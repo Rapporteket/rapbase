@@ -1,0 +1,20 @@
+Package: rapbase
+Type: Package
+Title: Base functions and resources for Rapporteket
+Version: 0.0.9000
+Date: 2015-01-23
+Author: Authors@R: person("Edvardsen", "Are", email =  "are.edvardsen@helse-nord.no",
+  role = c("cre", "aut"))
+Maintainer: Who to complain to <yourfault@somewhere.net>
+Description: Provide common functions and resources for registry speciffic
+  R-packages at Rapportekt. Can potentially contain alot of stuff, also
+  not directly related to R...
+License: GPL-2
+LazyData: true
+Imports:
+  Cairo,
+  DBI,
+  knitr,
+  RJDBC,
+  RMySQL,
+  yaml
