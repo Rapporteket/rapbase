@@ -14,5 +14,6 @@ Provide common functions and resources for registry speciffic
 
 RunNoweb
 LibFigFilType
+RapporteketDbConnection
 }
 
