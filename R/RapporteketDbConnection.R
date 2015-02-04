@@ -32,7 +32,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
     dbUrl <- paste("jdbc:sqlserver://", conf$host, ":", conf$port,
                    ";databaseName=", conf$nkr$name,
                    ";instance=", conf$nkr$inst, ";charset=UTF-8", sep="")
-    con <- DBI::dbConnect(drv, dbUrl, user = conf$user, password=conf$pass)
+    con <- DBI::dbConnect(drv, dbUrl, user = conf$user, password = conf$pass)
   }
   
   return(con, drv)
