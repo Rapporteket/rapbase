@@ -3,8 +3,8 @@
 #' Generic to registries, handle the data source connections, including
 #' usernames and passwords needed to open these connections
 #' 
-#' @param registryName String id used for the reistry from which data
-#'  connection is provided
+#' @param registryName String id used for the registry in global configuration
+#'  file from which informastion on the database connection is provided
 #' @param dbType String providing type of data source, one of
 #'  "mysql" and "mssql". Defaults to "mysql"
 #' @return con Data source connection object
@@ -35,7 +35,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
     con <- DBI::dbConnect(drv, dbUrl, user = conf$user, password = conf$pass)
   }
   
-  return(con, drv)
+  list(con = con, drv = drv)
 }
 
 
