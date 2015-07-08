@@ -1,0 +1,7 @@
+# dummy config entry
+nordummy:
+  host : dummyhost.no
+  name : dummy_db_name
+  user : dummy_username
+  pass : dummy_user_password
+  disp : dummy_display_name
