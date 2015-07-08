@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Make sure config is present in rapbase when installed at Rapporteket
+
+DBCONFIGFILE="/opt/jasper/r/dbConfig.yml"
+LIBPATH="/usr/lib64/R/library/rapbase/"
+
+if [ -f $DBCONFIGFILE ] && [ -d $LIBPATH ];
+  then
+    cp $DBCONFIGFILE $LIBPATH
+fi
