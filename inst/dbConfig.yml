@@ -1,7 +1,7 @@
 # dummy config entry
 nordummy:
-  host : dummyhost.no
+  host : dummy_db_hostname.no
   name : dummy_db_name
-  user : dummy_username
-  pass : dummy_user_password
+  user : dummy_db_username
+  pass : dummy_db_password
   disp : dummy_display_name
