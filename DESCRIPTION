@@ -11,10 +11,10 @@ Description: Provide common functions and resources for registry speciffic
   not directly related to R...
 License: GPL-2
 LazyData: true
+Depends: RMySQL
 Imports:
   Cairo,
   DBI,
   knitr,
   RJDBC,
-  RMySQL,
   yaml
