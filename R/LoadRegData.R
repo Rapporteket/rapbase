@@ -6,6 +6,7 @@
 #' @param registryName String Name of the registry as defined in dbConfig.yml
 #' @param query String SQL query to obtain the data
 #' @return RegData dataframe Registry data
+#' @export
 
 LoadRegData <- function(registryName, query, dbType = "mysql") {
   
