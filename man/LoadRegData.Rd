@@ -10,6 +10,8 @@ LoadRegData(registryName, query, dbType = "mysql")
 \item{registryName}{String Name of the registry as defined in dbConfig.yml}
 
 \item{query}{String SQL query to obtain the data}
+
+\item{dbType}{String Type of db to query, currently "mysql" (default) and "mssql"}
 }
 \value{
 RegData dataframe Registry data
