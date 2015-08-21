@@ -16,5 +16,6 @@ Imports:
   Cairo,
   DBI,
   knitr,
+  rJava,
   RJDBC,
   yaml
