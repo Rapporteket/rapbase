@@ -5,3 +5,11 @@ nordummy:
   user : dummy_db_username
   pass : dummy_db_password
   disp : dummy_display_name
+
+# for testing, on localhost
+rapbase:
+  host : 127.0.0.1
+  name : rapbase
+  user : rapbase
+  pass : rapbase
+  disp : ForTestingOnly
