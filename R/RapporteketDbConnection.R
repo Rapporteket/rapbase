@@ -45,8 +45,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
 #' @param drv DBIDriver object that is to be removed
 #' @export
 
-rapCloseDbConnection <- function(con, drv) {
+rapCloseDbConnection <- function(con) {
   con <- DBI::dbDisconnect(con)
-  con <- DBI::dbUnloadDriver(drv)
   con <- NULL
 }
