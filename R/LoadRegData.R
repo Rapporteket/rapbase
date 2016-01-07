@@ -11,9 +11,9 @@
 
 LoadRegData <- function(registryName, query, dbType = "mysql") {
   
-  dbList <- rapbase::rapOpenDbConnection(registryName, dbType)
+  dbList <- rapOpenDbConnection(registryName, dbType)
   RegData <- DBI::dbGetQuery(dbList$con, query)
-  rapbase::rapCloseDbConnection(dbList$con)
+  rapCloseDbConnection(dbList$con)
   dbList <- NULL
   
   return(RegData)
