@@ -4,12 +4,10 @@
 \alias{rapCloseDbConnection}
 \title{Close down data connection handle}
 \usage{
-rapCloseDbConnection(con, drv)
+rapCloseDbConnection(con)
 }
 \arguments{
 \item{con}{Open connection object that is to be closed}
-
-\item{drv}{DBIDriver object that is to be removed}
 }
 \description{
 Close down data connection handle
