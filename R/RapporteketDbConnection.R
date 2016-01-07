@@ -42,7 +42,6 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
 #' Close down data connection handle
 #' 
 #' @param con Open connection object that is to be closed
-#' @param drv DBIDriver object that is to be removed
 #' @export
 
 rapCloseDbConnection <- function(con) {
