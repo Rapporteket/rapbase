@@ -12,6 +12,7 @@ Description: Provide common functions and resources for registry specific
   not directly related to R...
 License: GPL-2
 LazyData: true
+Depends: R (>= 3.0.2), RMySQL
 Imports:
   Cairo,
   DBI,
