@@ -3,20 +3,23 @@ Type: Package
 Title: Base functions and resources for Rapporteket
 Version: 0.0.9000
 Date: 2015-01-23
-Author: Authors@R: c(person("Edvardsen", "Are", email =  "are.edvardsen@helse-nord.no",
-  role = c("cre", "aut")),
-  person("Thon", "Kevin", email = "kevin.thon@skde.no", role = "aut"))
+Author: Authors@R: c(person("Edvardsen", "Are", email = "are.edvardsen@helse-
+    nord.no", role = c("cre", "aut")), person("Thon", "Kevin", email =
+    "kevin.thon@skde.no", role = "aut"))
 Maintainer: Are Edvardsen <are.edvardsen@helse-nord.no>
 Description: Provide common functions and resources for registry specific
-  R-packages at Rapporteket. Can potentially contain alot of stuff, also
-  not directly related to R...
+    R-packages at Rapporteket. Can potentially contain alot of stuff, also
+    not directly related to R...
 License: GPL-2
 LazyData: true
-Depends: R (>= 3.0.2), RMySQL
+Depends:
+    R (>= 3.0.2),
+    RMySQL
 Imports:
-  Cairo,
-  DBI,
-  knitr,
-  RJDBC,
-  RMySQL,
-  yaml
+    Cairo,
+    DBI,
+    knitr,
+    RJDBC,
+    RMySQL,
+    yaml
+RoxygenNote: 5.0.1
