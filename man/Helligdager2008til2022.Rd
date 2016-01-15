@@ -17,7 +17,7 @@ Helligdager2008til2022
 }
 \description{
 Et datasett med norske røddager 2008 til 2022. Søndager 
-er ikke inkludert i listen. \o fdg æ r ø å
+er ikke inkludert i listen.
 }
 \keyword{datasets}
 

@@ -4,21 +4,24 @@
 \alias{figtype}
 \title{Funksjon som angir hvilket format en figur skal lagres i.}
 \usage{
-figtype(outfile = "", res = 72, width = 555, height = 555,
-  pointsize = 12, fargepalett = "BlaaOff")
+figtype(outfile = "", width = 3 * 595, height = 3 * 595, res = 3 * 72,
+  pointsizePDF = 11, fargepalett = "BlaaOff")
 }
 \arguments{
-\item{outfile}{??}
+\item{outfile}{Navn på fil som skal skrives til. Tom tekststreng skriver til skjerm}
 
-\item{res}{??}
+\item{width}{Bredde på output ved gitt oppløsning}
 
-\item{width}{??}
+\item{height}{Høyde på output ved gitt oppløsning}
 
-\item{height}{??}
+\item{res}{Oppløsningen på raster-output}
 
-\item{pointsize}{??}
+\item{pointsizePDF}{Skrifstørrelse i pdf-output}
 
-\item{fargepalett}{??}
+\item{fargepalett}{Hvilken fargepalett skal brukes}
+}
+\value{
+UtFigFil List med en del figurparametre
 }
 \description{
 Formatet er spesifisert gjennom endinga til filnavnet
