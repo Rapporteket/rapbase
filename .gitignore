@@ -3,3 +3,4 @@
 .RData
 rapbase.Rproj
 inst/doc
+inst/jrxml/*.jasper
