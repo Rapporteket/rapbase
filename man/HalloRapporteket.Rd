@@ -7,7 +7,7 @@
 HalloRapporteket()
 }
 \value{
-message
+message A test message
 }
 \description{
 To be used for testing purposes

@@ -2,7 +2,7 @@
 #' 
 #' To be used for testing purposes
 #' 
-#' @return message
+#' @return message A test message
 #' @export
 
 HalloRapporteket <- function() {
