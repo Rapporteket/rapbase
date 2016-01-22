@@ -3,6 +3,7 @@
 #' To be used for testing purposes
 #' 
 #' @return message
+#' @export
 
 HalloRapporteket <- function() {
   
