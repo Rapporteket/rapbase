@@ -9,39 +9,44 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Hoepfully, use of R packages will make both development and system meintenance at Rappporteket.
-However, this calls for some changes of both routines and configuration/set-up. In the
-following, such changes are logged as they are made. Hence, all entries here should be
-reviewed before an approval of this approach.
+Hoepfully, use of R packages will make both development and system meintenance
+at Rappporteket easier.
+However, this calls for some changes of both routines andconfiguration/set-up.
+In the following, such changes are logged as they are made. Hence, all entries
+here should be reviewed before an approval of this approach.
 
 ## User privileges
-Intallation of packages must also work automated. In a manual approach operating with
-root privileges is common and trivial. However, processes either automated or
-initiated by random users or external triggers should always be run with very reduced
-privileges. At _Rapporteket_ all R related processes are run by the unprivileged user
-_tomcat_. This should the also apply to handling of R packages.
+Intallation of packages must also work automated. In a manualapproach
+operating with root privileges is common and trivial. However, processes
+either automated or initiated by random users or external triggers should
+always be run with very reduced privileges. At _Rapporteket_ all R related
+processes are run by the unprivileged user _tomcat_. This should the also
+apply to handling of R packages.
 
-During installation of R packages R checks the privileges of the user who triggers the
-installation. If the user has root privileges, the package is installed alongside the rest
-of the (default) packages providing system wide access. If the user does not have root 
-privileges the package will be installed in the users home directory and will thus only be
-available to the current user.
+During installation of R packages R checks the privileges of the user who
+triggers the installation. If the user has root privileges, the package is
+installed alongside the rest of the (default) packages providing system wide
+access. If the user does not have root privileges the package will be
+installed in the users home directory and will thus only be available to the
+current user.
 
-The _tomcat_ user does not even have his own home directory suitable for install of R
-packages. Hence, a local R package site library is proposed where _tomcat_ have read
-and write access. By default, an R install comes with built in definition of several options,
-and at Rapporteket these are:
+The _tomcat_ user does not even have his own home directory suitable for
+install of R packages. Hence, a local R package site library is proposed where
+_tomcat_ have read and write access. By default, an R install comes with built
+in definition of several options, and at Rapporteket these are:
 
 ```r
 Sys.getenv("R_LIBS_SITE")
-[1] "/usr/local/lib/R/site-library:/usr/local/lib/R/library:/usr/lib64/R/library:/usr/share/R/library"
+[1] "/usr/local/lib/R/site-library:/usr/local/lib/R/library:
+/usr/lib64/R/library:/usr/share/R/library"
 ```
-The only one that actually exists is _/usr/lib64/R/library_ and packages installed as
-root are all placed here. User _tomcat_ does not have write access to this directory and
-cannot install any packages.
+The only one that actually exists is _/usr/lib64/R/library_ and packages
+installed as root are all placed here. User _tomcat_ does not have write
+access to this directory and cannot install any packages.
 
-To enable user _tomcat_ to install our own packages it is proposed to use on of the
-other options, by (as root) creating directories and setting appropriate privileges:
+To enable user _tomcat_ to install our own packages it is proposed to use on
+of the other options, by (as root) creating directories and setting
+appropriate privileges:
 
 ```bash
 cd /usr/local/lib
@@ -49,58 +54,47 @@ mkdir -p R/site-library
 chown -R root:tomcat R
 chmod -R ug+rwx R
 ```
- Now, also user _tomcat_ will be able to install packages.
- 
- An alternative approch will be to create a proper HOME for user _tomcat_.
+Now, also user _tomcat_ will be able to install packages^[An alternative approch will be to create a proper HOME for user _tomcat_].
 
+All R sessions are spawned by Rserve which need some additional information,
+also on the library paths to use. Hence, the startup script for Rserve
+must be extended by defining and exporting an additional environmental
+varaible R_LIBS:
 
-
-
-
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
-
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
-
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+```bash
+R_LIBS=/usr/lib64/R/library:/usr/local/lib/R/site-library
+export R_LIBS
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+The above two lines must hence be added to the Rserve start-up script
+(_/etc/init.d/rserve_).
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+## Installing our own packages from github
+We aim to distribute all R related reports as standard R package
+infrastructure. These packages will all be hosted by github then acting as
+a common repository for both development and installation.
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+Our packages will have dependencies to other packages found in the
+official R repositories. All dependencies must be accessible upon installation
+of our packages. All request from _Rapporteket_ to external resources will
+have to use an proxy server which have to be defined:
 
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+```r
+Sys.setenv(http_proxy="http://www-proxy.helsenord.no:8080")
 ```
 
-Also a quote using `>`:
+Communication with github requires TLS (https/ssl) so we need an additional
+library and some configuration to make this work:
 
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+```r
+library(httr)
+set_config(use_proxy(url="172.29.3.227", port=8080))
+```
+
+The actual installation can then be performed using the _devtools_ package,
+_e.g._:
+
+
+```r
+devtools::install_github("Rapporteket/rapbase", ref = "rel")
+```
