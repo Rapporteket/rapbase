@@ -10,9 +10,6 @@
 
 installGithubPackage <- function(packageName, branchName) {
   
-  # debug
-  cat(.libPaths())
-  
   message <- ""
   message <- MakeMessage(message, "Initiating 'InstallGithubPackage'")
   
@@ -32,7 +29,9 @@ installGithubPackage <- function(packageName, branchName) {
   message <- MakeMessage(message,
                          paste0("Intalling 'rapbase' from branch '",
                                 branchName, "'"))
-  devtools::install_github(githubRapbase, ref=branchName, args=c("--clean"))
+  devtools::with_libpaths(new = "/usr/lib/R/site-library",
+                          install_github(githubRapbase, ref=branchName,
+                                         args=c("--clean")))
   message <- MakeMessage(message, "Done with 'rapbase'")
   
   if (packageName != "rapbase") {
