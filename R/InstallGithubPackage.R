@@ -10,6 +10,9 @@
 
 installGithubPackage <- function(packageName, branchName) {
   
+  # debug
+  cat(.libPaths())
+  
   message <- ""
   message <- MakeMessage(message, "Initiating 'InstallGithubPackage'")
   
