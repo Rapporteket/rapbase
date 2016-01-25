@@ -16,7 +16,7 @@ In the following, such changes are logged as they are made. Hence, all entries
 here should be reviewed before an approval of this approach.
 
 ## User privileges
-Intallation of packages must also work automated. In a manualapproach
+Intallation of packages must also work automated. In a manual approach
 operating with root privileges is common and trivial. However, processes
 either automated or initiated by random users or external triggers should
 always be run with very reduced privileges. At _Rapporteket_ all R related
@@ -27,8 +27,8 @@ During installation of R packages R checks the privileges of the user who
 triggers the installation. If the user has root privileges, the package is
 installed alongside the rest of the (default) packages providing system wide
 access. If the user does not have root privileges the package will be
-installed in the users home directory and will thus only be available to the
-current user.
+installed in the users home directory and will thus only be available to that
+praticular user.
 
 The _tomcat_ user does not even have his own home directory suitable for
 install of R packages. Hence, a local R package site library is proposed where
