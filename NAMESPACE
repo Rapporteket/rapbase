@@ -2,7 +2,9 @@
 
 export(HalloRapporteket)
 export(LoadRegData)
+export(MakeMessage)
 export(RunNoweb)
 export(figtype)
+export(installGithubPackage)
 export(rapCloseDbConnection)
 export(rapOpenDbConnection)
