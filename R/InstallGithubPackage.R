@@ -27,19 +27,34 @@ installGithubPackage <- function(packageName, branchName) {
                                    port=as.numeric(USE_PROXY_PORT)))
 
   message <- MakeMessage(message,
-                         paste0("Intalling 'rapbase' from branch '",
-                                branchName, "'"))
-  devtools::with_libpaths(new = "/usr/local/lib/R/site-library",
-                          devtools::install_github(githubRapbase,
-                                                   ref=branchName,
-                                                   args=c("--clean")))
+                         paste0("Intalling '", githubRapbase,
+                                "' from branch '", branchName, "'"))
+  res <- tryCatch({
+    devtools::with_libpaths(new = "/usr/local/lib/R/site-library",
+                            devtools::install_github(githubRapbase,
+                                                     ref=branchName,
+                                                     args=c("--clean")))
+  }, warning = function(war) {
+    return(war)
+  }, error = function(err) {
+    return(err)
+  })
+  
+  message <- MakeMessage(message, res)
   message <- MakeMessage(message, "Done with 'rapbase'")
   
   if (packageName != "rapbase") {
     message <- MakeMessage(message, paste0("Installing '", packageName,
                                            "' from branch '", branchName, "'"))
-    devtools::install_github(githubPackage, ref=branchName)
+    res <- tryCatch({
+      devtools::install_github(githubPackage, ref=branchName)
+    }, warning = function(war) {
+      return(war)
+    }, error = function(err) {
+      return(err)
+    })
     
+    message <- MakeMessage(message, res)
   }
   else {
     message <- MakeMessage(message, "No additional packages to install")
