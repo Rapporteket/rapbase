@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.0.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2016-01-25T14:13:53 -->
+<!-- 2016-01-26T12:21:57 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="InstallGithubRapporteket" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" scriptletClass="no.skde.tools.report.RunRFunction" uuid="aab8b9e0-fe17-489f-a7b0-fbb1e92f8e27">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
@@ -8,6 +8,8 @@
 	<property name="ireport.jasperserver.url" value="http://tos-hreg-app-06.nreg.no:8080/rapporteket_test/"/>
 	<property name="ireport.jasperserver.user" value="superuser"/>
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="ireport.jasperserver.report.resource" value="/organizations/Rapporteket/Reports/InstallGithubRapporteket_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/organizations/Rapporteket/Reports/InstallGithubRapporteket"/>
 	<parameter name="rPackageName" class="java.lang.String" isForPrompting="false">
 		<defaultValueExpression><![CDATA[new String("rapbase")]]></defaultValueExpression>
 	</parameter>
@@ -36,8 +38,11 @@
 			<property name="local_mesure_unitheight" value="pixel"/>
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<staticText>
-				<reportElement x="0" y="0" width="282" height="30" uuid="91671e23-9410-4425-9567-0b709fcb4ac5"/>
-				<text><![CDATA[Intall package from github. See below status]]></text>
+				<reportElement x="0" y="0" width="555" height="30" uuid="91671e23-9410-4425-9567-0b709fcb4ac5"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Intalling R packages from github, see below status:]]></text>
 			</staticText>
 		</band>
 	</title>
@@ -48,7 +53,7 @@
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="0" y="0" width="555" height="700" uuid="e95ce88b-9d41-42fb-8be5-3c59d805055f"/>
 				<textElement textAlignment="Left">
-					<font size="12"/>
+					<font size="12" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{REPORT_SCRIPTLET}.getRFunctionMessage()]]></textFieldExpression>
 			</textField>
