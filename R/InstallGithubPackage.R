@@ -34,6 +34,7 @@ installGithubPackage <- function(packageName, branchName) {
                             devtools::install_github(githubRapbase,
                                                      ref=branchName,
                                                      args=c("--clean")))
+    return("'rapbase' installed")
   }, warning = function(war) {
     return(war)
   }, error = function(err) {
@@ -47,7 +48,11 @@ installGithubPackage <- function(packageName, branchName) {
     message <- MakeMessage(message, paste0("Installing '", packageName,
                                            "' from branch '", branchName, "'"))
     res <- tryCatch({
-      devtools::install_github(githubPackage, ref=branchName)
+      devtools::with_libpaths(new = "/usr/local/lib/R/site-library",
+                              devtools::install_github(githubPackage,
+                                                       ref=branchName))
+      
+      return(paste(packageName, "installed"))
     }, warning = function(war) {
       return(war)
     }, error = function(err) {
