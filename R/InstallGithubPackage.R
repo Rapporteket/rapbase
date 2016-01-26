@@ -34,7 +34,7 @@ installGithubPackage <- function(packageName, branchName) {
                             devtools::install_github(githubRapbase,
                                                      ref=branchName,
                                                      args=c("--clean")))
-    return("'rapbase' installed")
+    print("'rapbase' installed")
   }, warning = function(war) {
     return(war)
   }, error = function(err) {
@@ -52,7 +52,7 @@ installGithubPackage <- function(packageName, branchName) {
                               devtools::install_github(githubPackage,
                                                        ref=branchName))
       
-      return(paste(packageName, "installed"))
+      print(paste(packageName, "installed"))
     }, warning = function(war) {
       return(war)
     }, error = function(err) {
