@@ -12,6 +12,8 @@
 RunNoweb <- function(nowebFileName, packageName, weaveMethod = "knitr") {
   weaveInputFile <- system.file(nowebFileName, package = packageName)
   if (weaveMethod == "knitr") {
+    # make sure processing takes place "here" (sessions getwd())
+    knitr::opts_knit$set(root.dir='./')
     knitr::knit(weaveInputFile)
   } else if (is.element(weaveMethod, c("Sweave", "sweave"))) {
     Sweave(weaveInputFile)
