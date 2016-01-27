@@ -4,7 +4,7 @@
 # at Rapporteket
 
 DBCONFIGFILE="/opt/jasper/r/dbConfig.yml"
-LIBPATH="/usr/lib64/R/library/rapbase/"
+LIBPATH="/usr/local/lib/R/site-library/rapbase/"
 
 if [ -f $DBCONFIGFILE ] && [ -d $LIBPATH ];
   then
