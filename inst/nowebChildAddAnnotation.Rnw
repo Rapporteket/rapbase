@@ -1,0 +1,28 @@
+% This is a child document nesting over specified files to be included
+% as annotations in the pdf output from Sweave or knitr docs. The vector
+% 'pdfAttachFiles' containing attachment file names is to be provided by the
+% parent
+%
+% Oct 16 2014 Are Edvardsen
+% Copyleft 2014, SKDE
+
+
+<<sanitize, results=tex, echo=F, eval=T>>=
+san <- function(str) {
+  res <- str
+  res <- gsub("&", "\\&", res, fixed = TRUE)
+  res <- gsub("_", "\\_", res, fixed = TRUE)
+  res
+}
+@
+
+<<SweaveAddAnnotation, results=tex, echo=F, eval=T>>=
+if (exists("pdfAttachFiles") && length(pdfAttachFiles) > 0) {
+  for (anFile in pdfAttachFiles) {
+    cat(paste(san(anFile), ': ', '\\attachfile[icon=Paperclip, description=', anFile, ']{', anFile, '}', ' \\\\', '\n', sep=''))
+  }
+} else {
+  cat('Annotations wanted but found no files to add!\n')
+  cat('Annotasjoner ønskes, men fant ingen filer å legge ved!\n')
+}
+@
