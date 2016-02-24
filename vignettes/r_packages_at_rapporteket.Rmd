@@ -10,8 +10,8 @@ vignette: >
 ---
 
 Hoepfully, use of R packages will make both development and system meintenance
-at Rappporteket easier.
-However, this calls for some changes of both routines andconfiguration/set-up.
+at Rappporteket easier. However, this calls for some changes of both routines
+and configuration/set-up.
 In the following, such changes are logged as they are made. Hence, all entries
 here should be reviewed before an approval of this approach.
 
