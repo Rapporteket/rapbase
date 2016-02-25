@@ -16,6 +16,7 @@ san <- function(str) {
 }
 @
 
+
 <<insertAnnotations, results='asis', echo=F, eval=T>>=
 if (exists("attachFiles") && length(attachFiles) > 0) {
   for (anFile in attachFiles) {
