@@ -7,7 +7,7 @@
 % Copyleft 2014, SKDE
 
 
-<<sanitize, results=tex, echo=F, eval=T>>=
+<<sanitize, echo=F, eval=T>>=
 san <- function(str) {
   res <- str
   res <- gsub("&", "\\&", res, fixed = TRUE)
@@ -16,8 +16,8 @@ san <- function(str) {
 }
 @
 
-<<SweaveAddAnnotation, results=tex, echo=F, eval=T>>=
-if (exists("pdfAttachFiles") && length(pdfAttachFiles) > 0) {
+<<insertAnnotations, echo=F, eval=T>>=
+if (exists("attachFiles") && length(attachFiles) > 0) {
   for (anFile in pdfAttachFiles) {
     cat(paste(san(anFile), ': ', '\\attachfile[icon=Paperclip, description=', anFile, ']{', anFile, '}', ' \\\\', '\n', sep=''))
   }
