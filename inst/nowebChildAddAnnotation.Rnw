@@ -18,7 +18,7 @@ san <- function(str) {
 
 <<insertAnnotations, echo=F, eval=T>>=
 if (exists("attachFiles") && length(attachFiles) > 0) {
-  for (anFile in pdfAttachFiles) {
+  for (anFile in attachFiles) {
     cat(paste(san(anFile), ': ', '\\attachfile[icon=Paperclip, description=', anFile, ']{', anFile, '}', ' \\\\', '\n', sep=''))
   }
 } else {
