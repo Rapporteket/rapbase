@@ -23,6 +23,7 @@ installGithubPackage <- function(packageName, branchName) {
   
   message <- MakeMessage(message, "Setting network proxies")
   Sys.setenv(http_proxy=HTTP_PROXY)
+  Sys.setenv(https_proxy=HTTP_PROXY)
   httr::set_config(httr::use_proxy(url=USE_PROXY_URL,
                                    port=as.numeric(USE_PROXY_PORT)))
 
