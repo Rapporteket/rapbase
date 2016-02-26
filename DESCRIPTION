@@ -22,7 +22,8 @@ Imports:
     knitr,
     RJDBC,
     RMySQL,
-    yaml
+    yaml,
+    withr
 RoxygenNote: 5.0.1
 Suggests: knitr
 VignetteBuilder: knitr
