@@ -24,9 +24,13 @@ installGithubPackage <- function(packageName, branchName) {
   message <- MakeMessage(message, "Setting network proxies")
   Sys.setenv(http_proxy=HTTP_PROXY)
   Sys.setenv(https_proxy=HTTP_PROXY)
+  
   httr::set_config(httr::use_proxy(url=USE_PROXY_URL,
                                    port=as.numeric(USE_PROXY_PORT)))
 
+  message <- MakeMessage(message, "Set 'libcurl' as download method")
+  options(download.file.method="libcurl")
+  
   message <- MakeMessage(message,
                          paste0("Intalling '", githubRapbase,
                                 "' from branch '", branchName, "'"))
