@@ -53,7 +53,7 @@ installGithubPackage <- function(packageName, branchName) {
     message <- MakeMessage(message, paste0("Installing '", packageName,
                                            "' from branch '", branchName, "'"))
     res <- tryCatch({
-      devtools::with_libpaths(new = "/usr/local/lib/R/site-library",
+      withr::with_libpaths(new = "/usr/local/lib/R/site-library",
                               devtools::install_github(githubPackage,
                                                        ref=branchName))
       
