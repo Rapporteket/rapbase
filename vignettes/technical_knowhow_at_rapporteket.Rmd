@@ -12,7 +12,7 @@ vignette: >
 Please use as a bin for all kinds of technical informastion relevant for taking
 a package for a spin at Rapporteket. This doc is liberal in terms of content and
 one should at whatever comes to mind as relevant. Thus, this vignette might
-therefore be somewht lingo agnostic...
+therefore be somewhat lingo agnostic...
 
 # Æ, ø, å. Darn them buggers!
 During February 2016 we were poking around in some encoding issues related to
@@ -48,7 +48,7 @@ På app-08 gir det samme:
 [1] "C"
 ```
 ## Løsning
-Problemet kan løses ved å endre måten Rserve (daemon) startes. Følgende linje i '/etc/init.d/rserve'
+Problemet kan løses ved å endre måten Rserve (daemon) startes. Følgende linje i _/etc/init.d/rserve_
 ```bash
 su -p -s /bin/sh $OWNER -c "$R_HOME/bin/Rserve --vanilla --RS-encoding utf8 
 --RS-workdir /opt/jasper/r" > /var/log/jasper/Rserve.log 2>&1 &
