@@ -1,0 +1,68 @@
+---
+title: "Technical knowhow at Rapporteket"
+author: "Are Edvardsen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+Please use as a bin for all kinds of technical informastion relevant for taking
+a package for a spin at Rapporteket. This doc is liberal in terms of content and
+one should at whatever comes to mind as relevant. Thus, this vignette might
+therefore be somewht lingo agnostic...
+
+# Æ, ø, å. Darn them buggers!
+During February 2016 we were poking around in some encoding issues related to
+establishing a new TEST server at Rapporteket. We were not able to source R
+files and figures produced were not able to show nordic characters
+(substituting them with ".."). The first
+was avoided by using `eval(parse("someFile.R", encoding="UTF-8"))` rather than
+`source("someFile.R", encoding="UTF-8")` but the latter we could not solve.
+It was likely that these two problems were both related to encoding issues. The
+solution to this is described below.
+
+## Problem
+De ulike versjonene av R/Rserve mlm app-06 og app-08 leser systemets miljøvariabler angående encoding/locale ulikt. app-06 fungerer slik den skal mens app-08 ikke har riktige miljøvariabler satt i sesjonen.
+
+## Reproduksjon av feilen
+I en sesjon startet av Rserve, kjør kommandoen
+
+```r
+Sys.getlocale(category = "LC_ALL")
+```
+
+På app-06 gir dette:
+
+```r
+[1] "LC_CTYPE=en_US.UTF-8;LC_NUMERIC=C;LC_TIME=nb_NO.UTF-8;LC_COLLATE=en_US.UTF-8;
+LC_MONETARY=nb_NO.UTF-8;LC_MESSAGES=en_US.UTF-8;LC_PAPER=nb_NO.UTF-8;LC_NAME=C;
+LC_ADDRESS=C;LC_TELEPHONE=C;LC_MEASUREMENT=nb_NO.UTF-8;LC_IDENTIFICATION=C"
+```
+
+På app-08 gir det samme:
+
+```r
+[1] "C"
+```
+## Løsning
+Problemet kan løses ved å endre måten Rserve (daemon) startes. Følgende linje i '/etc/init.d/rserve'
+```bash
+su -p -s /bin/sh $OWNER -c "$R_HOME/bin/Rserve --vanilla --RS-encoding utf8 
+--RS-workdir /opt/jasper/r" > /var/log/jasper/Rserve.log 2>&1 &
+```
+fungerer på app-06. På app-08 må denne endres til:
+```bash
+su -p -s /bin/sh $OWNER -c "$R_HOME/bin/Rserve --vanilla --RS-encoding native 
+--RS-workdir /opt/jasper/r" > /var/log/jasper/Rserve.log 2>&1 &
+```
+
+der opsjonen `--RS-encoding` er endret fra `utf8` til `native` (endringen er allerede gjort på app-08 ifm feilsøking, men se kommentar under "Mulige konsekvenser av endringen"). Endringen er basert på Rserve sin dokumentasjon:
+
+> String encoding directive was introduced in Rserve 0.5-3. This means that strings are converted to the given encoding before being sent to the client and also all strings from the client are assumed to come from the given encoding. (Previously the strings were always passed as-is with no conversion). The currently supported encodings are "native" (same as the server session locale), "utf8" and "latin1". The server default is currently "native" for compatibility with previous versions (but may change to "utf8" in the future, so explicit use of encoding in the config file is advised).
+
+
+## Mulige konsekvenser av endringen
+Et mulig utfall av dette er at avvik i konfigurasjon mlm app-06 og app-08, noe som sikkert ikke er heldig mht ivaretakelse av stabil drift. Det kan tenkes at alle miljø (TEST og PROD) bør endret til "native" GITT AT DET GIR RIKTIG UTFALL OGSÅ FOR DISSE SERVERNE. Det er altså ikke testet av meg, men er en endring som Saana og Jan-Inge får gjøre en vurdering av.
