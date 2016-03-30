@@ -31,23 +31,25 @@ installGithubPackage <- function(packageName, branchName) {
   message <- MakeMessage(message, "Set 'libcurl' as download method")
   options(download.file.method="libcurl")
   
-  message <- MakeMessage(message,
-                         paste0("Intalling '", githubRapbase,
-                                "' from branch '", branchName, "'"))
-  res <- tryCatch({
-    withr::with_libpaths(new = "/usr/local/lib/R/site-library",
-                            devtools::install_github(githubRapbase,
-                                                     ref=branchName,
-                                                     args=c("--clean")))
-    print("'rapbase' installed")
-  }, warning = function(war) {
-    return(war)
-  }, error = function(err) {
-    return(err)
-  })
-  
-  message <- MakeMessage(message, res)
-  message <- MakeMessage(message, "Done with 'rapbase'")
+  if (packageName == "rapbase") {
+    message <- MakeMessage(message,
+                           paste0("Intalling '", githubRapbase,
+                                  "' from branch '", branchName, "'"))
+    res <- tryCatch({
+      withr::with_libpaths(new = "/usr/local/lib/R/site-library",
+                           devtools::install_github(githubRapbase,
+                                                    ref=branchName,
+                                                    args=c("--clean")))
+      print("'rapbase' installed")
+    }, warning = function(war) {
+      return(war)
+    }, error = function(err) {
+      return(err)
+    })
+    
+    message <- MakeMessage(message, res)
+    message <- MakeMessage(message, "Done with 'rapbase'")
+  }
   
   if (packageName != "rapbase") {
     message <- MakeMessage(message, paste0("Installing '", packageName,
