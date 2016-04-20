@@ -14,7 +14,7 @@ installGithubPackage <- function(packageName, branchName) {
   message <- MakeMessage(message, "Initiating 'InstallGithubPackage'")
   
   HTTP_PROXY <- "http://www-proxy-rn.helsenord.no:8080"
-  USE_PROXY_URL <- "172.29.3.227"
+  USE_PROXY_URL <- "172.29.3.232"
   USE_PROXY_PORT <- "8080"
   GITHUB_ORGANIZATION <- "Rapporteket"
   
