@@ -16,7 +16,7 @@ RunNoweb <- function(nowebFileName, packageName, weaveMethod = "knitr") {
     knitr::opts_knit$set(root.dir='./')
     knitr::knit(weaveInputFile)
   } else if (is.element(weaveMethod, c("Sweave", "sweave"))) {
-    Sweave(weaveInputFile)
+    Sweave(weaveInputFile, encoding="utf8")
   } else {
     cat("\nweaveMethod specified is none of knitr or Sweave. Nothing to do\n")
   }
