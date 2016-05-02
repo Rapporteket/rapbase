@@ -39,6 +39,7 @@ installGithubPackage <- function(packageName, branchName) {
       withr::with_libpaths(new = "/usr/local/lib/R/site-library",
                            devtools::install_github(githubRapbase,
                                                     ref=branchName,
+                                                    force=TRUE,
                                                     args=c("--clean")))
       print("'rapbase' installed")
     }, warning = function(war) {
