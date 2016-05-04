@@ -15,6 +15,7 @@
 #' \emph{appsDirectoryName} must be set to \emph{'shinyApps'}.
 #' @param packageName String providing the name of the package in which the
 #' shiny app resides
+#' @export
 
 runShinyApp <- function(appName, appsDirectoryName, packageName) {
   
