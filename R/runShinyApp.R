@@ -18,27 +18,26 @@
 
 runShinyApp <- function(appName, appsDirectoryName, packageName) {
   
-    # locate all shiny apps
-    validApps <- list.files(system.file(appsDirectoryName,
-                                        package = packageName))
-    
-    validAppsMsg <-
-      paste0(
-        "Valid apps are: '",
-        paste(validApps, collapse = "', '"),
-        "'")
-    
-    # if an invalid app is given, throw an error
-    if (missing(appName) || !nzchar(appName) ||
-        !appName %in% validApps) {
-      stop(
-        'Please run `runShinyApp()` with a valid app name as an argument.n',
-        validExamplesMsg,
-        call. = FALSE)
-    }
-    
-    # find and launch the app
-    appDir <- system.file(appsDirectoryName, appName, package = packageName)
-    shiny::runApp(appDir, display.mode = "normal")
+  # locate all shiny apps
+  validApps <- list.files(system.file(appsDirectoryName,
+                                      package = packageName))
+  
+  validAppsMsg <-
+    paste0(
+      "Valid apps are: '",
+      paste(validApps, collapse = "', '"),
+      "'")
+  
+  # if an invalid app is given, throw an error
+  if (missing(appName) || !nzchar(appName) ||
+      !appName %in% validApps) {
+    stop(
+      'Please run `runShinyApp()` with a valid app name as an argument.n',
+      validExamplesMsg,
+      call. = FALSE)
   }
+  
+  # find and launch the app
+  appDir <- system.file(appsDirectoryName, appName, package = packageName)
+  shiny::runApp(appDir, display.mode = "normal")
 }
