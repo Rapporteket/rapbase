@@ -34,7 +34,7 @@ runShinyApp <- function(appName, appsDirectoryName, packageName) {
       !appName %in% validApps) {
     stop(
       'Please run `runShinyApp()` with a valid app name as an argument.n',
-      validExamplesMsg,
+      validAppsMsg,
       call. = FALSE)
   }
   
