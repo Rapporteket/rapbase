@@ -33,7 +33,7 @@ runShinyApp <- function(appName, appsDirectoryName, packageName) {
   if (missing(appName) || !nzchar(appName) ||
       !appName %in% validApps) {
     stop(
-      'Please run `runShinyApp()` with a valid app name as an argument.n',
+      'Please run `runShinyApp()` with a valid app name as an argument\n',
       validAppsMsg,
       call. = FALSE)
   }
