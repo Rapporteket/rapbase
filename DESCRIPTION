@@ -3,7 +3,7 @@ Type: Package
 Title: Base functions and resources for Rapporteket
 Version: 1.1.1
 Date: 2015-01-23
-Author: Authors@R: c(person("Edvardsen", "Are", email = "are.edvardsen@helse-
+Authors@R: c(person("Edvardsen", "Are", email = "are.edvardsen@helse-
     nord.no", role = c("cre", "aut")), person("Thon", "Kevin", email =
     "kevin.thon@skde.no", role = "aut"))
 Maintainer: Are Edvardsen <are.edvardsen@helse-nord.no>
