@@ -4,8 +4,8 @@
 #' attempt is to keep thin function generic (across packages). It might not
 #' prove wise and future implementation might be per-package.
 #' 
-#' Idea and code (partly) taken from Dean Attali's R Blog
-#' \url{http://www.r-bloggers.com/supplementing-your-r-package-with-a-shiny-app/}
+#' Idea and code (partly) taken from Dean Attali's
+#' \href{http://www.r-bloggers.com/supplementing-your-r-package-with-a-shiny-app/}{R Blog}.
 #' Gratitude.
 #' 
 #' @param appName String providing the name of the shiny application
