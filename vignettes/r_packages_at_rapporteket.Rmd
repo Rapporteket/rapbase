@@ -77,7 +77,7 @@ a common repository for both development and installation.
 Our packages will have dependencies to other packages found in the
 official R repositories. All dependencies must be accessible upon installation
 of our packages. All request from _Rapporteket_ to external resources will
-have to use an proxy server which have to be defined:
+have to use a proxy server which have to be defined:
 
 ```r
 Sys.setenv(http_proxy="http://www-proxy-rn.helsenord.no:8080")
