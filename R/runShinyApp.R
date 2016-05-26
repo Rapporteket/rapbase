@@ -5,7 +5,7 @@
 #' prove wise and future implementation might be per-package.
 #' 
 #' Idea and code (partly) taken from Dean Attali's R Blog
-#' (http://www.r-bloggers.com/supplementing-your-r-package-with-a-shiny-app/)
+#' \url{http://www.r-bloggers.com/supplementing-your-r-package-with-a-shiny-app/}
 #' Gratitude.
 #' 
 #' @param appName String providing the name of the shiny application
