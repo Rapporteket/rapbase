@@ -77,10 +77,10 @@ a common repository for both development and installation.
 Our packages will have dependencies to other packages found in the
 official R repositories. All dependencies must be accessible upon installation
 of our packages. All request from _Rapporteket_ to external resources will
-have to use an proxy server which have to be defined:
+have to use a proxy server which have to be defined:
 
 ```r
-Sys.setenv(http_proxy="http://www-proxy.helsenord.no:8080")
+Sys.setenv(http_proxy="http://www-proxy-rn.helsenord.no:8080")
 ```
 
 Communication with github requires TLS (https/ssl) so we need an additional
@@ -88,7 +88,7 @@ library and some configuration to make this work:
 
 ```r
 library(httr)
-set_config(use_proxy(url="172.29.3.227", port=8080))
+set_config(use_proxy(url="172.29.3.232", port=8080))
 ```
 
 The actual installation can then be performed using the _devtools_ package,
@@ -96,5 +96,5 @@ _e.g._:
 
 
 ```r
-devtools::install_github("Rapporteket/rapbase", ref = "rel")
+devtools::install_github("Rapporteket/rapbase", ref = "rel", args = c("--clean"))
 ```

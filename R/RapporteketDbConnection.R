@@ -28,7 +28,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
   else if (dbType == "mssql") {
     
     drv <- RJDBC::JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver",
-                system.file("sqljdbc4.jar", package = "repbase"))
+                system.file("sqljdbc4.jar", package = "rapbase"))
     dbUrl <- paste("jdbc:sqlserver://", conf$host, ":", conf$port,
                    ";databaseName=", conf$nkr$name,
                    ";instance=", conf$nkr$inst, ";charset=UTF-8", sep="")
