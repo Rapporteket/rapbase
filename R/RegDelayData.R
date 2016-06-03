@@ -29,6 +29,12 @@ RegDelayData <- function(registryName, registrationFormName) {
   
   dbType <- "mysql"
   
+  # temporary fix discrepancy field name. Shold be fixed at db-level for 'nger'
+  registrationFormFieldName <- "Skjemanavn"
+  if (registryName == "nger") {
+    registrationFormFieldName <- "SkjemaNavn"
+  }
+  
   query <- paste0(
     'select
   year(HovedDato) as year,
@@ -36,7 +42,8 @@ RegDelayData <- function(registryName, registrationFormName) {
 from
   SkjemaOversikt
 where
-  SkjemaStatus=1 and SkjemaNavn="', registrationFormName, '";'
+  SkjemaStatus=1 and ', registrationFormFieldName, '="',
+    registrationFormName, '";'
   )
   
   regDelayData <- rapbase::LoadRegData(registryName, query, dbType)
