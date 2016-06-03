@@ -10,12 +10,11 @@
 #' @seealso This function use \code{\link{RegDelay}}
 #' @export
 
-RegDelayReport <- function(years, registryKeyNames = "",
-                           registrationFormNames = "") {
+RegDelayReport <- function(years, registryKeyNames, registrationFormNames) {
   
   # these are inputs, but hardcode for now
-  registryKeyNames <- c("nger", "nger")
-  registrationFormNames <- c("Operasjon", "Operasjon")
+  #registryKeyNames <- c("nger", "nger")
+  #registrationFormNames <- c("Operasjon", "Operasjon")
   
   for (i in (1:length(registryKeyNames))) {
     if (i == 1) {
