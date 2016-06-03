@@ -31,5 +31,8 @@ RegDelayReport <- function(years, registryKeyNames = "",
     }
   }
   
+  # order data frame by sum days ascending
+  regDelays <- regDelays[order(regDelays$sumDays), ]
+  
   return(regDelays)
 }
