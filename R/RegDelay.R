@@ -16,11 +16,15 @@ RegDelay <- function(years, registryName, registrationFormName) {
   
   # make data frame
   medianDelay <- data.frame(regName = registryName, stringsAsFactors = FALSE)
+  sumDays <- 0
   for (i in years) {
     ind <- which(delayData$year == i)
-    medianDelay[[as.character(i)]] = median(delayData$daysDiff[ind])
+    medianDays <- median(delayData$daysDiff[ind])
+    medianDelay[[as.character(i)]] = medianDays
     medianDelay[[paste0("N", as.character(i))]] = length(ind)
+    sumDays <- sumDays + medianDays
   }
+  medianDelay$sumDays <- sumDays
   
   return(medianDelay)
 }
