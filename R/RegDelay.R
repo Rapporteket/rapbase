@@ -1,6 +1,7 @@
 #' Provide registration delay for OpenQReg quality registries
 #'
-#' Provide registration delay in median number of days grouped by years
+#' Provide registration delay in median number of days (in addition to first
+#' and third quartile, and N) grouped by years
 #'
 #' @param years integer vector with years for results and grouping
 #' @inheritParams RegDelayData
@@ -27,7 +28,8 @@ RegDelay <- function(years, registryName, registrationFormName) {
     medianDelay[[paste0("Q2", as.character(i))]] <- quartiles[3]
     medianDelay[[paste0("Q3", as.character(i))]] <- quartiles[4]
     medianDelay[[paste0("N", as.character(i))]] = length(ind)
-    sumDays <- sumDays + medianDays
+    #sumDays <- sumDays + medianDays
+    sumDays <- sumDays + quartiles[3]
   }
   medianDelay$sumDays <- sumDays
   
