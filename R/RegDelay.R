@@ -19,8 +19,13 @@ RegDelay <- function(years, registryName, registrationFormName) {
   sumDays <- 0
   for (i in years) {
     ind <- which(delayData$year == i)
-    medianDays <- median(delayData$daysDiff[ind])
-    medianDelay[[as.character(i)]] = medianDays
+    #medianDays <- median(delayData$daysDiff[ind])
+    # find quartiles
+    quartiles <- unname(quantile(delayData$daysDiff[ind]))
+    #medianDelay[[as.character(i)]] = medianDays
+    medianDelay[[paste0("Q1", as.character(i))]] <- quartiles[2]
+    medianDelay[[paste0("Q2", as.character(i))]] <- quartiles[3]
+    medianDelay[[paste0("Q3", as.character(i))]] <- quartiles[4]
     medianDelay[[paste0("N", as.character(i))]] = length(ind)
     sumDays <- sumDays + medianDays
   }
