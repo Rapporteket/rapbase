@@ -19,7 +19,8 @@ data frame with registry name, median and number of observations
 for each year
 }
 \description{
-Provide registration delay in median number of days grouped by years
+Provide registration delay in median number of days (in addition to first
+and third quartile, and N) grouped by years
 }
 \seealso{
 Data to this function is provided by \code{\link{RegDelayData}}.

@@ -4,7 +4,7 @@
 \alias{RegDelayReport}
 \title{Make report data on registration delays across OpenQReg registries}
 \usage{
-RegDelayReport(years, registryKeyNames = "", registrationFormNames = "")
+RegDelayReport(years, registryKeyNames, registrationFormNames)
 }
 \arguments{
 \item{years}{Integer Vector of years to group delays}
