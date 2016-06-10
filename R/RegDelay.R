@@ -11,10 +11,15 @@
 #' and \code{\link{RegDelayDataPeculiar}}.
 #' @export
 
-RegDelay <- function(years, registryName, registrationFormName) {
+RegDelay <- function(years, registryName, registrationFormName,
+                     peculiarity = FALSE) {
   
   # get data
-  delayData <- RegDelayData(registryName, registrationFormName)
+  if (peculiarity) {
+    delayData <- RegDelayDataPeculiar(resgistryName)
+  } else {
+    delayData <- RegDelayData(registryName, registrationFormName)
+  }
   
   # make data frame
   medianDelay <- data.frame(regName = registryName, stringsAsFactors = FALSE)

@@ -3,14 +3,17 @@
 #' @param years Integer Vector of years to group delays
 #' @param registryKeyNames String Vector of registry names corresponding to the
 #' key used for within registry packages
-#' @param registrationFormNames String Vector of registrarion form names where
+#' @param registrationFormNames String Vector of registration form names where
 #' dates are to be collected from. Elements must correspond to
 #' \emph{registryKeyNames}
+#' @param peculiarity Logical vector, TRUE for none-OpenQReg registries.
+#' Elements must correspond to \emph{registryKeyNames}
 #' @return regDelays Data frame of median delays
 #' @seealso This function use \code{\link{RegDelay}}
 #' @export
 
-RegDelayReport <- function(years, registryKeyNames, registrationFormNames) {
+RegDelayReport <- function(years, registryKeyNames, registrationFormNames,
+                           peculiarity) {
   
   # these are inputs, but hardcode for now
   #registryKeyNames=c("nger", "Nakke", "norgast","nra","Muskel","noric101619")
@@ -19,14 +22,16 @@ RegDelayReport <- function(years, registryKeyNames, registrationFormNames) {
   for (i in (1:length(registryKeyNames))) {
     if (i == 1) {
       regDelays <- RegDelay(years = years, registryName = registryKeyNames[i],
-                            registrationFormName = registrationFormNames[i])
+                            registrationFormName = registrationFormNames[i],
+                            peculiarity = peculiarity[i])
     }
     else {
       regDelays <- rbind(regDelays,
                          RegDelay(years = years,
                                   registryName = registryKeyNames[i],
                                   registrationFormName = 
-                                    registrationFormNames[i]))
+                                    registrationFormNames[i],
+                                  peculiarity = peculiarity[i]))
     }
   }
   
