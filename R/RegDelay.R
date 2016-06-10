@@ -5,9 +5,10 @@
 #'
 #' @param years integer vector with years for results and grouping
 #' @inheritParams RegDelayData
-#' @return data frame with registry name, median and number of observations
-#' for each year
-#' @seealso Data to this function is provided by \code{\link{RegDelayData}}.
+#' @return data frame with registry name, quartiles 1, 2 and 3 and number of
+#' observations for each year
+#' @seealso Data to this function is provided by \code{\link{RegDelayData}}
+#' and \code{\link{RegDelayDataPeculiar}}.
 #' @export
 
 RegDelay <- function(years, registryName, registrationFormName) {
