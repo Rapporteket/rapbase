@@ -29,7 +29,7 @@ RegDelayData <- function(registryName, registrationFormName) {
   
   dbType <- "mysql"
   
-  # temporary fix discrepancy field name. Shold be fixed at db-level for 'nger'
+  # temporary fix discrepancy field name. Should be fixed at db-level for 'nger'
   registrationFormFieldName <- "Skjemanavn"
   if (registryName == "nger") {
     registrationFormFieldName <- "SkjemaNavn"
