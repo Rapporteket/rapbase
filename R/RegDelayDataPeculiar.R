@@ -6,7 +6,7 @@
 #' @param registryName String Key/name of registry to get data from
 #' @format Return a data frame with two variables:
 #' \describe{
-#' \item{year}{the year for the event
+#' \item{year}{the year for the event}
 #' \item{daysDiff}{the difference in days between event and the last time the
 #' registration form was saved (preferably)}
 #' }
