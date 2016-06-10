@@ -19,7 +19,7 @@ shiny app resides}
 }
 \description{
 runShinyApp start a shiny application residing within an R package. First
-attempt is to keep thin function generic (across packages). It might not
+attempt is to keep this function generic (across packages). It might not
 prove wise and future implementation might be per-package.
 }
 \details{
