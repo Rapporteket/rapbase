@@ -25,7 +25,7 @@ RegDelayDataPeculiar <- function(registryName) {
     query <- "
 SELECT
   YEAR(DateAdmittedIntensive) as year,
-  DATEDIFF(LastUpdated, DateAdmittedIntensive) AS daysDiff
+  DATEDIFF(LastUpdated, DateDischargedIntensive) AS daysDiff
 FROM
   Main"
   } else if (registryName == "Hjerneslag") {
