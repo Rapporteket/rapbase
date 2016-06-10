@@ -42,7 +42,7 @@ FROM
     
     "
   } else {
-    stop("\nThe registry name provided is not valid.\n")
+    stop("\nThe registry name provided is not a valid one.\n")
   }
 
   regDelayData <- rapbase::LoadRegData(registryName, query, dbType)
