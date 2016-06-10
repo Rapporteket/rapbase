@@ -16,7 +16,7 @@ RegDelay <- function(years, registryName, registrationFormName,
   
   # get data
   if (peculiarity) {
-    delayData <- RegDelayDataPeculiar(resgistryName)
+    delayData <- RegDelayDataPeculiar(registryName)
   } else {
     delayData <- RegDelayData(registryName, registrationFormName)
   }
