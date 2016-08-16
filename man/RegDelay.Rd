@@ -4,7 +4,7 @@
 \alias{RegDelay}
 \title{Provide registration delay for OpenQReg quality registries}
 \usage{
-RegDelay(years, registryName, registrationFormName)
+RegDelay(years, registryName, registrationFormName, peculiarity = FALSE)
 }
 \arguments{
 \item{years}{integer vector with years for results and grouping}
@@ -15,13 +15,15 @@ RegDelay(years, registryName, registrationFormName)
 are to be collected from}
 }
 \value{
-data frame with registry name, median and number of observations
-for each year
+data frame with registry name, quartiles 1, 2 and 3 and number of
+observations for each year
 }
 \description{
-Provide registration delay in median number of days grouped by years
+Provide registration delay in median number of days (in addition to first
+and third quartile, and N) grouped by years
 }
 \seealso{
-Data to this function is provided by \code{\link{RegDelayData}}.
+Data to this function is provided by \code{\link{RegDelayData}}
+and \code{\link{RegDelayDataPeculiar}}.
 }
 

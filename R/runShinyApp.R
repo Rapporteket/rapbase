@@ -1,7 +1,7 @@
 #' runShinyApp starts a shiny application in a package
 #' 
 #' runShinyApp start a shiny application residing within an R package. First
-#' attempt is to keep thin function generic (across packages). It might not
+#' attempt is to keep this function generic (across packages). It might not
 #' prove wise and future implementation might be per-package.
 #' 
 #' Idea and code (partly) taken from Dean Attali's
@@ -30,8 +30,7 @@ runShinyApp <- function(appName, appsDirectoryName, packageName) {
       "'")
   
   # if an invalid app is given, throw an error
-  if (missing(appName) || !nzchar(appName) ||
-      !appName %in% validApps) {
+  if (missing(appName) || !nzchar(appName) || !appName %in% validApps) {
     stop(
       'Please run `runShinyApp()` with a valid app name as an argument\n',
       validAppsMsg,
