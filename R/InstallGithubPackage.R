@@ -58,7 +58,8 @@ installGithubPackage <- function(packageName, branchName) {
     res <- tryCatch({
       withr::with_libpaths(new = "/usr/local/lib/R/site-library",
                               devtools::install_github(githubPackage,
-                                                       ref=branchName))
+                                                       ref=branchName,
+                                                       args=c("--clean")))
       
       print(paste(packageName, "installed"))
     }, warning = function(war) {
