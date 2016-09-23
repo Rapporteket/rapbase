@@ -1,0 +1,6 @@
+RegDelayReport
+```{r echo=FALSE, results='asis'}
+knitr::opts_knit$set(root.dir = './')
+df=data.frame(col1=letters[1:6], col2=rep(1, 6))
+knitr::kable(df, format = "markdown")
+```
