@@ -1,6 +1,11 @@
 RegDelayReport
 ```{r echo=FALSE, results='asis'}
 knitr::opts_knit$set(root.dir = './')
-df=data.frame(col1=letters[1:6], col2=rep(1, 6))
+registryKeyNames <- c("nger", "Nakke", "norgast","nra","Muskel","noric101619","nir")
+registrationFormNames <- c("Operasjon","Legeskjema","Registrering","1A Anamnese","Basisregistrering","Start","nada")
+peculiarity=c(rep(FALSE, 6), TRUE)
+years <- c(2014,2015,2016)
+df <- RegDelayReport(years, registrationFormNames, registryKeyNames, peculiarity)
+#df=data.frame(col1=letters[1:6], col2=rep(1, 6))
 knitr::kable(df, format = "markdown")
 ```
