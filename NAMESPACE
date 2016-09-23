@@ -3,6 +3,7 @@
 export(HalloRapporteket)
 export(LoadRegData)
 export(MakeMessage)
+export(PushGist)
 export(RegDelay)
 export(RegDelayData)
 export(RegDelayDataPeculiar)
