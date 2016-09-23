@@ -23,7 +23,7 @@ PushGist <- function(mdFile, gistId = "", PAT = "") {
   
   # for testing, params are:
   # gistId = "58126cca9efd3d373b59bc6c2a6445f1"
-  # PAT = "b63d81fb5c6b7a660914ea66e368ef3d43469cb3"
+  # PAT = cant be listed here since github will revoke the token...
   # authenticate, if need be
   if (PAT != "") {
     tryCatch({
