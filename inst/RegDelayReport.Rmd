@@ -8,7 +8,7 @@ years <- c(2014,2015,2016)
 #registrationFormNames <- c("Start")
 #peculiarity=c(rep(FALSE, 1))
 #years <- c(2014,2015,2016)
-df <- rapbase::RegDelayReport(years, registrationFormNames, registryKeyNames, peculiarity)
+df <- rapbase::RegDelayReport(years, registryKeyNames, registrationFormNames, peculiarity)
 
 # make a subset from df of only median and N
 df <- df[c("regName", "Q22014", "N2014", "Q22015", "N2015", "Q22016", "N2016")]
