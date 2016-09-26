@@ -1,5 +1,5 @@
 RegDelayReport `r Sys.Date()`
-```{r echo=FALSE, results='asis', message=FALSE}
+```{r echo=TRUE, results='asis'}
 # registryKeyNames <- c("nger", "Nakke", "norgast","nra","Muskel","noricStagingNasjonal","nir")
 # registrationFormNames <- c("Operasjon","Legeskjema","Registrering","1A Anamnese","Basisregistrering","Start","nada")
 # peculiarity=c(rep(FALSE, 6), TRUE)
