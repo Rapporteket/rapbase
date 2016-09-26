@@ -1,6 +1,5 @@
 RegDelayReport `r Sys.Date()`
 ```{r echo=FALSE, results='asis', message=FALSE}
-#knitr::opts_knit$set(root.dir = './')
 registryKeyNames <- c("nger", "Nakke", "norgast","nra","Muskel","noricStagingNasjonal","nir")
 registrationFormNames <- c("Operasjon","Legeskjema","Registrering","1A Anamnese","Basisregistrering","Start","nada")
 peculiarity=c(rep(FALSE, 6), TRUE)
