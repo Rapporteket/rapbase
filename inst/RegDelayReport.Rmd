@@ -1,27 +1,28 @@
 RegDelayReport `r Sys.Date()`
 ```{r echo=TRUE, results='asis'}
+# define vars
 registryKeyNames <- c("nger", "Nakke", "norgast","nra","Muskel","noricStagingNasjonal","nir")
 registrationFormNames <- c("Operasjon","Legeskjema","Registrering","1A Anamnese","Basisregistrering","Start","nada")
 peculiarity <- c(rep(FALSE, 6), TRUE)
 years <- c(2014,2015,2016)
-#registryKeyNames <- c("noricStagingNasjonal")
-#registrationFormNames <- c("Start")
-#peculiarity=c(rep(FALSE, 1))
-#years <- c(2014,2015,2016)
+
+# get data
 df <- rapbase::RegDelayReport(years, registryKeyNames, registrationFormNames, peculiarity)
 
 # make a subset from df of only median and N
 df <- df[c("regName", "Q22014", "N2014", "Q22015", "N2015", "Q22016", "N2016")]
 
 # rename registries
-# df["regName"][df["regName"]=="nger"] <- "NGER"
-# df["regName"][df["regName"]=="Nakke"] <- "NKR Nakke"
-# df["regName"][df["regName"]=="norgast"] <- "NoRGast"
-# df["regName"][df["regName"]=="nra"] <- "NRA"
-# df["regName"][df["regName"]=="noricStagingNasjonal"] <- "NORIC"
-# df["regName"][df["regName"]=="nir"] <- "NIR"
+df["regName"][df["regName"]=="nger"] <- "NGER"
+df["regName"][df["regName"]=="Nakke"] <- "NKR Nakke"
+df["regName"][df["regName"]=="norgast"] <- "NoRGast"
+df["regName"][df["regName"]=="nra"] <- "NRA"
+df["regName"][df["regName"]=="noricStagingNasjonal"] <- "NORIC"
+df["regName"][df["regName"]=="nir"] <- "NIR"
 
 # rename column name
 names(df)[names(df)=="regName"] <- "Navn"
+
+# knit neatly
 knitr::kable(df, format = "markdown", row.names = FALSE, digits = 0)
 ```
