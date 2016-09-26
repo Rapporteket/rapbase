@@ -1,4 +1,4 @@
-RegDelayReport `Sys.Date()`
+RegDelayReport `r Sys.Date()`
 ```{r echo=FALSE, results='asis'}
 #knitr::opts_knit$set(root.dir = './')
 registryKeyNames <- c("nger", "Nakke", "norgast","nra","Muskel","noricStagingNasjonal","nir")
