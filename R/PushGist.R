@@ -30,9 +30,9 @@ PushGist <- function(mdFile, gistId = "", PAT = "") {
       Sys.setenv(GITHUB_PAT=PAT)
       gistr::gist_auth()
     }, warning = function(war) {
-      return(war)
+      return(paste("Authentication warning:", war))
     }, error = function(err) {
-      return(err)
+      return(paste("Authentication error:", err))
     })
   }
     
@@ -43,9 +43,9 @@ PushGist <- function(mdFile, gistId = "", PAT = "") {
       g <- gistr::run(mdFile, knitopts = list(quiet=TRUE))
       gistr::gist_create(g, browse=FALSE)
     }, warning = function(war) {
-      return(war)
+      return(paste("Create gist warning:", war))
     }, error = function(err){
-      return(err)
+      return(paste("Create gist error:",err))
     })
   } else {
     tryCatch({
@@ -53,9 +53,9 @@ PushGist <- function(mdFile, gistId = "", PAT = "") {
       g <- gistr::update_files(g, gistr::run(mdFile, knitopts = list(quiet=TRUE)))
       g <- gistr::update(g)
     }, warning = function(war){
-      return(war)
+      return(paste("Update gist warning:",war))
     }, error = function(err) {
-      return(err)
+      return(paste("Update gist error:",err))
     })
   }
   
