@@ -2,13 +2,13 @@ RegDelayReport `r Sys.Date()`
 ```{r echo=TRUE, results='asis'}
 registryKeyNames <- c("nger", "Nakke", "norgast","nra","Muskel","noricStagingNasjonal","nir")
 registrationFormNames <- c("Operasjon","Legeskjema","Registrering","1A Anamnese","Basisregistrering","Start","nada")
-peculiarity=c(rep(FALSE, 6), TRUE)
+peculiarity <- c(rep(FALSE, 6), TRUE)
 years <- c(2014,2015,2016)
 #registryKeyNames <- c("noricStagingNasjonal")
 #registrationFormNames <- c("Start")
 #peculiarity=c(rep(FALSE, 1))
 #years <- c(2014,2015,2016)
-df <- RegDelayReport(years, registrationFormNames, registryKeyNames, peculiarity)
+df <- rapbase::RegDelayReport(years, registrationFormNames, registryKeyNames, peculiarity)
 
 # make a subset from df of only median and N
 df <- df[c("regName", "Q22014", "N2014", "Q22015", "N2015", "Q22016", "N2016")]
