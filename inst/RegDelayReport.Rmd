@@ -23,6 +23,12 @@ df["regName"][df["regName"]=="nir"] <- "NIR"
 # rename column name
 names(df)[names(df)=="regName"] <- "Navn"
 
+# make column headings nicer...
+for (i in years) {
+  txt <- as.character(i)
+  names(df) <- sub(txt, paste0("<sub>", txt, "</sub>"), names(df))
+}
+
 # knit neatly
 knitr::kable(df, format = "markdown", row.names = FALSE, digits = 0)
 ```
