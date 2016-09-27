@@ -1,4 +1,4 @@
-RegDelayReport `r Sys.Date()`
+Table: Median dager fra hendelse til registrering per `r as.character(format(Sys.Date(), format="%e. %B %Y"))`
 ```{r echo=FALSE, results='asis'}
 # define vars
 registryKeyNames <- c("nger", "Nakke", "norgast","nra","Muskel","noricStagingNasjonal","nir")
@@ -23,7 +23,7 @@ df["regName"][df["regName"]=="nir"] <- "NIR"
 # rename column name
 names(df)[names(df)=="regName"] <- "Navn"
 
-# make column headings nicer...
+# make column years subscripts
 for (i in years) {
   txt <- as.character(i)
   names(df) <- sub(txt, paste0("<sub>", txt, "</sub>"), names(df))
