@@ -30,3 +30,5 @@ Imports:
 RoxygenNote: 5.0.1
 Suggests: knitr
 VignetteBuilder: knitr
+URL: http://github.com/Rapporteket/rapbase
+BugReports: http://github.com/Rapporteket/rapbase/issues
