@@ -21,9 +21,6 @@ PushGist <- function(mdFile, gistId = "", PAT = "") {
   Sys.setenv(http_proxy=HTTP_PROXY)
   Sys.setenv(https_proxy=HTTP_PROXY)
   
-  # for testing, params are:
-  # gistId = "58126cca9efd3d373b59bc6c2a6445f1"
-  # PAT = cant be listed here since github will revoke the token...
   # authenticate, if need be
   if (PAT != "") {
     tryCatch({
@@ -36,8 +33,6 @@ PushGist <- function(mdFile, gistId = "", PAT = "") {
     })
   }
     
-  # actual id: gists(id="58126cca9efd3d373b59bc6c2a6445f1")
-  
   if (gistId == "") {
     tryCatch({
       g <- gistr::run(mdFile, knitopts = list(quiet=TRUE))
@@ -58,6 +53,5 @@ PushGist <- function(mdFile, gistId = "", PAT = "") {
       return(paste("Update gist error:",err))
     })
   }
-  
   
 }
