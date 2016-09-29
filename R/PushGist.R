@@ -40,7 +40,7 @@ PushGist <- function(mdFile, gistId = "", PAT = "") {
     }, warning = function(war) {
       return(paste("Create gist warning:", war))
     }, error = function(err){
-      return(paste("Create gist error:",err))
+      return(paste("Create gist error:", err))
     })
   } else {
     tryCatch({
@@ -48,9 +48,9 @@ PushGist <- function(mdFile, gistId = "", PAT = "") {
       g <- gistr::update_files(g, gistr::run(mdFile, knitopts = list(quiet=TRUE)))
       g <- gistr::update(g)
     }, warning = function(war){
-      return(paste("Update gist warning:",war))
+      return(paste("Update gist warning:", war))
     }, error = function(err) {
-      return(paste("Update gist error:",err))
+      return(paste("Update gist error:", err))
     })
   }
   

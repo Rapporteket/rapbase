@@ -12,8 +12,8 @@
 #' @export
 
 
-MakeMessage <- function(story, message, newLine=TRUE, newPara=FALSE,
-                        timeStamp=TRUE) {
+MakeMessage <- function(story, message, newLine = TRUE, newPara = FALSE,
+                        timeStamp = TRUE) {
   
   if (timeStamp) {
     message <- paste(format(Sys.time(), "%F %H:%M:%S"), message)
