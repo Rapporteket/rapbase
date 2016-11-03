@@ -4,15 +4,15 @@
 #' 
 #' @param mdFile String absolute file name and path of source Rmd-file. For
 #' instance provided as a \code{system.file} expression. 
-#' @param gistId String unike id to the gist to be updated. Defaults to an
-#' empty string which means that a gist will be created. If provided the
-#' corresponding gist will be updated
-#' @param PAT String Personal Access Token in case the gist is not public.
-#' Defaults to empty
+#' @param githubUserName String github user name for whom the gist will be
+#' published 
 #' @export
 
 
 PushGist <- function(mdFile, githubUserName = "") {
+  
+  reportName <- strsplit(basename(mdFile), ".", fixed = TRUE)[[1]][1]
+  
   
   # we need some proxy...
   HTTP_PROXY <- "http://www-proxy-rn.helsenord.no:8080"
