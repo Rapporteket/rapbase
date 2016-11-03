@@ -13,15 +13,20 @@ PushGist <- function(mdFile, githubUserName = "") {
   
   reportName <- strsplit(basename(mdFile), ".", fixed = TRUE)[[1]][1]
   
+  # read config
+  conf <- yaml::yaml.load_file(system.file("rapbaseConfig.yml",
+                                           package = "rapbase"))
   
   # we need some proxy...
-  HTTP_PROXY <- "http://www-proxy-rn.helsenord.no:8080"
-  USE_PROXY_URL <- "172.29.3.232"
-  USE_PROXY_PORT <- "8080"
+  pConf <- conf$network$proxy
+  HTTP_PROXY <- pConf$http
+  USE_PROXY_URL <- pConf$ip
+  USE_PROXY_PORT <- pConf$port
   Sys.setenv(http_proxy=HTTP_PROXY)
   Sys.setenv(https_proxy=HTTP_PROXY)
   
   # authenticate, if need be
+  PAT <- conf$github$PAT[githubUserName]
   if (PAT != "") {
     tryCatch({
       Sys.setenv(GITHUB_PAT=PAT)
@@ -32,7 +37,8 @@ PushGist <- function(mdFile, githubUserName = "") {
       return(paste("Authentication error:", err))
     })
   }
-    
+  
+  gistId <- conf$github$gist[reportName]  
   if (gistId == "") {
     tryCatch({
       g <- gistr::run(mdFile, knitopts = list(quiet=TRUE))
