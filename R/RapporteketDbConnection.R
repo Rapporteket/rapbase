@@ -16,19 +16,19 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
   conf <- yaml::yaml.load_file(system.file("dbConfig.yml", package = "rapbase"))
   conf <- conf[[registryName]]
   if (dbType == "mysql") {
-    drv <- DBI::dbDriver("MySQL")
+    drv <- RMySQL::MySQL()
     con <- DBI::dbConnect(drv,
-                     dbname = conf$name,
-                     host = conf$host,
-                     user = conf$user,
-                     password = conf$pass)
+                          dbname = conf$name,
+                          host = conf$host,
+                          user = conf$user,
+                          password = conf$pass)
     # ensure utf8 encoding
     tmp <- DBI::dbGetQuery(con, "SET NAMES utf8;")
   }
   else if (dbType == "mssql") {
     
     drv <- RJDBC::JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver",
-                system.file("sqljdbc4.jar", package = "rapbase"))
+                       system.file("sqljdbc4.jar", package = "rapbase"))
     dbUrl <- paste("jdbc:sqlserver://", conf$host, ":", conf$port,
                    ";databaseName=", conf$nkr$name,
                    ";instance=", conf$nkr$inst, ";charset=UTF-8", sep="")
