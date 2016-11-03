@@ -4,18 +4,14 @@
 \alias{PushGist}
 \title{Push some markdown to gist}
 \usage{
-PushGist(mdFile, gistId = "", PAT = "")
+PushGist(mdFile, githubUserName = "")
 }
 \arguments{
 \item{mdFile}{String absolute file name and path of source Rmd-file. For
 instance provided as a \code{system.file} expression.}
 
-\item{gistId}{String unike id to the gist to be updated. Defaults to an
-empty string which means that a gist will be created. If provided the
-corresponding gist will be updated}
-
-\item{PAT}{String Personal Access Token in case the gist is not public.
-Defaults to empty}
+\item{githubUserName}{String github user name for whom the gist will be
+published}
 }
 \description{
 Based on Rmd documents, push the resulting md to defined gist
