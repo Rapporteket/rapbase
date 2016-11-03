@@ -38,7 +38,7 @@ PushGist <- function(mdFile, githubUserName = "") {
     })
   }
   
-  gistId <- conf$github$gist[reportName]  
+  gistId <- conf$github$gistId[reportName]  
   if (gistId == "") {
     tryCatch({
       g <- gistr::run(mdFile, knitopts = list(quiet=TRUE))
