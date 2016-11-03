@@ -12,7 +12,7 @@
 #' @export
 
 
-PushGist <- function(mdFile, gistId = "", PAT = "") {
+PushGist <- function(mdFile, githubUserName = "") {
   
   # we need some proxy...
   HTTP_PROXY <- "http://www-proxy-rn.helsenord.no:8080"
