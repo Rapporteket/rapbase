@@ -39,7 +39,6 @@ PushGist <- function(mdFile, githubUserName = "") {
   }
   
   gistId <- as.character(conf$github$gistId[reportName])
-  print(paste("gistId: -class:", class(gistId), "value:", gistId))
   if (gistId == "") {
     tryCatch({
       g <- gistr::run(mdFile, knitopts = list(quiet=TRUE))
@@ -51,9 +50,7 @@ PushGist <- function(mdFile, githubUserName = "") {
     })
   } else {
     tryCatch({
-      print(paste("gistId:", gistId, "\n"))
       g <- gistr::gist(id = gistId)
-      print(paste("gist object:", g))
       g <- gistr::update_files(g, gistr::run(mdFile, knitopts = list(quiet=TRUE)))
       g <- gistr::update(g)
     }, warning = function(war){
