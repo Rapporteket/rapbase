@@ -52,6 +52,7 @@ PushGist <- function(mdFile, githubUserName = "") {
     tryCatch({
       print(paste("gistId:", gistId, "\n"))
       g <- gistr::gist(id = gistId)
+      print(paste("gist object:", g))
       g <- gistr::update_files(g, gistr::run(mdFile, knitopts = list(quiet=TRUE)))
       g <- gistr::update(g)
     }, warning = function(war){
