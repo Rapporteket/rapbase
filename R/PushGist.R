@@ -38,7 +38,7 @@ PushGist <- function(mdFile, githubUserName = "") {
     })
   }
   
-  gistId <- conf$github$gistId[reportName]
+  gistId <- as.character(conf$github$gistId[reportName])
   print(paste("gistId: -class:", class(gistId), "value:", gistId))
   if (gistId == "") {
     tryCatch({
