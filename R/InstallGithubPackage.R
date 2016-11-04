@@ -13,6 +13,9 @@ installGithubPackage <- function(packageName, branchName) {
   message <- ""
   message <- MakeMessage(message, "Initiating 'InstallGithubPackage'")
   
+  conf <- yaml::yaml.load_file(system.file("rapbaseConfig.yml",
+                                           package = "rapbase"))
+  
   HTTP_PROXY <- "http://www-proxy-rn.helsenord.no:8080"
   USE_PROXY_URL <- "172.29.3.232"
   USE_PROXY_PORT <- "8080"
