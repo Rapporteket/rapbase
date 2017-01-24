@@ -12,7 +12,15 @@
 LoadRegData <- function(registryName, query, dbType = "mysql") {
   
   dbList <- rapOpenDbConnection(registryName, dbType)
-  RegData <- DBI::dbGetQuery(dbList$con, query)
+  if (registryName == "nkr"){
+    # ugly hack to get past 'out of heap mem' for nkr
+    res <- DBI::dbSendQuery(dbList$con, query)
+    RegData <- DBI::dbFetch(res, n = 20000)
+    RegData <- rbind(RegData, DBI::dbFetch(res, n = -1))
+    tmp <- DBI::dbClearResult(res)
+  } else {
+    RegData <- DBI::dbGetQuery(dbList$con, query)
+  }
   rapCloseDbConnection(dbList$con)
   dbList <- NULL
   
