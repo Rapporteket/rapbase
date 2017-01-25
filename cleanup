@@ -3,8 +3,14 @@
 # Make sure local config is made available in package rapbase when installed
 # at Rapporteket
 
+CONFIGFILE="/opt/jasper/r/rapbaseConfig.yml"
 DBCONFIGFILE="/opt/jasper/r/dbConfig.yml"
 LIBPATH="/usr/local/lib/R/site-library/rapbase/"
+
+if [ -f $CONFIGFILE ] && [ -d $LIBPATH ];
+  then
+    cp $CONFIGFILE $LIBPATH
+fi
 
 if [ -f $DBCONFIGFILE ] && [ -d $LIBPATH ];
   then

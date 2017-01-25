@@ -13,30 +13,36 @@ installGithubPackage <- function(packageName, branchName) {
   message <- ""
   message <- MakeMessage(message, "Initiating 'InstallGithubPackage'")
   
-  HTTP_PROXY <- "http://www-proxy-rn.helsenord.no:8080"
-  USE_PROXY_URL <- "172.29.3.232"
-  USE_PROXY_PORT <- "8080"
-  GITHUB_ORGANIZATION <- "Rapporteket"
+  message <- MakeMessage(message, "Reading configuration")
+  conf <- yaml::yaml.load_file(system.file("rapbaseConfig.yml",
+                                           package = "rapbase"))
   
-  githubPackage <- paste0(GITHUB_ORGANIZATION, "/", packageName)
-  githubRapbase <- paste0(GITHUB_ORGANIZATION, "/rapbase")
+  pConf <- conf$network$proxy
+  HTTP_PROXY <- pConf$http
+  PROXY_IP <- pConf$ip
+  PROXY_PORT <- pConf$port
   
   message <- MakeMessage(message, "Setting network proxies")
   Sys.setenv(http_proxy=HTTP_PROXY)
   Sys.setenv(https_proxy=HTTP_PROXY)
+  httr::set_config(httr::use_proxy(url=PROXY_IP,
+                                   port=as.numeric(PROXY_PORT)))
   
-  httr::set_config(httr::use_proxy(url=USE_PROXY_URL,
-                                   port=as.numeric(USE_PROXY_PORT)))
-
   message <- MakeMessage(message, "Set 'libcurl' as download method")
   options(download.file.method="libcurl")
   
+  GITHUB_ORGANIZATION <- conf$github$organization
+  githubPackage <- paste0(GITHUB_ORGANIZATION, "/", packageName)
+  githubRapbase <- paste0(GITHUB_ORGANIZATION, "/rapbase")
+  
+  
+  libpath <- as.character(conf$r$libpath)
   if (packageName == "rapbase") {
     message <- MakeMessage(message,
                            paste0("Intalling '", githubRapbase,
                                   "' from branch '", branchName, "'"))
     res <- tryCatch({
-      withr::with_libpaths(new = "/usr/local/lib/R/site-library",
+      withr::with_libpaths(new = libpath,
                            devtools::install_github(githubRapbase,
                                                     ref=branchName,
                                                     force=TRUE,
@@ -56,7 +62,7 @@ installGithubPackage <- function(packageName, branchName) {
     message <- MakeMessage(message, paste0("Installing '", packageName,
                                            "' from branch '", branchName, "'"))
     res <- tryCatch({
-      withr::with_libpaths(new = "/usr/local/lib/R/site-library",
+      withr::with_libpaths(new = libpath,
                               devtools::install_github(githubPackage,
                                                        ref=branchName,
                                                        args=c("--clean")))

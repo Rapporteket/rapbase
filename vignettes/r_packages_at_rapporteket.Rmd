@@ -92,9 +92,16 @@ set_config(use_proxy(url="172.29.3.232", port=8080))
 ```
 
 The actual installation can then be performed using the _devtools_ package,
-_e.g._:
+the following being relevant for a TEST or QA environment:
 
 
 ```r
 devtools::install_github("Rapporteket/rapbase", ref = "rel", args = c("--clean"))
+```
+
+For a PRODUCTION environment the following should be used:
+
+
+```r
+devtools::install_github("Rapporteket/rapbase", ref = "master", args = c("--clean"))
 ```

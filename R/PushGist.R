@@ -4,24 +4,29 @@
 #' 
 #' @param mdFile String absolute file name and path of source Rmd-file. For
 #' instance provided as a \code{system.file} expression. 
-#' @param gistId String unike id to the gist to be updated. Defaults to an
-#' empty string which means that a gist will be created. If provided the
-#' corresponding gist will be updated
-#' @param PAT String Personal Access Token in case the gist is not public.
-#' Defaults to empty
+#' @param githubUserName String github user name for whom the gist will be
+#' published 
 #' @export
 
 
-PushGist <- function(mdFile, gistId = "", PAT = "") {
+PushGist <- function(mdFile, githubUserName = "") {
+  
+  reportName <- strsplit(basename(mdFile), ".", fixed = TRUE)[[1]][1]
+  
+  # read config
+  conf <- yaml::yaml.load_file(system.file("rapbaseConfig.yml",
+                                           package = "rapbase"))
   
   # we need some proxy...
-  HTTP_PROXY <- "http://www-proxy-rn.helsenord.no:8080"
-  USE_PROXY_URL <- "172.29.3.232"
-  USE_PROXY_PORT <- "8080"
+  pConf <- conf$network$proxy
+  HTTP_PROXY <- pConf$http
+  USE_PROXY_URL <- pConf$ip
+  USE_PROXY_PORT <- pConf$port
   Sys.setenv(http_proxy=HTTP_PROXY)
   Sys.setenv(https_proxy=HTTP_PROXY)
   
   # authenticate, if need be
+  PAT <- conf$github$PAT[githubUserName]
   if (PAT != "") {
     tryCatch({
       Sys.setenv(GITHUB_PAT=PAT)
@@ -32,7 +37,8 @@ PushGist <- function(mdFile, gistId = "", PAT = "") {
       return(paste("Authentication error:", err))
     })
   }
-    
+  
+  gistId <- as.character(conf$github$gistId[reportName])
   if (gistId == "") {
     tryCatch({
       g <- gistr::run(mdFile, knitopts = list(quiet=TRUE))
