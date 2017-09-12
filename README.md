@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/Rapporteket/rapbase.png)](https://travis-ci.org/Rapporteket/rapbase)
+[![codecov.io](https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=rel)](https://codecov.io/github/Rapporteket/rapbase?branch=rel)
 
 # Install
 The current package can be fetched directly from your R session. If not already
