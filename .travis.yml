@@ -4,3 +4,5 @@ cache: packages
 branches:
   only:
     - rel
+    
+warnings_are_errors: false
