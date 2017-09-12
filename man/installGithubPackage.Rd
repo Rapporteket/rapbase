@@ -12,7 +12,7 @@ installGithubPackage(packageName, branchName)
 \item{branchName}{String Name of the branch to use}
 }
 \value{
-message String containing logged entries from the function
+story String containing logged entries from the function
 }
 \description{
 Install and report results
