@@ -7,8 +7,6 @@
 
 HalloRapporteket <- function() {
   
-  message <- "Hallaisen Rapporteket"
-  
-  return(message)
+  message("Hallaisen Rapporteket")
   
 }
