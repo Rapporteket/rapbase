@@ -18,6 +18,7 @@ Depends:
 Imports:
     Cairo,
     DBI,
+    devtools,
     gistr,
     httr,
     knitr,
@@ -27,7 +28,8 @@ Imports:
     yaml,
     withr
 Remotes:
-    hadley/testthat
+    hadley/testthat,
+    hadley/devtools
 RoxygenNote: 5.0.1
 VignetteBuilder: knitr
 URL: http://github.com/Rapporteket/rapbase
