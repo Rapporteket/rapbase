@@ -5,15 +5,15 @@
 #' @param packageName String Name of the package
 #' @param branchName String Name of the branch to use
 #' 
-#' @return message String containing logged entries from the function
+#' @return story String containing logged entries from the function
 #' @export
 
 installGithubPackage <- function(packageName, branchName) {
   
-  message <- ""
-  message <- MakeMessage(message, "Initiating 'InstallGithubPackage'")
+  story <- ""
+  story <- Makestory(story, "Initiating 'InstallGithubPackage'")
   
-  message <- MakeMessage(message, "Reading configuration")
+  story <- Makestory(story, "Reading configuration")
   conf <- yaml::yaml.load_file(system.file("rapbaseConfig.yml",
                                            package = "rapbase"))
   
@@ -22,13 +22,13 @@ installGithubPackage <- function(packageName, branchName) {
   PROXY_IP <- pConf$ip
   PROXY_PORT <- pConf$port
   
-  message <- MakeMessage(message, "Setting network proxies")
+  story <- Makestory(story, "Setting network proxies")
   Sys.setenv(http_proxy=HTTP_PROXY)
   Sys.setenv(https_proxy=HTTP_PROXY)
   httr::set_config(httr::use_proxy(url=PROXY_IP,
                                    port=as.numeric(PROXY_PORT)))
   
-  message <- MakeMessage(message, "Set 'libcurl' as download method")
+  story <- Makestory(story, "Set 'libcurl' as download method")
   options(download.file.method="libcurl")
   
   GITHUB_ORGANIZATION <- conf$github$organization
@@ -38,7 +38,7 @@ installGithubPackage <- function(packageName, branchName) {
   
   libpath <- as.character(conf$r$libpath)
   if (packageName == "rapbase") {
-    message <- MakeMessage(message,
+    story <- Makestory(story,
                            paste0("Intalling '", githubRapbase,
                                   "' from branch '", branchName, "'"))
     res <- tryCatch({
@@ -54,12 +54,12 @@ installGithubPackage <- function(packageName, branchName) {
       return(err)
     })
     
-    message <- MakeMessage(message, res)
-    message <- MakeMessage(message, "Done with 'rapbase'")
+    story <- Makestory(story, res)
+    story <- Makestory(story, "Done with 'rapbase'")
   }
   
   if (packageName != "rapbase") {
-    message <- MakeMessage(message, paste0("Installing '", packageName,
+    story <- Makestory(story, paste0("Installing '", packageName,
                                            "' from branch '", branchName, "'"))
     res <- tryCatch({
       withr::with_libpaths(new = libpath,
@@ -74,13 +74,13 @@ installGithubPackage <- function(packageName, branchName) {
       return(err)
     })
     
-    message <- MakeMessage(message, res)
+    story <- Makestory(story, res)
   }
   else {
-    message <- MakeMessage(message, "No additional packages to install")
+    story <- Makestory(story, "No additional packages to install")
   }
   
-  message <- MakeMessage(message, "Done")
+  story <- Makestory(story, "Done")
   
-  return(message)
+  return(story)
 }
