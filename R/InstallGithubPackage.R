@@ -17,6 +17,10 @@ installGithubPackage <- function(packageName, branchName) {
   conf <- getConfig(fileName = "rapbaseConfig.yml", packageName = "rapbase")
   
   pConf <- conf$network$proxy
+  if (is.null(pConf)) {
+    story <- MakeMessage(story, "No proxy info in config. Stopping.")
+    stop(story)
+  }
   HTTP_PROXY <- pConf$http
   PROXY_IP <- pConf$ip
   PROXY_PORT <- pConf$port
