@@ -1,4 +1,4 @@
-context("Prompting")
+context("Generate messages")
 
 test_that("Function return one element atomic char vector", {
   story <- "Whole story so far."
