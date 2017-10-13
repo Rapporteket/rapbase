@@ -21,6 +21,7 @@ getConfig <- function(fileName = "dbConfig.yml", packageName = "rapbase") {
     stopifnot(file.exists(system.file(fileName, package = packageName)))
     config_file <- system.file(fileName, package = packageName)
   } else {
+    cat("Config read as defined by R_RAP_CONFIG_PATH\n")
     stopifnot(file.exists(file.path(path, fileName)))
     config_file <- file.path(path, fileName)
   }
