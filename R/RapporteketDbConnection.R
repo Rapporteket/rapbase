@@ -13,7 +13,7 @@
 
 rapOpenDbConnection <- function(registryName, dbType = "mysql") {
   
-  conf <- yaml::yaml.load_file(system.file("dbConfig.yml", package = "rapbase"))
+  conf <- getConfig()
   conf <- conf[[registryName]]
   if (dbType == "mysql") {
     drv <- RMySQL::MySQL()
