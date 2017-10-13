@@ -15,10 +15,15 @@ test_that("Configuration can be read from environment var", {
   Sys.setenv(R_RAP_CONFIG_PATH = "~")
   writeLines(yaml::as.yaml(sample_config), file.path("~", sample_config_file))
   expect_output(str(getConfig(fileName = sample_config_file)), "List of")
+  # clean-up
+  file.remove(file.path("~", "test.yml"))
+  Sys.unsetenv("R_RAP_CONFIG_PATH")
 })
 
 test_that("Error is provided of configuration is nor present in file system", {
   sample_config_file = "iDoNotExist.yml"
   Sys.setenv(R_RAP_CONFIG_PATH = "~")
   expect_error(getConfig(fileName = sample_config_file))
+  # clean-up
+  Sys.unsetenv("R_RAP_CONFIG_PATH")
 })
