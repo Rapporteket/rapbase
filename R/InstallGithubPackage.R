@@ -14,8 +14,7 @@ installGithubPackage <- function(packageName, branchName) {
   story <- MakeMessage(story, "Initiating 'InstallGithubPackage'")
   
   story <- MakeMessage(story, "Reading configuration")
-  conf <- yaml::yaml.load_file(system.file("rapbaseConfig.yml",
-                                           package = "rapbase"))
+  conf <- getConfig(fileName = "rapbaseConfig.yml", packageName = "rapbase")
   
   pConf <- conf$network$proxy
   HTTP_PROXY <- pConf$http
