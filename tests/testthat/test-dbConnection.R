@@ -15,7 +15,7 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
 })
 
 test_that("Data can be queried from (MySQL) db", {
-  query <- "SELECT * FROM RapbaseTestTable"
+  query <- "SELECT * FROM testTable"
   expect_output(str(LoadRegData("rapbase", query, dbType = "mysql")),
                 "data.frame")
 })

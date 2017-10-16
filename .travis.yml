@@ -17,4 +17,4 @@ services:
   - mysql
   
 before_install:
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS rapbase; USE rapbase; CREATE TABLE testTable (id int, someText varchar(50), someInt int, someFloat decimal, someTime datetime);'
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS rapbase; USE rapbase; CREATE TABLE testTable (id INT, someText VARCHAR(50), someInt INT, someFloat DOUBLE, someTime DATETIME);'
