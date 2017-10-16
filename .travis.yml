@@ -12,3 +12,9 @@ r_github_packages:
 
 after_success:
   - Rscript -e 'covr::codecov()'
+  
+services:
+  - mysql
+  
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS rapbase; USE rapbase; CREATE TABLE testTable (id int, someText varchar(50), someInt int, someFloat decimal, someTime datetime);'
