@@ -28,7 +28,7 @@ installGithubPackage <- function(packageName, branchName) {
   story <- MakeMessage(story, "Setting network proxies")
   Sys.setenv(http_proxy=HTTP_PROXY)
   Sys.setenv(https_proxy=HTTP_PROXY)
-  httr::set_config(httr::use_proxy(url=PROXY_IP,
+  httr::set_config(httr::use_proxy(url=HTTP_PROXY,
                                    port=as.numeric(PROXY_PORT)))
   
   story <- MakeMessage(story, "Set 'libcurl' as download method")
