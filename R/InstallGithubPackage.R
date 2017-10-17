@@ -16,27 +16,22 @@ installGithubPackage <- function(packageName, branchName) {
   story <- MakeMessage(story, "Reading configuration")
   conf <- getConfig(fileName = "rapbaseConfig.yml", packageName = "rapbase")
   
-  pConf <- conf$network$proxy
-  if (is.null(pConf)) {
+  if (is.null(conf$network$proxy)) {
     story <- MakeMessage(story, "No proxy info in config. Stopping.")
     stop(story)
   }
-  HTTP_PROXY <- pConf$http
-  PROXY_IP <- pConf$ip
-  PROXY_PORT <- pConf$port
   
   story <- MakeMessage(story, "Setting network proxies")
-  Sys.setenv(http_proxy=HTTP_PROXY)
-  Sys.setenv(https_proxy=HTTP_PROXY)
-  httr::set_config(httr::use_proxy(url=HTTP_PROXY,
-                                   port=as.numeric(PROXY_PORT)))
+  Sys.setenv(http_proxy=conf$network$proxy$http)
+  Sys.setenv(https_proxy=conf$network$proxy$http)
+  httr::set_config(httr::use_proxy(url=conf$network$proxy$http,
+                                   port=as.numeric(conf$network$proxy$port)))
   
   story <- MakeMessage(story, "Set 'libcurl' as download method")
   options(download.file.method="libcurl")
   
-  GITHUB_ORGANIZATION <- conf$github$organization
-  githubPackage <- paste0(GITHUB_ORGANIZATION, "/", packageName)
-  githubRapbase <- paste0(GITHUB_ORGANIZATION, "/rapbase")
+  githubPackage <- paste0(conf$github$organization, "/", packageName)
+  githubRapbase <- paste0(conf$github$organization, "/rapbase")
   
   
   libpath <- as.character(conf$r$libpath)
