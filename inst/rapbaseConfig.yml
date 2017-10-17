@@ -7,7 +7,8 @@
 r :
 
   # dummy library path
-  libpath : /usr/local/lib/R/site-library
+  libpath : !expr Sys.getenv("R_LIBS_SITE")
+  # libpath : /usr/local/lib/R/site-library
 
 
 ## Network stuff
@@ -15,16 +16,18 @@ network :
 
 # dummy proxy server
   proxy :
-    http : http://dummy_proxy_hostname.no
-    port : 8080
-    ip : 192.168.0.100
+    http :
+    # http : http://dummy_proxy_hostname.no
+    port :
+    # port : 8080
+    # ip : 192.168.0.100
 
 
 ## Github stuff
 github :
 
-  # dummy github organization
-  organization : dummyOrganization
+  # github organization
+  organization : Rapporteket
   
   # dummy gist
   gistId :
