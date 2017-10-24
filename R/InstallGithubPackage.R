@@ -40,11 +40,10 @@ installGithubPackage <- function(packageName, branchName) {
                            paste0("Intalling '", githubRapbase,
                                   "' from branch '", branchName, "'"))
     res <- tryCatch({
-      withr::with_libpaths(new = libpath,
-                           devtools::install_github(githubRapbase,
-                                                    ref=branchName,
-                                                    force=TRUE,
-                                                    args=c("--clean")))
+      devtools::install_github(githubRapbase, ref=branchName,
+                               args=c("--clean",
+                                      paste0("--library=", libpath)))
+      
       print("'rapbase' installed")
     }, warning = function(war) {
       return(war)
