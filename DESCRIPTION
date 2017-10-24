@@ -25,8 +25,7 @@ Imports:
     RJDBC,
     RMySQL,
     shiny,
-    yaml,
-    withr
+    yaml
 Remotes:
     hadley/testthat,
     hadley/devtools
