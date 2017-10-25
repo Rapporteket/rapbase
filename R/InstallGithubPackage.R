@@ -59,10 +59,9 @@ installGithubPackage <- function(packageName, branchName) {
     story <- MakeMessage(story, paste0("Installing '", packageName,
                                            "' from branch '", branchName, "'"))
     res <- tryCatch({
-      withr::with_libpaths(new = libpath,
-                              devtools::install_github(githubPackage,
-                                                       ref=branchName,
-                                                       args=c("--clean")))
+      devtools::install_github(githubPackage, ref=branchName,
+                               args=c("--clean",
+                                      paste0("--library=", libpath)))
       
       print(paste(packageName, "installed"))
     }, warning = function(war) {
