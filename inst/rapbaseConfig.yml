@@ -7,7 +7,7 @@
 r :
 
   # dummy library path
-  libpath : !expr ""
+  libpath : !expr character(0)
   # libpath : !expr Sys.getenv("R_LIBS_USER")
   # libpath : /usr/local/lib/R/site-library
 
