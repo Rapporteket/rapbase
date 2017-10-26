@@ -4,20 +4,23 @@ test_that("How does code coverage work...", {
   expect_error(installGithubPackage())
 })
 
-test_tnat("Error is provided when no config present", {
-  expect_error(installGithubPackage("norummy", "rel", TRUE))
+test_that("Error is provided when no config present", {
+  expect_error(installGithubPackage("norummy", "rel", FALSE))
 })
 
-test_that("Error is provided when none existing branch in 'rapbase'", {
-  expect_error(installGithubPackage("rapbase", "noneExistingBranch"))
+test_that("Not found (404) printed when none existing branch in 'rapbase'", {
+  expect_output(print(installGithubPackage("rapbase", "noneExistingBranch")),
+                "HTTP 404")
 })
 
-test_that("Error provided when none existing branch for existing package", {
-  expect_error(installGithubPackage("nordummy", "noneExistingBranch"))
+test_that("Not found (404) when none existing branch for existing package", {
+  expect_output(print(installGithubPackage("nordummy", "noneExistingBranch")),
+                "HTTP 404")
 })
 
-test_that("Error provided wheb noen existing package", {
-  expect_error(installGithubPackage("noneExistingPackage", "rel"))
+test_that("Not found (404) when none existing package", {
+  expect_output(print(installGithubPackage("noneExistingPackage", "rel")),
+                "HTTP 404")
 })
 
 test_that("Test package 'nordummy' can be installed from github", {
