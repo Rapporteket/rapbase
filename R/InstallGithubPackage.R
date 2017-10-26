@@ -48,7 +48,7 @@ installGithubPackage <- function(packageName, branchName, noConfig=FALSE) {
       
       print("'rapbase' installed")
     }, warning = function(war) {
-      return(war)
+      return(war) # nocov
     }, error = function(err) {
       return(err)
     })
@@ -67,7 +67,7 @@ installGithubPackage <- function(packageName, branchName, noConfig=FALSE) {
       
       print(paste(packageName, "installed"))
     }, warning = function(war) {
-      return(war)
+      return(war) #nocov
     }, error = function(err) {
       return(err)
     })
