@@ -4,22 +4,29 @@
 #' 
 #' @param packageName String Name of the package
 #' @param branchName String Name of the branch to use
-#' @param noConfig Set to TRUE to prevent function from reading configuration.
-#'  Set FALSE by default. Mainly used for testing purposes.
+#' @param readConfig Set to TRUE to prevent function from reading
+#' configuration. Set TRUE by default. Mainly used for testing purposes.
 #' 
 #' @return story String containing logged entries from the function
 #' @export
 
-installGithubPackage <- function(packageName, branchName, noConfig=FALSE) {
+installGithubPackage <- function(packageName, branchName, readConfig=TRUE) {
   
   story <- ""
   story <- MakeMessage(story, "Initiating 'InstallGithubPackage'")
   
   story <- MakeMessage(story, "Reading configuration")
-  conf <- getConfig(fileName = "rapbaseConfig.yml", packageName = "rapbase")
   
-  if (!exists("conf$network$proxy")) {
-    story <- MakeMessage(story, "No proxy info in config. Stopping.")
+  if (readConfig) {
+    conf <- getConfig(fileName = "rapbaseConfig.yml", packageName = "rapbase")
+  } else {
+    conf <- list(network=list(notAProxy="test"))
+  }
+  
+  if (is.null(conf$network[["proxy"]])) {
+    story <- MakeMessage(story, "Proxy not defined in config. If your system
+                         does not use one please provide it as an empty string.
+                         Stopping.")
     stop(story)
   }
   
