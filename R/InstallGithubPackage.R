@@ -4,11 +4,13 @@
 #' 
 #' @param packageName String Name of the package
 #' @param branchName String Name of the branch to use
+#' @param noConfig Set to TRUE to prevent function from reading configuration.
+#'  Set FALSE by default. Mainly used for testing purposes.
 #' 
 #' @return story String containing logged entries from the function
 #' @export
 
-installGithubPackage <- function(packageName, branchName) {
+installGithubPackage <- function(packageName, branchName, noConfig=FALSE) {
   
   story <- ""
   story <- MakeMessage(story, "Initiating 'InstallGithubPackage'")
