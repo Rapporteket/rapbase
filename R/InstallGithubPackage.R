@@ -16,7 +16,7 @@ installGithubPackage <- function(packageName, branchName) {
   story <- MakeMessage(story, "Reading configuration")
   conf <- getConfig(fileName = "rapbaseConfig.yml", packageName = "rapbase")
   
-  if (is.null(conf$network$proxy)) {
+  if (!exists("conf$network$proxy")) {
     story <- MakeMessage(story, "No proxy info in config. Stopping.")
     stop(story)
   }
