@@ -24,7 +24,7 @@ test_that("Not found (404) when none existing package", {
 })
 
 test_that("Test package 'nordummy' can be installed from github", {
-  expect_message(installGithubPackage("nordumm", "rel"))
+  expect_message(installGithubPackage("nordummy", "rel"))
 })
 
 test_that("'rapbase' can be instlled from github", {
