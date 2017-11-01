@@ -44,6 +44,7 @@ installGithubPackage <- function(packageName, branchName, readConfig=TRUE) {
   
   
   libpath <- as.character(conf$r$libpath)
+  success <- paste0("'", packageName, "' installed")
   if (packageName == "rapbase") {
     story <- MakeMessage(story,
                            paste0("Intalling '", githubRapbase,
@@ -53,7 +54,7 @@ installGithubPackage <- function(packageName, branchName, readConfig=TRUE) {
                                args=c("--clean",
                                       paste0("--library=", libpath)))
       
-      print("'rapbase' installed")
+      success
     }, warning = function(war) {
       return(war) # nocov
     }, error = function(err) {
@@ -72,7 +73,7 @@ installGithubPackage <- function(packageName, branchName, readConfig=TRUE) {
                                args=c("--clean",
                                       paste0("--library=", libpath)))
       
-      print(paste(packageName, "installed"))
+      success
     }, warning = function(war) {
       return(war) #nocov
     }, error = function(err) {
