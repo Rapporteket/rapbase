@@ -5,8 +5,9 @@
 #' @return message A test message
 #' @export
 
-HalloRapporteket <- function() {
+HalloRapporteket <- function() { # nocov start
   
-  message("Hallaisen Rapporteket")
-  
+  testMessage <- "Hallaisen Rapporteket"
+  message(testMessage)
+  # nocov end
 }

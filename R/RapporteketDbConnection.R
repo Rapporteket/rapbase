@@ -30,7 +30,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
     # ensure utf8 encoding
     tmp <- DBI::dbGetQuery(con, "SET NAMES utf8;")
   }
-  else if (dbType == "mssql") {
+  else if (dbType == "mssql") { # nocov start
     
     drv <- RJDBC::JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver",
                        system.file("sqljdbc4.jar", package = "rapbase"))
@@ -38,7 +38,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
                    ";databaseName=", conf$nkr$name,
                    ";instance=", conf$nkr$inst, ";charset=UTF-8", sep="")
     con <- DBI::dbConnect(drv, dbUrl, user = conf$user, password = conf$pass)
-  }
+  } # nocov end
   
   list(con = con, drv = drv)
 }
