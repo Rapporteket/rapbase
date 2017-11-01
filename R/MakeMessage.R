@@ -28,5 +28,5 @@ MakeMessage <- function(story, message, newLine = TRUE, newPara = FALSE,
   }
   
   story <- paste(story, message)
-  
+  story
 }
