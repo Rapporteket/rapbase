@@ -4,12 +4,15 @@
 \alias{installGithubPackage}
 \title{Install packages from GitHub at Rapporteket}
 \usage{
-installGithubPackage(packageName, branchName)
+installGithubPackage(packageName, branchName, readConfig = TRUE)
 }
 \arguments{
 \item{packageName}{String Name of the package}
 
 \item{branchName}{String Name of the branch to use}
+
+\item{readConfig}{Set to FALSE to prevent function from reading
+configuration. Set TRUE by default. Mainly used for testing purposes.}
 }
 \value{
 story String containing logged entries from the function
