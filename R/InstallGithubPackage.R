@@ -4,7 +4,7 @@
 #' 
 #' @param packageName String Name of the package
 #' @param branchName String Name of the branch to use
-#' @param readConfig Set to TRUE to prevent function from reading
+#' @param readConfig Set to FALSE to prevent function from reading
 #' configuration. Set TRUE by default. Mainly used for testing purposes.
 #' 
 #' @return story String containing logged entries from the function
