@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base functions and resources for Rapporteket
-Version: 1.5.1
+Version: 1.6.0
 Date: 2017-01-25
 Authors@R: c(person("Edvardsen", "Are", email = "are.edvardsen@helse-
     nord.no", role = c("cre", "aut")), person("Thon", "Kevin", email =
