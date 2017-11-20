@@ -105,3 +105,17 @@ For a PRODUCTION environment the following should be used:
 ```r
 devtools::install_github("Rapporteket/rapbase", ref = "master", args = c("--clean"))
 ```
+
+## Troubleshooting
+Things may go wrong, awfully so. Misery collected:
+
+### Proxy and TLS
+Observed: packages (primarily our own) will not intstall because they depend on
+other CRAN packages that cannot be installed.
+
+Plausible cause: network communication with (CRAN) https mirrors fails,
+time-out or stops due to internal proxies.
+
+Solution: manually install dependency packages and selecting http mirrors
+which may be an (last) option in the list of https mirrors.
+

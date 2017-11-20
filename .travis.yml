@@ -1,0 +1,20 @@
+language: r
+cache: packages
+
+branches:
+  only:
+    - rel
+    
+warnings_are_errors: false
+
+r_github_packages: 
+  - jimhester/covr
+
+after_success:
+  - travis_wait Rscript -e 'covr::codecov()'
+  
+services:
+  - mysql
+  
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS rapbase; USE rapbase; CREATE TABLE testTable (id INT, someText VARCHAR(50), someInt INT, someFloat DOUBLE, someTime DATETIME);'

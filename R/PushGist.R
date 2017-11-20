@@ -13,9 +13,7 @@ PushGist <- function(mdFile, githubUserName = "") {
   
   reportName <- strsplit(basename(mdFile), ".", fixed = TRUE)[[1]][1]
   
-  # read config
-  conf <- yaml::yaml.load_file(system.file("rapbaseConfig.yml",
-                                           package = "rapbase"))
+  conf <- getConfig()
   
   # we need some proxy...
   pConf <- conf$network$proxy

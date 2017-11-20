@@ -1,27 +1,38 @@
+[![Build Status](https://travis-ci.org/Rapporteket/rapbase.png)](https://travis-ci.org/Rapporteket/rapbase)
+[![codecov.io](https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=rel)](https://codecov.io/github/Rapporteket/rapbase?branch=rel)
+
 # Install
 The current package can be fetched directly from your R session. If not already
 present, first install the devtools-package from your R terminal:
 
-  install.packages("devtools")
+```r
+install.packages("devtools")
+```
 
 Then, install the rapbase package:
 
-  devtools::install_github("Rapporteket/rapbase")
+```r
+devtools::install_github("Rapporteket/rapbase")
+```
 
 When installed at Rapporteket make sure clean-up is performed:
 
-  devtools::install_github("Rapporteket/rapbase", args=c("--clean"))
+```r
+devtools::install_github("Rapporteket/rapbase", args=c("--clean"))
+```
 
 This will add local configuration after the package has been installed
 
 
 NOTE: Communicating through a proxy might cause the above install command to
 fail. If so, try the following prior to the above install command:
-  
-  library(httr)
-  set_config(
-    use_proxy(url="18.91.12.23", port=8080, username="user",password="passwd")
+
+```r  
+library(httr)
+set_config(
+  use_proxy(url="18.91.12.23", port=8080, username="user",password="passwd")
   )
+```
 
 replacing the example parameter values with whatever applies for the
 system the package is being installed on

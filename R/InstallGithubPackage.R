@@ -4,83 +4,89 @@
 #' 
 #' @param packageName String Name of the package
 #' @param branchName String Name of the branch to use
+#' @param readConfig Set to FALSE to prevent function from reading
+#' configuration. Set TRUE by default. Mainly used for testing purposes.
 #' 
-#' @return message String containing logged entries from the function
+#' @return story String containing logged entries from the function
 #' @export
 
-installGithubPackage <- function(packageName, branchName) {
+installGithubPackage <- function(packageName, branchName, readConfig=TRUE) {
   
-  message <- ""
-  message <- MakeMessage(message, "Initiating 'InstallGithubPackage'")
+  story <- ""
+  story <- MakeMessage(story, "Initiating 'InstallGithubPackage'")
   
-  message <- MakeMessage(message, "Reading configuration")
-  conf <- yaml::yaml.load_file(system.file("rapbaseConfig.yml",
-                                           package = "rapbase"))
+  story <- MakeMessage(story, "Reading configuration")
   
-  pConf <- conf$network$proxy
-  HTTP_PROXY <- pConf$http
-  PROXY_IP <- pConf$ip
-  PROXY_PORT <- pConf$port
+  if (readConfig) {
+    conf <- getConfig(fileName = "rapbaseConfig.yml", packageName = "rapbase")
+  } else {
+    conf <- list(network=list(notAProxy="test"))
+  }
   
-  message <- MakeMessage(message, "Setting network proxies")
-  Sys.setenv(http_proxy=HTTP_PROXY)
-  Sys.setenv(https_proxy=HTTP_PROXY)
-  httr::set_config(httr::use_proxy(url=PROXY_IP,
-                                   port=as.numeric(PROXY_PORT)))
+  if (is.null(conf$network[["proxy"]])) {
+    story <- MakeMessage(story, "Proxy not defined in config. If your system
+                         does not use one please provide it as an empty string.
+                         Stopping.")
+    stop(story)
+  }
   
-  message <- MakeMessage(message, "Set 'libcurl' as download method")
+  story <- MakeMessage(story, "Setting network proxies")
+  Sys.setenv(http_proxy=conf$network$proxy$http)
+  Sys.setenv(https_proxy=conf$network$proxy$http)
+  httr::set_config(httr::use_proxy(url=conf$network$proxy$http,
+                                   port=as.numeric(conf$network$proxy$port)))
+  
+  story <- MakeMessage(story, "Set 'libcurl' as download method")
   options(download.file.method="libcurl")
   
-  GITHUB_ORGANIZATION <- conf$github$organization
-  githubPackage <- paste0(GITHUB_ORGANIZATION, "/", packageName)
-  githubRapbase <- paste0(GITHUB_ORGANIZATION, "/rapbase")
+  githubPackage <- paste0(conf$github$organization, "/", packageName)
+  githubRapbase <- paste0(conf$github$organization, "/rapbase")
   
   
   libpath <- as.character(conf$r$libpath)
+  success <- paste0("'", packageName, "' installed")
   if (packageName == "rapbase") {
-    message <- MakeMessage(message,
+    story <- MakeMessage(story,
                            paste0("Intalling '", githubRapbase,
                                   "' from branch '", branchName, "'"))
     res <- tryCatch({
-      withr::with_libpaths(new = libpath,
-                           devtools::install_github(githubRapbase,
-                                                    ref=branchName,
-                                                    force=TRUE,
-                                                    args=c("--clean")))
-      print("'rapbase' installed")
+      devtools::install_github(githubRapbase, ref=branchName,
+                               args=c("--clean",
+                                      paste0("--library=", libpath)))
+      
+      success
     }, warning = function(war) {
-      return(war)
+      return(war) # nocov
     }, error = function(err) {
       return(err)
     })
     
-    message <- MakeMessage(message, res)
-    message <- MakeMessage(message, "Done with 'rapbase'")
+    story <- MakeMessage(story, res)
+    story <- MakeMessage(story, "Done with 'rapbase'")
   }
   
   if (packageName != "rapbase") {
-    message <- MakeMessage(message, paste0("Installing '", packageName,
+    story <- MakeMessage(story, paste0("Installing '", packageName,
                                            "' from branch '", branchName, "'"))
     res <- tryCatch({
-      withr::with_libpaths(new = libpath,
-                              devtools::install_github(githubPackage,
-                                                       ref=branchName,
-                                                       args=c("--clean")))
+      devtools::install_github(githubPackage, ref=branchName,
+                               args=c("--clean",
+                                      paste0("--library=", libpath)))
       
-      print(paste(packageName, "installed"))
+      success
     }, warning = function(war) {
-      return(war)
+      return(war) #nocov
     }, error = function(err) {
       return(err)
     })
     
-    message <- MakeMessage(message, res)
+    story <- MakeMessage(story, res)
   }
   else {
-    message <- MakeMessage(message, "No additional packages to install")
+    story <- MakeMessage(story, "No additional packages to install")
   }
   
-  message <- MakeMessage(message, "Done")
+  story <- MakeMessage(story, "Done")
   
-  return(message)
+  return(story)
 }

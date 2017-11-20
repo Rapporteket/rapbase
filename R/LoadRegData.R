@@ -12,12 +12,13 @@
 LoadRegData <- function(registryName, query, dbType = "mysql") {
   
   dbList <- rapOpenDbConnection(registryName, dbType)
-  if (registryName == "nkr"){
+  if (registryName == "nkr"){ # nocov start
     # ugly hack to get past 'out of heap mem' for nkr
     res <- DBI::dbSendQuery(dbList$con, query)
     RegData <- DBI::dbFetch(res, n = 20000)
     RegData <- rbind(RegData, DBI::dbFetch(res, n = -1))
     tmp <- DBI::dbClearResult(res)
+    # nocov end
   } else {
     RegData <- DBI::dbGetQuery(dbList$con, query)
   }

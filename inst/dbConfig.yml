@@ -10,6 +10,6 @@ nordummy:
 rapbase:
   host : 127.0.0.1
   name : rapbase
-  user : rapbase
-  pass : rapbase
+  user : travis
+  pass : 
   disp : ForTestingOnly

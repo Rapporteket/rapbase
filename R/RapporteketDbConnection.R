@@ -13,8 +13,13 @@
 
 rapOpenDbConnection <- function(registryName, dbType = "mysql") {
   
-  conf <- yaml::yaml.load_file(system.file("dbConfig.yml", package = "rapbase"))
+  conf <- getConfig()
   conf <- conf[[registryName]]
+  if (is.null(conf)) {
+    stop(paste0("There is no configuration corresponding to key '",
+               registryName, "'. Please check key and/or configuration."))
+  }
+  
   if (dbType == "mysql") {
     drv <- RMySQL::MySQL()
     con <- DBI::dbConnect(drv,
@@ -25,7 +30,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
     # ensure utf8 encoding
     tmp <- DBI::dbGetQuery(con, "SET NAMES utf8;")
   }
-  else if (dbType == "mssql") {
+  else if (dbType == "mssql") { # nocov start
     
     drv <- RJDBC::JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver",
                        system.file("sqljdbc4.jar", package = "rapbase"))
@@ -33,7 +38,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
                    ";databaseName=", conf$nkr$name,
                    ";instance=", conf$nkr$inst, ";charset=UTF-8", sep="")
     con <- DBI::dbConnect(drv, dbUrl, user = conf$user, password = conf$pass)
-  }
+  } # nocov end
   
   list(con = con, drv = drv)
 }
