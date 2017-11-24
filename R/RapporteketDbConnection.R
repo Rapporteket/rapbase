@@ -16,8 +16,9 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
   conf <- getConfig()
   conf <- conf[[registryName]]
   if (is.null(conf)) {
-    stop(paste0("There is no configuration corresponding to key '",
-               registryName, "'. Please check key and/or configuration."))
+    stop(paste0("Could not connect to database because there is no
+                configuration corresponding to key '", registryName,
+                "'. Please check key and/or configuration."))
   }
   
   if (dbType == "mysql") {
