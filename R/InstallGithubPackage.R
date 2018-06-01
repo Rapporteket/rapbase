@@ -12,6 +12,8 @@
 
 installGithubPackage <- function(packageName, branchName, readConfig=TRUE) {
   
+  # nocov start
+  
   story <- ""
   story <- MakeMessage(story, "Initiating 'InstallGithubPackage'")
   
@@ -89,4 +91,6 @@ installGithubPackage <- function(packageName, branchName, readConfig=TRUE) {
   story <- MakeMessage(story, "Done")
   
   return(story)
+  
+  # nocov end
 }
