@@ -23,7 +23,7 @@ Imports:
     httr,
     knitr,
     RJDBC,
-    RMySQL,
+    RMariaDB,
     shiny,
     yaml
 Remotes:
