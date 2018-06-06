@@ -29,7 +29,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
                           user = conf$user,
                           password = conf$pass)
     # ensure utf8 encoding
-    tmp <- DBI::dbGetQuery(con, "SET NAMES utf8;")
+    tmp <- DBI::dbExecute(con, "SET NAMES utf8;")
   }
   else if (dbType == "mssql") { # nocov start
     
