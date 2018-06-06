@@ -22,7 +22,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
   }
   
   if (dbType == "mysql") {
-    drv <- RMySQL::MySQL()
+    drv <- RMariaDB::MariaDB()
     con <- DBI::dbConnect(drv,
                           dbname = conf$name,
                           host = conf$host,
