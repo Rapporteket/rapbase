@@ -22,14 +22,14 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
   }
   
   if (dbType == "mysql") {
-    drv <- RMySQL::MySQL()
+    drv <- RMariaDB::MariaDB()
     con <- DBI::dbConnect(drv,
                           dbname = conf$name,
                           host = conf$host,
                           user = conf$user,
                           password = conf$pass)
     # ensure utf8 encoding
-    tmp <- DBI::dbGetQuery(con, "SET NAMES utf8;")
+    tmp <- DBI::dbExecute(con, "SET NAMES utf8;")
   }
   else if (dbType == "mssql") { # nocov start
     

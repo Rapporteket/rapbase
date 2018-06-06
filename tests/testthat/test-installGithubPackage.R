@@ -23,10 +23,10 @@ test_that("Error is provided when no config present", {
 #                 "HTTP 404")
 # })
 
-test_that("Test package 'nordummy' can be installed from github", {
-  expect_message(installGithubPackage("nordummy", "rel"))
-})
-
-test_that("'rapbase' can be instlled from github", {
-  expect_message(installGithubPackage("rapbase", "rel"))
-})
+# test_that("Test package 'nordummy' can be installed from github", {
+#   expect_message(installGithubPackage("nordummy", "rel"))
+# })
+# 
+# test_that("'rapbase' can be instlled from github", {
+#   expect_message(installGithubPackage("rapbase", "rel"))
+# })
