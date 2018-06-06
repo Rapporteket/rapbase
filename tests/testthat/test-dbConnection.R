@@ -11,7 +11,7 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
   expect_is(l[[2]], "MariaDBDriver")
   expect_true(RMariaDB::dbIsValid(l$con))
   rapCloseDbConnection(l$con)
-  expect_error(RMariaDB::dbIsValid(l$con))
+  expect_false(RMariaDB::dbIsValid(l$con))
 })
 
 test_that("Data can be queried from (MySQL) db", {
