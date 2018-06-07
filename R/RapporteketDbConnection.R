@@ -27,7 +27,8 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
                           dbname = conf$name,
                           host = conf$host,
                           user = conf$user,
-                          password = conf$pass)
+                          password = conf$pass,
+                          bigint = "integer")
     # ensure utf8 encoding
     tmp <- DBI::dbExecute(con, "SET NAMES utf8;")
   }
