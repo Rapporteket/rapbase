@@ -1,5 +1,14 @@
 context("Handling db connections")
 
+# For these test to work locally make sure an instance of mysql server is
+# running and that the necassary user privileges are provided, e.g. as SQL:
+#   grant all privileges on [DATABASE].* to '[USER]'@'localhost';
+# where [DATABASE] and [USER] correspond to whatever given in rapbase config:
+#   conf <- rapbase::getConf()
+# When run at Travis build servers [USER] must be set to 'travis' and with
+# an empty password (as also assumed in the above localhost example). See also
+# .travis.yml
+
 test_that("Error provided when key has no corresponding config", {
   expect_error(rapOpenDbConnection(registryName = "aNoneExistingRegistryKey"))
 })
