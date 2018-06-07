@@ -19,3 +19,20 @@ test_that("Data can be queried from (MySQL) db", {
   expect_output(str(LoadRegData("rapbase", query, dbType = "mysql")),
                 "data.frame")
 })
+
+test_that("Bigints are returned as integers (not bit64::integer64)", {
+  query <- c("DROP DATABASE IF EXISTS rapbase;",
+             "CREATE DATABASE rapbase;",
+             "USE rapbase;",
+             paste("CREATE TABLE testTable (id int, someText varchar(50),",
+             "someInt INT, someBigInt BIGINT, someFloat DOUBLE,",
+             "someTime DATETIME);"))
+  l <- rapOpenDbConnection("rapbase")
+  for (q in query) {
+    tmp <- DBI::dbExecute(l$con, q)
+  }
+  query <- "SELECT * FROM testTable;"
+  df <- DBI::dbGetQuery(l$con, query)
+  rapCloseDbConnection(l$con)
+  expect_is(df[["someBigInt"]], "integer")
+})
