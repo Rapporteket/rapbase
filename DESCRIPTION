@@ -1,8 +1,8 @@
 Package: rapbase
 Type: Package
 Title: Base functions and resources for Rapporteket
-Version: 1.5.1
-Date: 2017-01-25
+Version: 1.7.1
+Date: 2018-06-07
 Authors@R: c(person("Edvardsen", "Are", email = "are.edvardsen@helse-
     nord.no", role = c("cre", "aut")), person("Thon", "Kevin", email =
     "kevin.thon@skde.no", role = "aut"))
@@ -23,7 +23,7 @@ Imports:
     httr,
     knitr,
     RJDBC,
-    RMySQL,
+    RMariaDB,
     shiny,
     yaml
 Remotes:

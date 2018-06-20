@@ -16,24 +16,26 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
   conf <- getConfig()
   conf <- conf[[registryName]]
   if (is.null(conf)) {
-    stop(paste0("There is no configuration corresponding to key '",
-               registryName, "'. Please check key and/or configuration."))
+    stop(paste0("Could not connect to database because there is no
+                configuration corresponding to key '", registryName,
+                "'. Please check key and/or configuration."))
   }
   
   if (dbType == "mysql") {
-    drv <- RMySQL::MySQL()
+    drv <- RMariaDB::MariaDB()
     con <- DBI::dbConnect(drv,
                           dbname = conf$name,
                           host = conf$host,
                           user = conf$user,
-                          password = conf$pass)
+                          password = conf$pass,
+                          bigint = "integer")
     # ensure utf8 encoding
-    tmp <- DBI::dbGetQuery(con, "SET NAMES utf8;")
+    tmp <- DBI::dbExecute(con, "SET NAMES utf8;")
   }
   else if (dbType == "mssql") { # nocov start
     
     drv <- RJDBC::JDBC("com.microsoft.sqlserver.jdbc.SQLServerDriver",
-                       system.file("sqljdbc4.jar", package = "rapbase"))
+                       system.file("sqljdbc42.jar", package = "rapbase"))
     dbUrl <- paste("jdbc:sqlserver://", conf$host, ":", conf$port,
                    ";databaseName=", conf$nkr$name,
                    ";instance=", conf$nkr$inst, ";charset=UTF-8", sep="")
