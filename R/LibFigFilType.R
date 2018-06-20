@@ -31,7 +31,9 @@ figtype <- function(outfile='', width=3*595, height=3*595, res=3*72, pointsizePD
          pdf = pdf(file = outfile, width=7, height=7*height/width, family=fonttype, #family='arial', 
                    pointsize=pointsizePDF),		
          bmp = bmp(file = outfile, res=res, width=width, height=height),
-         tif = tiff(file = outfile, res=res, width=width, height=height)
+         tif = tiff(file = outfile, res=res, width=width, height=height),
+         wmf = win.metafile(filename = outfile, width = 7, height = 7*height/width, 
+                            pointsize = pointsizePDF)
   )
   
   
