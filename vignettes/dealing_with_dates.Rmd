@@ -1,5 +1,5 @@
 ---
-title: "Registerdata, R og bruk av dato på Rapporteket"
+title: "Registerdata, R og bruk av dato"
 author: "Are Edvardsen, SKDE"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -13,21 +13,28 @@ vignette: >
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Hva er problemet?
+## Problembeskrivelse
 Vanlig arbeidsflyt i framstilling av registerinformasjon på ved bruk av R på
 Rapporteket består forenklet av 1) å spørre om data fra en database, 2) gjøre
 talloperasjoner og 3) presentere resultatet i form av tabeller, figurer og
 tekst. I registerdata vil det bestandig finnes ulike former for
 tidsinformasjon slik som dato og klokkeslett. Følgelig er det da også normalt
 å måtte forholde seg til tid i de talloperasjoner som gjøres underveis fram
-til et ferdig resultat. I R er det mange pakker og funksjoner som er aktuell
-for bruk på tidsvariabler. Felles for slike kalender-funksjoner er at det
-ofte kan være vanskelig finne ut hva som er relevant og riktig bruk. Da er det
-også større risiko for å få feil. Ved bruk av konkrete eksempler er det her
-gjort et forsøk på redegjøre for bakgrunn slik at risiko for feil reduseres.
+til et ferdig resultat. I R er det mange pakker og enda flere funksjoner som er
+aktuelle
+for bruk på tidsvariabler. Felles for slike "kalender-funksjoner"" er at det
+ofte kan være vanskelig å få full oversikt og forståelse av hvordan de virker.
+I praktisk
+bruk forsøker man gjerne flere varianter til man har noe som synes å gi et
+tilforlatelig svar. Slik tilnærming vil gi en
+større risiko for feil. Ved bruk av et konkrete eksempl er det her
+gjort et forsøk på redegjøre for noen vanlig brukte kalenderfunksjoner slik at
+at risiko for feil ved framtidig bruk reduseres.
 
 ## Eksempel på feil som oppstår
-Følgende eksempel gir en reell reproduksjon av feil oppdaget i *NorGAst* der
+Følgende eksempel gir en reell reproduksjon av 
+[feil oppdaget i *NorGAst*](https://github.com/Rapporteket/norgast/issues/2)
+der
 endepunktet i datoutvalget ikke kommer med i analysen. Kommandoene under er
 kjørt på *Rapporteket* TEST. Av hensyn til forenkling er det bare benyttet
 en øvre (*datoTil*) og ingen nedre (*datoFra*) begrensning av dato.
@@ -60,7 +67,7 @@ RegData <- rapbase::LoadRegData(registryName, query, dbType)
 ```
 
 Lag ny variabel *OperasjonsDato* slik det er gjort i *NorGAst*, sjekk
-maxverdi og klasse på oprinnelig og ny variabel:
+maxverdi og klasse på opprinnelig og ny variabel:
 ```r
 RegData$OperasjonsDato <- as.POSIXlt(RegData$OpDato, format="%Y-%m-%d")
 
@@ -101,12 +108,14 @@ as.POSIXlt(datoTil)
 ```
 CEST (Central European Summer Time) ligger to timer foran UTC og siden
 tidsinformasjonen som benyttes bare innholder dato (og ikke klokkeslett) så
-filtreres disse ut fra datagrunnlaget. Hypotetisk kunne alle 20 observasjoner
+filtreres disse ut fra datagrunnlaget. I et tenkt tilfelle kunne alle 20
+observasjoner
 fra 31. juli vært registrert kl 22:01 og i så fall vil det gi et korrekt
 utfall at disse filtreres vekk når sommertid gjelder mens for vintertid vil
 det gitt feil utfall. I realiteten er klokkeslett ikke kjent og da vil den
 logiske opertoren som benyttes i filteret fungere som beskrevet over for
-POSIX*-klassene.
+POSIX-klassene, altså at alle opersjonsdatoer som er lik *datoTil* men som
+ligger "øst" for UTC filtreres ut.
 
 ## Og hvorfor ender man opp med datoer fra ulike tidssoner?
 For verdiene i *OperasjonsDato* er svaret allerede gitt over. Ved konvertering
@@ -116,15 +125,15 @@ det benyttes da default tidssone UTC. Ved konvertering av *datoTil* fra klassen
 hvilken tidssone den befinner seg i. I eksempelet over fikk funksjonen svaret
 "CEST" (UTC+2). Det samme eksempelet ville gitt "CET" (UTC+1) om det ble kjørt
 i desember. Bruk av klassen *POSIXct* ville gitt samme resultat. En digresjon
-angående disse klassene er at "ct" (calenar time) forholder seg til antall
+angående disse klassene er at "ct" (calendar time) forholder seg til antall
 sekunder fra et gitt tidspunkt (the epoch, *i.e.* 1970-01-01 UTC) mens "lt"
 (local time) inneholder en liste med vektorer som hver angir år, måned, dag,
 time, osv.
 
-## Hvordan løse problemet
+## Mulige løsninger
 I eksempelet over introduseres feilen ved bruk av POSIX-klassene og den
 påfølgende bruken av tidssoner. Selv om det ikke kan utelukkes helt så vil
-praktisk håndtering av data fra norske kvalitetsregister ikke ha behov for bruk
+praktisk håndtering av data fra norske kvalitetsregistre ikke ha behov for bruk
 av tidssone. I så måte kunne man unngått bruk av disse klassene for datoer.
 Men, det kan finnes mange gode grunner til å fortsette bruken og da
 foreutsetter det at man håndterer tidssoner riktig. I eksempelet over kunne man
@@ -151,4 +160,4 @@ verdiene representeres i R. Den tekniske manualen for MySQL gir
 [flere detaljer](https://dev.mysql.com/doc/refman/5.5/en/datetime.html) som er
 vel verdt å lese. Rapportutviklere som benytter data fra en database (gjennom
 sql) bør derfor være oppmerksom på de formater som benyttes i databasen når
-spørringen settes opp.
+spørringen settes opp for å sikre at videre tallbehandling i R gjøres riktig.
