@@ -10,7 +10,7 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 ```
 
 ## Problembeskrivelse
@@ -56,7 +56,6 @@ query <- paste0("SELECT
                    a.ForlopsID = f.ForlopsID
                  WHERE
                    f.HovedDato <= \'", datoTil, "'")
-                  
 ```
 
 Hent data:
@@ -100,9 +99,10 @@ max(RegData$OperasjonsDato[indDato])
 [1] "2017-07-30 UTC"
 ```
 Selv om datobegrensningen er den samme som i opprinnelig spørring mot databasen
-(og at man da forventer at ingen verdier filtreres ut) så tas det likevel vekk
-20 observasjoner (som alle har Operasjonsdato 2017-07-31). Årsaken ligger i
-ulik tidssone for de verdier som sammenholdes i filteret over:
+(og at man da forventer at ingen verdier filtreres ut) så tas det i dette
+tilfellet likevel vekk 20 observasjoner (som alle har Operasjonsdato
+2017-07-31). Årsaken ligger i ulik tidssone for de verdier som sammenholdes i
+filteret over:
 ```r
 as.POSIXlt(datoTil)
 [1] "2017-07-31 CEST"
