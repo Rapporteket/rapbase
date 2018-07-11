@@ -21,15 +21,13 @@ tekst. I registerdata vil det bestandig finnes ulike former for
 tidsinformasjon slik som dato og klokkeslett. Følgelig er det da også normalt
 å måtte forholde seg til tid i de talloperasjoner som gjøres underveis fram
 til et ferdig resultat. I R er det mange pakker og enda flere funksjoner som er
-aktuelle
-for bruk på tidsvariabler. Felles for slike "kalender-funksjoner"" er at det
-ofte kan være vanskelig å få full oversikt og forståelse av hvordan de virker.
-I praktisk
-bruk forsøker man gjerne flere varianter til man har noe som synes å gi et
-tilforlatelig svar. Slik tilnærming vil gi en
-større risiko for feil. Ved bruk av et konkrete eksempl er det her
-gjort et forsøk på redegjøre for noen vanlig brukte kalenderfunksjoner slik at
-at risiko for feil ved framtidig bruk reduseres.
+aktuelle for bruk på tidsvariabler. Felles for slike "kalender-funksjoner"" er
+at det ofte kan være vanskelig å få full oversikt og forståelse av hvordan de
+virker. I praktisk bruk forsøker man gjerne flere varianter til man har noe som
+synes å gi et tilforlatelig svar. Slik tilnærming vil gi en større risiko for
+feil. Ved bruk av et konkret eksempel er det her gjort et forsøk på redegjøre
+for noen vanlig brukte kalenderfunksjoner slik at at risiko for feil ved
+framtidig bruk reduseres.
 
 ## Eksempel på feil som oppstår
 Følgende eksempel gir en reell reproduksjon av 
@@ -81,7 +79,7 @@ max(RegData$OperasjonsDato)
 class(RegData$OperasjonsDato)
 [1] "POSIXlt" "POSIXt"
 ```
-Maksimumsverdi stemmer med den som er oppgitt i spørringa. Legg merke til
+Maksimumsverdi stemmer med den som er oppgitt i spørringen. Legg merke til
 at opprinnelig variabel er av klassen
 [*Date*](http://stat.ethz.ch/R-manual/R-devel/library/base/html/Dates.html)
 og at tidssone ikke er angitt.
@@ -110,12 +108,12 @@ as.POSIXlt(datoTil)
 [1] "2017-07-31 CEST"
 ```
 CEST (Central European Summer Time) ligger to timer foran UTC og siden
-tidsinformasjonen som benyttes bare innholder dato (og ikke klokkeslett) så
+tidsinformasjonen som benyttes bare inneholder dato (og ikke klokkeslett) så
 filtreres disse ut fra datagrunnlaget. I et tenkt tilfelle kunne alle 20
 observasjoner fra 31. juli vært registrert kl 22:01 og i så fall vil det gi et
 korrekt utfall at disse filtreres vekk når sommertid gjelder mens for vintertid
 vil det gitt feil utfall. I realiteten er klokkeslett ikke kjent og da vil den
-logiske opertoren som benyttes i filteret fungere som beskrevet over for
+logiske operatoren som benyttes i filteret fungere som beskrevet over for
 POSIX-klassene, altså at alle opersjonsdatoer som er lik *datoTil* men som
 ligger "øst" for UTC filtreres ut.
 
@@ -133,8 +131,8 @@ til klassen
 spør funksjonen 
 [*as.POSIXlt*](https://stat.ethz.ch/R-manual/R-devel/library/base/html/as.POSIXlt.html)
 egen server hvilken tidssone den befinner seg i. I eksempelet over fikk
-funksjonen svaret "CEST" (UTC+2). Det samme eksempelet ville gitt "CET" (UTC+1)
-om det ble kjørt i desember. Bruk av klassen
+funksjonen svaret "CEST" (UTC+2). Den samme funksjonen ville gitt "CET" (UTC+1)
+om den ble kjørt i desember. Bruk av klassen
 [*POSIXct*](https://stat.ethz.ch/R-manual/R-devel/library/base/html/DateTimeClasses.html)
 ville gitt samme resultat. En digresjon angående disse klassene er at "ct"
 (calendar time) forholder seg til antall sekunder fra et gitt tidspunkt (the
