@@ -82,8 +82,11 @@ class(RegData$OperasjonsDato)
 [1] "POSIXlt" "POSIXt"
 ```
 Maksimumsverdi stemmer med den som er oppgitt i spørringa. Legg merke til
-at opprinnelig variabel er av klassen *Date* og at tidssone ikke er angitt.
-Ved konvertering til klassen *POSIXlt* benyttes default tidssone UTC.
+at opprinnelig variabel er av klassen
+[*Date*](http://stat.ethz.ch/R-manual/R-devel/library/base/html/Dates.html)
+og at tidssone ikke er angitt.
+Ved konvertering til klassen 
+[*POSIXlt*](https://stat.ethz.ch/R-manual/R-devel/library/base/html/DateTimeClasses.html) benyttes default tidssone UTC.
 
 Det neste som skjer i *NorGAst* er en (ekstra) filtrering på angitt
 datobegrensning:
@@ -109,26 +112,34 @@ as.POSIXlt(datoTil)
 CEST (Central European Summer Time) ligger to timer foran UTC og siden
 tidsinformasjonen som benyttes bare innholder dato (og ikke klokkeslett) så
 filtreres disse ut fra datagrunnlaget. I et tenkt tilfelle kunne alle 20
-observasjoner
-fra 31. juli vært registrert kl 22:01 og i så fall vil det gi et korrekt
-utfall at disse filtreres vekk når sommertid gjelder mens for vintertid vil
-det gitt feil utfall. I realiteten er klokkeslett ikke kjent og da vil den
+observasjoner fra 31. juli vært registrert kl 22:01 og i så fall vil det gi et
+korrekt utfall at disse filtreres vekk når sommertid gjelder mens for vintertid
+vil det gitt feil utfall. I realiteten er klokkeslett ikke kjent og da vil den
 logiske opertoren som benyttes i filteret fungere som beskrevet over for
 POSIX-klassene, altså at alle opersjonsdatoer som er lik *datoTil* men som
 ligger "øst" for UTC filtreres ut.
 
 ## Og hvorfor ender man opp med datoer fra ulike tidssoner?
 For verdiene i *OperasjonsDato* er svaret allerede gitt over. Ved konvertering
-fra klassen *Date* til klassen *POSIXlt* så er ikke tidssone definert og
+fra klassen
+[*Date*](http://stat.ethz.ch/R-manual/R-devel/library/base/html/Dates.html)
+til klassen 
+[*POSIXlt*](https://stat.ethz.ch/R-manual/R-devel/library/base/html/DateTimeClasses.html)
+så er ikke tidssone definert og
 det benyttes da default tidssone UTC. Ved konvertering av *datoTil* fra klassen
-*character* til klassen *POSIXlt* spør funksjonen *as.POSIXlt* egen server
-hvilken tidssone den befinner seg i. I eksempelet over fikk funksjonen svaret
-"CEST" (UTC+2). Det samme eksempelet ville gitt "CET" (UTC+1) om det ble kjørt
-i desember. Bruk av klassen *POSIXct* ville gitt samme resultat. En digresjon
-angående disse klassene er at "ct" (calendar time) forholder seg til antall
-sekunder fra et gitt tidspunkt (the epoch, *i.e.* 1970-01-01 UTC) mens "lt"
-(local time) inneholder en liste med vektorer som hver angir år, måned, dag,
-time, osv.
+[*character*](https://stat.ethz.ch/R-manual/R-devel/library/base/html/character.html)
+til klassen 
+[*POSIXlt*](https://stat.ethz.ch/R-manual/R-devel/library/base/html/DateTimeClasses.html)
+spør funksjonen 
+[*as.POSIXlt*](https://stat.ethz.ch/R-manual/R-devel/library/base/html/as.POSIXlt.html)
+egen server hvilken tidssone den befinner seg i. I eksempelet over fikk
+funksjonen svaret "CEST" (UTC+2). Det samme eksempelet ville gitt "CET" (UTC+1)
+om det ble kjørt i desember. Bruk av klassen
+[*POSIXct*](https://stat.ethz.ch/R-manual/R-devel/library/base/html/DateTimeClasses.html)
+ville gitt samme resultat. En digresjon angående disse klassene er at "ct"
+(calendar time) forholder seg til antall sekunder fra et gitt tidspunkt (the
+epoch, *i.e.* 1970-01-01 UTC) mens "lt" (local time) inneholder en liste med
+vektorer som hver angir år, måned, dag, time, osv.
 
 ## Mulige løsninger
 I eksempelet over introduseres feilen ved bruk av POSIX-klassene og den
@@ -139,7 +150,9 @@ Men, det kan finnes mange gode grunner til å fortsette bruken og da
 foreutsetter det at man håndterer tidssoner riktig. I eksempelet over kunne man
 tatt vekk datofilteret i R-koden da det allerede er definert i sql (spørringen
 til databasen). Om man likevel ønkser å ivareta et slik filter i R-koden ved
-bruk av *POSIX* kan dette gjøre gjennom å definere samme tidssone eksplisitt
+bruk av
+[*POSIX*](https://stat.ethz.ch/R-manual/R-devel/library/base/html/DateTimeClasses.html)
+kan dette gjøre gjennom å definere samme tidssone eksplisitt
 for alle variabler:
 ```r
 RegData$OperasjonsDato <- as.POSIXlt(RegData$OpDato, tz="UTC", format="%Y-%m-%d")
@@ -155,8 +168,11 @@ tidssone eksplisitt. Se under.
 MySQL (den mest vanlige databasemotoren på *Rapporteket*) benytter
 tre ulike tidsformater: DATE, DATETIME og TIMESTAMP. De to første definerer
 ikke tidssone mens den siste gjør det. Felter med format TIMESTAMP vil gjennom
-*DBI* være definert som klassen *POSIXct* og dermed ivareta tidssone når
-verdiene representeres i R. Den tekniske manualen for MySQL gir
+[*DBI*](https://cran.r-project.org/web/packages/DBI/index.html)
+være definert som klassen
+[*POSIXct*](https://stat.ethz.ch/R-manual/R-devel/library/base/html/DateTimeClasses.html)
+og dermed ivareta tidssone når verdiene representeres i R. Den tekniske
+manualen for MySQL gir
 [flere detaljer](https://dev.mysql.com/doc/refman/5.5/en/datetime.html) som er
 vel verdt å lese. Rapportutviklere som benytter data fra en database (gjennom
 sql) bør derfor være oppmerksom på de formater som benyttes i databasen når
