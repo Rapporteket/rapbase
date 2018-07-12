@@ -48,16 +48,14 @@ datoTil <- "2017-07-31"
 Lag databasespørring:
 ```r
 query <- paste0("SELECT
-                   a.OpDato
+                   OpDato
                  FROM
-                   AlleVariablerNum a
-                 INNER JOIN
-                   ForlopsOversikt f
-                 ON
-                   a.ForlopsID = f.ForlopsID
+                   AlleVariablerNum
                  WHERE
-                   f.HovedDato <= \'", datoTil, "'")
+                   opDato <= \'", datoTil, "'")
 ```
+
+
 
 Hent data:
 ```r
@@ -101,7 +99,7 @@ max(RegData$OperasjonsDato[indDato])
 ```
 Selv om datobegrensningen er den samme som i opprinnelig spørring mot databasen
 (og at man da forventer at ingen verdier filtreres ut) så tas det i dette
-tilfellet likevel vekk 20 observasjoner (som alle har Operasjonsdato
+tilfellet likevel vekk 20 observasjoner (som alle har *OperasjonsDato* lik
 2017-07-31). Årsaken ligger i ulik tidssone for de verdier som sammenholdes i
 filteret over:
 ```r
