@@ -19,12 +19,16 @@
 
 shinySessionInfo <- function(shinySession, entity, testCase = FALSE) {
   
-  if (is.null(shinySession) | !is.list(shinySession)) {
-    stop("No list of session information provided. Cannot do anything")
+  if (is.null(shinySession)) {
+    stop("Session information is empty!. Cannot do anything")
+  }
+  
+  if (!c("ShinySession") %in% attributes(shinySession)$class) {
+    stop("Got no object of class 'ShinySession'! Cannot do anything")
   }
   
   if (!(entity %in% c("user", "groups", "resh_id", "role"))) {
-    stop("Incorrect entity provided. Must be one of 'user', 'groups', 'resh_id'
+    stop("Incorrect entity provided! Must be one of 'user', 'groups', 'resh_id'
          or 'role'")
   }
   
