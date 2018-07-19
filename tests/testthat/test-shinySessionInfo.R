@@ -5,12 +5,18 @@ shinySessionTest<-list(clientData=list(url_search=list(`X-USER`="testUser1")))
 shinySessionTest$clientData$url_search$`X-GROUPS`<-"testGroup1,testGroup2"
 shinySessionTest$clientData$url_search$resh_id<-"123456"
 shinySessionTest$clientData$url_search$role<-"LU"
+# simulate ShinySession class for above list
+attr(shinySessionTest, "class") <- "ShinySession"
 
 # simulated real data
 shinySession <- list(user="user1")
 shinySession$groups <- "group1,group2"
 shinySession$request <- list(HTTP_RESH_ID="789012")
 shinySession$request$HTTP_ROLE <- "LC"
+# make a copy for testing wrong class
+shinySessionWrongClass <- shinySession
+# simulate ShinySession class for above list
+attr(shinySession, "class") <- "ShinySession"
 
 test_that("Default is to assume real data scenario", {
   expect_equal(getShinyUserName(shinySession), "user1")
@@ -31,7 +37,8 @@ test_that("Also working for test cases", {
 
 test_that("Function handle errors", {
   expect_error(shinySessionInfo(shinySession = NULL, entity = "user"))
-  expect_error(shinySessionInfo(shinySession = c("a", "b"), entity = "user"))
+  expect_error(shinySessionInfo(shinySession = shinySessionWrongClass,
+                                entity = "user"))
   expect_error(shinySessionInfo(shinySession = shinySession,
                                 entity = ""))
 })
