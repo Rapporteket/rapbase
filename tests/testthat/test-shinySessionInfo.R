@@ -1,10 +1,9 @@
 context("Shiny session info")
 
 # test case data
-shinySessionTest<-list(clientData=list(url_search=list(`X-USER`="testUser1")))
-shinySessionTest$clientData$url_search$`X-GROUPS`<-"testGroup1,testGroup2"
-shinySessionTest$clientData$url_search$resh_id<-"123456"
-shinySessionTest$clientData$url_search$role<-"LU"
+ss <- "?X-USER=testUser1&X-GROUPS=testGroup1,testGroup2&resh_id=123456&role=LU"
+shinySessionTest<-list(clientData=list(url_search=ss))
+
 # simulate ShinySession class for above list
 attr(shinySessionTest, "class") <- "ShinySession"
 
