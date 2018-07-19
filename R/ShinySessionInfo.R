@@ -35,7 +35,7 @@ shinySessionInfo <- function(shinySession, entity, testCase = FALSE) {
   if (testCase) {
     #warning("This is a test. Not to be applied in production!",
     #        immediate. = TRUE)
-    us <- shinySession$clientData$url_search
+    us <- shiny::parseQueryString(shinySession$clientData$url_search)
     user <- us$`X-USER`
     groups <- us$`X-GROUPS`
     resh_id <- us$resh_id
