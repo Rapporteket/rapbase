@@ -13,6 +13,7 @@ resultattjeneste for medisinske kvalitetsregistre
 
 ---
 
+
 This email contains results from medical registries as requested by you or a
 person acting on your behalf. If you have questions or do not want to receive
 such emails please contact SKDE either by phone +47 77 75 58 00 or email
