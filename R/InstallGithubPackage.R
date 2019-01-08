@@ -33,11 +33,12 @@ installGithubPackage <- function(packageName, branchName, readConfig=TRUE) {
   }
   
   story <- MakeMessage(story, "Setting network proxies")
-  Sys.setenv(http_proxy=conf$network$proxy$http)
-  Sys.setenv(https_proxy=conf$network$proxy$http)
-  httr::set_config(httr::use_proxy(url=conf$network$proxy$http,
-                                   port=as.numeric(conf$network$proxy$port)))
-  
+  if (!is.null(conf$network$proxy$http)) {
+    Sys.setenv(http_proxy=conf$network$proxy$http)
+    Sys.setenv(https_proxy=conf$network$proxy$http)
+    httr::set_config(httr::use_proxy(url=conf$network$proxy$http,
+                                     port=as.numeric(conf$network$proxy$port)))
+  }
   story <- MakeMessage(story, "Set 'libcurl' as download method")
   options(download.file.method="libcurl")
   
