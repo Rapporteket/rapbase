@@ -10,6 +10,12 @@ r :
   libpath : !expr character(0)
   # libpath : !expr Sys.getenv("R_LIBS_USER")
   # libpath : /usr/local/lib/R/site-library
+  
+  testUser :
+    user : username
+    group : registryName
+    role : accessLevel
+    reshId : 999999
 
 
 ## Network stuff
