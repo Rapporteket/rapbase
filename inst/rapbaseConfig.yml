@@ -13,9 +13,9 @@ r :
   
   testUser :
     user : username
-    group : registryName
+    groups : registryName
     role : accessLevel
-    reshId : 999999
+    resh_id : 999999
 
 
 ## Network stuff

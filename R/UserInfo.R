@@ -64,18 +64,18 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     conf <- getConfig(fileName = "rapbaseConfig.yml")
     d <- conf$r$testUser
     user <- d$user
-    group <- d$group
+    groups <- d$groups
     role <- d$role
-    resh_id <- d$reshId
+    resh_id <- d$resh_id
   }
   
   if (context %in% devContexts) {
     conf <- getConfig(fileName = "rapbaseConfig.yml")
     d <- conf$r$testUser
     user <- d$user
-    group <- d$group
+    groups <- d$groups
     role <- d$role
-    resh_id <- d$reshId
+    resh_id <- d$resh_id
   }
   
   if (context %in% testContexts | context %in% prodContexts) {
