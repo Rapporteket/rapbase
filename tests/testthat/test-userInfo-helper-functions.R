@@ -7,7 +7,7 @@ currentInstance <- Sys.getenv("R_RAP_INSTANCE")
 conf <- getConfig(fileName = "rapbaseConfig.yml")
 d <- conf$r$testUser
 
-Sys.setenv(R_RAP_INSTANCE="")
+Sys.setenv(R_RAP_INSTANCE="DEV")
 test_that("Helpers provide config data when no session data present", {
   expect_equal(getUserName(), d$user)
   expect_equal(getUserGroups(), d$groups)
