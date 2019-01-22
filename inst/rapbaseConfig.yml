@@ -7,7 +7,7 @@
 r :
 
   # dummy library path
-  libpath : !expr character(0)
+  libpath :
   # libpath : !expr Sys.getenv("R_LIBS_USER")
   # libpath : /usr/local/lib/R/site-library
   
@@ -23,9 +23,9 @@ network :
 
 # dummy proxy server
   proxy :
-    http : !expr ""
+    http :
+    port :
     # http : http://dummy_proxy_hostname.no
-    port : !expr ""
     # port : 8080
     # ip : 192.168.0.100
 
