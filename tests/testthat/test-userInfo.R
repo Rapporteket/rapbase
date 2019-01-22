@@ -14,8 +14,8 @@ test_that("Warning is provided when instance is undefined", {
 
 
 Sys.setenv(R_RAP_INSTANCE="DEV")
-test_that("Function provides an entity in a dec context", {
-  expect_equal(userInfo(entity = "group"), "registryName")
+test_that("Function provides an entity in a dev context", {
+  expect_equal(userInfo(entity = "groups"), "registryName")
 })
 
 
