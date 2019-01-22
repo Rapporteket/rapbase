@@ -1,5 +1,8 @@
 context("User info")
 
+# store current instance
+currentInstance <- Sys.getenv("R_RAP_INSTANCE")
+
 
 test_that("Function handles general errors", {
   expect_error(userInfo(entity = "user", devContexts = c("DEV", "TEST")))
@@ -77,3 +80,6 @@ test_that("Function can handle redefined contexts", {
   expect_equal(userInfo(entity = "resh_id", devContexts = c("DEV", "QA"),
                         prodContexts = c("PRODUCTION")), 999999)
 })
+
+# Restore instance
+Sys.setenv(R_RAP_INSTANCE=currentInstance)
