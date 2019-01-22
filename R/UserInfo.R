@@ -22,7 +22,7 @@
 #' @param testContext A character vector providing unique instances to be
 #' regarded as a test context. In this context user attributes will be read
 #' from the url call to a shiny application. Hence, for this context the
-#' corresponding shiny session object mustn also be provided. The instances
+#' corresponding shiny session object must also be provided. The instances
 #' provided cannot overlap instances provided in any other contexts. By default
 #' set to \code{c("TEST")}. 
 #' @param prodContext A character vector providing unique instances to be
