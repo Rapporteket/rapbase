@@ -59,7 +59,8 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
   context <- Sys.getenv("R_RAP_INSTANCE")
   
   if (context == "") {
-    warning("System has no context defined. Only source left will be config")
+    warning("System has no defined instance. Configuration as provided by
+            'rapbaseConfig.yml' will be used as source for user data.")
     conf <- getConfig(fileName = "rapbaseConfig.yml")
     d <- conf$r$testUser
     user <- d$user
