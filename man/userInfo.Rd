@@ -26,7 +26,7 @@ cannot overlap instances provided in any other contexts. By default set to
 \item{testContext}{A character vector providing unique instances to be
 regarded as a test context. In this context user attributes will be read
 from the url call to a shiny application. Hence, for this context the
-corresponding shiny session object mustn also be provided. The instances
+corresponding shiny session object must also be provided. The instances
 provided cannot overlap instances provided in any other contexts. By default
 set to \code{c("TEST")}.}
 
@@ -50,7 +50,7 @@ data. This function will normally be used via its helper functions (see
 below).
 }
 \seealso{
-\code{\link{getShinyUserName}}, \code{\link{getShinyUserGroups}},
-\code{\link{getShinyUserReshId}}, \code{\link{getShinyUserRole}}
+\code{\link{getUserName}}, \code{\link{getUserGroups}},
+\code{\link{getUserReshId}}, \code{\link{getUserRole}}
 }
 
