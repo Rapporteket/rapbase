@@ -35,8 +35,8 @@
 #' 
 #' @return String of singel user data element
 #' 
-#' @seealso \code{\link{getShinyUserName}}, \code{\link{getShinyUserGroups}},
-#' \code{\link{getShinyUserReshId}}, \code{\link{getShinyUserRole}}
+#' @seealso \code{\link{getUserName}}, \code{\link{getUserGroups}},
+#' \code{\link{getUserReshId}}, \code{\link{getUserRole}}
 #' 
 #' @export
 
