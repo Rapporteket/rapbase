@@ -3,18 +3,25 @@ context("User info helper functions")
 # store current instance
 currentInstance <- Sys.getenv("R_RAP_INSTANCE")
 
+Sys.setenv(R_RAP_INSTANCE="DEV")
+test_that("Helpers provide config data when no session data present", {
+  expect_warning(getUserName())
+  expect_warning(getUserGroups())
+  expect_warning(getUserReshId())
+  expect_warning(getUserRole())
+})
+
 # take whatever user info provided by confing
 conf <- getConfig(fileName = "rapbaseConfig.yml")
 d <- conf$r$testUser
 
 Sys.setenv(R_RAP_INSTANCE="DEV")
-test_that("Helpers provide config data when no session data present", {
-  expect_equal(getUserName(), d$user)
-  expect_equal(getUserGroups(), d$groups)
-  expect_equal(getUserReshId(), d$resh_id)
-  expect_equal(getUserRole(), d$role)
+test_that("Helpers provide config data when provided session object is empty", {
+  expect_equal(getUserName(shinySession = NULL), d$user)
+  expect_equal(getUserGroups(shinySession = NULL), d$groups)
+  expect_equal(getUserReshId(shinySession = NULL), d$resh_id)
+  expect_equal(getUserRole(shinySession = NULL), d$role)
 })
-
 
 # Simulated session
 shinySession <- list(user="user1")
