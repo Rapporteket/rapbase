@@ -13,6 +13,7 @@ test_that("Error provided when key has no corresponding config", {
   expect_error(rapOpenDbConnection(registryName = "aNoneExistingRegistryKey"))
 })
 
+
 # make sure we do have a test db during DEV
 if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
   query <- c("DROP DATABASE IF EXISTS rapbase;",
