@@ -14,9 +14,7 @@
 #' @examples
 #' # returns FALSE, rapbase has no explicit dependency to itself
 #' isPkgRapReg("rapbase")
-#' 
-#' # returns TRUE if 'raptools' is installed
-#' isPkgRapReg("raptools")
+
 
 isPkgRapReg <- function(pkg) {
   grepl("rapbase", packageDescription(pkg)$Depends, fixed = TRUE)
