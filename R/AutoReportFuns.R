@@ -325,7 +325,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
       attFile <- do.call(what = f, args = rep$params)
       if (dryRun) {
         message(paste("No emails sent. Attachment is", attFile))
-      } else {
+      } else { # nocov start
         # prepare email
         from <- conf$network$sender
         # escape spaces (e.g. when full name is added to <email>)
@@ -338,7 +338,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
           control = list(smtpServer=conf$network$smtp$server,
                          smtpPortSMTP=conf$network$smtp$port))
         
-      }
+      } # nocov end
     }
   }
 }
