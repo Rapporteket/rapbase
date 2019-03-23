@@ -20,9 +20,11 @@
 #' @param runDayOfYear Integer vector with day numbers of the year when the
 #' report is to be run
 #' @param dryRun Logical defining if global auto report config actually is to
-#' be updated. If set to TRUE the actual config (all of it) will be printed to
-#' the console. FALSE by default
+#' be updated. If set to TRUE the actual config (all of it) will be returned by
+#' the function. FALSE by default
 #'
+#' @return Nothing unless dryRun is set TRUE in which case a list of all config
+#' will be returned
 #' @seealso \code{\link{deleteAutoReport}}
 #' @export
 
@@ -55,7 +57,7 @@ createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
   rd[[eval(autoRepId)]] <- l
   
   if (dryRun) {
-    print(rd)
+    rd
   } else {
     writeAutoReportData(config = rd)
   }
