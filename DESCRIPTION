@@ -19,11 +19,14 @@ Imports:
     Cairo,
     DBI,
     devtools,
+    digest,
     gistr,
     httr,
     knitr,
+    readr,
     RJDBC,
     RMariaDB,
+    sendmailR,
     shiny,
     yaml
 Remotes:
