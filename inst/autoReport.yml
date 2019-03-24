@@ -3,29 +3,29 @@ testAutoReportFirst:
   package: raptools
   fun: .testAutoReport
   params:
-    - aNum: 1
-    - aChar: a
-    - anExp: Sys.Date()
+  - aNum: 1
+  - aChar: a
+  - anExp: Sys.Date()
   owner: jesus
   email:
-    - Some One <someone@nowhere.com>
-    - Jesus <jesus@sky.com>
+  - Some One <someone@nowhere.com>
+  - Jesus <jesus@sky.com>
   runDayOfYear:
-    - 30
-    - 60
+  - 30
+  - 60
 testAutoReportSecond:
   synopsis: Test, the second one
   package: raptools
   fun: .testAutoReport
   params:
-    - aNum: 2.0
-    - aChar: '3.14'
-    - anExp: sessionInfo()
+  - aNum: 2.0
+  - aChar: '3.14'
+  - anExp: sessionInfo()
   owner: someone
   email:
-    - <someone@nowhere.com>
-    - jesus@sky.com
+  - <someone@nowhere.com>
+  - jesus@sky.com
   runDayOfYear:
-    - 30
-    - 60
-    - 90
+  - 30
+  - 60
+  - 90
