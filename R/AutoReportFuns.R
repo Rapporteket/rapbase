@@ -356,7 +356,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
 #' @param startDay Start date of sequence. May be provided as a string,
 #' \emph{e.g.} \"2019-03-17\" or as class \"Date\". Defaults to today
 #' @param interval String representing a valid seq.POSIXt interval such as
-#' \"DSTday\", \"week\", \"month\", \"quarter\" or \"year\")
+#' "DSTday", "week", "month", "quarter" or "year")
 #'
 #' @return Integer vector of day numbers
 #' @export
