@@ -18,7 +18,7 @@ test_that("Warning is provided when instance is undefined", {
 
 Sys.setenv(R_RAP_INSTANCE="DEV")
 test_that("Function provides an entity in a dev context", {
-  expect_equal(userInfo(entity = "groups"), "registryName")
+  expect_equal(userInfo(entity = "groups"), "rapbase")
 })
 
 
@@ -72,9 +72,9 @@ test_that("Function provides entities in a QA/PRODUCTION context", {
 
 test_that("Function can handle redefined contexts", {
   expect_equal(userInfo(entity = "user", devContexts = c("DEV", "QA"),
-                        prodContexts = c("PRODUCTION")), "username")
+                        prodContexts = c("PRODUCTION")), "tester")
   expect_equal(userInfo(entity = "groups", devContexts = c("DEV", "QA"),
-                        prodContexts = c("PRODUCTION")), "registryName")
+                        prodContexts = c("PRODUCTION")), "rapbase")
   expect_equal(userInfo(entity = "role", devContexts = c("DEV", "QA"),
                         prodContexts = c("PRODUCTION")), "accessLevel")
   expect_equal(userInfo(entity = "resh_id", devContexts = c("DEV", "QA"),
