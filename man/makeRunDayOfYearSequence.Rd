@@ -11,7 +11,7 @@ makeRunDayOfYearSequence(startDay = Sys.Date(), interval)
 \emph{e.g.} \"2019-03-17\" or as class \"Date\". Defaults to today}
 
 \item{interval}{String representing a valid seq.POSIXt interval such as
-\"DSTday\", \"week\", \"month\", \"quarter\" or \"year\")}
+"DSTday", "week", "month", "quarter" or "year")}
 }
 \value{
 Integer vector of day numbers

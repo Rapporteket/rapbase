@@ -21,6 +21,8 @@ parameter to be used in the above function}
 
 \item{paramValues}{String vector with corresponding values to paramNames}
 
+\item{owner}{String providing the owner of the report. Usually a user name}
+
 \item{email}{String with email address to recipient of email containg the
 report}
 
@@ -28,8 +30,12 @@ report}
 report is to be run}
 
 \item{dryRun}{Logical defining if global auto report config actually is to
-be updated. If set to TRUE the actual config (all of it) will be printed to
-the console. FALSE by default}
+be updated. If set to TRUE the actual config (all of it) will be returned by
+the function. FALSE by default}
+}
+\value{
+Nothing unless dryRun is set TRUE in which case a list of all config
+will be returned
 }
 \description{
 Adds an entry to the system configuration of reports to run at given

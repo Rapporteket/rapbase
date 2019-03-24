@@ -13,7 +13,9 @@ findNextRunDate(runDayOfYear, baseDayNum = as.POSIXlt(Sys.Date())$yday +
 \item{baseDayNum}{Numeric defining base year-day. Default is today}
 
 \item{returnFormat}{String providing return format as described in
-base::strptime in the current locale. Defaults to "\%A \%d. \%B \%Y"}
+\code{\link[base]{strptime}} in the current locale. Defaults to
+"\%A \%d. \%B \%Y" that will provide something like
+'Mandag 20. januar 2019' in a Norwegian locale}
 }
 \value{
 String date for printing
