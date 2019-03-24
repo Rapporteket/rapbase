@@ -15,6 +15,7 @@
 #' @param paramNames String vector where each element corresponds to the input
 #' parameter to be used in the above function
 #' @param paramValues String vector with corresponding values to paramNames
+#' @param owner String providing the owner of the report. Usually a user name
 #' @param email String with email address to recipient of email containg the
 #' report
 #' @param runDayOfYear Integer vector with day numbers of the year when the
