@@ -12,8 +12,8 @@ r :
   # libpath : /usr/local/lib/R/site-library
   
   testUser :
-    user : username
-    groups : registryName
+    user : tester
+    groups : rapbase
     role : accessLevel
     resh_id : 999999
 
