@@ -402,7 +402,6 @@ findNextRunDate <- function(runDayOfYear,
                             returnFormat = "%A %d. %B %Y") {
   
   year <- as.POSIXlt(Sys.Date())$year + 1900
-  returnFormat <- "%A %d. %B %Y" #e.g. 'Mandag 20. januar 2019'
   
   if (baseDayNum >= max(runDayOfYear) | length(runDayOfYear) == 1 &
       baseDayNum >= max(runDayOfYear)) {
