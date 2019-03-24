@@ -388,7 +388,8 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 #' @param runDayOfYear Numeric vector providing year-day numbers  
 #' @param baseDayNum Numeric defining base year-day. Default is today
 #' @param returnFormat String providing return format as described in
-#' base::strptime in the current locale. Defaults to "\%A \%d. \%B \%Y"
+#' \code{\link[base]{strptime}} in the current locale. Defaults to
+#' "\%A \%d. \%B \%Y"
 #' @return String date for printing
 #' @examples
 #' # Will return Jan 30 in the current year and locale with default formatting
