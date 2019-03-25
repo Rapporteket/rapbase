@@ -1,12 +1,12 @@
 testAutoReportFirst:
   synopsis: Test, the first one
-  package: raptools
+  package: rapbase
   fun: .testAutoReport
   params:
   - aNum: 1
   - aChar: a
   - anExp: Sys.Date()
-  owner: jesus
+  owner: tester
   email:
   - Some One <someone@nowhere.com>
   - Jesus <jesus@sky.com>
@@ -15,13 +15,13 @@ testAutoReportFirst:
   - 60
 testAutoReportSecond:
   synopsis: Test, the second one
-  package: raptools
+  package: rapbase
   fun: .testAutoReport
   params:
   - aNum: 2.0
   - aChar: '3.14'
   - anExp: sessionInfo()
-  owner: someone
+  owner: tester
   email:
   - <someone@nowhere.com>
   - jesus@sky.com
