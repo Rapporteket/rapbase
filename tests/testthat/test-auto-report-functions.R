@@ -81,6 +81,36 @@ test_that("Auto report can be deleted", {
   expect_true(is.na(names(readAutoReportData())[reportId]))
 })
 
+Sys.setenv(R_RAP_CONFIG_PATH="test")
+
+test_that("Auto report config can be created from package default", {
+  dir.create(path = Sys.getenv("R_RAP_CONFIG_PATH"))
+  expect_warning(readAutoReportData())
+})
+
+test_that("Backup of auto report config can be made", {
+  writeAutoReportData(config = rd)
+  expect_true(file.exists(file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
+                                    "autoReportBackup")))
+})
+
+bckFile <- list.files(file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
+                                "autoReportBackup"), full.names = TRUE)
+Sys.setFileTime(bckFile, "2019-01-01")
+writeAutoReportData(config = rd)
+
+# test_that("Backup of auto reports can be cleaned", {
+#   expect_false(file.exists(bckFile))
+#})
+
+f <- file.remove(
+  list.files(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReportBackup"),
+             full.names = TRUE))
+f <- file.remove(
+  file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReportBackup"))
+f <- file.remove(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReport.yml"))
+f <- file.remove(Sys.getenv("R_RAP_CONFIG_PATH"))
+Sys.setenv(R_RAP_CONFIG_PATH="")
 
 # Restore environment
 Sys.setenv(R_RAP_INSTANCE=currentInstance)
