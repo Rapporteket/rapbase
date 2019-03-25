@@ -275,9 +275,9 @@ getRegs <- function(config) {
   if(length(grep("::", x))>0) {
     parts<-strsplit(x, "::")[[1]]
     getExportedValue(parts[1], parts[2])
-  } else {
+  } else { # nocov start
     x
-  }
+  } # nocov end
   
 }
 
