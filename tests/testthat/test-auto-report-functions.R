@@ -68,12 +68,8 @@ test_that("The next run day in sequence can be identified", {
 
 shinySession <- list(user="tester")
 shinySession$groups <- "rapbase"
-# shinySession$request <- list(HTTP_RESH_ID="789012")
-# shinySession$request$HTTP_ROLE <- "LC"
-# # make a copy for testing wrong class
-# shinySessionWrongClass <- shinySession
-# simulate ShinySession class for above list
 attr(shinySession, "class") <- "ShinySession"
+
 test_that("A per-user subscription table (for shiny) can be made", {
   expect_true(is.list(makeUserSubscriptionTab(session = shinySession)))
 })
