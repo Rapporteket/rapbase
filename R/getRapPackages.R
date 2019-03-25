@@ -13,6 +13,11 @@ getRapPackages <- function() {
   allPkg <- as.data.frame(library()$result, stringsAsFactors=FALSE)
   res <- sapply(allPkg$Package, isPkgRapReg)
   res <- names(res[res==TRUE])
-  res[!is.na(res)]
+  # make sure a vector is always returned
+  if (length(res[!is.na(res)]) == 0) {
+    vector(mode = "character")
+  } else {
+    res[!is.na(res)]
+  }
   
 }
