@@ -433,8 +433,8 @@ makeUserSubscriptionTab <- function(session) {
   
   l <- list()
   autoRep <- readAutoReportData() %>%
-    raptools::selectByReg(., reg = rapbase::getUserGroups(session)) %>%
-    raptools::selectByOwner(., owner = rapbase::getUserName(session))
+    selectByReg(., reg = getUserGroups(session)) %>%
+    selectByOwner(., owner = getUserName(session))
   
   for (n in names(autoRep)){
     r <- list("repId"=n,
