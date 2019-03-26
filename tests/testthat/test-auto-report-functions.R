@@ -6,6 +6,7 @@ currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
 Sys.setenv(R_RAP_INSTANCE="")
 Sys.setenv(R_RAP_CONFIG_PATH="")
 
+# make test data
 synopsis <- "Test of auto report"
 package <- "rapbase"
 fun <- ".testAutoReport"
@@ -15,6 +16,14 @@ owner <- "tester"
 email <- "tester@skde.no"
 runDayOfYear <- as.POSIXlt(Sys.Date())$yday+1
 dryRun <- FALSE
+
+test_that("Config data can be filterd bu registry on empty input", {
+  expect_true(is.list(selectByReg(list(), "test")))
+})
+
+test_that("Config data can be filterd by owner on empty input", {
+  expect_true(is.list(selectByOwner(list(), "test")))
+})
 
 test_that("Auto report can be created and written to file", {
   expect_silent(createAutoReport(synopsis, package, fun, paramNames,

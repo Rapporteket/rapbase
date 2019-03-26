@@ -178,13 +178,17 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 
 selectByReg <- function(config, reg) {
   
-  ind <- integer()
-  for (i in 1:length(config)) {
-    if (config[[i]]$package == reg) {
-      ind <- c(ind, i)
+  if (length(config) == 0 ) {
+    list()
+  } else {
+    ind <- integer()
+    for (i in 1:length(config)) {
+      if (config[[i]]$package == reg) {
+        ind <- c(ind, i)
+      }
     }
+    c(config[ind])
   }
-  c(config[ind])
 }
 
 
@@ -200,15 +204,18 @@ selectByReg <- function(config, reg) {
 
 selectByOwner <- function(config, owner) {
   
-  ind <- integer()
-  for (i in 1:length(config)) {
-    if (config[[i]]$owner == owner) {
-      ind <- c(ind, i)
+  if (length(config) == 0) {
+    list()
+  } else {
+    ind <- integer()
+    for (i in 1:length(config)) {
+      if (config[[i]]$owner == owner) {
+        ind <- c(ind, i)
+      }
     }
+    c(config[ind])
   }
-  c(config[ind])
 }
-
 
 
 #' Provide vector of registries (\emph{i.e.} their R packages) in config
