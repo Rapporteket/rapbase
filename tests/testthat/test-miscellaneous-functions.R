@@ -5,5 +5,5 @@ test_that("Listing of Rapporteket packages is present", {
 })
 
 test_that("Widget for shiny apps can be provided", {
-  expect_output(str(appNavbarUserWidget()), "script")
+  expect_output(str(appNavbarUserWidget()), "script|navbar-brand")
 })
