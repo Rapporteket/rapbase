@@ -28,6 +28,7 @@ Imports:
     RMariaDB,
     sendmailR,
     shiny,
+    utils,
     yaml
 Remotes:
     hadley/testthat

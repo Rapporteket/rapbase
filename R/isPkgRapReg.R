@@ -17,5 +17,5 @@
 
 
 isPkgRapReg <- function(pkg) {
-  grepl("rapbase", packageDescription(pkg)$Depends, fixed = TRUE)
+  grepl("rapbase", utils::packageDescription(pkg)$Depends, fixed = TRUE)
 }
