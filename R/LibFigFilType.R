@@ -12,6 +12,7 @@
 #' @param fargepalett Hvilken fargepalett skal brukes
 #' @return UtFigFil List med en del figurparametre
 #' @keywords rapporteket norgast
+#' @importFrom grDevices bmp jpeg pdf png rgb tiff
 #' @export
 
 figtype <- function(outfile='', width=3*595, height=3*595, res=3*72, pointsizePDF=11, 

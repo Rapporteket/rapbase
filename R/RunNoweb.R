@@ -7,6 +7,7 @@
 #' @param packageName Name of the package containg noweb file(s)
 #' @param weaveMethod Method to apply for weaving. Currently available are
 #'  'Sweave' and 'knitr', default to the latter.
+#' @importFrom utils Sweave
 #' @export
 
 RunNoweb <- function(nowebFileName, packageName, weaveMethod = "knitr") {
