@@ -434,6 +434,7 @@ findNextRunDate <- function(runDayOfYear,
 #' @param session A shiny session object
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
+#' @importFrom magrittr "%>%"
 #' @export
 
 makeUserSubscriptionTab <- function(session) {
