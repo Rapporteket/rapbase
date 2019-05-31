@@ -23,6 +23,7 @@ Imports:
     gistr,
     httr,
     knitr,
+    magrittr,
     readr,
     RJDBC,
     RMariaDB,
