@@ -13,8 +13,33 @@ test_that("Error provided when key has no corresponding config", {
   expect_error(rapOpenDbConnection(registryName = "aNoneExistingRegistryKey"))
 })
 
+
+# Make sure we do have a test db during DEV
+# On Travis, this will be taken care of in config (.travis.yml)
+# If in a DEV context alter the default travis setup
+regName <- "rapbase"
+if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
+  regName <- "dev"
+  query <- c("DROP DATABASE IF EXISTS rapbase;",
+             "CREATE DATABASE rapbase;",
+             "USE rapbase;",
+             paste("CREATE TABLE testTable (id int, someText varchar(50),",
+                   "someInt INT, someBigInt BIGINT, someFloat DOUBLE,",
+                   "someTime DATETIME);"))
+  conf <- getConfig()[[regName]]
+  drv <- RMariaDB::MariaDB()
+  con <- DBI::dbConnect(drv,
+                        host = conf$host,
+                        user = conf$user,
+                        password = conf$pass)
+  for (q in query) {
+    tmp <- DBI::dbExecute(con, q)
+  }
+  DBI::dbDisconnect(con)
+}
+
 test_that("A mysql db connection and driver can be provided and cleaned", {
-  l <- rapOpenDbConnection("rapbase")
+  l <- rapOpenDbConnection(registryName = regName)
   expect_output(str(l), "List of 2")
   expect_is(l[[1]], "MariaDBConnection")
   expect_is(l[[2]], "MariaDBDriver")
@@ -25,7 +50,7 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
 
 test_that("Data can be queried from (MySQL) db", {
   query <- "SELECT * FROM testTable"
-  expect_output(str(LoadRegData("rapbase", query, dbType = "mysql")),
+  expect_output(str(LoadRegData(regName, query, dbType = "mysql")),
                 "data.frame")
 })
 
@@ -36,7 +61,7 @@ test_that("Bigints are returned as integers (not bit64::integer64)", {
              paste("CREATE TABLE testTable (id int, someText varchar(50),",
              "someInt INT, someBigInt BIGINT, someFloat DOUBLE,",
              "someTime DATETIME);"))
-  l <- rapOpenDbConnection("rapbase")
+  l <- rapOpenDbConnection(regName)
   for (q in query) {
     tmp <- DBI::dbExecute(l$con, q)
   }

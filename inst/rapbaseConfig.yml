@@ -7,9 +7,15 @@
 r :
 
   # dummy library path
-  libpath : !expr character(0)
+  libpath :
   # libpath : !expr Sys.getenv("R_LIBS_USER")
   # libpath : /usr/local/lib/R/site-library
+  
+  testUser :
+    user : tester
+    groups : rapbase
+    role : accessLevel
+    resh_id : 999999
 
 
 ## Network stuff
@@ -17,12 +23,17 @@ network :
 
 # dummy proxy server
   proxy :
-    http : !expr ""
+    http :
+    port :
     # http : http://dummy_proxy_hostname.no
-    port : !expr ""
     # port : 8080
     # ip : 192.168.0.100
 
+# email
+  smtp :
+    server : localhost
+    port : 2525
+  sender : rapporteket@skde.no
 
 ## Github stuff
 github :

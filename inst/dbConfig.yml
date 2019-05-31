@@ -6,10 +6,18 @@ nordummy:
   pass : dummy_db_password
   disp : dummy_display_name
 
-# for testing, on localhost
+# for testing, on localhost travis
 rapbase:
   host : 127.0.0.1
   name : rapbase
   user : travis
   pass : 
   disp : ForTestingOnly
+
+# for testing, in rap-dev-data container
+dev:
+  host : db
+  name : rapbase
+  user : root
+  pass : root
+  disp : ForDevOnly
