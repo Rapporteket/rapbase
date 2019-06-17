@@ -99,7 +99,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     if (context %in% prodContexts) {
       user <- shinySession$user
       groups <- shinySession$groups
-      resh_id <- shinySession$request$HTTP_RESH_ID
+      resh_id <- shinySession$request$HTTP_RESHID
       role <- shinySession$request$HTTP_ROLE
     }
   }
