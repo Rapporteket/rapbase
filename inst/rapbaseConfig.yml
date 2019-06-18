@@ -16,6 +16,7 @@ r :
     groups : rapbase
     role : accessLevel
     resh_id : 999999
+    email: rapporteket@skde.no
 
 
 ## Network stuff

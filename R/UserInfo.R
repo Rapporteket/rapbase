@@ -8,7 +8,7 @@
 #' below).
 #'
 #' @param entity String defining the element to return. Currently, one of
-#' 'user', groups', 'resh_id' or 'role'
+#' 'user', groups', 'resh_id', 'role' or 'email'
 #' @param shinySession Shiny session object (list, NULL by default). Must be
 #' provided when the source of user attributes is either the shiny app url or
 #' an external authentication provider. By default this will apply to the
@@ -45,9 +45,9 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
                      prodContexts = c("QA", "PRODUCTION")) {
   
   # check for valid entities
-  if (!(entity %in% c("user", "groups", "resh_id", "role"))) {
+  if (!(entity %in% c("user", "groups", "resh_id", "role", "email"))) {
     stop("Incorrect entity provided! Must be one of 'user', 'groups', 'resh_id'
-         or 'role'")
+         'role' or 'email'")
   }
   
   # check if any contexts overlap, and stop if so
@@ -67,6 +67,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     groups <- d$groups
     role <- d$role
     resh_id <- d$resh_id
+    email <- d$email
   }
   
   if (context %in% devContexts) {
@@ -76,6 +77,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     groups <- d$groups
     role <- d$role
     resh_id <- d$resh_id
+    email <- d$email
   }
   
   if (context %in% testContexts | context %in% prodContexts) {
@@ -94,6 +96,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
       groups <- us$`X-GROUPS`
       resh_id <- us$resh_id
       role <- us$role
+      email <- us$email
     }
     
     if (context %in% prodContexts) {
@@ -101,6 +104,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
       groups <- shinySession$groups
       resh_id <- shinySession$request$HTTP_RESHID
       role <- shinySession$request$HTTP_ROLE
+      email <- shinySession$request$HTTP_EMAIL
     }
   }
 
@@ -108,6 +112,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
          user = user,
          groups = groups,
          resh_id = resh_id,
-         role = role)
+         role = role,
+         email = email)
   
 }
