@@ -18,6 +18,7 @@
 #' @param owner String providing the owner of the report. Usually a user name
 #' @param email String with email address to recipient of email containg the
 #' report
+#' @param organization String idetifying the organization the owner belongs to
 #' @param runDayOfYear Integer vector with day numbers of the year when the
 #' report is to be run
 #' @param dryRun Logical defining if global auto report config actually is to
@@ -30,7 +31,8 @@
 #' @export
 
 createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
-                             owner, email, runDayOfYear, dryRun = FALSE) {
+                             owner, email, organization, runDayOfYear,
+                             dryRun = FALSE) {
   
   # make unique id by (hashing) combination of owner and timestamp
   ts <- as.character(as.integer(as.POSIXct(Sys.time())))
@@ -51,6 +53,7 @@ createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
   l$params <- paramsListVector
   l$owner <- owner
   l$email <- email
+  l$organization <- organization
   l$runDayOfYear <- runDayOfYear
   
   rd <- readAutoReportData()
@@ -210,6 +213,32 @@ selectByOwner <- function(config, owner) {
     ind <- integer()
     for (i in 1:length(config)) {
       if (config[[i]]$owner == owner) {
+        ind <- c(ind, i)
+      }
+    }
+    c(config[ind])
+  }
+}
+
+
+#' Select data on one organization from config (list)
+#'
+#' Pick all config corresponding to a given organization (of the report)
+#'
+#' @param config list of configuration for automated reports
+#' @param organization string giving the exact organization
+#'
+#' @return list with config for reports belonging to organization
+#' @export
+
+selectByOrganization <- function(config, organization) {
+  
+  if (length(config) == 0) {
+    list()
+  } else {
+    ind <- integer()
+    for (i in 1:length(config)) {
+      if (config[[i]]$organization == organization) {
         ind <- c(ind, i)
       }
     }
