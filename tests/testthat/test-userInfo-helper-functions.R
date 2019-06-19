@@ -26,8 +26,11 @@ test_that("Helpers provide config data when provided session object is empty", {
 # Simulated session
 shinySession <- list(user="user1")
 shinySession$groups <- "group1,group2"
-shinySession$request <- list(HTTP_RESH_ID="789012")
+shinySession$request <- list(HTTP_RESHID="789012")
 shinySession$request$HTTP_ROLE <- "LC"
+shinySession$request$HTTP_EMAIL <- "user1@nowhere.no"
+shinySession$request$HTTP_FULLNAME <- "T Test"
+shinySession$request$HTTP_PHONE <- "04050607"
 # simulate ShinySession class for above list
 attr(shinySession, "class") <- "ShinySession"
 
@@ -37,6 +40,9 @@ test_that("Helpers provide session data", {
   expect_equal(getUserGroups(shinySession), "group1,group2")
   expect_equal(getUserReshId(shinySession), "789012")
   expect_equal(getUserRole(shinySession), "LC")
+  expect_equal(getUserEmail(shinySession), "user1@nowhere.no")
+  expect_equal(getUserFullName(shinySession), "T Test")
+  expect_equal(getUserPhone(shinySession), "04050607")
 })
 
 
