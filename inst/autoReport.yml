@@ -10,6 +10,7 @@ testAutoReportFirst:
   email:
   - Some One <someone@nowhere.com>
   - Jesus <jesus@sky.com>
+  organization: 000000
   runDayOfYear:
   - 30
   - 60
@@ -25,6 +26,7 @@ testAutoReportSecond:
   email:
   - <someone@nowhere.com>
   - jesus@sky.com
+  organization: 000000
   runDayOfYear:
   - 30
   - 60

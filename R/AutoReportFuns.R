@@ -474,8 +474,8 @@ makeUserSubscriptionTab <- function(session) {
     selectByOwner(., owner = getUserName(session))
   
   for (n in names(autoRep)){
-    r <- list("repId"=n,
-              "Rapport"=autoRep[[n]]$synopsis,
+    r <- list("Rapport"=autoRep[[n]]$synopsis,
+              "Enhet"=autoRep[[n]]$organization,
               "Neste"=findNextRunDate(autoRep[[n]]$runDayOfYear),
               "Slett"=as.character(
                 shiny::actionButton(inputId = paste0("del_", n),
