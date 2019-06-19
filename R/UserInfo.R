@@ -8,7 +8,7 @@
 #' below).
 #'
 #' @param entity String defining the element to return. Currently, one of
-#' 'user', groups', 'resh_id', 'role' or 'email'
+#' 'user', groups', 'resh_id', 'role', 'email', 'full_name' or 'phone'
 #' @param shinySession Shiny session object (list, NULL by default). Must be
 #' provided when the source of user attributes is either the shiny app url or
 #' an external authentication provider. By default this will apply to the
@@ -45,7 +45,8 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
                      prodContexts = c("QA", "PRODUCTION")) {
   
   # check for valid entities
-  if (!(entity %in% c("user", "groups", "resh_id", "role", "email"))) {
+  if (!(entity %in% c("user", "groups", "resh_id", "role", "email",
+                      "full_name", "phone"))) {
     stop("Incorrect entity provided! Must be one of 'user', 'groups', 'resh_id'
          'role' or 'email'")
   }
@@ -68,6 +69,8 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     role <- d$role
     resh_id <- d$resh_id
     email <- d$email
+    full_name <- d$full_name
+    phone <- d$phone
   }
   
   if (context %in% devContexts) {
@@ -78,6 +81,8 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     role <- d$role
     resh_id <- d$resh_id
     email <- d$email
+    full_name <- d$full_name
+    phone <- d$phone
   }
   
   if (context %in% testContexts | context %in% prodContexts) {
@@ -97,6 +102,8 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
       resh_id <- us$resh_id
       role <- us$role
       email <- us$email
+      full_name <- us$full_name
+      phone <- us$phone
     }
     
     if (context %in% prodContexts) {
@@ -105,6 +112,8 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
       resh_id <- shinySession$request$HTTP_RESHID
       role <- shinySession$request$HTTP_ROLE
       email <- shinySession$request$HTTP_EMAIL
+      full_name <- shinySession$request$HTTP_FULLNAME
+      phone <- shinySession$request$HTTP_PHONE
     }
   }
 
@@ -113,6 +122,8 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
          groups = groups,
          resh_id = resh_id,
          role = role,
-         email = email)
+         email = email,
+         full_name = full_name,
+         phone = phone)
   
 }
