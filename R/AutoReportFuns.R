@@ -471,7 +471,8 @@ makeUserSubscriptionTab <- function(session) {
   l <- list()
   autoRep <- readAutoReportData() %>%
     selectByReg(., reg = getUserGroups(session)) %>%
-    selectByOwner(., owner = getUserName(session))
+    selectByOwner(., owner = getUserName(session)) %>% 
+    selectByOrganization(., organization = getUserReshId(session))
   
   for (n in names(autoRep)){
     r <- list("Rapport"=autoRep[[n]]$synopsis,
