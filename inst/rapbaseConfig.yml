@@ -15,8 +15,10 @@ r :
     user : tester
     groups : rapbase
     role : accessLevel
-    resh_id : 999999
+    resh_id : '999999'
     email: rapporteket@skde.no
+    full_name: T Tester
+    phone: '04050607'
 
 
 ## Network stuff
