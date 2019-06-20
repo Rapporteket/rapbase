@@ -4,11 +4,14 @@ context("User info helper functions")
 currentInstance <- Sys.getenv("R_RAP_INSTANCE")
 
 Sys.setenv(R_RAP_INSTANCE="DEV")
-test_that("Helpers provide config data when no session data present", {
+test_that("Helpers provide warning when no session data present", {
   expect_warning(getUserName())
   expect_warning(getUserGroups())
   expect_warning(getUserReshId())
   expect_warning(getUserRole())
+  expect_warning(getUserEmail())
+  expect_warning(getUserFullName())
+  expect_warning(getUserPhone())
 })
 
 # take whatever user info provided by confing
@@ -21,6 +24,9 @@ test_that("Helpers provide config data when provided session object is empty", {
   expect_equal(getUserGroups(shinySession = NULL), d$groups)
   expect_equal(getUserReshId(shinySession = NULL), d$resh_id)
   expect_equal(getUserRole(shinySession = NULL), d$role)
+  expect_equal(getUserEmail(shinySession = NULL), d$email)
+  expect_equal(getUserFullName(shinySession = NULL), d$full_name)
+  expect_equal(getUserPhone(shinySession = NULL), d$phone)
 })
 
 # Simulated session
