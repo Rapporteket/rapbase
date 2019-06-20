@@ -10,7 +10,7 @@ testAutoReportFirst:
   email:
   - Some One <someone@nowhere.com>
   - Jesus <jesus@sky.com>
-  organization: '000000'
+  organization: '999999'
   runDayOfYear:
   - 30
   - 60
@@ -26,7 +26,7 @@ testAutoReportSecond:
   email:
   - <someone@nowhere.com>
   - jesus@sky.com
-  organization: '000000'
+  organization: '999999'
   runDayOfYear:
   - 30
   - 60
@@ -41,5 +41,17 @@ testAutoReportSecond:
   - anExp: Sys.Date()
   owner: tester
   email: tester@skde.no
-  organization: '000000'
+  organization: '999999'
   runDayOfYear: 170.0
+cd467ac14dd848b8798a384a3e51512c:
+  synopsis: Test of auto report
+  package: rapbase
+  fun: .testAutoReport
+  params:
+  - aNum: '1'
+  - aChar: someString
+  - anExp: Sys.Date()
+  owner: tester
+  email: tester@skde.no
+  organization: '999999'
+  runDayOfYear: 171.0
