@@ -3,7 +3,6 @@ context("User info")
 # store current instance
 currentInstance <- Sys.getenv("R_RAP_INSTANCE")
 
-
 test_that("Function handles general errors", {
   expect_error(userInfo(entity = "user", devContexts = c("DEV", "TEST")))
   expect_error(userInfo(entity = "username"))
@@ -54,7 +53,7 @@ Sys.setenv(R_RAP_INSTANCE="QA")
 # simulated real data
 shinySession <- list(user="user1")
 shinySession$groups <- "group1,group2"
-shinySession$request <- list(HTTP_RESH_ID="789012")
+shinySession$request <- list(HTTP_RESHID="789012")
 shinySession$request$HTTP_ROLE <- "LC"
 # make a copy for testing wrong class
 shinySessionWrongClass <- shinySession
@@ -78,7 +77,7 @@ test_that("Function can handle redefined contexts", {
   expect_equal(userInfo(entity = "role", devContexts = c("DEV", "QA"),
                         prodContexts = c("PRODUCTION")), "accessLevel")
   expect_equal(userInfo(entity = "resh_id", devContexts = c("DEV", "QA"),
-                        prodContexts = c("PRODUCTION")), 999999)
+                        prodContexts = c("PRODUCTION")), "999999")
 })
 
 # Restore instance

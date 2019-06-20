@@ -14,10 +14,11 @@ paramNames <- c("aNum", "aChar", "anExp")
 paramValues <- c(1, "someString", "Sys.Date()")
 owner <- "tester"
 email <- "tester@skde.no"
+organization <- "000000"
 runDayOfYear <- as.POSIXlt(Sys.Date())$yday+1
 dryRun <- FALSE
 
-test_that("Config data can be filterd bu registry on empty input", {
+test_that("Config data can be filterd by registry on empty input", {
   expect_true(is.list(selectByReg(list(), "test")))
 })
 
@@ -25,17 +26,21 @@ test_that("Config data can be filterd by owner on empty input", {
   expect_true(is.list(selectByOwner(list(), "test")))
 })
 
+test_that("Config data can be filtered by organization on empty input", {
+  expect_true(is.list(selectByOrganization(list(), "test")))
+})
+
 test_that("Auto report can be created and written to file", {
   expect_silent(createAutoReport(synopsis, package, fun, paramNames,
-                                 paramValues, owner, email, runDayOfYear,
-                                 dryRun))
+                                 paramValues, owner, email, organization,
+                                 runDayOfYear, dryRun))
     
   })
 
 test_that("Auto report can be created as dry run (stout)", {
   res <- createAutoReport(synopsis, package, fun, paramNames,
-                          paramValues, owner, email, runDayOfYear,
-                          dryRun = TRUE)
+                          paramValues, owner, email, organization,
+                          runDayOfYear, dryRun = TRUE)
   expect_true(is.list(res))
 })
 
@@ -47,6 +52,10 @@ test_that("Auto reports can be filtered by registry/package", {
 
 test_that("Auto reports can be filtered by owner", {
   expect_true(is.list(selectByOwner(rd, owner)))
+})
+
+test_that("Auto reports can be filtered by organization", {
+  expect_true(is.list(selectByOrganization(rd, organization)))
 })
 
 test_that("Registries/packages can be extracted from config", {

@@ -15,7 +15,9 @@ getRapPackages <- function() {
   res <- names(res[res==TRUE])
   # make sure a vector is always returned
   if (length(res[!is.na(res)]) == 0) {
+    # nocov start
     vector(mode = "character")
+    # nocov end
   } else {
     res[!is.na(res)]
   }
