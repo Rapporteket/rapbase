@@ -480,9 +480,10 @@ makeUserSubscriptionTab <- function(session) {
               "Neste"=findNextRunDate(autoRep[[n]]$runDayOfYear),
               "Slett"=as.character(
                 shiny::actionButton(inputId = paste0("del_", n),
-                             label = "x",
-                             onclick = 'Shiny.onInputChange(\"del_button\",  this.id)',
-                             style = "color: red;")))
+                             label = "",
+                             icon = shiny::icon("trash"),
+                             onclick = 'Shiny.onInputChange(\"del_button\",
+                             this.id)')))
     l <- rbind(l, r)
   }
   l
