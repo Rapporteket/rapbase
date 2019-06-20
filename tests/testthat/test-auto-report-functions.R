@@ -26,6 +26,10 @@ test_that("Config data can be filterd by owner on empty input", {
   expect_true(is.list(selectByOwner(list(), "test")))
 })
 
+test_that("Config data can be filtered by organization on empty input", {
+  expect_true(is.list(selectByOrganization(list(), "test")))
+})
+
 test_that("Auto report can be created and written to file", {
   expect_silent(createAutoReport(synopsis, package, fun, paramNames,
                                  paramValues, owner, email, organization,
