@@ -8,7 +8,7 @@
 
 is an R package holding common R functions for *Rapporteket* which is a reporting service for Norwegian medical quality registries. Each registry at *Rapporteket* will have their content structured as R packages that are all found under the [Rapporteket organization at GitHub](https://github.com/Rapporteket). Such packages are likely to depend on the *rapbase* package. Please feel free to [learn mora about the *rapbase* package](https://rapporteket.github.io/rapbase/index.html).
 
-Top-level information regarding *Rapporteket* is [provided on a dedicated site (in Norwegian)](https://rapporteket.github.io/rapporteket)
+Top-level information regarding *Rapporteket* is [provided on a dedicated site (in Norwegian)](https://rapporteket.github.io/rapporteket).
 
 ## Install
 As of july 2019 the *rapbase* R package is available from GitHub and cab be installed from the R command propt:
