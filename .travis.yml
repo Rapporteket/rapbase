@@ -1,10 +1,5 @@
 language: r
 cache: packages
-
-branches:
-  only:
-    - rel
-    - gh-pages
     
 warnings_are_errors: false
 
