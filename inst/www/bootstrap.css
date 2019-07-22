@@ -7022,12 +7022,27 @@ a.list-group-item-danger.active:focus {
 }
 
 /*
-Testing logo
+Rapporteket logo
 */
 .logo {
-  display: inline-block;
   vertical-align: middle;
+  float: left;
   width: 26px;
   height: 26px;
-  fill: currentColor;
+  /*fill: currentColor;*/
+}
+/* for now, do not flicker logo*/
+.navbar-default .logo {
+  fill: #18bc9c;
+}
+.navbar-default .logo:hover,
+.navbar-default .logo:focus {
+  fill: #18bc9c;
+}
+.navbar-inverse .logo {
+  fill: #2c3e50;
+}
+.navbar-inverse .logo:hover,
+.navbar-inverse .logo:focus {
+  fill: #2c3e50;
 }
