@@ -6,7 +6,7 @@
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 <!-- badges: end -->
 
-is an R package holding common R functions for *Rapporteket* which is a reporting service for Norwegian medical quality registries. Each registry at *Rapporteket* will have their content structured as R packages that are all found under the [Rapporteket organization at GitHub](https://github.com/Rapporteket). Such packages are likely to depend on the *rapbase* package. Please feel free to [learn mora about the *rapbase* package](https://rapporteket.github.io/rapbase/index.html).
+is an R package holding common R functions for *Rapporteket* which is a reporting service for Norwegian medical quality registries. Each registry at *Rapporteket* will have their content structured as R packages that are all found under the [Rapporteket organization at GitHub](https://github.com/Rapporteket). Such packages are likely to depend on the *rapbase* package. Please feel free to [learn more about the *rapbase* package](https://rapporteket.github.io/rapbase/index.html).
 
 Top-level information regarding *Rapporteket* is [provided on a dedicated site (in Norwegian)](https://rapporteket.github.io/rapporteket).
 
