@@ -3,9 +3,16 @@ Type: Package
 Title: Base functions and resources for Rapporteket
 Version: 1.8.0
 Date: 2018-06-07
-Authors@R: c(person("Edvardsen", "Are", email = "are.edvardsen@helse-
-    nord.no", role = c("cre", "aut")), person("Thon", "Kevin", email =
-    "kevin.thon@skde.no", role = "aut"))
+Authors@R: c(
+    person(given = "Are",
+           family = "Edvardsen",
+           role = c("aut", "cre"),
+           email = "biorakel@gmail.com",
+           comment = c(ORCID = "0000-0002-5210-3656")),
+    person(given = "Kevin Otto",
+           family = "Thon",
+           role = c("aut"),
+           email = "kevin.thon@helse-nord.no"))
 Maintainer: Are Edvardsen <are.edvardsen@helse-nord.no>
 Description: Provide common functions and resources for registry specific
     R-packages at Rapporteket. Can potentially contain alot of stuff, also
