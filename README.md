@@ -1,5 +1,8 @@
+<!-- badges: start -->
 [![Build Status](https://travis-ci.org/Rapporteket/rapbase.png)](https://travis-ci.org/Rapporteket/rapbase)
 [![codecov.io](https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=rel)](https://codecov.io/github/Rapporteket/rapbase?branch=rel)
+[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+<!-- badges: end -->
 
 # Install
 The current package can be fetched directly from your R session. If not already
