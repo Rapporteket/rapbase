@@ -1,43 +1,36 @@
+# rapbase <img src="man/figures/favicon.ico" align="right" height="150" />
+
+<!-- badges: start -->
 [![Build Status](https://travis-ci.org/Rapporteket/rapbase.png)](https://travis-ci.org/Rapporteket/rapbase)
 [![codecov.io](https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=rel)](https://codecov.io/github/Rapporteket/rapbase?branch=rel)
+[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+<!-- badges: end -->
 
-# Install
-The current package can be fetched directly from your R session. If not already
-present, first install the devtools-package from your R terminal:
+*rapbase* is an R package holding common R functions for *Rapporteket* which is a reporting service for Norwegian medical quality registries. Each registry at *Rapporteket* will have their content structured as R packages that are all found under the [Rapporteket organization at GitHub](https://github.com/Rapporteket). Such packages are likely to depend on the *rapbase* package.
 
+Top-level information regarding *Rapporteket* is [provided on a dedicated site (in Norwegian)](https://rapporteket.github.io/rapporteket).
+
+## Install
+As of july 2019 the *rapbase* R package is available from GitHub and cab be installed from the R command propt:
 ```r
-install.packages("devtools")
+remotes::install("Rapporteket/rapbase")
 ```
+Alternatively, the package source code can be [cloned from GitHub](https://github.com/Rapporteket/rapbase) and built locally. 
 
-Then, install the rapbase package:
-
+## Usage
+Once the package is installed functions can be called from within R, *e.g.*:
 ```r
-devtools::install_github("Rapporteket/rapbase")
+rapbase::HalloRapporteket()
 ```
+For a complete and updated view of the package documentation please consult the [*rapbase*-site](https://rapporteket.github.io/rapbase/index.html). Looking into [how others have implemented *rapbase* for various registries](https://github.com/Rapporteket) is also an excellent way of learning the use of *rapbase*. In the [rapRegTemplate package (in Norwegian)](https://github.com/Rapporteket/rapRegTemplate) that provides a Shiny application template to be used for making registries there is some boiler plate code to aid start up. Please feel free to also contact the maintainers and authors directly. 
 
-When installed at Rapporteket make sure clean-up is performed:
+## Issues
+Please provide any comments (*e.g.* on proposed enhancements, shortcomings, errors) through the [issue tracker](https://github.com/Rapporteket/rapbase/issues).
 
-```r
-devtools::install_github("Rapporteket/rapbase", args=c("--clean"))
-```
+## Contributing
+Contributors submit their code by forking from the 'rel' branch and opening of pull request. Development workflow must apply unit testing of the code. In addition to automated testing proposed changes and additions to the *rapbase* code will be accepted (or rejected) based on manual code reviews. Code that is accepted will be merged into the 'rel' branch, tagged and used for full scale TESTING and QA prior to PRODUCTION deployment.
 
-This will add local configuration after the package has been installed
-
-
-NOTE: Communicating through a proxy might cause the above install command to
-fail. If so, try the following prior to the above install command:
-
-```r  
-library(httr)
-set_config(
-  use_proxy(url="18.91.12.23", port=8080, username="user",password="passwd")
-  )
-```
-
-replacing the example parameter values with whatever applies for the
-system the package is being installed on
-
-# Develop
-Contributors submit their code to the rel (release) branch which is subject to
-testing at Rapporteket. Upon acceptance rel will me merged to the master
-branch and tagged
+## Ethics
+Please note that the 'rapbase' project is released with a
+[Contributor Code of Conduct](CODE_OF_CONDUCT.md).
+By contributing to this project, you agree to abide by its terms.

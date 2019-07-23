@@ -1,8 +1,8 @@
 Package: rapbase
 Type: Package
 Title: Base functions and resources for Rapporteket
-Version: 1.8.0
-Date: 2018-06-07
+Version: 1.9.0
+Date: 2019-07-23
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -17,7 +17,7 @@ Maintainer: Are Edvardsen <are.edvardsen@helse-nord.no>
 Description: Provide common functions and resources for registry specific
     R-packages at Rapporteket. Can potentially contain alot of stuff, also
     not directly related to R...
-License: GPL-2
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
