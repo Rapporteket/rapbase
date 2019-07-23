@@ -27,7 +27,7 @@ For a complete and updated view of the package documentation please consult the 
 ## Issues
 Please provide any comments (*e.g.* on proposed enhancements, shortcomings, errors) through the [issue tracker](https://github.com/Rapporteket/rapbase/issues).
 
-## Development
+## Contributing
 Contributors submit their code by forking from the 'rel' branch and opening of pull request. Development workflow must apply unit testing of the code. In addition to automated testing proposed changes and additions to the *rapbase* code will be accepted (or rejected) based on manual code reviews. Code that is accepted will be merged into the 'rel' branch, tagged and used for full scale TESTING and QA prior to PRODUCTION deployment.
 
 ## Ethics
