@@ -1,0 +1,205 @@
+* using log directory 'd:/RCompile/CRANguest/R-release/rapbase.Rcheck'
+* using R version 3.6.1 (2019-07-05)
+* using platform: x86_64-w64-mingw32 (64-bit)
+* using session charset: ISO8859-1
+* checking for file 'rapbase/DESCRIPTION' ... OK
+* checking extension type ... Package
+* this is package 'rapbase' version '1.10.0'
+* package encoding: UTF-8
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'Are Edvardsen <biorakel@gmail.com>'
+
+New submission
+
+Possibly mis-spelled words in DESCRIPTION:
+  Rapporteket (3:41, 18:19, 19:28)
+
+Unknown, possibly mis-spelled, fields in DESCRIPTION:
+  'Remotes'
+
+Package has a VignetteBuilder field but no prebuilt vignette index.
+* checking package namespace information ... OK
+* checking package dependencies ... OK
+* checking if this is a source package ... OK
+* checking if there is a namespace ... OK
+* checking for hidden files and directories ... OK
+* checking for portable file names ... OK
+* checking serialization versions ... OK
+* checking whether package 'rapbase' can be installed ... OK
+* checking installed package size ... OK
+* checking package directory ... OK
+* checking for future file timestamps ... OK
+* checking DESCRIPTION meta-information ... OK
+* checking top-level files ... OK
+* checking for left-over files ... OK
+* checking index information ... OK
+* checking package subdirectories ... OK
+* checking R files for non-ASCII characters ... OK
+* checking R files for syntax errors ... OK
+* loading checks for arch 'i386'
+** checking whether the package can be loaded ... OK
+** checking whether the package can be loaded with stated dependencies ... OK
+** checking whether the package can be unloaded cleanly ... OK
+** checking whether the namespace can be loaded with stated dependencies ... OK
+** checking whether the namespace can be unloaded cleanly ... OK
+** checking loading without being on the library search path ... OK
+** checking use of S3 registration ... OK
+* loading checks for arch 'x64'
+** checking whether the package can be loaded ... OK
+** checking whether the package can be loaded with stated dependencies ... OK
+** checking whether the package can be unloaded cleanly ... OK
+** checking whether the namespace can be loaded with stated dependencies ... OK
+** checking whether the namespace can be unloaded cleanly ... OK
+** checking loading without being on the library search path ... OK
+** checking use of S3 registration ... OK
+* checking dependencies in R code ... OK
+* checking S3 generic/method consistency ... OK
+* checking replacement functions ... OK
+* checking foreign function calls ... OK
+* checking R code for possible problems ... [4s] OK
+* checking Rd files ... OK
+* checking Rd metadata ... OK
+* checking Rd line widths ... OK
+* checking Rd cross-references ... OK
+* checking for missing documentation entries ... OK
+* checking for code/documentation mismatches ... OK
+* checking Rd \usage sections ... OK
+* checking Rd contents ... OK
+* checking for unstated dependencies in examples ... OK
+* checking contents of 'data' directory ... OK
+* checking data for non-ASCII characters ... OK
+* checking data for ASCII and uncompressed saves ... OK
+* checking examples ...
+** running examples for arch 'i386' ... [2s] OK
+** running examples for arch 'x64' ... [3s] OK
+* checking for unstated dependencies in 'tests' ... OK
+* checking tests ...
+** running tests for arch 'i386' ... [8s] ERROR
+  Running 'testthat.R' [6s]
+Running the tests in 'tests/testthat.R' failed.
+Complete output:
+  > library(testthat)
+  > library(rapbase)
+  > 
+  > test_check("rapbase")
+  -- 1. Error: A mysql db connection and driver can be provided and cleaned (@test
+  Failed to connect: Can't connect to MySQL server on '127.0.0.1' (10057)
+  1: rapOpenDbConnection(registryName = regName) at testthat/test-dbConnection.R:42
+  2: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  3: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  4: .local(drv, ...)
+  5: connection_create(host, username, password, dbname, as.integer(port), unix.socket, 
+         as.integer(client.flag), groups, default.file, ssl.key, ssl.cert, ssl.ca, ssl.capath, 
+         ssl.cipher)
+  
+  -- 2. Error: Data can be queried from (MySQL) db (@test-dbConnection.R#53)  ----
+  Failed to connect: Can't connect to MySQL server on '127.0.0.1' (10057)
+  1: expect_output(str(LoadRegData(regName, query, dbType = "mysql")), "data.frame") at testthat/test-dbConnection.R:53
+  2: quasi_capture(enquo(object), label, capture_output, width = width)
+  3: .capture(act$val <- eval_bare(get_expr(.quo), get_env(.quo)), ...)
+  4: capture_output_lines(code, print, width = width)
+  5: eval_with_output(code, print = print, width = width)
+  6: withr::with_output_sink(temp, withVisible(code))
+  7: force(code)
+  8: withVisible(code)
+  9: eval_bare(get_expr(.quo), get_env(.quo))
+  10: str(LoadRegData(regName, query, dbType = "mysql"))
+  11: LoadRegData(regName, query, dbType = "mysql")
+  12: rapOpenDbConnection(registryName, dbType)
+  13: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  14: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  15: .local(drv, ...)
+  16: connection_create(host, username, password, dbname, as.integer(port), unix.socket, 
+         as.integer(client.flag), groups, default.file, ssl.key, ssl.cert, ssl.ca, ssl.capath, 
+         ssl.cipher)
+  
+  -- 3. Error: Bigints are returned as integers (not bit64::integer64) (@test-dbCo
+  Failed to connect: Can't connect to MySQL server on '127.0.0.1' (10057)
+  1: rapOpenDbConnection(regName) at testthat/test-dbConnection.R:64
+  2: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  3: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  4: .local(drv, ...)
+  5: connection_create(host, username, password, dbname, as.integer(port), unix.socket, 
+         as.integer(client.flag), groups, default.file, ssl.key, ssl.cert, ssl.ca, ssl.capath, 
+         ssl.cipher)
+  
+  == testthat results  ===========================================================
+  [ OK: 85 | SKIPPED: 0 | WARNINGS: 5 | FAILED: 3 ]
+  1. Error: A mysql db connection and driver can be provided and cleaned (@test-dbConnection.R#42) 
+  2. Error: Data can be queried from (MySQL) db (@test-dbConnection.R#53) 
+  3. Error: Bigints are returned as integers (not bit64::integer64) (@test-dbConnection.R#64) 
+  
+  Error: testthat unit tests failed
+  Execution halted
+** running tests for arch 'x64' ... [7s] ERROR
+  Running 'testthat.R' [7s]
+Running the tests in 'tests/testthat.R' failed.
+Complete output:
+  > library(testthat)
+  > library(rapbase)
+  > 
+  > test_check("rapbase")
+  -- 1. Error: A mysql db connection and driver can be provided and cleaned (@test
+  Failed to connect: Can't connect to MySQL server on '127.0.0.1' (10057)
+  1: rapOpenDbConnection(registryName = regName) at testthat/test-dbConnection.R:42
+  2: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  3: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  4: .local(drv, ...)
+  5: connection_create(host, username, password, dbname, as.integer(port), unix.socket, 
+         as.integer(client.flag), groups, default.file, ssl.key, ssl.cert, ssl.ca, ssl.capath, 
+         ssl.cipher)
+  
+  -- 2. Error: Data can be queried from (MySQL) db (@test-dbConnection.R#53)  ----
+  Failed to connect: Can't connect to MySQL server on '127.0.0.1' (10057)
+  1: expect_output(str(LoadRegData(regName, query, dbType = "mysql")), "data.frame") at testthat/test-dbConnection.R:53
+  2: quasi_capture(enquo(object), label, capture_output, width = width)
+  3: .capture(act$val <- eval_bare(get_expr(.quo), get_env(.quo)), ...)
+  4: capture_output_lines(code, print, width = width)
+  5: eval_with_output(code, print = print, width = width)
+  6: withr::with_output_sink(temp, withVisible(code))
+  7: force(code)
+  8: withVisible(code)
+  9: eval_bare(get_expr(.quo), get_env(.quo))
+  10: str(LoadRegData(regName, query, dbType = "mysql"))
+  11: LoadRegData(regName, query, dbType = "mysql")
+  12: rapOpenDbConnection(registryName, dbType)
+  13: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  14: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  15: .local(drv, ...)
+  16: connection_create(host, username, password, dbname, as.integer(port), unix.socket, 
+         as.integer(client.flag), groups, default.file, ssl.key, ssl.cert, ssl.ca, ssl.capath, 
+         ssl.cipher)
+  
+  -- 3. Error: Bigints are returned as integers (not bit64::integer64) (@test-dbCo
+  Failed to connect: Can't connect to MySQL server on '127.0.0.1' (10057)
+  1: rapOpenDbConnection(regName) at testthat/test-dbConnection.R:64
+  2: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  3: DBI::dbConnect(drv, dbname = conf$name, host = conf$host, user = conf$user, password = conf$pass, 
+         bigint = "integer")
+  4: .local(drv, ...)
+  5: connection_create(host, username, password, dbname, as.integer(port), unix.socket, 
+         as.integer(client.flag), groups, default.file, ssl.key, ssl.cert, ssl.ca, ssl.capath, 
+         ssl.cipher)
+  
+  == testthat results  ===========================================================
+  [ OK: 85 | SKIPPED: 0 | WARNINGS: 5 | FAILED: 3 ]
+  1. Error: A mysql db connection and driver can be provided and cleaned (@test-dbConnection.R#42) 
+  2. Error: Data can be queried from (MySQL) db (@test-dbConnection.R#53) 
+  3. Error: Bigints are returned as integers (not bit64::integer64) (@test-dbConnection.R#64) 
+  
+  Error: testthat unit tests failed
+  Execution halted
+* checking PDF version of manual ... OK
+* DONE
+Status: 2 ERRORs, 1 NOTE
