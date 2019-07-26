@@ -16,7 +16,7 @@ Authors@R: c(
 Maintainer: Are Edvardsen <biorakel@gmail.com>
 Description: Provide common functions and resources for registry specific
     R-packages at Rapporteket. This packages is relevant for developers of
-    packages/registries at Rapporteket
+    packages/registries at Rapporteket.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
