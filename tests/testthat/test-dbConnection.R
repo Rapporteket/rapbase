@@ -70,3 +70,8 @@ test_that("Bigints are returned as integers (not bit64::integer64)", {
   rapCloseDbConnection(l$con)
   expect_is(df[["someBigInt"]], "integer")
 })
+
+test_that("The use of MSSQL in no longer possible with an appropriate message", {
+  expect_error(LoadRegData(regName, query, dbType = "mssql"),
+                regexp = "Use of MSSQL is no longer supported. Exiting")
+})
