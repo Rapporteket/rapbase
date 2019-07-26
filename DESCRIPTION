@@ -13,10 +13,10 @@ Authors@R: c(
            family = "Thon",
            role = c("aut"),
            email = "kevin.thon@helse-nord.no"))
-Maintainer: Are Edvardsen <are.edvardsen@helse-nord.no>
+Maintainer: Are Edvardsen <biorakel@gmail.com>
 Description: Provide common functions and resources for registry specific
-    R-packages at Rapporteket. Can potentially contain alot of stuff, also
-    not directly related to R...
+    R-packages at Rapporteket. This packages is relevant for developers of
+    packages/registries at Rapporteket
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
