@@ -37,8 +37,6 @@ Imports:
     shiny,
     utils,
     yaml
-Remotes:
-    hadley/testthat
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 URL: http://github.com/Rapporteket/rapbase
