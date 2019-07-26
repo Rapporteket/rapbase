@@ -17,7 +17,7 @@ For test cases user privileges are provided by a query defined in the
 url of the shiny application request. Default FALSE}
 }
 \value{
-String of singel user data element
+String of single user data element
 }
 \description{
 Extracts elements from a shiny session object relevant for user data. This

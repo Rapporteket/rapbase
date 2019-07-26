@@ -8,7 +8,7 @@ rapOpenDbConnection(registryName, dbType = "mysql")
 }
 \arguments{
 \item{registryName}{String id used for the registry in global configuration
-file from which informastion on the database connection is provided}
+file from which information on the database connection is provided}
 
 \item{dbType}{String providing type of data source, one of
 "mysql" and "mssql". Defaults to "mysql"}

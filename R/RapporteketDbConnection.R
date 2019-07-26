@@ -4,7 +4,7 @@
 #' usernames and passwords needed to open these connections
 #' 
 #' @param registryName String id used for the registry in global configuration
-#'  file from which informastion on the database connection is provided
+#'  file from which information on the database connection is provided
 #' @param dbType String providing type of data source, one of
 #'  "mysql" and "mssql". Defaults to "mysql"
 #' @return con Data source connection object

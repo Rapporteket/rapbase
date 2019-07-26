@@ -10,7 +10,7 @@ getRegs(config)
 \item{config}{list of configuration for automated reports}
 }
 \value{
-character vector of rgistry (package) names
+character vector of registry (package) names
 }
 \description{
 Provide vector of registries (\emph{i.e.} their R packages) in config
