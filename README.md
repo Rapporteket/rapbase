@@ -11,7 +11,7 @@
 Top-level information regarding *Rapporteket* is [provided on a dedicated site (in Norwegian)](https://rapporteket.github.io/rapporteket).
 
 ## Install
-As of july 2019 the *rapbase* R package is available from GitHub and cab be installed from the R command propt:
+As of July 2019 the *rapbase* R package is available from GitHub and cab be installed from the R command prompt:
 ```r
 remotes::install("Rapporteket/rapbase")
 ```

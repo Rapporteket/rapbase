@@ -10,6 +10,6 @@
 
 # rapbase 1.10.0
 
-* Removed alot of stuff that do not belong in this package
+* Removed a lot of stuff that do not belong in this package
 * Support for MySQL through RMariaDB, only
 * Now under a GPL-3 license

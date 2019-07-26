@@ -1,6 +1,6 @@
 Package: rapbase
 Type: Package
-Title: Base functions and resources for Rapporteket
+Title: Base Functions and Resources for Rapporteket
 Version: 1.10.0
 Date: 2019-07-23
 Authors@R: c(

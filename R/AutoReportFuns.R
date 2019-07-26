@@ -3,22 +3,22 @@
 #' Create and add report to config
 #'
 #' Adds an entry to the system configuration of reports to run at given
-#' intervalls. After generating the configuration from the new entry
+#' intervals. After generating the configuration from the new entry
 #' the function load the current system configuration, adds the new
 #' entry and saves the updated system configuration.
 #'
 #' @param synopsis String with description of the report and to be used in
 #' subject field of email distributed reports
-#' @param package String with package name also correspondig to registry
+#' @param package String with package name also corresponding to registry
 #' @param fun String providing name of function to be called for generating
 #' report
 #' @param paramNames String vector where each element corresponds to the input
 #' parameter to be used in the above function
 #' @param paramValues String vector with corresponding values to paramNames
 #' @param owner String providing the owner of the report. Usually a user name
-#' @param email String with email address to recipient of email containg the
+#' @param email String with email address to recipient of email containing the
 #' report
-#' @param organization String idetifying the organization the owner belongs to
+#' @param organization String identifying the organization the owner belongs to
 #' @param runDayOfYear Integer vector with day numbers of the year when the
 #' report is to be run
 #' @param dryRun Logical defining if global auto report config actually is to
@@ -251,7 +251,7 @@ selectByOrganization <- function(config, organization) {
 #'
 #' @param config list of configuration for automated reports
 #'
-#' @return character vector of rgistry (package) names
+#' @return character vector of registry (package) names
 #' @export
 
 getRegs <- function(config) {
