@@ -468,6 +468,8 @@ findNextRunDate <- function(runDayOfYear,
 
 makeUserSubscriptionTab <- function(session) {
   
+  . <- ""
+  
   l <- list()
   autoRep <- readAutoReportData() %>%
     selectByReg(., reg = getUserGroups(session)) %>%
