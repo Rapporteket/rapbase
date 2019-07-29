@@ -10,14 +10,19 @@ context("Handling db connections")
 # .travis.yml
 
 # Database infrastructure is only available at Travis and our own dev env.
-# Tests running on other envoronments should be skipped
+# Tests running on other environments should be skipped
 checkDb <- function() {
-  if (Sys.getenv("R_RAP_INSTANCE") != "DEV") {
+  if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
+    NULL
+  } else if (Sys.getenv("TRAVIS") == "true") {
+    NULL
+  } else {
     skip("Test skipped due to lack of database infrastructure")
   }
 }
 
 test_that("Error provided when key has no corresponding config", {
+  NULL
   expect_error(rapOpenDbConnection(registryName = "aNoneExistingRegistryKey"))
 })
 

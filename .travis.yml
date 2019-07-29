@@ -1,8 +1,5 @@
 language: r
 cache: packages
-
-env:
-  - R_RAP_INSTANCE=DEV
     
 warnings_are_errors: false
 
