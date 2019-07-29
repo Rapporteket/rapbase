@@ -4,6 +4,8 @@
 * win-builder (release and devel)
 
 ## R CMD check results
-There were no ERRORs, WARNINGs or NOTEs
+There were no ERRORs and WARNINGs.
 
-This is the first time this package is submitted to Cran
+There was one NOTE:
+
+* This is the first time this package is submitted to Cran
