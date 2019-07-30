@@ -32,5 +32,5 @@ Contributors submit their code by forking from the 'rel' branch and opening of p
 
 ## Ethics
 Please note that the 'rapbase' project is released with a
-[Contributor Code of Conduct](CODE_OF_CONDUCT.md).
+[Contributor Code of Conduct](http://rapporteket.github.io/rapbase/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.
