@@ -32,4 +32,6 @@ Please provide any comments (*e.g.* on proposed enhancements, shortcomings, erro
 Contributors submit their code by forking from the 'rel' branch and opening of pull request. Development workflow must apply unit testing of the code. In addition to automated testing proposed changes and additions to the *rapbase* code will be accepted (or rejected) based on manual code reviews. Code that is accepted will be merged into the 'rel' branch, tagged and used for full scale TESTING and QA prior to PRODUCTION deployment.
 
 ## Ethics
-Please note that the 'rapbase' project is released with a [Contributor Code of Conduct](http://rapporteket.github.io/rapbase/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
+Please note that the 'rapbase' project is released with a
+[Contributor Code of Conduct](http://rapporteket.github.io/rapbase/CODE_OF_CONDUCT.html).
+By contributing to this project, you agree to abide by its terms.
