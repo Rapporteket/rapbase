@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![Build Status](https://travis-ci.org/Rapporteket/rapbase.png)](https://travis-ci.org/Rapporteket/rapbase)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/areedv/rapbase?branch=master&svg=true)](https://ci.appveyor.com/project/areedv/rapbase)
 [![codecov.io](https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=rel)](https://codecov.io/github/Rapporteket/rapbase?branch=rel)
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 <!-- badges: end -->
@@ -31,6 +32,4 @@ Please provide any comments (*e.g.* on proposed enhancements, shortcomings, erro
 Contributors submit their code by forking from the 'rel' branch and opening of pull request. Development workflow must apply unit testing of the code. In addition to automated testing proposed changes and additions to the *rapbase* code will be accepted (or rejected) based on manual code reviews. Code that is accepted will be merged into the 'rel' branch, tagged and used for full scale TESTING and QA prior to PRODUCTION deployment.
 
 ## Ethics
-Please note that the 'rapbase' project is released with a
-[Contributor Code of Conduct](http://rapporteket.github.io/rapbase/CODE_OF_CONDUCT.html).
-By contributing to this project, you agree to abide by its terms.
+Please note that the 'rapbase' project is released with a [Contributor Code of Conduct](http://rapporteket.github.io/rapbase/CODE_OF_CONDUCT.html). By contributing to this project, you agree to abide by its terms.
