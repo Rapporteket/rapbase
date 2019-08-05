@@ -2,6 +2,7 @@ context("User info")
 
 # store current instance
 currentInstance <- Sys.getenv("R_RAP_INSTANCE")
+currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
 
 test_that("Function handles general errors", {
   expect_error(userInfo(entity = "user", devContexts = c("DEV", "TEST")))
@@ -16,6 +17,7 @@ test_that("Warning is provided when instance is undefined", {
 
 
 Sys.setenv(R_RAP_INSTANCE="DEV")
+Sys.setenv(R_RAP_CONFIG_PATH="")
 test_that("Function provides an entity in a dev context", {
   expect_equal(userInfo(entity = "groups"), "rapbase")
 })
@@ -82,3 +84,4 @@ test_that("Function can handle redefined contexts", {
 
 # Restore instance
 Sys.setenv(R_RAP_INSTANCE=currentInstance)
+Sys.setenv(R_RAP_CONFIG_PATH=currentConfigPath)
