@@ -20,7 +20,8 @@ String user groups
 Get user groups from a shiny session object
 }
 \examples{
-\dontrun{
+\donttest{
+# Requires a valid shiny session object
 getShinyUserGroups(shinySessionObject)
 }
 

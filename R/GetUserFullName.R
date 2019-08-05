@@ -13,7 +13,8 @@
 #' \code{\link{getUserEmail}}, \code{\link{getUserPhone}}
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Requires a valid shiny session object
 #' getUserFullName()
 #' getUserFullName(shinySessionObject)
 #' }

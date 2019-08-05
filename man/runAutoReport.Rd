@@ -27,7 +27,8 @@ can be attached to an email. The email itself is defined and sent to
 recipients defined in the config
 }
 \examples{
-\dontrun{
+\donttest{
+# Example depend on environment variable R_RAP_CONFIG_PATH being set
 runAutoReport()
 }
 }

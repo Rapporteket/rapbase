@@ -131,7 +131,8 @@ readAutoReportData <- function(fileName = "autoReport.yml", packageName = "rapba
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Example depend on environment variable R_RAP_CONFIG_PATH being set
 #' config <- readAutoReportData()
 #' writeAutoReportData(config = config)
 #' }
@@ -340,7 +341,8 @@ getRegs <- function(config) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Example depend on environment variable R_RAP_CONFIG_PATH being set
 #' runAutoReport()
 #' }
 
