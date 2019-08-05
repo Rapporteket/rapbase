@@ -142,8 +142,11 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
   path <- Sys.getenv("R_RAP_CONFIG_PATH")
   
   if (path == "") {
-    # for now, just write into installed package
-    con <- file(system.file(fileName, package = packageName), "w")
+    # cannot proceed if there is nowhere to store config
+    stop(paste("There is nowhere to store config data.", 
+               "The environment variable R_RAP_CONFIG_PATH must be defined",
+               "providing av path to a directory where configuration can",
+               "be written. Stopping"))
   } else {
     oriFile <- file.path(path, fileName)
     # in case we screw-up, make a backup
