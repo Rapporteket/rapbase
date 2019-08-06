@@ -11,7 +11,7 @@ Thank you for your comments. These are the changes in the second resubmission:
 
 * Corrected a typo in README.md
 
-* Removed useless comments in tests/testthat/test-installGithubPackage.R and redundant data documentation (R/Helligdager2008til2022.R)
+* Removed useless comments in tests/testthat/test-installGithubPackage.R
 
 ### Test environments
 Due to the above changes these test have been (re-)run as part of the second resubmission:
