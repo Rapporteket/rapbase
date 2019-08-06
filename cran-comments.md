@@ -1,3 +1,18 @@
+## Second resubmission
+Thank you for your comments. These are the changes in the second resubmission:
+
+* Replaced \\dontrun{} by \\donttest{} in the following Rd-files: getShinyUserGroups.Rd, getShinyUserName.Rd, getShinyUserReshId.Rd, getShinyUserRole.Rd, getUserEmail.Rd, getUserFullName.Rd, getUserGroups.Rd, getUserName.Rd, getUserPhone.Rd, getUserReshId.Rd, getUserRole.Rd, runAutoReport.Rd, writeAutoReportData.Rd. In addition, for each \\donttest{} a comment on the reason for doing so was provided
+
+* Ensured that functions (and their examples) do not write to the user's home filespace or anywhere else on the file system by altering the following files: AutoReportFuns.R
+
+* Ensured that tests (in tests/testthat) do not write to the user's home filespace or anywhere else on the file system by altering the following files: test-auto-report-functions.R, test-config.R
+
+* Due to dependencies of the above changes the following files were also altered: tests/testthat/test-userInfo.R (further isolating test session), R/AutoReportFuns.R (config only read within relevant condition)
+
+* Corrected a typo in README.md
+
+* Removed useless comments in tests/testthat/test-installGithubPackage.R and redundant data documentation (R/Helligdager2008til2022.R)
+
 ## Resubmission
 This is a resubmission. Thanks for the comments (and quickly so) and accordingly I have:
 
