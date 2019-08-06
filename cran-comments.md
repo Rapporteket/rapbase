@@ -13,6 +13,16 @@ Thank you for your comments. These are the changes in the second resubmission:
 
 * Removed useless comments in tests/testthat/test-installGithubPackage.R and redundant data documentation (R/Helligdager2008til2022.R)
 
+### Test environments
+Due to the above changes these test have been (re-)run as part of the second resubmission:
+
+* local Debian 9, R 3.6.1 (based on docker image from rocker/verse:3.6.1)
+* Ubuntu 16.04 (on Travis CI): oldrel (R 3.5.3), rel (R 3.6.1) and devel (R 2019-08-05 r76918)
+* Windows Server 2012 R2 x64 (on Appveyor): R 3.6.1 Patched (2019-08-04 r76915)
+* win-builder: unstable (2019-07-05 r76784), release (R 3.6.1) and oldrelease (R 3.5.3)
+
+The above tests provided the same R CMD check results as for the initial submission (see below).
+
 ## Resubmission
 This is a resubmission. Thanks for the comments (and quickly so) and accordingly I have:
 
