@@ -22,7 +22,8 @@ defined (empty)}
 Write automated report metadata
 }
 \examples{
-\dontrun{
+\donttest{
+# Example depend on environment variable R_RAP_CONFIG_PATH being set
 config <- readAutoReportData()
 writeAutoReportData(config = config)
 }

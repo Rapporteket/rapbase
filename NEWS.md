@@ -7,3 +7,9 @@
 * Added contribution guidelines
 * New package site at https://rapporteket.github.io/rapbase/index.html
 * Auto build site from Travis CI
+
+# rapbase 1.10.0
+
+* Removed a lot of stuff that do not belong in this package
+* Support for MySQL through RMariaDB, only
+* Now under a GPL-3 license

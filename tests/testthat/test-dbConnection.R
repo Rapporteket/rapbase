@@ -9,7 +9,20 @@ context("Handling db connections")
 # an empty password (as also assumed in the above localhost example). See also
 # .travis.yml
 
+# Database infrastructure is only available at Travis and our own dev env.
+# Tests running on other environments should be skipped
+checkDb <- function() {
+  if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
+    NULL
+  } else if (Sys.getenv("TRAVIS") == "true") {
+    NULL
+  } else {
+    skip("Test skipped due to lack of database infrastructure")
+  }
+}
+
 test_that("Error provided when key has no corresponding config", {
+  NULL
   expect_error(rapOpenDbConnection(registryName = "aNoneExistingRegistryKey"))
 })
 
@@ -39,6 +52,7 @@ if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
 }
 
 test_that("A mysql db connection and driver can be provided and cleaned", {
+  checkDb()
   l <- rapOpenDbConnection(registryName = regName)
   expect_output(str(l), "List of 2")
   expect_is(l[[1]], "MariaDBConnection")
@@ -49,12 +63,14 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
 })
 
 test_that("Data can be queried from (MySQL) db", {
+  checkDb()
   query <- "SELECT * FROM testTable"
   expect_output(str(LoadRegData(regName, query, dbType = "mysql")),
                 "data.frame")
 })
 
 test_that("Bigints are returned as integers (not bit64::integer64)", {
+  checkDb()
   query <- c("DROP DATABASE IF EXISTS rapbase;",
              "CREATE DATABASE rapbase;",
              "USE rapbase;",
@@ -69,4 +85,9 @@ test_that("Bigints are returned as integers (not bit64::integer64)", {
   df <- DBI::dbGetQuery(l$con, query)
   rapCloseDbConnection(l$con)
   expect_is(df[["someBigInt"]], "integer")
+})
+
+test_that("The use of MSSQL in no longer possible with an appropriate message", {
+  expect_error(LoadRegData(regName, query, dbType = "mssql"),
+                regexp = "Use of MSSQL is no longer supported. Exiting")
 })

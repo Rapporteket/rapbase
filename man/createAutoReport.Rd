@@ -11,7 +11,7 @@ createAutoReport(synopsis, package, fun, paramNames, paramValues, owner,
 \item{synopsis}{String with description of the report and to be used in
 subject field of email distributed reports}
 
-\item{package}{String with package name also correspondig to registry}
+\item{package}{String with package name also corresponding to registry}
 
 \item{fun}{String providing name of function to be called for generating
 report}
@@ -23,10 +23,10 @@ parameter to be used in the above function}
 
 \item{owner}{String providing the owner of the report. Usually a user name}
 
-\item{email}{String with email address to recipient of email containg the
+\item{email}{String with email address to recipient of email containing the
 report}
 
-\item{organization}{String idetifying the organization the owner belongs to}
+\item{organization}{String identifying the organization the owner belongs to}
 
 \item{runDayOfYear}{Integer vector with day numbers of the year when the
 report is to be run}
@@ -41,7 +41,7 @@ will be returned
 }
 \description{
 Adds an entry to the system configuration of reports to run at given
-intervalls. After generating the configuration from the new entry
+intervals. After generating the configuration from the new entry
 the function load the current system configuration, adds the new
 entry and saves the updated system configuration.
 }

@@ -8,7 +8,8 @@
 #' \code{\link{getShinyUserReshId}}
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Requires a valid shiny session object
 #' getShinyUserRole(shinySessionObject)
 #' }
 #' 

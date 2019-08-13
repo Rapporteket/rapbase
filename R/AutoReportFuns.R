@@ -3,22 +3,22 @@
 #' Create and add report to config
 #'
 #' Adds an entry to the system configuration of reports to run at given
-#' intervalls. After generating the configuration from the new entry
+#' intervals. After generating the configuration from the new entry
 #' the function load the current system configuration, adds the new
 #' entry and saves the updated system configuration.
 #'
 #' @param synopsis String with description of the report and to be used in
 #' subject field of email distributed reports
-#' @param package String with package name also correspondig to registry
+#' @param package String with package name also corresponding to registry
 #' @param fun String providing name of function to be called for generating
 #' report
 #' @param paramNames String vector where each element corresponds to the input
 #' parameter to be used in the above function
 #' @param paramValues String vector with corresponding values to paramNames
 #' @param owner String providing the owner of the report. Usually a user name
-#' @param email String with email address to recipient of email containg the
+#' @param email String with email address to recipient of email containing the
 #' report
-#' @param organization String idetifying the organization the owner belongs to
+#' @param organization String identifying the organization the owner belongs to
 #' @param runDayOfYear Integer vector with day numbers of the year when the
 #' report is to be run
 #' @param dryRun Logical defining if global auto report config actually is to
@@ -131,7 +131,8 @@ readAutoReportData <- function(fileName = "autoReport.yml", packageName = "rapba
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Example depend on environment variable R_RAP_CONFIG_PATH being set
 #' config <- readAutoReportData()
 #' writeAutoReportData(config = config)
 #' }
@@ -142,8 +143,11 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
   path <- Sys.getenv("R_RAP_CONFIG_PATH")
   
   if (path == "") {
-    # for now, just write into installed package
-    con <- file(system.file(fileName, package = packageName), "w")
+    # cannot proceed if there is nowhere to store config
+    stop(paste("There is nowhere to store config data.", 
+               "The environment variable R_RAP_CONFIG_PATH must be defined",
+               "providing av path to a directory where configuration can",
+               "be written. Stopping"))
   } else {
     oriFile <- file.path(path, fileName)
     # in case we screw-up, make a backup
@@ -251,7 +255,7 @@ selectByOrganization <- function(config, organization) {
 #'
 #' @param config list of configuration for automated reports
 #'
-#' @return character vector of rgistry (package) names
+#' @return character vector of registry (package) names
 #' @export
 
 getRegs <- function(config) {
@@ -337,16 +341,15 @@ getRegs <- function(config) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Example depend on environment variable R_RAP_CONFIG_PATH being set
 #' runAutoReport()
 #' }
 
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
                           dryRun = FALSE) {
   
-  # get config
-  conf <- rapbase::getConfig("rapbaseConfig.yml")
-  
+    
   # get report candidates
   reps <- readAutoReportData()
   
@@ -363,6 +366,8 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
       if (dryRun) {
         message(paste("No emails sent. Attachment is", attFile))
       } else { # nocov start
+        # get config
+        conf <- rapbase::getConfig("rapbaseConfig.yml")
         # prepare email
         from <- conf$network$sender
         # escape spaces (e.g. when full name is added to <email>)
@@ -467,6 +472,8 @@ findNextRunDate <- function(runDayOfYear,
 #' @export
 
 makeUserSubscriptionTab <- function(session) {
+  
+  . <- ""
   
   l <- list()
   autoRep <- readAutoReportData() %>%

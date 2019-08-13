@@ -2,6 +2,7 @@
 
 <!-- badges: start -->
 [![Build Status](https://travis-ci.org/Rapporteket/rapbase.png)](https://travis-ci.org/Rapporteket/rapbase)
+[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/areedv/rapbase?branch=master&svg=true)](https://ci.appveyor.com/project/areedv/rapbase)
 [![codecov.io](https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=rel)](https://codecov.io/github/Rapporteket/rapbase?branch=rel)
 [![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 <!-- badges: end -->
@@ -11,7 +12,7 @@
 Top-level information regarding *Rapporteket* is [provided on a dedicated site (in Norwegian)](https://rapporteket.github.io/rapporteket).
 
 ## Install
-As of july 2019 the *rapbase* R package is available from GitHub and cab be installed from the R command propt:
+As of July 2019 the *rapbase* R package is available from GitHub and can be installed from the R command prompt:
 ```r
 remotes::install("Rapporteket/rapbase")
 ```
@@ -32,5 +33,5 @@ Contributors submit their code by forking from the 'rel' branch and opening of p
 
 ## Ethics
 Please note that the 'rapbase' project is released with a
-[Contributor Code of Conduct](CODE_OF_CONDUCT.md).
+[Contributor Code of Conduct](http://rapporteket.github.io/rapbase/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.

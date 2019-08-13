@@ -1,9 +1,9 @@
-#' Provide user attributes based on evironment context
+#' Provide user attributes based on environment context
 #' 
 #' Extracts elements from either config, url (shiny) or session (shiny)
 #' relevant for user data such as name, group, role and reshId. Source of info
 #' is based on environment context and can be controlled by altering the default
-#' settings for which contexts that will apply for the varius sources of user
+#' settings for which contexts that will apply for the various sources of user
 #' data. This function will normally be used via its helper functions (see
 #' below).
 #'
@@ -14,11 +14,11 @@
 #' an external authentication provider. By default this will apply to the
 #' 'TEST', 'QA' and 'PRODUCTION' contexts in which case the shiny session
 #' object must be provided.
-#' @param devContexts A charcter vector providing unique intances to be regarded
-#' as a development context. In this context user attributes will be read from
-#' configuration as provided by 'rapbaseConfig.yml'. The instances provided
-#' cannot overlap instances provided in any other contexts. By default set to
-#' \code{c("DEV")}.
+#' @param devContexts A character vector providing unique instances to be
+#' regarded as a development context. In this context user attributes will be
+#' read from configuration as provided by 'rapbaseConfig.yml'. The instances
+#' provided cannot overlap instances provided in any other contexts. By default
+#' set to \code{c("DEV")}.
 #' @param testContexts A character vector providing unique instances to be
 #' regarded as a test context. In this context user attributes will be read
 #' from the url call to a shiny application. Hence, for this context the
@@ -27,13 +27,13 @@
 #' set to \code{c("TEST")}. 
 #' @param prodContexts A character vector providing unique instances to be
 #' regarded as a production context. In this context user attributes will be
-#' read from the shiny session object (as shiny server interacts witn an
+#' read from the shiny session object (as shiny server interacts with an
 #' external log-in service). Hence, for this context the corresponding shiny
 #' session object must also be provided. The instances provided cannot overlap
 #' instances provided in any other contexts. By default set to
 #' \code{c("QA", "PRODUCTION")}.
 #' 
-#' @return String of singel user data element
+#' @return String of single user data element
 #' 
 #' @seealso \code{\link{getUserName}}, \code{\link{getUserGroups}},
 #' \code{\link{getUserReshId}}, \code{\link{getUserRole}}

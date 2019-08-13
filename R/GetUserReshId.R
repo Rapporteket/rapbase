@@ -12,7 +12,8 @@
 #' \code{\link{getUserGroups}}, \code{\link{getUserRole}}
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Requires a valid shiny session object
 #' getUserReshId()
 #' getUserReshId(shinySessionObject)
 #' }

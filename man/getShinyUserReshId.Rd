@@ -20,7 +20,8 @@ String user resh_id
 Get user resh_id from a shiny session object
 }
 \examples{
-\dontrun{
+\donttest{
+# Requires a valid shiny session object
 getShinyUserReshId(shinySessionObject)
 }
 

@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
-Title: Base functions and resources for Rapporteket
-Version: 1.9.0
+Title: Base Functions and Resources for Rapporteket
+Version: 1.10.0
 Date: 2019-07-23
 Authors@R: c(
     person(given = "Are",
@@ -13,22 +13,22 @@ Authors@R: c(
            family = "Thon",
            role = c("aut"),
            email = "kevin.thon@helse-nord.no"))
-Maintainer: Are Edvardsen <are.edvardsen@helse-nord.no>
+Maintainer: Are Edvardsen <biorakel@gmail.com>
 Description: Provide common functions and resources for registry specific
-    R-packages at Rapporteket. Can potentially contain alot of stuff, also
-    not directly related to R...
-License: MIT + file LICENSE
+    R-packages at Rapporteket
+    <https://rapporteket.github.io/rapporteket/articles/short_introduction.html>.
+    This package is relevant for developers of packages/registries at
+    Rapporteket.
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends:
-    R (>= 3.0.2)
+    R (>= 3.5.0)
 Imports:
-    Cairo,
     DBI,
     devtools,
     digest,
     gistr,
-    grDevices,
     httr,
     knitr,
     magrittr,
@@ -39,10 +39,7 @@ Imports:
     shiny,
     utils,
     yaml
-Remotes:
-    hadley/testthat
 RoxygenNote: 6.1.1
-VignetteBuilder: knitr
 URL: http://github.com/Rapporteket/rapbase
 BugReports: http://github.com/Rapporteket/rapbase/issues
 Suggests: testthat

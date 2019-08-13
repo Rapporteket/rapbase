@@ -7,3 +7,6 @@
 ^CODE_OF_CONDUCT\.md$
 ^LICENSE\.md$
 ^\.github$
+^cran-comments.md$
+^CRAN-RELEASE$
+^appveyor\.yml$

@@ -20,7 +20,8 @@ String user name
 Get user name from a shiny session object
 }
 \examples{
-\dontrun{
+\donttest{
+# Requires a valid shiny session object
 getShinyUserName(shinySessionObject)
 }
 
