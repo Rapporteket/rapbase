@@ -7,3 +7,87 @@ template:
   params:
     bootswatch: flatly
     ganalytics: UA-145582048-1
+    
+reference:
+  - title: Configuration
+    desc: >
+      Read configuration data
+    contents:
+    - getConfig
+    
+  - title: Database
+    desc: >
+      Handle database connections and queries
+    contents:
+    - LoadRegData
+    - rapOpenDbConnection
+    - rapCloseDbConnection
+    
+  - title: User information
+    desc: >
+      Provides information on the logged in user in a shiny session
+    contents:
+    - getUserName
+    - getUserGroups
+    - getUserRole
+    - getUserReshId
+    - getUserFullName
+    - getUserPhone
+    - getUserEmail
+    - userInfo
+    - getShinyUserName
+    - getShinyUserGroups
+    - getShinyUserRole
+    - getShinyUserReshId
+    - ShinySessionInfo
+    
+  - title: Automated reports
+    desc: >
+      Handle automated reports
+    contents:
+    - readAutoReportData
+    - writeAutoReportData
+    - runAutoReport
+    - createAutoReport
+    - deleteAutoReport
+    - selectByOwner
+    - selectByOrganization
+    - selectByReg
+    - makeUserSubscriptionTab
+    - makeRunDayOfYearSequence
+    - isPkgRapReg
+    - getRegs
+    - findNextRunDate
+    - .testAutoReport
+    - .getFun
+    
+  - title: Shiny
+    desc: >
+      Helper functions to be used by shiny apps
+    contents:
+    - runShinyApp
+    - appNavbarUserWidget
+    
+  - title: Miscellaneous
+    desc: >
+      Various tools
+    contents:
+    - HalloRapporteket
+    - MakeMessage
+    - PushGist
+    - RunNoweb
+    - getRapPackages
+    - installGithubPackage
+    
+  - title: Data
+    desc: >
+      Data contained by the package
+    contents:
+    - Helligdager2008til2022
+  
+  - title: Meta
+    desc: >
+      About the package
+    contents:
+    - rapbase
+
