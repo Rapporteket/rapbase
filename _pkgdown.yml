@@ -39,7 +39,7 @@ reference:
     - getShinyUserGroups
     - getShinyUserRole
     - getShinyUserReshId
-    - ShinySessionInfo
+    - shinySessionInfo
     
   - title: Automated reports
     desc: >
