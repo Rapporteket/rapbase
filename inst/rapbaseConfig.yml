@@ -22,6 +22,13 @@ r :
     phone: '04050607'
 
 
+## Sceduled stuff
+scheduled :
+  funs :
+   - runAutoReport
+   - raplogManager
+  
+
 ## Network stuff
 network :
 
