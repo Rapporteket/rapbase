@@ -8,8 +8,10 @@ r :
 
   # dummy library path
   libpath :
-  # libpath : !expr Sys.getenv("R_LIBS_USER")
-  # libpath : /usr/local/lib/R/site-library
+  
+  raplog :
+    archiveDir : logArchive
+    eolDays : 730
   
   testUser :
     user : tester
