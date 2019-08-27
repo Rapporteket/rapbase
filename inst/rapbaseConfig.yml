@@ -1,5 +1,4 @@
 ## Configuration of the R package 'rapbase', yaml formatted
-## To be applied post-install, typically when the 'clean' argument is provided
 ## May contain anything, but try to keep some sensible structure and tidyness
 
 
