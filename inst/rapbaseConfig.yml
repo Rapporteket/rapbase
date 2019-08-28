@@ -28,8 +28,8 @@ r :
   schedule :
     nocturnal :
       funs :
-      - runAutoReport
-      - raplogManager
+      - rapbase::runAutoReport
+      - raplog::raplogManager
   
 
 ## Network
