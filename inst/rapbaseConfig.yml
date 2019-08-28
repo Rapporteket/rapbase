@@ -29,7 +29,6 @@ r :
     nocturnal :
       funs :
       - rapbase::runAutoReport
-      - raplog::raplogManager
   
 
 ## Network
