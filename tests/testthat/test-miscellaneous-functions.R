@@ -21,11 +21,6 @@ test_that("scheduler kick-off function can be run based on default config (that 
   expect_warning(fireInTheHole())
 })
 
-# ...and the only testable artifact is the logArchive directory
-test_that("fireInTheHole() left a logArchice directory", {
-  expect_true(dir.exists(file.path(tempdir, "logArchive")))
-})
-
 # Restore env
 Sys.setenv(R_RAP_INSTANCE=currentContext)
 Sys.setenv(R_RAP_CONFIG_PATH=currentConfigPath)
