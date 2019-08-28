@@ -73,7 +73,7 @@ test_that("Function provides entities in a QA/PRODUCTION context", {
 
 test_that("Function can handle redefined contexts", {
   expect_equal(userInfo(entity = "user", devContexts = c("DEV", "QA"),
-                        prodContexts = c("PRODUCTION")), "tester")
+                        prodContexts = c("PRODUCTION")), "ttester")
   expect_equal(userInfo(entity = "groups", devContexts = c("DEV", "QA"),
                         prodContexts = c("PRODUCTION")), "rapbase")
   expect_equal(userInfo(entity = "role", devContexts = c("DEV", "QA"),
