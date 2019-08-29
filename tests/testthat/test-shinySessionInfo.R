@@ -17,6 +17,22 @@ shinySessionWrongClass <- shinySession
 # simulate ShinySession class for above list
 attr(shinySession, "class") <- "ShinySession"
 
+# now deprecated, main function
+test_that("shinySessionInfo() is deprecated", {
+  expect_warning(shinySessionInfo(shinySession = shinySession, entity="user"))
+})
+
+# now deprecated, wrapper functions
+test_that("wrapper funs are deprecated", {
+  expect_warning(getShinyUserName(shinySession), class = "lifecycle_warning_deprecated")
+  expect_warning(getShinyUserGroups(shinySession), class = "lifecycle_warning_deprecated")
+  expect_warning(getShinyUserReshId(shinySession), class = "lifecycle_warning_deprecated")
+  expect_warning(getShinyUserRole(shinySession), class = "lifecycle_warning_deprecated")
+})
+
+# now deprecated, but should still work
+withr::local_options(list(lifecycle_verbosity = "quiet"))
+
 test_that("Default is to assume real data scenario", {
   expect_equal(getShinyUserName(shinySession), "user1")
   expect_equal(getShinyUserGroups(shinySession), "group1,group2")

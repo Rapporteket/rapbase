@@ -18,6 +18,8 @@
 #' @export
 
 shinySessionInfo <- function(shinySession, entity, testCase = FALSE) {
+  lifecycle::deprecate_warn("1.10.0", "rapbase::shinySessionInfo()",
+                            "rapbase::userInfo()")
   
   if (is.null(shinySession)) {
     stop("Session information is empty!. Cannot do anything")
