@@ -39,6 +39,7 @@ Imports:
     sendmailR,
     shiny,
     utils,
+    withr,
     yaml
 RoxygenNote: 6.1.1
 URL: http://github.com/Rapporteket/rapbase
