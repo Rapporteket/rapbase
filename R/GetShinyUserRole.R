@@ -17,5 +17,7 @@
 
 
 getShinyUserRole <- function(shinySession, testCase = FALSE) {
+  lifecycle::deprecate_warn("1.10.0", "rapbase::GetShinyUserRole()",
+                 "rapbase::getUserRole()")
   shinySessionInfo(shinySession, entity = "role", testCase)
 }

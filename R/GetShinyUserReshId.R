@@ -17,5 +17,7 @@
 
 
 getShinyUserReshId <- function(shinySession, testCase = FALSE) {
+  lifecycle::deprecate_warn("1.10.0", "rapbase::GetShinyUserReshId()",
+                 "rapbase::getUserReshId()")
   shinySessionInfo(shinySession, entity = "resh_id", testCase)
 }
