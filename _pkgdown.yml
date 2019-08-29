@@ -73,6 +73,7 @@ reference:
       Various tools
     contents:
     - HalloRapporteket
+    - fireInTheHole
     - MakeMessage
     - PushGist
     - RunNoweb

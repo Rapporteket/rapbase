@@ -1,32 +1,40 @@
 ## Configuration of the R package 'rapbase', yaml formatted
-## To be applied post-install, typically when the 'clean' argument is provided
 ## May contain anything, but try to keep some sensible structure and tidyness
 
 
-## R stuff
+## R
 r :
 
-  # dummy library path
+  # Dummy library path
   libpath :
   
+  # Activity logging
   raplog :
     archiveDir : logArchive
     eolDays : 730
   
+  # User data for testing purposes
   testUser :
-    user : tester
+    user : ttester
     groups : rapbase
     role : accessLevel
     resh_id : '999999'
     email: rapporteket@skde.no
-    full_name: T Tester
+    full_name: Tore Tester
     phone: '04050607'
 
 
-## Network stuff
+  # Scedule
+  schedule :
+    nocturnal :
+      funs :
+      - rapbase::runAutoReport
+  
+
+## Network
 network :
 
-# dummy proxy server
+  # Proxy server and port
   proxy :
     http :
     port :
@@ -34,30 +42,30 @@ network :
     # port : 8080
     # ip : 192.168.0.100
 
-# email
+  # email
   smtp :
     server : localhost
     port : 2525
   sender : rapporteket@skde.no
 
-## Github stuff
+## GitHub
 github :
 
-  # github organization
+  # Github organization
   organization : Rapporteket
   
-  # dummy gist
+  # Dummy gist
   gistId :
     reportName : reportNameGistId
 
-  # dummy PAT  
+  # Dummy PAT  
   PAT :
     githubUserName : PAT
 
 
-## Database stuff
+## Database
 db :
-  # dummy config entry
+  # Dummy config entry
   nordummy:
     host : dummy_db_hostname.no
     name : dummy_db_name
@@ -65,7 +73,7 @@ db :
     pass : dummy_db_password
     disp : dummy_display_name
 
-  # for testing, on localhost
+  # For testing, on localhost
   rapbase:
     host : 127.0.0.1
     name : rapbase
