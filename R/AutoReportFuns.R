@@ -489,6 +489,7 @@ makeUserSubscriptionTab <- function(session) {
   for (n in names(autoRep)){
     r <- list("Rapport"=autoRep[[n]]$synopsis,
               "Enhet"=autoRep[[n]]$organization,
+              "Periode" =autoRep[[n]]$intervalName,
               "Neste"=findNextRunDate(autoRep[[n]]$runDayOfYear),
               "Slett"=as.character(
                 shiny::actionButton(inputId = paste0("del_", n),
