@@ -59,6 +59,8 @@ createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
   l$owner <- owner
   l$email <- email
   l$organization <- organization
+  l$interval <- interval
+  l$intervalName <- intervalName
   l$runDayOfYear <- runDayOfYear
   
   rd <- readAutoReportData()
