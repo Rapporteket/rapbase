@@ -42,14 +42,30 @@
 
 appNavbarUserWidget <- function(user = "Undefined person", organization = "Undefined organization") {
   
+  quit <- shiny::tags$button(
+    id = 'close',
+    type = "button",
+    class = "btn action-button",
+    onclick = "setTimeout(function(){window.close();},500);",  # close browser
+    "Lukk"
+  )
+  
   txtWidget <-
+    # paste0("var header = $('.navbar> .container-fluid');\n",
+    #        "header.append('<div class=\"navbar-brand\" style=\"float:right;font-size:75%\">",
+    #        user,
+    #        organization,
+    #        "<a href=\"http://localhost:80\">Logg ut</a>",
+    #        "</div>');\n",
+    #        "console.log(header)")
+  
     paste0("var header = $('.navbar> .container-fluid');\n",
-           "header.append('<div class=\"navbar-brand\" style=\"float:right;font-size:75%\">",
-           user,
-           organization,
-           "<a href=\"http://localhost:80\">Logg ut</a>",
-           "</div>');\n",
-           "console.log(header)")
+         "header.append('<div class=\"navbar-brand\" style=\"float:right;font-size:75%\">",
+         user,
+         organization,
+         quit,
+         "</div>');\n",
+         "console.log(header)")
   
   shiny::tags$script(shiny::HTML(txtWidget))
 }
