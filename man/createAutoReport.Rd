@@ -5,7 +5,8 @@
 \title{Create and add report to config}
 \usage{
 createAutoReport(synopsis, package, fun, paramNames, paramValues, owner,
-  email, organization, runDayOfYear, dryRun = FALSE)
+  email, organization, runDayOfYear, interval = "", intervalName = "",
+  dryRun = FALSE)
 }
 \arguments{
 \item{synopsis}{String with description of the report and to be used in
@@ -30,6 +31,12 @@ report}
 
 \item{runDayOfYear}{Integer vector with day numbers of the year when the
 report is to be run}
+
+\item{interval}{String defining a time intervall as defined in
+\code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an emty string}
+
+\item{intervalName}{String providing a human uderstandable representation of
+\code{interval}. Default value is an emty string}
 
 \item{dryRun}{Logical defining if global auto report config actually is to
 be updated. If set to TRUE the actual config (all of it) will be returned by

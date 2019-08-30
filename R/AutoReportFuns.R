@@ -21,6 +21,10 @@
 #' @param organization String identifying the organization the owner belongs to
 #' @param runDayOfYear Integer vector with day numbers of the year when the
 #' report is to be run
+#' @param interval String defining a time intervall as defined in
+#' \code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an emty string
+#' @param intervalName String providing a human uderstandable representation of
+#' \code{interval}. Default value is an emty string 
 #' @param dryRun Logical defining if global auto report config actually is to
 #' be updated. If set to TRUE the actual config (all of it) will be returned by
 #' the function. FALSE by default
@@ -32,6 +36,7 @@
 
 createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
                              owner, email, organization, runDayOfYear,
+                             interval = "", intervalName = "", 
                              dryRun = FALSE) {
   
   # make unique id by (hashing) combination of owner and timestamp
