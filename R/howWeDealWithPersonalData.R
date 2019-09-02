@@ -9,6 +9,8 @@
 
 howWeDealWithPersonalData <- function(session) {
   
+  . <- ""
+  
   params <- list(session=session)
   system.file("howWeDealWithPersonalData.Rmd", package="rapbase") %>%
     knitr::knit() %>%
