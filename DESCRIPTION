@@ -33,6 +33,7 @@ Imports:
     knitr,
     lifecycle,
     magrittr,
+    markdown,
     readr,
     RJDBC,
     RMariaDB,
