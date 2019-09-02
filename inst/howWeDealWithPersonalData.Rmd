@@ -1,0 +1,18 @@
+---
+title: "How we deal with personal data"
+output: html_document
+params:
+  session: list()
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Hei, `r rapbase::getUserFullName(session)`! Her er en kort oppsummering av hva [Rapporteket](https://rapporteket.github.io/rapporteket/articles/kort_introduksjon.html) vet om deg og hvordan denne informasjonen brukes og lagres.
+
+## Innlogging for bruk av Rapporteket
+Før Rapporteket tas i bruk må du gjennom en identitets- og adgangskontroll hos helseregister.no, FALK eller en annen slik tjeneste. Etter innlogging mottar Rapporteket et sett av informasjon om deg slik som **fult navn**, **epostadresse**, **telefonnummer** og **brukernavn** samt informasjon om din tilknytning til et gitt register, slik som **rolle**, **gruppetilhørighet** og **organisasjonstilhørighet**. Alt dette er nødvendig for at Rapporteket skal kunne fungere som en god og sikker resultattjeneste.
+
+## Hvilke personlige data lagers på Rapporteket?
+All bruk av Rapporteket loggføres slik at aktiviteten kan dokumenteres i ettertid. Dette er viktig med tanke på å kunne ettergå feil, avdekke sikkerhetsbrudd og etablerer statistikk over bruk. Alle logger slettes fortløpende etter 2 år.
