@@ -40,18 +40,30 @@
 #' @examples
 #' appNavbarUserWidget()
 
-appNavbarUserWidget <- function(user = "Undefined person", organization = "Undefined organization") {
+appNavbarUserWidget <- function(user = "Undefined person",
+                                organization = "Undefined organization",
+                                addUserInfo = FALSE) {
+  
+  if (addUserInfo) {
+  userInfo <- shiny::tags$a(
+    id = "userInfo",
+    href = "#",
+    class = "action-button",
+    "Det vi vet om deg:")
+  } else {
+    userInfo <- character()
+  }
   
   quit <- shiny::tags$a(
     id = 'close',
     href = "#",
     onclick = "setTimeout(function(){window.close();},250);",  # close browser
-    "Lukk"
-  )
+    "Lukk")
   
   txtWidget <-
     paste0("var header = $('.navbar> .container-fluid');\n",
-         "header.append('<div class=\"navbar-brand\" style=\"float:right;font-size:75%\">",
+         "header.append('<div class=\"navbar-brand\" style=\"float:right;vertical-align:super;font-size:65%\">",
+         userInfo,
          user,
          organization,
          quit,
