@@ -5,12 +5,15 @@
 \title{Create widget for registry apps at Rapporteket}
 \usage{
 appNavbarUserWidget(user = "Undefined person",
-  organization = "Undefined organization")
+  organization = "Undefined organization", addUserInfo = FALSE)
 }
 \arguments{
 \item{user}{String providing the name of the user}
 
 \item{organization}{String providing the organization of the user}
+
+\item{addUserInfo}{Logical defining wether a user data pop-up is to be part
+of the widget (TRUE) or not (FALSE, default)}
 }
 \value{
 Ready made html script

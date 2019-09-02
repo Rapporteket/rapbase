@@ -33,6 +33,8 @@
 #' 
 #' @param user String providing the name of the user
 #' @param organization String providing the organization of the user
+#' @param addUserInfo Logical defining wether a user data pop-up is to be part
+#' of the widget (TRUE) or not (FALSE, default)
 #'
 #' @return Ready made html script
 #' @export
