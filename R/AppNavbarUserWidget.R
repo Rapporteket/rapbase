@@ -51,7 +51,7 @@ appNavbarUserWidget <- function(user = "Undefined person",
     id = "userInfo",
     href = "#",
     class = "action-button",
-    "Det vi vet om deg:")
+    "Om:")
   } else {
     userInfo <- character()
   }
