@@ -64,6 +64,7 @@ createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
   l$owner <- owner
   l$email <- email
   l$organization <- organization
+  l$terminateDate <- terminateDate
   l$interval <- interval
   l$intervalName <- intervalName
   l$runDayOfYear <- runDayOfYear
@@ -373,7 +374,8 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
     rep <- reps[[i]]
     # get explicit referenced function
     f <- .getFun(paste0(rep$package, "::", rep$fun))
-    if (dayNumber %in% rep$runDayOfYear) {
+    if (dayNumber %in% rep$runDayOfYear &&
+        as.Date(rep$terminateDate) > Sys.Date()) {
       attFile <- do.call(what = f, args = rep$params)
       if (dryRun) {
         message(paste("No emails sent. Attachment is", attFile))
