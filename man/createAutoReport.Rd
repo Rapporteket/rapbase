@@ -5,8 +5,9 @@
 \title{Create and add report to config}
 \usage{
 createAutoReport(synopsis, package, fun, paramNames, paramValues, owner,
-  email, organization, runDayOfYear, interval = "", intervalName = "",
-  dryRun = FALSE)
+  email, organization, runDayOfYear, terminateDate = {     td <-
+  as.POSIXlt(Sys.Date())     td$year <- td$year + 3     as.Date(td) },
+  interval = "", intervalName = "", dryRun = FALSE)
 }
 \arguments{
 \item{synopsis}{String with description of the report and to be used in
@@ -31,6 +32,10 @@ report}
 
 \item{runDayOfYear}{Integer vector with day numbers of the year when the
 report is to be run}
+
+\item{terminateDate}{Date-class date after which report is no longer run.
+Deault values set to +3 years, \emph{e.g.}
+\code{\{td <- as.POSIXlt(Sys.Date()); td$year <- td$year+3; as.Date(td)\}}}
 
 \item{interval}{String defining a time intervall as defined in
 \code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an emty string}

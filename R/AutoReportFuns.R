@@ -21,6 +21,9 @@
 #' @param organization String identifying the organization the owner belongs to
 #' @param runDayOfYear Integer vector with day numbers of the year when the
 #' report is to be run
+#' @param terminateDate Date-class date after which report is no longer run.
+#' Deault values set to +3 years, \emph{e.g.}
+#' \code{\{td <- as.POSIXlt(Sys.Date()); td$year <- td$year+3; as.Date(td)\}} 
 #' @param interval String defining a time intervall as defined in
 #' \code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an emty string
 #' @param intervalName String providing a human uderstandable representation of
@@ -36,6 +39,8 @@
 
 createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
                              owner, email, organization, runDayOfYear,
+                             terminateDate = {td<-as.POSIXlt(Sys.Date());
+                                              td$year<-td$year+3;as.Date(td)},
                              interval = "", intervalName = "", 
                              dryRun = FALSE) {
   
