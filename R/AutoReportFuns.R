@@ -495,11 +495,19 @@ makeUserSubscriptionTab <- function(session) {
     selectByOwner(., owner = getUserName(session)) %>% 
     selectByOrganization(., organization = getUserReshId(session))
   
+  dateFormat <- "%A %d. %B %Y"
+  
   for (n in names(autoRep)){
+    nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
+                                returnFormat = dateFormat)
+    if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
+      nextDate <- "Utløpt"
+    }
     r <- list("Rapport"=autoRep[[n]]$synopsis,
               "Enhet"=autoRep[[n]]$organization,
-              "Periode" =autoRep[[n]]$intervalName,
-              "Neste"=findNextRunDate(autoRep[[n]]$runDayOfYear),
+              "Periode"=autoRep[[n]]$intervalName,
+              "Utløp"=autoRep[[n]]$terminateDate,
+              "Neste"=nextDate,
               "Slett"=as.character(
                 shiny::actionButton(inputId = paste0("del_", n),
                              label = "",
