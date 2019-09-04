@@ -22,8 +22,9 @@
 #' @param runDayOfYear Integer vector with day numbers of the year when the
 #' report is to be run
 #' @param terminateDate Date-class date after which report is no longer run.
-#' Deault values set to +3 years, \emph{e.g.}
-#' \code{\{td <- as.POSIXlt(Sys.Date()); td$year <- td$year+3; as.Date(td)\}} 
+#' Deault value set to \code{NULL} in which case the function will provide an
+#' expiry date adding 3 years to the current date if in a PRODUCTION context
+#' and 1 month if not 
 #' @param interval String defining a time intervall as defined in
 #' \code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an emty string
 #' @param intervalName String providing a human uderstandable representation of
@@ -39,10 +40,20 @@
 
 createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
                              owner, email, organization, runDayOfYear,
-                             terminateDate = {td<-as.POSIXlt(Sys.Date());
-                                              td$year<-td$year+3;as.Date(td)},
-                             interval = "", intervalName = "", 
-                             dryRun = FALSE) {
+                             terminateDate = NULL, interval = "",
+                             intervalName = "", dryRun = FALSE) {
+  
+  # When NULL, set expiry date based on context
+  if (is.null(terminateDate)) {
+    context <- Sys.getenv("R_RAP_INSTANCE")
+    terminateDate <- as.POSIXlt(Sys.Date())
+    if (context %in% c("PRODUCTION")) {
+      terminateDate$year <- terminateDate$year + 3
+      } else {
+      terminateDate$mon <- terminateDate$mon + 1
+      }
+    terminateDate <- as.Date(terminateDate)
+  }
   
   # make unique id by (hashing) combination of owner and timestamp
   ts <- as.character(as.integer(as.POSIXct(Sys.time())))
@@ -501,12 +512,12 @@ makeUserSubscriptionTab <- function(session) {
     nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
                                 returnFormat = dateFormat)
     if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
-      nextDate <- "Utløpt"
+      nextDate <- "Utl\u00F8pt"
     }
     r <- list("Rapport"=autoRep[[n]]$synopsis,
               "Enhet"=autoRep[[n]]$organization,
               "Periode"=autoRep[[n]]$intervalName,
-              "Utløp"=strftime(as.Date(autoRep[[n]]$terminateDate),
+              "Utl\u00F8p"=strftime(as.Date(autoRep[[n]]$terminateDate),
                                format = "%b %Y"),
               "Neste"=nextDate,
               "Slett"=as.character(
