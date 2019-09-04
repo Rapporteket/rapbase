@@ -64,7 +64,7 @@ createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
   l$owner <- owner
   l$email <- email
   l$organization <- organization
-  l$terminateDate <- terminateDate
+  l$terminateDate <- as.character(terminateDate)
   l$interval <- interval
   l$intervalName <- intervalName
   l$runDayOfYear <- runDayOfYear
