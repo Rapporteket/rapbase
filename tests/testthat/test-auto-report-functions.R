@@ -38,6 +38,15 @@ test_that("Auto report can be created as dry run (stout)", {
   expect_true(is.list(res))
 })
 
+Sys.setenv(R_RAP_INSTANCE="PRODUCTION")
+test_that("auto report can be created as dry run (stout) in an PROD context", {
+  res <- createAutoReport(synopsis, package, fun, paramNames,
+                          paramValues, owner, email, organization,
+                          runDayOfYear, dryRun = TRUE)
+  expect_true(is.list(res))
+})
+Sys.setenv(R_RAP_INSTANCE="")
+
 rd <- readAutoReportData()
 
 test_that("Auto reports can be filtered by registry/package", {
