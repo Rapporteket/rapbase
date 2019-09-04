@@ -454,7 +454,7 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 
 findNextRunDate <- function(runDayOfYear,
                             baseDayNum = as.POSIXlt(Sys.Date())$yday+1,
-                            returnFormat = "%A %d. %B %Y") {
+                            returnFormat = "%A %e. %B %Y") {
   
   year <- as.POSIXlt(Sys.Date())$year + 1900
   
@@ -495,7 +495,7 @@ makeUserSubscriptionTab <- function(session) {
     selectByOwner(., owner = getUserName(session)) %>% 
     selectByOrganization(., organization = getUserReshId(session))
   
-  dateFormat <- "%A %d. %B %Y"
+  dateFormat <- "%A %e. %B %Y"
   
   for (n in names(autoRep)){
     nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
