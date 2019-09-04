@@ -11,6 +11,9 @@ testAutoReportFirst:
   - Some One <someone@nowhere.com>
   - Jesus <jesus@sky.com>
   organization: '999999'
+  terminateDate: '9999-12-31'
+  interval:
+  intervalName:
   runDayOfYear:
   - 30
   - 60
@@ -27,6 +30,9 @@ testAutoReportSecond:
   - <someone@nowhere.com>
   - jesus@sky.com
   organization: '999999'
+  terminateDate: '9999-12-31'
+  interval:
+  intervalName:
   runDayOfYear:
   - 30
   - 60
@@ -42,6 +48,9 @@ testAutoReportSecond:
   owner: tester
   email: tester@skde.no
   organization: '999999'
+  terminateDate: '9999-12-31'
+  interval:
+  intervalName:
   runDayOfYear: 170.0
 cd467ac14dd848b8798a384a3e51512c:
   synopsis: Test of auto report
@@ -54,4 +63,7 @@ cd467ac14dd848b8798a384a3e51512c:
   owner: tester
   email: tester@skde.no
   organization: '999999'
+  terminateDate: '9999-12-31'
+  interval:
+  intervalName:
   runDayOfYear: 171.0
