@@ -33,7 +33,7 @@ report}
 report is to be run}
 
 \item{terminateDate}{Date-class date after which report is no longer run.
-Deault value set to \code{NULL} in which case the function will provide an
+Default value set to \code{NULL} in which case the function will provide an
 expiry date adding 3 years to the current date if in a PRODUCTION context
 and 1 month if not}
 
