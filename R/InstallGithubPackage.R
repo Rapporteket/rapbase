@@ -10,7 +10,8 @@
 #' @return story String containing logged entries from the function
 #' @export
 
-installGithubPackage <- function(packageName, branchName, readConfig=TRUE) {
+installGithubPackage <- function(packageName, branchName = "master",
+                                 readConfig=TRUE) {
   
   # nocov start
   
