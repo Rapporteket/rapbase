@@ -1,4 +1,4 @@
-# rapbase <img src="man/figures/favicon.ico" align="right" height="150" />
+# rapbase <img src="man/figures/logo.svg" align="right" height="150" />
 
 <!-- badges: start -->
 [![Build Status](https://travis-ci.org/Rapporteket/rapbase.png)](https://travis-ci.org/Rapporteket/rapbase)
