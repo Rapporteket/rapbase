@@ -13,7 +13,7 @@ howWeDealWithPersonalData <- function(session) {
   
   params <- list(session=session)
   system.file("howWeDealWithPersonalData.Rmd", package="rapbase") %>%
-    knitr::knit() %>%
+    knitr::knit(output = tempfile()) %>%
     markdown::markdownToHTML(.,
                              options = c('fragment_only',
                                          'base64_images',
