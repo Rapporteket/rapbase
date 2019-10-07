@@ -54,9 +54,7 @@ installGithubPackage <- function(packageName, branchName = "master",
                            paste0("Intalling '", githubRapbase,
                                   "' from branch '", branchName, "'"))
     res <- tryCatch({
-      devtools::install_github(githubRapbase, ref=branchName,
-                               args=c("--clean",
-                                      paste0("--library=", libpath)))
+      remotes::install_github(githubRapbase, ref=branchName)
       
       success
     }, warning = function(war) {
@@ -73,9 +71,7 @@ installGithubPackage <- function(packageName, branchName = "master",
     story <- MakeMessage(story, paste0("Installing '", packageName,
                                            "' from branch '", branchName, "'"))
     res <- tryCatch({
-      devtools::install_github(githubPackage, ref=branchName,
-                               args=c("--clean",
-                                      paste0("--library=", libpath)))
+      remotes::install_github(githubPackage, ref=branchName)
       
       success
     }, warning = function(war) {

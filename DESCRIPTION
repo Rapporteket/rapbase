@@ -35,6 +35,7 @@ Imports:
     magrittr,
     markdown,
     readr,
+    remotes,
     RJDBC,
     RMariaDB,
     sendmailR,
