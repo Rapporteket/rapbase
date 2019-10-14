@@ -32,6 +32,15 @@ test_that("an html doc regarding 'how we deal with...' can be provided", {
   expect_output(howWeDealWithPersonalData(session = list()), "")
 })
 
+# a logical providing info if context is Rapporteket
+test_that("we currently do not reside within a Rapportekte context", {
+  expect_false(isRapContext())
+})
+Sys.setenv(R_RAP_INSTANCE="DEV")
+test_that("we are now within a Rapportekte context", {
+  expect_true(isRapContext())
+})
+
 
 # Restore env
 Sys.setenv(R_RAP_INSTANCE=currentContext)
