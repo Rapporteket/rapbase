@@ -402,6 +402,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
         # ship the shite
         sendmailR::sendmail(
           from, to, subject, body,
+          headers=list(`Content-Type` = "text/html; charset=\"utf-8\""),
           control = list(smtpServer=conf$network$smtp$server,
                          smtpPortSMTP=conf$network$smtp$port))
         
