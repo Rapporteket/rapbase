@@ -31,7 +31,6 @@ Imports:
     gistr,
     httr,
     knitr,
-    lifecycle,
     magrittr,
     markdown,
     readr,
@@ -46,4 +45,6 @@ Imports:
 RoxygenNote: 6.1.1
 URL: http://github.com/Rapporteket/rapbase
 BugReports: http://github.com/Rapporteket/rapbase/issues
-Suggests: testthat
+Suggests:
+    testthat,
+    lifecycle
