@@ -1,9 +1,9 @@
 #' Provide a no-opt-out ok message
 #' 
-#' To be applied for user input when there is actaully no choice :-)
+#' To be applied for user input when there is actuaully no choice :-)
 #'
 #' @return String with possible state of mind (in Norwegian) once left with no
-#' opitions 
+#' options 
 #' @export
 #'
 #' @examples
