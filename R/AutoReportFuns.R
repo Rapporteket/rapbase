@@ -397,7 +397,8 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
         from <- conf$network$sender
         # escape spaces (e.g. when full name is added to <email>)
         to <- gsub(" ", "\\ ", rep$email, fixed = TRUE)
-        subject <- iconv(rep$synopsis, from = "UTF-8", to = "latin1")
+        subject <- rep$synopsis
+        Encoding(subject) <- "latin1"
         body <- list(stdTxt, sendmailR::mime_part(attFile))
         # ship the shite
         sendmailR::sendmail(
