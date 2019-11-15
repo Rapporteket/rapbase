@@ -397,8 +397,10 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
         from <- conf$network$sender
         # escape spaces (e.g. when full name is added to <email>)
         to <- gsub(" ", "\\ ", rep$email, fixed = TRUE)
+        # Rapporteket uses an smtp with funny microsoft tech...
         subject <- rep$synopsis
-        Encoding(subject) <- "latin1"
+        Encoding(subject) <- "UTF-8"
+        subject <- iconv(subject, from = "UTF-8", to = "CP1252")
         body <- list(stdTxt, sendmailR::mime_part(attFile))
         # ship the shite
         sendmailR::sendmail(
