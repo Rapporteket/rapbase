@@ -60,7 +60,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
   context <- Sys.getenv("R_RAP_INSTANCE")
   
   if (context == "") {
-    warning("System has no defined instance. Configuration as provided by
+    message("System has no defined instance. Configuration as provided by
             'rapbaseConfig.yml' will be used as source for user data.")
     conf <- getConfig(fileName = "rapbaseConfig.yml")
     d <- conf$r$testUser
@@ -74,6 +74,16 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
   }
   
   if (context %in% devContexts) {
+    
+    if (is.null(shinySession)) {
+      stop("Session information is empty! Eventually, that will come bite you")
+    }
+    
+    if (!c("ShinySession") %in% attributes(shinySession)$class) {
+      stop(paste("Got no object of class 'ShinySession'!",
+                 "Your carma is way below threshold..."))
+    }
+    
     conf <- getConfig(fileName = "rapbaseConfig.yml")
     d <- conf$r$testUser
     user <- d$user

@@ -11,15 +11,18 @@ test_that("Function handles general errors", {
 
 # Testing on different instances: undefined, DEV, TEST and QA/PRODUCTION
 Sys.setenv(R_RAP_INSTANCE="")
-test_that("Warning is provided when instance is undefined", {
-  expect_warning(userInfo(entity = "user"))
+test_that("a message is provided when instance is undefined", {
+  expect_message(userInfo(entity = "user"))
 })
 
 
 Sys.setenv(R_RAP_INSTANCE="DEV")
 Sys.setenv(R_RAP_CONFIG_PATH="")
+ss <- list()
+# simulate ShinySession class for above list
+attr(ss, "class") <- "ShinySession"
 test_that("Function provides an entity in a dev context", {
-  expect_equal(userInfo(entity = "groups"), "rapbase")
+  expect_equal(userInfo(shinySession = ss, entity = "groups"), "rapbase")
 })
 
 
@@ -72,13 +75,17 @@ test_that("Function provides entities in a QA/PRODUCTION context", {
 })
 
 test_that("Function can handle redefined contexts", {
-  expect_equal(userInfo(entity = "user", devContexts = c("DEV", "QA"),
+  expect_equal(userInfo(shinySession = shinySession, entity = "user",
+                        devContexts = c("DEV", "QA"),
                         prodContexts = c("PRODUCTION")), "ttester")
-  expect_equal(userInfo(entity = "groups", devContexts = c("DEV", "QA"),
+  expect_equal(userInfo(shinySession = shinySession, entity = "groups",
+                        devContexts = c("DEV", "QA"),
                         prodContexts = c("PRODUCTION")), "rapbase")
-  expect_equal(userInfo(entity = "role", devContexts = c("DEV", "QA"),
+  expect_equal(userInfo(shinySession = shinySession, entity = "role",
+                        devContexts = c("DEV", "QA"),
                         prodContexts = c("PRODUCTION")), "accessLevel")
-  expect_equal(userInfo(entity = "resh_id", devContexts = c("DEV", "QA"),
+  expect_equal(userInfo(shinySession = shinySession, entity = "resh_id",
+                        devContexts = c("DEV", "QA"),
                         prodContexts = c("PRODUCTION")), "999999")
 })
 
