@@ -9,10 +9,11 @@
 #' @examples
 #' noOptOutOk()
 
+
 noOptOutOk <- function() {
   
-  msg <- c("Den er grei", "Om du sier det, så", "Ok, da", "Javel, da",
-           "Ja, da er det vel sånn", "Skål for den!", "Fint", "Flott",
+  msg <- c("Den er grei", "Om du sier det, s\u00e5", "Ok, da", "Javel, da",
+           "Ja, da er det vel s\u00e5nn", "Sk\u00e5l for den!", "Fint", "Flott",
            "Klart", "Mottatt", "Akkurat", "Livet er herlig")
   
   sample(msg, 1)
