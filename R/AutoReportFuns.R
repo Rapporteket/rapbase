@@ -373,7 +373,7 @@ getRegs <- function(config) {
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
                           dryRun = FALSE) {
   
-    
+  
   # get report candidates
   reps <- readAutoReportData()
   
@@ -385,31 +385,37 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
   from <- conf$network$sender
   
   for (i in 1:length(reps)) {
-    rep <- reps[[i]]
-    # get explicit referenced function
-    f <- .getFun(paste0(rep$package, "::", rep$fun))
-    if (dayNumber %in% rep$runDayOfYear &&
-        as.Date(rep$terminateDate) > Sys.Date()) {
-      attFile <- do.call(what = f, args = rep$params)
-      if (dryRun) {
-        message(paste("No emails sent. Attachment is", attFile))
-      } else { # nocov start
-        # escape spaces (e.g. when full name is added to <email>)
-        to <- gsub(" ", "\\ ", rep$email, fixed = TRUE)
-        # Rapporteket uses an smtp with funny microsoft tech...
-        subject <- rep$synopsis
-        Encoding(subject) <- "UTF-8"
-        subject <- iconv(subject, from = "UTF-8", to = "CP1252")
-        body <- list(stdTxt, sendmailR::mime_part(attFile))
-        # ship the shite
-        sendmailR::sendmail(
-          from, to, subject, body,
-          headers=list(`Content-Type` = "text/html; charset=\"utf-8\""),
-          control = list(smtpServer=conf$network$smtp$server,
-                         smtpPortSMTP=conf$network$smtp$port))
-        
-      } # nocov end
-    }
+    tryCatch({
+      rep <- reps[[i]]
+      # get explicit referenced function
+      f <- .getFun(paste0(rep$package, "::", rep$fun))
+      if (dayNumber %in% rep$runDayOfYear &&
+          as.Date(rep$terminateDate) > Sys.Date()) {
+        attFile <- do.call(what = f, args = rep$params)
+        if (dryRun) {
+          message(paste("No emails sent. Attachment is", attFile))
+        } else { # nocov start
+          # escape spaces (e.g. when full name is added to <email>)
+          to <- gsub(" ", "\\ ", rep$email, fixed = TRUE)
+          # Rapporteket uses an smtp with funny microsoft tech...
+          subject <- rep$synopsis
+          Encoding(subject) <- "UTF-8"
+          subject <- iconv(subject, from = "UTF-8", to = "CP1252")
+          body <- list(stdTxt, sendmailR::mime_part(attFile))
+          # ship the shite
+          sendmailR::sendmail(
+            from, to, subject, body,
+            headers=list(`Content-Type` = "text/html; charset=\"utf-8\""),
+            control = list(smtpServer=conf$network$smtp$server,
+                           smtpPortSMTP=conf$network$smtp$port))
+          
+        } # nocov end
+      }
+    },
+    error = function(e) {
+      message(paste("Report could not be processed (moving on to the next):",
+                    e))
+    })
   }
 }
 
