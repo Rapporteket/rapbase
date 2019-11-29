@@ -380,6 +380,9 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
   # standard text for email body
   stdTxt <- readr::read_file(system.file("autoReportStandardEmailText.txt",
                                          package = "rapbase"))
+  # get sender from common config
+  conf <- rapbase::getConfig("rapbaseConfig.yml")
+  from <- conf$network$sender
   
   for (i in 1:length(reps)) {
     rep <- reps[[i]]
@@ -391,10 +394,6 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
       if (dryRun) {
         message(paste("No emails sent. Attachment is", attFile))
       } else { # nocov start
-        # get config
-        conf <- rapbase::getConfig("rapbaseConfig.yml")
-        # prepare email
-        from <- conf$network$sender
         # escape spaces (e.g. when full name is added to <email>)
         to <- gsub(" ", "\\ ", rep$email, fixed = TRUE)
         # Rapporteket uses an smtp with funny microsoft tech...
