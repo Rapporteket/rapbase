@@ -80,6 +80,7 @@ reference:
     - RunNoweb
     - getRapPackages
     - installGithubPackage
+    - isRapContext
     
   - title: Data
     desc: >
