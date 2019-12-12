@@ -10,7 +10,7 @@
 #' For test cases user privileges are provided by a query defined in the
 #' url of the shiny application request. Default FALSE
 #'
-#' @return String of singel user data element
+#' @return String of single user data element
 #' 
 #' @seealso \code{\link{getShinyUserName}}, \code{\link{getShinyUserGroups}},
 #' \code{\link{getShinyUserReshId}}, \code{\link{getShinyUserRole}}
@@ -18,6 +18,8 @@
 #' @export
 
 shinySessionInfo <- function(shinySession, entity, testCase = FALSE) {
+  lifecycle::deprecate_warn("1.10.0", "rapbase::shinySessionInfo()",
+                            "rapbase::userInfo()")
   
   if (is.null(shinySession)) {
     stop("Session information is empty!. Cannot do anything")

@@ -6,10 +6,14 @@ testAutoReportFirst:
   - aNum: 1
   - aChar: a
   - anExp: Sys.Date()
-  owner: tester
+  owner: ttester
   email:
   - Some One <someone@nowhere.com>
   - Jesus <jesus@sky.com>
+  organization: '999999'
+  terminateDate: '9999-12-31'
+  interval:
+  intervalName:
   runDayOfYear:
   - 30
   - 60
@@ -21,11 +25,45 @@ testAutoReportSecond:
   - aNum: 2.0
   - aChar: '3.14'
   - anExp: sessionInfo()
-  owner: tester
+  owner: ttester
   email:
   - <someone@nowhere.com>
   - jesus@sky.com
+  organization: '999999'
+  terminateDate: '9999-12-31'
+  interval:
+  intervalName:
   runDayOfYear:
   - 30
   - 60
   - 90
+5a0e7e28fd4c641be535a2b292a6b7b2:
+  synopsis: Test of auto report
+  package: rapbase
+  fun: .testAutoReport
+  params:
+  - aNum: '1'
+  - aChar: someString
+  - anExp: Sys.Date()
+  owner: ttester
+  email: tester@skde.no
+  organization: '999999'
+  terminateDate: '9999-12-31'
+  interval:
+  intervalName:
+  runDayOfYear: 170.0
+cd467ac14dd848b8798a384a3e51512c:
+  synopsis: Test of expired auto report
+  package: rapbase
+  fun: .testAutoReport
+  params:
+  - aNum: '1'
+  - aChar: someString
+  - anExp: Sys.Date()
+  owner: ttester
+  email: tester@skde.no
+  organization: '999999'
+  terminateDate: '0000-01-01'
+  interval:
+  intervalName:
+  runDayOfYear: 171.0

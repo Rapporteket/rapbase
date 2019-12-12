@@ -22,7 +22,8 @@ shiny session object calls to this function is made without any arguments. If
 redefining contexts is needed, please use \code{\link{userInfo}} instead.
 }
 \examples{
-\dontrun{
+\donttest{
+# Requires a valid shiny session object
 getUserName()
 getUserName(shinySessionObject)
 }

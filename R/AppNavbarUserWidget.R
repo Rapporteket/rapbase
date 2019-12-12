@@ -33,6 +33,8 @@
 #' 
 #' @param user String providing the name of the user
 #' @param organization String providing the organization of the user
+#' @param addUserInfo Logical defining wether a user data pop-up is to be part
+#' of the widget (TRUE) or not (FALSE, default)
 #'
 #' @return Ready made html script
 #' @export
@@ -40,16 +42,35 @@
 #' @examples
 #' appNavbarUserWidget()
 
-appNavbarUserWidget <- function(user = "Undefined person", organization = "Undefined organization") {
+appNavbarUserWidget <- function(user = "Undefined person",
+                                organization = "Undefined organization",
+                                addUserInfo = FALSE) {
+  
+  if (addUserInfo) {
+  userInfo <- shiny::tags$a(
+    id = "userInfo",
+    href = "#",
+    class = "action-button",
+    "Om:")
+  } else {
+    userInfo <- character()
+  }
+  
+  quit <- shiny::tags$a(
+    id = 'close',
+    href = "#",
+    onclick = "setTimeout(function(){window.close();},250);",  # close browser
+    "Lukk")
   
   txtWidget <-
     paste0("var header = $('.navbar> .container-fluid');\n",
-           "header.append('<div class=\"navbar-brand\" style=\"float:right;font-size:75%\">",
-           user,
-           organization,
-           "<a href=\"http://localhost:80\">Logg ut</a>",
-           "</div>');\n",
-           "console.log(header)")
+         "header.append('<div class=\"navbar-brand\" style=\"float:right;vertical-align:super;font-size:65%\">",
+         userInfo,
+         user,
+         organization,
+         quit,
+         "</div>');\n",
+         "console.log(header)")
   
   shiny::tags$script(shiny::HTML(txtWidget))
 }

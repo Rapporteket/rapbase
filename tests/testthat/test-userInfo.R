@@ -2,7 +2,7 @@ context("User info")
 
 # store current instance
 currentInstance <- Sys.getenv("R_RAP_INSTANCE")
-
+currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
 
 test_that("Function handles general errors", {
   expect_error(userInfo(entity = "user", devContexts = c("DEV", "TEST")))
@@ -11,14 +11,18 @@ test_that("Function handles general errors", {
 
 # Testing on different instances: undefined, DEV, TEST and QA/PRODUCTION
 Sys.setenv(R_RAP_INSTANCE="")
-test_that("Warning is provided when instance is undefined", {
-  expect_warning(userInfo(entity = "user"))
+test_that("a message is provided when instance is undefined", {
+  expect_message(userInfo(entity = "user"))
 })
 
 
 Sys.setenv(R_RAP_INSTANCE="DEV")
+Sys.setenv(R_RAP_CONFIG_PATH="")
+ss <- list()
+# simulate ShinySession class for above list
+attr(ss, "class") <- "ShinySession"
 test_that("Function provides an entity in a dev context", {
-  expect_equal(userInfo(entity = "groups"), "rapbase")
+  expect_equal(userInfo(shinySession = ss, entity = "groups"), "rapbase")
 })
 
 
@@ -54,7 +58,7 @@ Sys.setenv(R_RAP_INSTANCE="QA")
 # simulated real data
 shinySession <- list(user="user1")
 shinySession$groups <- "group1,group2"
-shinySession$request <- list(HTTP_RESH_ID="789012")
+shinySession$request <- list(HTTP_RESHID="789012")
 shinySession$request$HTTP_ROLE <- "LC"
 # make a copy for testing wrong class
 shinySessionWrongClass <- shinySession
@@ -71,15 +75,20 @@ test_that("Function provides entities in a QA/PRODUCTION context", {
 })
 
 test_that("Function can handle redefined contexts", {
-  expect_equal(userInfo(entity = "user", devContexts = c("DEV", "QA"),
-                        prodContexts = c("PRODUCTION")), "tester")
-  expect_equal(userInfo(entity = "groups", devContexts = c("DEV", "QA"),
+  expect_equal(userInfo(shinySession = shinySession, entity = "user",
+                        devContexts = c("DEV", "QA"),
+                        prodContexts = c("PRODUCTION")), "ttester")
+  expect_equal(userInfo(shinySession = shinySession, entity = "groups",
+                        devContexts = c("DEV", "QA"),
                         prodContexts = c("PRODUCTION")), "rapbase")
-  expect_equal(userInfo(entity = "role", devContexts = c("DEV", "QA"),
+  expect_equal(userInfo(shinySession = shinySession, entity = "role",
+                        devContexts = c("DEV", "QA"),
                         prodContexts = c("PRODUCTION")), "accessLevel")
-  expect_equal(userInfo(entity = "resh_id", devContexts = c("DEV", "QA"),
-                        prodContexts = c("PRODUCTION")), 999999)
+  expect_equal(userInfo(shinySession = shinySession, entity = "resh_id",
+                        devContexts = c("DEV", "QA"),
+                        prodContexts = c("PRODUCTION")), "999999")
 })
 
 # Restore instance
 Sys.setenv(R_RAP_INSTANCE=currentInstance)
+Sys.setenv(R_RAP_CONFIG_PATH=currentConfigPath)

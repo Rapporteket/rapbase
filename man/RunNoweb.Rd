@@ -9,7 +9,7 @@ RunNoweb(nowebFileName, packageName, weaveMethod = "knitr")
 \arguments{
 \item{nowebFileName}{Basename of the noweb file, \emph{e.g.} 'myFile.Rnw'.}
 
-\item{packageName}{Name of the package containg noweb file(s)}
+\item{packageName}{Name of the package containing noweb file(s)}
 
 \item{weaveMethod}{Method to apply for weaving. Currently available are
 'Sweave' and 'knitr', default to the latter.}

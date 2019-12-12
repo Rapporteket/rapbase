@@ -12,7 +12,8 @@
 #' \code{\link{getUserGroups}}, \code{\link{getUserReshId}}
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Requires a valid shiny session object
 #' getUserRole()
 #' getUserRole(shinySessionObject)
 #' }
@@ -21,11 +22,6 @@
 
 
 getUserRole <- function(shinySession = NULL) {
-  
-  if (missing(shinySession)) {
-    warning(paste("A shinySession object was not provided. Hence, this",
-                  "function call may not work across all contexts"))
-  }
   
   userInfo(shinySession, entity = "role")
   

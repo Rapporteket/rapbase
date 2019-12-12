@@ -4,9 +4,10 @@
 #' of the package are placed flat under the \emph{inst} directory
 #'
 #' @param nowebFileName Basename of the noweb file, \emph{e.g.} 'myFile.Rnw'.
-#' @param packageName Name of the package containg noweb file(s)
+#' @param packageName Name of the package containing noweb file(s)
 #' @param weaveMethod Method to apply for weaving. Currently available are
 #'  'Sweave' and 'knitr', default to the latter.
+#' @importFrom utils Sweave
 #' @export
 
 RunNoweb <- function(nowebFileName, packageName, weaveMethod = "knitr") {

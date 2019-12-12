@@ -8,7 +8,8 @@
 #' \code{\link{getShinyUserRole}}
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Requires a valid shiny session object
 #' getShinyUserGroups(shinySessionObject)
 #' }
 #' 
@@ -16,5 +17,6 @@
 
 
 getShinyUserGroups <- function(shinySession, testCase = FALSE) {
+  lifecycle::deprecate_warn("1.10.0", "rapbase::GetShinyUserGroups()", "rapbase::getUserGroups()")
   shinySessionInfo(shinySession, entity = "groups", testCase)
 }

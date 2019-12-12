@@ -1,14 +1,9 @@
-#' rapbase: A package for generic R-resources at Rapporteket.
+#' rapbase: Base Functions and Resources for Rapporteket
 #'
-#'  Provide common functions and resources for registry speciffic
-#'  R-packages at Rapportekt. Can potentially contain alot of stuff, also
-#'  not directly related to R...
+#'  Provide common functions and resources for registry specific
+#' R-packages at Rapporteket. This packages is relevant for developers of
+#' packages/registries at Rapporteket
 #' 
-#' @section rapbase functions:
-#' RunNoweb
-#' LibFigFilType
-#' RapporteketDbConnection
-#'
 #' @docType package
 #' @name rapbase
 NULL

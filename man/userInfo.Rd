@@ -2,14 +2,14 @@
 % Please edit documentation in R/UserInfo.R
 \name{userInfo}
 \alias{userInfo}
-\title{Provide user attributes based on evironment context}
+\title{Provide user attributes based on environment context}
 \usage{
 userInfo(entity, shinySession = NULL, devContexts = c("DEV"),
   testContexts = c("TEST"), prodContexts = c("QA", "PRODUCTION"))
 }
 \arguments{
 \item{entity}{String defining the element to return. Currently, one of
-'user', groups', 'resh_id' or 'role'}
+'user', groups', 'resh_id', 'role', 'email', 'full_name' or 'phone'}
 
 \item{shinySession}{Shiny session object (list, NULL by default). Must be
 provided when the source of user attributes is either the shiny app url or
@@ -17,11 +17,11 @@ an external authentication provider. By default this will apply to the
 'TEST', 'QA' and 'PRODUCTION' contexts in which case the shiny session
 object must be provided.}
 
-\item{devContexts}{A charcter vector providing unique intances to be regarded
-as a development context. In this context user attributes will be read from
-configuration as provided by 'rapbaseConfig.yml'. The instances provided
-cannot overlap instances provided in any other contexts. By default set to
-\code{c("DEV")}.}
+\item{devContexts}{A character vector providing unique instances to be
+regarded as a development context. In this context user attributes will be
+read from configuration as provided by 'rapbaseConfig.yml'. The instances
+provided cannot overlap instances provided in any other contexts. By default
+set to \code{c("DEV")}.}
 
 \item{testContexts}{A character vector providing unique instances to be
 regarded as a test context. In this context user attributes will be read
@@ -32,20 +32,20 @@ set to \code{c("TEST")}.}
 
 \item{prodContexts}{A character vector providing unique instances to be
 regarded as a production context. In this context user attributes will be
-read from the shiny session object (as shiny server interacts witn an
+read from the shiny session object (as shiny server interacts with an
 external log-in service). Hence, for this context the corresponding shiny
 session object must also be provided. The instances provided cannot overlap
 instances provided in any other contexts. By default set to
 \code{c("QA", "PRODUCTION")}.}
 }
 \value{
-String of singel user data element
+String of single user data element
 }
 \description{
 Extracts elements from either config, url (shiny) or session (shiny)
 relevant for user data such as name, group, role and reshId. Source of info
 is based on environment context and can be controlled by altering the default
-settings for which contexts that will apply for the varius sources of user
+settings for which contexts that will apply for the various sources of user
 data. This function will normally be used via its helper functions (see
 below).
 }

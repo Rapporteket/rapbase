@@ -3,23 +3,32 @@
 #' Create and add report to config
 #'
 #' Adds an entry to the system configuration of reports to run at given
-#' intervalls. After generating the configuration from the new entry
+#' intervals. After generating the configuration from the new entry
 #' the function load the current system configuration, adds the new
 #' entry and saves the updated system configuration.
 #'
 #' @param synopsis String with description of the report and to be used in
 #' subject field of email distributed reports
-#' @param package String with package name also correspondig to registry
+#' @param package String with package name also corresponding to registry
 #' @param fun String providing name of function to be called for generating
 #' report
 #' @param paramNames String vector where each element corresponds to the input
 #' parameter to be used in the above function
 #' @param paramValues String vector with corresponding values to paramNames
 #' @param owner String providing the owner of the report. Usually a user name
-#' @param email String with email address to recipient of email containg the
+#' @param email String with email address to recipient of email containing the
 #' report
+#' @param organization String identifying the organization the owner belongs to
 #' @param runDayOfYear Integer vector with day numbers of the year when the
 #' report is to be run
+#' @param terminateDate Date-class date after which report is no longer run.
+#' Default value set to \code{NULL} in which case the function will provide an
+#' expiry date adding 3 years to the current date if in a PRODUCTION context
+#' and 1 month if not 
+#' @param interval String defining a time intervall as defined in
+#' \code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an emty string
+#' @param intervalName String providing a human uderstandable representation of
+#' \code{interval}. Default value is an emty string 
 #' @param dryRun Logical defining if global auto report config actually is to
 #' be updated. If set to TRUE the actual config (all of it) will be returned by
 #' the function. FALSE by default
@@ -30,7 +39,21 @@
 #' @export
 
 createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
-                             owner, email, runDayOfYear, dryRun = FALSE) {
+                             owner, email, organization, runDayOfYear,
+                             terminateDate = NULL, interval = "",
+                             intervalName = "", dryRun = FALSE) {
+  
+  # When NULL, set expiry date based on context
+  if (is.null(terminateDate)) {
+    context <- Sys.getenv("R_RAP_INSTANCE")
+    terminateDate <- as.POSIXlt(Sys.Date())
+    if (context %in% c("PRODUCTION")) {
+      terminateDate$year <- terminateDate$year + 3
+      } else {
+      terminateDate$mon <- terminateDate$mon + 1
+      }
+    terminateDate <- as.Date(terminateDate)
+  }
   
   # make unique id by (hashing) combination of owner and timestamp
   ts <- as.character(as.integer(as.POSIXct(Sys.time())))
@@ -51,6 +74,10 @@ createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
   l$params <- paramsListVector
   l$owner <- owner
   l$email <- email
+  l$organization <- organization
+  l$terminateDate <- as.character(terminateDate)
+  l$interval <- interval
+  l$intervalName <- intervalName
   l$runDayOfYear <- runDayOfYear
   
   rd <- readAutoReportData()
@@ -128,7 +155,8 @@ readAutoReportData <- function(fileName = "autoReport.yml", packageName = "rapba
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Example depend on environment variable R_RAP_CONFIG_PATH being set
 #' config <- readAutoReportData()
 #' writeAutoReportData(config = config)
 #' }
@@ -139,8 +167,11 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
   path <- Sys.getenv("R_RAP_CONFIG_PATH")
   
   if (path == "") {
-    # for now, just write into installed package
-    con <- file(system.file(fileName, package = packageName), "w")
+    # cannot proceed if there is nowhere to store config
+    stop(paste("There is nowhere to store config data.", 
+               "The environment variable R_RAP_CONFIG_PATH must be defined",
+               "providing av path to a directory where configuration can",
+               "be written. Stopping"))
   } else {
     oriFile <- file.path(path, fileName)
     # in case we screw-up, make a backup
@@ -218,11 +249,37 @@ selectByOwner <- function(config, owner) {
 }
 
 
+#' Select data on one organization from config (list)
+#'
+#' Pick all config corresponding to a given organization (of the report)
+#'
+#' @param config list of configuration for automated reports
+#' @param organization string giving the exact organization
+#'
+#' @return list with config for reports belonging to organization
+#' @export
+
+selectByOrganization <- function(config, organization) {
+  
+  if (length(config) == 0) {
+    list()
+  } else {
+    ind <- integer()
+    for (i in 1:length(config)) {
+      if (config[[i]]$organization == organization) {
+        ind <- c(ind, i)
+      }
+    }
+    c(config[ind])
+  }
+}
+
+
 #' Provide vector of registries (\emph{i.e.} their R packages) in config
 #'
 #' @param config list of configuration for automated reports
 #'
-#' @return character vector of rgistry (package) names
+#' @return character vector of registry (package) names
 #' @export
 
 getRegs <- function(config) {
@@ -308,15 +365,14 @@ getRegs <- function(config) {
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Example depend on environment variable R_RAP_CONFIG_PATH being set
 #' runAutoReport()
 #' }
 
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
                           dryRun = FALSE) {
   
-  # get config
-  conf <- rapbase::getConfig("rapbaseConfig.yml")
   
   # get report candidates
   reps <- readAutoReportData()
@@ -324,30 +380,42 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday+1,
   # standard text for email body
   stdTxt <- readr::read_file(system.file("autoReportStandardEmailText.txt",
                                          package = "rapbase"))
+  # get sender from common config
+  conf <- rapbase::getConfig("rapbaseConfig.yml")
+  from <- conf$network$sender
   
   for (i in 1:length(reps)) {
-    rep <- reps[[i]]
-    # get explicit referenced function
-    f <- .getFun(paste0(rep$package, "::", rep$fun))
-    if (dayNumber %in% rep$runDayOfYear) {
-      attFile <- do.call(what = f, args = rep$params)
-      if (dryRun) {
-        message(paste("No emails sent. Attachment is", attFile))
-      } else { # nocov start
-        # prepare email
-        from <- conf$network$sender
-        # escape spaces (e.g. when full name is added to <email>)
-        to <- gsub(" ", "\\ ", rep$email, fixed = TRUE)
-        subject <- rep$synopsis
-        body <- list(stdTxt, sendmailR::mime_part(attFile))
-        # ship the shite
-        sendmailR::sendmail(
-          from, to, subject, body,
-          control = list(smtpServer=conf$network$smtp$server,
-                         smtpPortSMTP=conf$network$smtp$port))
-        
-      } # nocov end
-    }
+    tryCatch({
+      rep <- reps[[i]]
+      # get explicit referenced function
+      f <- .getFun(paste0(rep$package, "::", rep$fun))
+      if (dayNumber %in% rep$runDayOfYear &&
+          as.Date(rep$terminateDate) > Sys.Date()) {
+        attFile <- do.call(what = f, args = rep$params)
+        if (dryRun) {
+          message(paste("No emails sent. Attachment is", attFile))
+        } else { # nocov start
+          # escape spaces (e.g. when full name is added to <email>)
+          to <- gsub(" ", "\\ ", rep$email, fixed = TRUE)
+          # Rapporteket uses an smtp with funny microsoft tech...
+          subject <- rep$synopsis
+          Encoding(subject) <- "UTF-8"
+          subject <- iconv(subject, from = "UTF-8", to = "CP1252")
+          body <- list(stdTxt, sendmailR::mime_part(attFile))
+          # ship the shite
+          sendmailR::sendmail(
+            from, to, subject, body,
+            headers=list(`Content-Type` = "text/html; charset=\"utf-8\""),
+            control = list(smtpServer=conf$network$smtp$server,
+                           smtpPortSMTP=conf$network$smtp$port))
+          
+        } # nocov end
+      }
+    },
+    error = function(e) {
+      message(paste("Report could not be processed (moving on to the next):",
+                    e))
+    })
   }
 }
 
@@ -406,7 +474,7 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 
 findNextRunDate <- function(runDayOfYear,
                             baseDayNum = as.POSIXlt(Sys.Date())$yday+1,
-                            returnFormat = "%A %d. %B %Y") {
+                            returnFormat = "%A %e. %B %Y") {
   
   year <- as.POSIXlt(Sys.Date())$year + 1900
   
@@ -434,24 +502,39 @@ findNextRunDate <- function(runDayOfYear,
 #' @param session A shiny session object
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
+#' @importFrom magrittr "%>%"
 #' @export
 
 makeUserSubscriptionTab <- function(session) {
   
+  . <- ""
+  
   l <- list()
   autoRep <- readAutoReportData() %>%
     selectByReg(., reg = getUserGroups(session)) %>%
-    selectByOwner(., owner = getUserName(session))
+    selectByOwner(., owner = getUserName(session)) %>% 
+    selectByOrganization(., organization = getUserReshId(session))
+  
+  dateFormat <- "%A %e. %B %Y"
   
   for (n in names(autoRep)){
-    r <- list("repId"=n,
-              "Rapport"=autoRep[[n]]$synopsis,
-              "Neste"=findNextRunDate(autoRep[[n]]$runDayOfYear),
+    nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
+                                returnFormat = dateFormat)
+    if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
+      nextDate <- "Utl\u00F8pt"
+    }
+    r <- list("Rapport"=autoRep[[n]]$synopsis,
+              "Enhet"=autoRep[[n]]$organization,
+              "Periode"=autoRep[[n]]$intervalName,
+              "Utl\u00F8p"=strftime(as.Date(autoRep[[n]]$terminateDate),
+                               format = "%b %Y"),
+              "Neste"=nextDate,
               "Slett"=as.character(
                 shiny::actionButton(inputId = paste0("del_", n),
-                             label = "x",
-                             onclick = 'Shiny.onInputChange(\"del_button\",  this.id)',
-                             style = "color: red;")))
+                             label = "",
+                             icon = shiny::icon("trash"),
+                             onclick = 'Shiny.onInputChange(\"del_button\",
+                             this.id)')))
     l <- rbind(l, r)
   }
   l

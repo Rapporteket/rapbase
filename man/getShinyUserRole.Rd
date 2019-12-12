@@ -20,7 +20,8 @@ String user role
 Get user role from a shiny session object
 }
 \examples{
-\dontrun{
+\donttest{
+# Requires a valid shiny session object
 getShinyUserRole(shinySessionObject)
 }
 

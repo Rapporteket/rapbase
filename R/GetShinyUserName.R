@@ -8,7 +8,8 @@
 #' \code{\link{getShinyUserReshId}}, \code{\link{getShinyUserRole}}
 #' 
 #' @examples
-#' \dontrun{
+#' \donttest{
+#' # Requires a valid shiny session object
 #' getShinyUserName(shinySessionObject)
 #' }
 #' 
@@ -16,5 +17,7 @@
 
 
 getShinyUserName <- function(shinySession, testCase = FALSE) {
+  lifecycle::deprecate_warn("1.10.0", "rapbase::GetShinyUserName()",
+                 "rapbase::getUserName()")
   shinySessionInfo(shinySession, entity = "user", testCase)
 }
