@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 1.11.0
+Version: 1.11.1.9000
 Date: 2019-12-11
 Authors@R: c(
     person(given = "Are",
@@ -25,6 +25,7 @@ LazyData: true
 Depends:
     R (>= 3.5.0)
 Imports:
+    base64enc,
     DBI,
     devtools,
     digest,
