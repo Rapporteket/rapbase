@@ -21,3 +21,7 @@
 * Extending report subscription options
 * Some improvements in handling errors
 * Improved readability of site
+
+# rapbase 1.11.1
+
+* Fix for none-ascii characters in email subject (header)
