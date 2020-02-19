@@ -595,7 +595,7 @@ makeUserSubscriptionTab_v2 <- function(session) {
   l$Rapport <- map_chr(l$Rapport, function(x) x)
   # l$Enhet <- map_chr(l$Enhet, function(x) x)
   l$Periode <- map_chr(l$Periode, function(x) x)
-  l$Utløp <- map_chr(l$Utløp, function(x) x)
+  l[["Utl\u00F8p"]] <- map_chr(l[["Utl\u00F8p"]], function(x) x)
   l$Neste <- map_chr(l$Neste, function(x) x)
   l$Mottakere <- map_chr(l$Mottakere, function(x) {paste0(x, collapse = '<br />')})
   # l$Parametre <- map_chr(l$Parametre, function(x) {paste0(x, collapse = '<br />')})
