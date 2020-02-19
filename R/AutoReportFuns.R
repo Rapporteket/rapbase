@@ -544,3 +544,61 @@ makeUserSubscriptionTab <- function(session) {
   }
   l
 }
+
+#' Make table of subscriptions of reports
+#' 
+#' Make a table to be rendered in a shiny app providing the active
+#' subscriptions of a given user within a given registry which are
+#' both collected from the shiny session object provided
+#'
+#' @param session A shiny session object
+#'
+#' @return Matrix providing a table to be rendered in a shiny app
+#' @importFrom magrittr "%>%"
+#' @export
+
+makeUserSubscriptionTab_v2 <- function(session) {
+  
+  . <- ""
+  
+  l <- list()
+  autoRep <- readAutoReportData() %>%
+    selectByReg(., reg = getUserGroups(session)) %>%
+    selectByOwner(., owner = getUserName(session)) %>% 
+    selectByOrganization(., organization = getUserReshId(session))
+  
+  dateFormat <- "%A %e. %B %Y"
+  
+  for (n in names(autoRep)){
+    nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
+                                returnFormat = dateFormat)
+    if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
+      nextDate <- "Utl\u00F8pt"
+    }
+    r <- list("Rapport"=autoRep[[n]]$synopsis,
+              # "Enhet"=autoRep[[n]]$organization,
+              "Periode"=autoRep[[n]]$intervalName,
+              "Utl\u00F8p"=strftime(as.Date(autoRep[[n]]$terminateDate),
+                                    format = "%b %Y"),
+              "Neste"=nextDate,
+              "Mottakere"=autoRep[[n]]$email,
+              "Avdeling"=autoRep[[n]]$params[[2]]$reshID,
+              "Slett"=as.character(
+                shiny::actionButton(inputId = paste0("del_", n),
+                                    label = "",
+                                    icon = shiny::icon("trash"),
+                                    onclick = 'Shiny.onInputChange(\"del_button\",
+                                    this.id)')))
+    l <- rbind(l, r)
+  }
+  l <- as.data.frame(l, row.names = F)
+  l$Rapport <- map_chr(l$Rapport, function(x) x)
+  # l$Enhet <- map_chr(l$Enhet, function(x) x)
+  l$Periode <- map_chr(l$Periode, function(x) x)
+  l$Utløp <- map_chr(l$Utløp, function(x) x)
+  l$Neste <- map_chr(l$Neste, function(x) x)
+  l$Mottakere <- map_chr(l$Mottakere, function(x) {paste0(x, collapse = '<br />')})
+  # l$Parametre <- map_chr(l$Parametre, function(x) {paste0(x, collapse = '<br />')})
+  l$Slett <- map_chr(l$Slett, function(x) x)
+  l
+}
