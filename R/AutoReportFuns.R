@@ -590,13 +590,15 @@ makeUserSubscriptionTab_v2 <- function(session) {
                                     this.id)')))
     l <- rbind(l, r)
   }
-  l <- as.data.frame(l, row.names = F)
-  l$Rapport <- purrr::map_chr(l$Rapport, function(x) x)
-  l$Periode <- purrr::map_chr(l$Periode, function(x) x)
-  l[["Utl\u00F8p"]] <- purrr::map_chr(l[["Utl\u00F8p"]], function(x) x)
-  l$Neste <- purrr::map_chr(l$Neste, function(x) x)
-  l$Mottakere <- purrr::map_chr(l$Mottakere, function(x) {paste0(x, collapse = '<br />')})
-  l$Avdeling <- purrr::map_chr(l$Avdeling, function(x) x)
-  l$Slett <- purrr::map_chr(l$Slett, function(x) x)
+  if (!is.null(dim(l))) {
+    l <- as.data.frame(l, row.names = F)
+    l$Rapport <- purrr::map_chr(l$Rapport, function(x) x)
+    l$Periode <- purrr::map_chr(l$Periode, function(x) x)
+    l[["Utl\u00F8p"]] <- purrr::map_chr(l[["Utl\u00F8p"]], function(x) x)
+    l$Neste <- purrr::map_chr(l$Neste, function(x) x)
+    l$Mottakere <- purrr::map_chr(l$Mottakere, function(x) {paste0(x, collapse = '<br />')})
+    l$Avdeling <- purrr::map_chr(l$Avdeling, function(x) x)
+    l$Slett <- purrr::map_chr(l$Slett, function(x) x)
+  }
   l
 }
