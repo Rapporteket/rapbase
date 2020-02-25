@@ -576,7 +576,6 @@ makeUserSubscriptionTab_v2 <- function(session) {
       nextDate <- "Utl\u00F8pt"
     }
     r <- list("Rapport"=autoRep[[n]]$synopsis,
-              # "Enhet"=autoRep[[n]]$organization,
               "Periode"=autoRep[[n]]$intervalName,
               "Utl\u00F8p"=strftime(as.Date(autoRep[[n]]$terminateDate),
                                     format = "%b %Y"),
@@ -592,13 +591,12 @@ makeUserSubscriptionTab_v2 <- function(session) {
     l <- rbind(l, r)
   }
   l <- as.data.frame(l, row.names = F)
-  l$Rapport <- map_chr(l$Rapport, function(x) x)
-  # l$Enhet <- map_chr(l$Enhet, function(x) x)
-  l$Periode <- map_chr(l$Periode, function(x) x)
-  l[["Utl\u00F8p"]] <- map_chr(l[["Utl\u00F8p"]], function(x) x)
-  l$Neste <- map_chr(l$Neste, function(x) x)
-  l$Mottakere <- map_chr(l$Mottakere, function(x) {paste0(x, collapse = '<br />')})
-  # l$Parametre <- map_chr(l$Parametre, function(x) {paste0(x, collapse = '<br />')})
-  l$Slett <- map_chr(l$Slett, function(x) x)
+  l$Rapport <- purrr::map_chr(l$Rapport, function(x) x)
+  l$Periode <- purrr::map_chr(l$Periode, function(x) x)
+  l[["Utl\u00F8p"]] <- purrr::map_chr(l[["Utl\u00F8p"]], function(x) x)
+  l$Neste <- purrr::map_chr(l$Neste, function(x) x)
+  l$Mottakere <- purrr::map_chr(l$Mottakere, function(x) {paste0(x, collapse = '<br />')})
+  l$Avdeling <- purrr::map_chr(l$Avdeling, function(x) x)
+  l$Slett <- purrr::map_chr(l$Slett, function(x) x)
   l
 }
