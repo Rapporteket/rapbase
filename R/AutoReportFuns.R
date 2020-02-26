@@ -559,6 +559,8 @@ makeUserSubscriptionTab <- function(session) {
 
 makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
   
+  # nocov start
+  
   . <- ""
   
   l <- list()
@@ -599,4 +601,5 @@ makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
       l$Avdeling <- map_resh_name$Sykehusnavn[match(as.numeric(l$Avdeling), map_resh_name$AvdRESH)]
     }
   l
+  # nocov end
 }
