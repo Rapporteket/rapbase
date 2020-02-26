@@ -557,7 +557,9 @@ makeUserSubscriptionTab <- function(session) {
 #' @importFrom magrittr "%>%"
 #' @export
 
-makeUserSubscriptionTab_v2 <- function(session) {
+makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
+  
+  # nocov start
   
   . <- ""
   
@@ -576,13 +578,14 @@ makeUserSubscriptionTab_v2 <- function(session) {
       nextDate <- "Utl\u00F8pt"
     }
     r <- list("Rapport"=autoRep[[n]]$synopsis,
-              # "Enhet"=autoRep[[n]]$organization,
               "Periode"=autoRep[[n]]$intervalName,
               "Utl\u00F8p"=strftime(as.Date(autoRep[[n]]$terminateDate),
                                     format = "%b %Y"),
               "Neste"=nextDate,
               "Mottakere"=autoRep[[n]]$email,
-              "Avdeling"=autoRep[[n]]$params[[2]]$reshID,
+              "Avdeling"= if ('reshID' %in%  names(unlist(autoRep[[n]]$params))) {
+                unlist(autoRep[[n]]$params)[['reshID']]
+              } else {autoRep[[n]]$organization},
               "Slett"=as.character(
                 shiny::actionButton(inputId = paste0("del_", n),
                                     label = "",
@@ -591,14 +594,12 @@ makeUserSubscriptionTab_v2 <- function(session) {
                                     this.id)')))
     l <- rbind(l, r)
   }
-  l <- as.data.frame(l, row.names = F)
-  l$Rapport <- map_chr(l$Rapport, function(x) x)
-  # l$Enhet <- map_chr(l$Enhet, function(x) x)
-  l$Periode <- map_chr(l$Periode, function(x) x)
-  l[["Utl\u00F8p"]] <- map_chr(l[["Utl\u00F8p"]], function(x) x)
-  l$Neste <- map_chr(l$Neste, function(x) x)
-  l$Mottakere <- map_chr(l$Mottakere, function(x) {paste0(x, collapse = '<br />')})
-  # l$Parametre <- map_chr(l$Parametre, function(x) {paste0(x, collapse = '<br />')})
-  l$Slett <- map_chr(l$Slett, function(x) x)
+    l <- as.data.frame(l, row.names = F)
+    l$Mottakere <- purrr::map_chr(l$Mottakere, function(x) {paste0(x, collapse = '<br />')})
+    l$Avdeling <- purrr::map_chr(l$Avdeling, function(x) x)
+    if (!is.null(map_resh_name)) {
+      l$Avdeling <- map_resh_name$Sykehusnavn[match(as.numeric(l$Avdeling), map_resh_name$AvdRESH)]
+    }
   l
+  # nocov end
 }

@@ -42,7 +42,8 @@ Imports:
     shiny,
     utils,
     withr,
-    yaml
+    yaml,
+    purrr
 RoxygenNote: 6.1.1
 URL: http://github.com/Rapporteket/rapbase
 BugReports: http://github.com/Rapporteket/rapbase/issues
