@@ -49,9 +49,9 @@ createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
     terminateDate <- as.POSIXlt(Sys.Date())
     if (context %in% c("PRODUCTION")) {
       terminateDate$year <- terminateDate$year + 3
-      } else {
+    } else {
       terminateDate$mon <- terminateDate$mon + 1
-      }
+    }
     terminateDate <- as.Date(terminateDate)
   }
   
@@ -532,13 +532,13 @@ makeUserSubscriptionTab <- function(session) {
               "Enhet"=autoRep[[n]]$organization,
               "Periode"=autoRep[[n]]$intervalName,
               "Utl\u00F8p"=strftime(as.Date(autoRep[[n]]$terminateDate),
-                               format = "%b %Y"),
+                                    format = "%b %Y"),
               "Neste"=nextDate,
               "Slett"=as.character(
                 shiny::actionButton(inputId = paste0("del_", n),
-                             label = "",
-                             icon = shiny::icon("trash"),
-                             onclick = 'Shiny.onInputChange(\"del_button\",
+                                    label = "",
+                                    icon = shiny::icon("trash"),
+                                    onclick = 'Shiny.onInputChange(\"del_button\",
                              this.id)')))
     l <- rbind(l, r)
   }
@@ -558,8 +558,6 @@ makeUserSubscriptionTab <- function(session) {
 #' @export
 
 makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
-  
-  # nocov start
   
   . <- ""
   
@@ -594,12 +592,13 @@ makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
                                     this.id)')))
     l <- rbind(l, r)
   }
+  if (!is.null(dim(l))) {
     l <- as.data.frame(l, row.names = F)
     l$Mottakere <- purrr::map_chr(l$Mottakere, function(x) {paste0(x, collapse = '<br />')})
     l$Avdeling <- purrr::map_chr(l$Avdeling, function(x) x)
     if (!is.null(map_resh_name)) {
       l$Avdeling <- map_resh_name$Sykehusnavn[match(as.numeric(l$Avdeling), map_resh_name$AvdRESH)]
     }
+  }
   l
-  # nocov end
 }
