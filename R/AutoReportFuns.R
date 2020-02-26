@@ -557,7 +557,7 @@ makeUserSubscriptionTab <- function(session) {
 #' @importFrom magrittr "%>%"
 #' @export
 
-makeUserSubscriptionTab_v2 <- function(session) {
+makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
   
   . <- ""
   
@@ -581,7 +581,9 @@ makeUserSubscriptionTab_v2 <- function(session) {
                                     format = "%b %Y"),
               "Neste"=nextDate,
               "Mottakere"=autoRep[[n]]$email,
-              "Avdeling"=autoRep[[n]]$params[[2]]$reshID,
+              "Avdeling"= if ('reshID' %in%  names(unlist(autoRep[[n]]$params))) {
+                unlist(autoRep[[n]]$params)[['reshID']]
+              } else {autoRep[[n]]$organization},
               "Slett"=as.character(
                 shiny::actionButton(inputId = paste0("del_", n),
                                     label = "",
@@ -590,15 +592,11 @@ makeUserSubscriptionTab_v2 <- function(session) {
                                     this.id)')))
     l <- rbind(l, r)
   }
-  if (!is.null(dim(l))) {
     l <- as.data.frame(l, row.names = F)
-    l$Rapport <- purrr::map_chr(l$Rapport, function(x) x)
-    l$Periode <- purrr::map_chr(l$Periode, function(x) x)
-    l[["Utl\u00F8p"]] <- purrr::map_chr(l[["Utl\u00F8p"]], function(x) x)
-    l$Neste <- purrr::map_chr(l$Neste, function(x) x)
     l$Mottakere <- purrr::map_chr(l$Mottakere, function(x) {paste0(x, collapse = '<br />')})
     l$Avdeling <- purrr::map_chr(l$Avdeling, function(x) x)
-    l$Slett <- purrr::map_chr(l$Slett, function(x) x)
-  }
+    if (!is.null(map_resh_name)) {
+      l$Avdeling <- map_resh_name$Sykehusnavn[match(as.numeric(l$Avdeling), map_resh_name$AvdRESH)]
+    }
   l
 }
