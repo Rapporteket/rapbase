@@ -559,6 +559,8 @@ makeUserSubscriptionTab <- function(session) {
 
 makeUserSubscriptionTab_v2 <- function(session) {
   
+  # start nocov
+  
   . <- ""
   
   l <- list()
@@ -601,4 +603,5 @@ makeUserSubscriptionTab_v2 <- function(session) {
     l$Slett <- purrr::map_chr(l$Slett, function(x) x)
   }
   l
+  # end nocov
 }
