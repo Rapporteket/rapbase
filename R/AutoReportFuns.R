@@ -49,9 +49,9 @@ createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
     terminateDate <- as.POSIXlt(Sys.Date())
     if (context %in% c("PRODUCTION")) {
       terminateDate$year <- terminateDate$year + 3
-      } else {
+    } else {
       terminateDate$mon <- terminateDate$mon + 1
-      }
+    }
     terminateDate <- as.Date(terminateDate)
   }
   
@@ -532,15 +532,76 @@ makeUserSubscriptionTab <- function(session) {
               "Enhet"=autoRep[[n]]$organization,
               "Periode"=autoRep[[n]]$intervalName,
               "Utl\u00F8p"=strftime(as.Date(autoRep[[n]]$terminateDate),
-                               format = "%b %Y"),
+                                    format = "%b %Y"),
               "Neste"=nextDate,
               "Slett"=as.character(
                 shiny::actionButton(inputId = paste0("del_", n),
-                             label = "",
-                             icon = shiny::icon("trash"),
-                             onclick = 'Shiny.onInputChange(\"del_button\",
+                                    label = "",
+                                    icon = shiny::icon("trash"),
+                                    onclick = 'Shiny.onInputChange(\"del_button\",
                              this.id)')))
     l <- rbind(l, r)
+  }
+  l
+}
+
+#' Make table of subscriptions of reports
+#' 
+#' Make a table to be rendered in a shiny app providing the active
+#' subscriptions of a given user within a given registry which are
+#' both collected from the shiny session object provided
+#'
+#' @param session A shiny session object
+#' @param map_resh_name A data.table consisting og two columns, 
+#' Sykehusnavn and AvdRESH, providing a mapping between numeric 
+#' RESH and text label
+#'
+#' @return Matrix providing a table to be rendered in a shiny app
+#' @importFrom magrittr "%>%"
+#' @export
+
+makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
+  
+  . <- ""
+  
+  l <- list()
+  autoRep <- readAutoReportData() %>%
+    selectByReg(., reg = getUserGroups(session)) %>%
+    selectByOwner(., owner = getUserName(session)) %>% 
+    selectByOrganization(., organization = getUserReshId(session))
+  
+  dateFormat <- "%A %e. %B %Y"
+  
+  for (n in names(autoRep)){
+    nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
+                                returnFormat = dateFormat)
+    if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
+      nextDate <- "Utl\u00F8pt"
+    }
+    r <- list("Rapport"=autoRep[[n]]$synopsis,
+              "Periode"=autoRep[[n]]$intervalName,
+              "Utl\u00F8p"=strftime(as.Date(autoRep[[n]]$terminateDate),
+                                    format = "%b %Y"),
+              "Neste"=nextDate,
+              "Mottakere"=autoRep[[n]]$email,
+              "Avdeling"= if ('reshID' %in%  names(unlist(autoRep[[n]]$params))) {
+                unlist(autoRep[[n]]$params)[['reshID']]
+              } else {autoRep[[n]]$organization},
+              "Slett"=as.character(
+                shiny::actionButton(inputId = paste0("del_", n),
+                                    label = "",
+                                    icon = shiny::icon("trash"),
+                                    onclick = 'Shiny.onInputChange(\"del_button\",
+                                    this.id)')))
+    l <- rbind(l, r)
+  }
+  if (!is.null(dim(l))) {
+    l <- as.data.frame(l, row.names = F)
+    l$Mottakere <- purrr::map_chr(l$Mottakere, function(x) {paste0(x, collapse = '<br />')})
+    l$Avdeling <- purrr::map_chr(l$Avdeling, function(x) x)
+    if (!is.null(map_resh_name)) {
+      l$Avdeling <- map_resh_name$Sykehusnavn[match(as.numeric(l$Avdeling), map_resh_name$AvdRESH)]
+    }
   }
   l
 }

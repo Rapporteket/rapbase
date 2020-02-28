@@ -54,6 +54,7 @@ reference:
     - selectByOrganization
     - selectByReg
     - makeUserSubscriptionTab
+    - makeUserSubscriptionTab_v2
     - makeRunDayOfYearSequence
     - isPkgRapReg
     - getRegs
