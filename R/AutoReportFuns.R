@@ -552,6 +552,9 @@ makeUserSubscriptionTab <- function(session) {
 #' both collected from the shiny session object provided
 #'
 #' @param session A shiny session object
+#' @param map_resh_name A data.table consisting og two columns, 
+#' Sykehusnavn and AvdRESH, providing a mapping between numeric 
+#' RESH and text label
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
 #' @importFrom magrittr "%>%"
