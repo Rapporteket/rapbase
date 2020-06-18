@@ -4,8 +4,7 @@
 \alias{runAutoReport}
 \title{Run reports as defined in yaml config and ship content by email}
 \usage{
-runAutoReport(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
-  dryRun = FALSE)
+runAutoReport(dayNumber = as.POSIXlt(Sys.Date())$yday + 1, dryRun = FALSE)
 }
 \arguments{
 \item{dayNumber}{Integer day of year where January 1st is 1. Defaults to

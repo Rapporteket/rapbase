@@ -4,8 +4,13 @@
 \alias{userInfo}
 \title{Provide user attributes based on environment context}
 \usage{
-userInfo(entity, shinySession = NULL, devContexts = c("DEV"),
-  testContexts = c("TEST"), prodContexts = c("QA", "PRODUCTION"))
+userInfo(
+  entity,
+  shinySession = NULL,
+  devContexts = c("DEV"),
+  testContexts = c("TEST"),
+  prodContexts = c("QA", "PRODUCTION")
+)
 }
 \arguments{
 \item{entity}{String defining the element to return. Currently, one of

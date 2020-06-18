@@ -4,8 +4,11 @@
 \alias{findNextRunDate}
 \title{Find next run date for automated reports}
 \usage{
-findNextRunDate(runDayOfYear, baseDayNum = as.POSIXlt(Sys.Date())$yday +
-  1, returnFormat = "\%A \%e. \%B \%Y")
+findNextRunDate(
+  runDayOfYear,
+  baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
+  returnFormat = "\%A \%e. \%B \%Y"
+)
 }
 \arguments{
 \item{runDayOfYear}{Numeric vector providing year-day numbers}

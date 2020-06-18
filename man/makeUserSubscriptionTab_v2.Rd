@@ -4,10 +4,14 @@
 \alias{makeUserSubscriptionTab_v2}
 \title{Make table of subscriptions of reports}
 \usage{
-makeUserSubscriptionTab_v2(session)
+makeUserSubscriptionTab_v2(session, map_resh_name = NULL)
 }
 \arguments{
 \item{session}{A shiny session object}
+
+\item{map_resh_name}{A data.table consisting og two columns, 
+Sykehusnavn and AvdRESH, providing a mapping between numeric 
+RESH and text label}
 }
 \value{
 Matrix providing a table to be rendered in a shiny app

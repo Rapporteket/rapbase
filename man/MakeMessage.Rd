@@ -4,8 +4,7 @@
 \alias{MakeMessage}
 \title{Provide simple formatting of a sequential message}
 \usage{
-MakeMessage(story, message, newLine = TRUE, newPara = FALSE,
-  timeStamp = TRUE)
+MakeMessage(story, message, newLine = TRUE, newPara = FALSE, timeStamp = TRUE)
 }
 \arguments{
 \item{story}{String Text that the message is to be added to}

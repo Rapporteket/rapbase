@@ -4,8 +4,11 @@
 \alias{appNavbarUserWidget}
 \title{Create widget for registry apps at Rapporteket}
 \usage{
-appNavbarUserWidget(user = "Undefined person",
-  organization = "Undefined organization", addUserInfo = FALSE)
+appNavbarUserWidget(
+  user = "Undefined person",
+  organization = "Undefined organization",
+  addUserInfo = FALSE
+)
 }
 \arguments{
 \item{user}{String providing the name of the user}
