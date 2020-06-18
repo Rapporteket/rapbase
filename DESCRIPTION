@@ -1,8 +1,8 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 1.11.1.9001
-Date: 2020-01-03
+Version: 1.11.2
+Date: 2020-06-18
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -44,7 +44,7 @@ Imports:
     withr,
     yaml,
     purrr
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 URL: http://github.com/Rapporteket/rapbase
 BugReports: http://github.com/Rapporteket/rapbase/issues
 Suggests:

@@ -3,7 +3,6 @@
 \docType{package}
 \name{rapbase}
 \alias{rapbase}
-\alias{rapbase-package}
 \title{rapbase: Base Functions and Resources for Rapporteket}
 \description{
 Provide common functions and resources for registry specific

@@ -4,8 +4,7 @@
 \alias{readAutoReportData}
 \title{Read automated report metadata}
 \usage{
-readAutoReportData(fileName = "autoReport.yml",
-  packageName = "rapbase")
+readAutoReportData(fileName = "autoReport.yml", packageName = "rapbase")
 }
 \arguments{
 \item{fileName}{String defining name of the yaml configuration file. Default

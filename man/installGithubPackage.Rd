@@ -4,8 +4,7 @@
 \alias{installGithubPackage}
 \title{Install packages from GitHub at Rapporteket}
 \usage{
-installGithubPackage(packageName, branchName = "master",
-  readConfig = TRUE)
+installGithubPackage(packageName, branchName = "master", readConfig = TRUE)
 }
 \arguments{
 \item{packageName}{String Name of the package}

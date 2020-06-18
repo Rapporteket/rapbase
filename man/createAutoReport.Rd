@@ -4,9 +4,21 @@
 \alias{createAutoReport}
 \title{Create and add report to config}
 \usage{
-createAutoReport(synopsis, package, fun, paramNames, paramValues, owner,
-  email, organization, runDayOfYear, terminateDate = NULL,
-  interval = "", intervalName = "", dryRun = FALSE)
+createAutoReport(
+  synopsis,
+  package,
+  fun,
+  paramNames,
+  paramValues,
+  owner,
+  email,
+  organization,
+  runDayOfYear,
+  terminateDate = NULL,
+  interval = "",
+  intervalName = "",
+  dryRun = FALSE
+)
 }
 \arguments{
 \item{synopsis}{String with description of the report and to be used in

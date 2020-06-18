@@ -5,6 +5,10 @@ r:
   - oldrel
   - release
   - devel
+
+env:
+  global:
+    - _R_CHECK_DONTTEST_EXAMPLES_=FALSE
     
 warnings_are_errors: false
 

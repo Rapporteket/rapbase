@@ -4,8 +4,11 @@
 \alias{writeAutoReportData}
 \title{Write automated report metadata}
 \usage{
-writeAutoReportData(fileName = "autoReport.yml", config,
-  packageName = "rapbase")
+writeAutoReportData(
+  fileName = "autoReport.yml",
+  config,
+  packageName = "rapbase"
+)
 }
 \arguments{
 \item{fileName}{String defining name of the yaml configuration file. Default

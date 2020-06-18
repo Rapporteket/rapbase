@@ -56,19 +56,12 @@ appNavbarUserWidget <- function(user = "Undefined person",
     userInfo <- character()
   }
   
-  quit <- shiny::tags$a(
-    id = 'close',
-    href = "#",
-    onclick = "setTimeout(function(){window.close();},250);",  # close browser
-    "Lukk")
-  
   txtWidget <-
     paste0("var header = $('.navbar> .container-fluid');\n",
          "header.append('<div class=\"navbar-brand\" style=\"float:right;vertical-align:super;font-size:65%\">",
          userInfo,
          user,
          organization,
-         quit,
          "</div>');\n",
          "console.log(header)")
   
