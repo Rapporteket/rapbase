@@ -28,7 +28,7 @@ deploy:
   script: Rscript -e 'pkgdown::deploy_site_github()'
   skip_cleanup: true
   on:
-    branch: rel
+    branch: master
     condition: $TRAVIS_R_VERSION_STRING == "release"
 
 after_success:
