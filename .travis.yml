@@ -17,6 +17,7 @@ services:
   
 before_install:
   - mysql -e 'CREATE DATABASE IF NOT EXISTS rapbase; USE rapbase; CREATE TABLE testTable (id INT, someText VARCHAR(50), someInt INT, someFloat DOUBLE, someTime DATETIME);'
+  - sudo apt-get -y install libharfbuzz-dev libfribidi-dev
 
 r_github_packages: 
   - jimhester/covr
