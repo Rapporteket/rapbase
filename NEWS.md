@@ -1,3 +1,7 @@
+# rapbase 1.11.3
+
+* Remove rJava dependency
+
 # rapbase 1.11.2
 
 * Remove close option from user widget
