@@ -10,14 +10,14 @@ test_that("Function handles general errors", {
 })
 
 # Testing on different instances: undefined, DEV, TEST and QA/PRODUCTION
-Sys.setenv(R_RAP_INSTANCE="")
+Sys.setenv(R_RAP_INSTANCE = "")
 test_that("a message is provided when instance is undefined", {
   expect_message(userInfo(entity = "user"))
 })
 
 
-Sys.setenv(R_RAP_INSTANCE="DEV")
-Sys.setenv(R_RAP_CONFIG_PATH="")
+Sys.setenv(R_RAP_INSTANCE = "DEV")
+Sys.setenv(R_RAP_CONFIG_PATH = "")
 ss <- list()
 # simulate ShinySession class for above list
 attr(ss, "class") <- "ShinySession"
@@ -26,14 +26,15 @@ test_that("Function provides an entity in a dev context", {
 })
 
 
-Sys.setenv(R_RAP_INSTANCE="TEST")
+Sys.setenv(R_RAP_INSTANCE = "TEST")
 test_that("Function error when empty shiny session object i TEST context", {
   expect_error(userInfo(entity = "user"))
 })
 
 # test case data
-ss <- "?X-USER=testUser2&X-GROUPS=testGroup2,testGroup3&resh_id=78910111&role=SC"
-shinySessionTest<-list(clientData=list(url_search=ss))
+ss <- paste0("?X-USER=testUser2&X-GROUPS=testGroup2,",
+             "testGroup3&resh_id=78910111&role=SC")
+shinySessionTest <- list(clientData = list(url_search = ss))
 
 test_that("Function error when shiny session is not of class 'ShinySession'", {
   expect_error(userInfo(entity = "user", shinySession = shinySessionTest))
@@ -53,12 +54,12 @@ test_that("Function provides entities in a TEST context", {
 })
 
 
-Sys.setenv(R_RAP_INSTANCE="QA")
+Sys.setenv(R_RAP_INSTANCE = "QA")
 
 # simulated real data
-shinySession <- list(user="user1")
+shinySession <- list(user = "user1")
 shinySession$groups <- "group1,group2"
-shinySession$request <- list(HTTP_RESHID="789012")
+shinySession$request <- list(HTTP_RESHID = "789012")
 shinySession$request$HTTP_ROLE <- "LC"
 # make a copy for testing wrong class
 shinySessionWrongClass <- shinySession
@@ -90,5 +91,5 @@ test_that("Function can handle redefined contexts", {
 })
 
 # Restore instance
-Sys.setenv(R_RAP_INSTANCE=currentInstance)
-Sys.setenv(R_RAP_CONFIG_PATH=currentConfigPath)
+Sys.setenv(R_RAP_INSTANCE = currentInstance)
+Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)

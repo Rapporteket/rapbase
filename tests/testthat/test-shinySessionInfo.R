@@ -2,15 +2,15 @@ context("Shiny session info")
 
 # test case data
 ss <- "?X-USER=testUser1&X-GROUPS=testGroup1,testGroup2&resh_id=123456&role=LU"
-shinySessionTest<-list(clientData=list(url_search=ss))
+shinySessionTest <- list(clientData = list(url_search = ss))
 
 # simulate ShinySession class for above list
 attr(shinySessionTest, "class") <- "ShinySession"
 
 # simulated real data
-shinySession <- list(user="user1")
+shinySession <- list(user = "user1")
 shinySession$groups <- "group1,group2"
-shinySession$request <- list(HTTP_RESH_ID="789012")
+shinySession$request <- list(HTTP_RESH_ID = "789012")
 shinySession$request$HTTP_ROLE <- "LC"
 # make a copy for testing wrong class
 shinySessionWrongClass <- shinySession
@@ -19,15 +19,20 @@ attr(shinySession, "class") <- "ShinySession"
 
 # now deprecated, main function
 test_that("shinySessionInfo() is deprecated", {
-  expect_warning(shinySessionInfo(shinySession = shinySession, entity="user"))
+  expect_warning(shinySessionInfo(shinySession = shinySession,
+                                  entity = "user"))
 })
 
 # now deprecated, wrapper functions
 test_that("wrapper funs are deprecated", {
-  expect_warning(getShinyUserName(shinySession), class = "lifecycle_warning_deprecated")
-  expect_warning(getShinyUserGroups(shinySession), class = "lifecycle_warning_deprecated")
-  expect_warning(getShinyUserReshId(shinySession), class = "lifecycle_warning_deprecated")
-  expect_warning(getShinyUserRole(shinySession), class = "lifecycle_warning_deprecated")
+  expect_warning(getShinyUserName(shinySession),
+                 class = "lifecycle_warning_deprecated")
+  expect_warning(getShinyUserGroups(shinySession),
+                 class = "lifecycle_warning_deprecated")
+  expect_warning(getShinyUserReshId(shinySession),
+                 class = "lifecycle_warning_deprecated")
+  expect_warning(getShinyUserRole(shinySession),
+                 class = "lifecycle_warning_deprecated")
 })
 
 # now deprecated, but should still work
