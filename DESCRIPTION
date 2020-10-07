@@ -43,7 +43,7 @@ Imports:
     withr,
     yaml,
     purrr
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 URL: http://github.com/Rapporteket/rapbase
 BugReports: http://github.com/Rapporteket/rapbase/issues
 Suggests:

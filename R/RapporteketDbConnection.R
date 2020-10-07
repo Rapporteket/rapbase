@@ -1,18 +1,18 @@
 #' Provide connection handle for data source at Rapporteket
-#' 
+#'
 #' Generic to registries, handle the data source connections, including
 #' usernames and passwords needed to open these connections
-#' 
+#'
 #' @param registryName String id used for the registry in global configuration
 #'  file from which information on the database connection is provided
 #' @param dbType String providing type of data source, one of
 #'  "mysql" and "mssql". Defaults to "mysql"
 #' @return con Data source connection object
 #' @return drv DBIDriver object
-#' @export 
+#' @export
 
 rapOpenDbConnection <- function(registryName, dbType = "mysql") {
-  
+
   conf <- getConfig()
   conf <- conf[[registryName]]
   if (is.null(conf)) {
@@ -20,7 +20,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
                 configuration corresponding to key '", registryName,
                 "'. Please check key and/or configuration."))
   }
-  
+
   if (dbType == "mysql") {
     drv <- RMariaDB::MariaDB()
     con <- DBI::dbConnect(drv,
@@ -32,16 +32,16 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
     # ensure utf8 encoding
     tmp <- DBI::dbExecute(con, "SET NAMES utf8;")
   }
-  else if (dbType == "mssql") { 
+  else if (dbType == "mssql") {
     stop("Use of MSSQL is no longer supported. Exiting")
   }
-  
+
   list(con = con, drv = drv)
 }
 
 
 #' Close down data connection handle
-#' 
+#'
 #' @param con Open connection object that is to be closed
 #' @export
 

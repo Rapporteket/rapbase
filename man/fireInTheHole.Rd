@@ -14,7 +14,8 @@ file, \emph{e.g.} "rapbaseConfig.yml".
 \details{
 This is a crontab example running fireInTheHole() every night at 01 hours,
 Monday throug Friday and with emails supressed:
-\preformatted{0  1 * * 1-5 Rscript -e 'rapbase::fireInTheHole()' >/dev/null 2>&1}
+\preformatted{0  1 * * 1-5 Rscript -e 'rapbase::fireInTheHole()' >/dev/null
+2>&1}
 }
 \examples{
 \donttest{

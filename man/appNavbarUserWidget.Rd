@@ -47,7 +47,8 @@ ui <- tagList(
   navbarPage(
     ...,
     tabPanel(...,
-    appNavbarUserWidget(user = uiOutput(appUserName), organization = textOutput(appUserOrg))
+    appNavbarUserWidget(user = uiOutput(appUserName),
+    organization = textOutput(appUserOrg))
     ),
     ...
   )
