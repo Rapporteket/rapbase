@@ -16,9 +16,9 @@ installGithubPackage <- function(packageName, branchName = "master",
   # nocov start
 
   story <- ""
-  story <- MakeMessage(story, "Initiating 'InstallGithubPackage'")
+  story <- makeMessage(story, "Initiating 'InstallGithubPackage'")
 
-  story <- MakeMessage(story, "Reading configuration")
+  story <- makeMessage(story, "Reading configuration")
 
   if (readConfig) {
     conf <- getConfig(fileName = "rapbaseConfig.yml", packageName = "rapbase")
@@ -27,20 +27,20 @@ installGithubPackage <- function(packageName, branchName = "master",
   }
 
   if (is.null(conf$network[["proxy"]])) {
-    story <- MakeMessage(story, "Proxy not defined in config. If your system
+    story <- makeMessage(story, "Proxy not defined in config. If your system
                          does not use one please provide it as an empty string.
                          Stopping.")
     stop(story)
   }
 
-  story <- MakeMessage(story, "Setting network proxies")
+  story <- makeMessage(story, "Setting network proxies")
   if (!is.null(conf$network$proxy$http)) {
     Sys.setenv(http_proxy = conf$network$proxy$http)
     Sys.setenv(https_proxy = conf$network$proxy$http)
     httr::set_config(httr::use_proxy(url = conf$network$proxy$http,
       port = as.numeric(conf$network$proxy$port)))
   }
-  story <- MakeMessage(story, "Set 'libcurl' as download method")
+  story <- makeMessage(story, "Set 'libcurl' as download method")
   options(download.file.method = "libcurl")
 
   githubPackage <- paste0(conf$github$organization, "/", packageName)
@@ -48,7 +48,7 @@ installGithubPackage <- function(packageName, branchName = "master",
 
   success <- paste0("'", packageName, "' installed")
   if (packageName == "rapbase") {
-    story <- MakeMessage(story,
+    story <- makeMessage(story,
                            paste0("Intalling '", githubRapbase,
                                   "' from branch '", branchName, "'"))
     res <- tryCatch({
@@ -61,12 +61,12 @@ installGithubPackage <- function(packageName, branchName = "master",
       return(err)
     })
 
-    story <- MakeMessage(story, res)
-    story <- MakeMessage(story, "Done with 'rapbase'")
+    story <- makeMessage(story, res)
+    story <- makeMessage(story, "Done with 'rapbase'")
   }
 
   if (packageName != "rapbase") {
-    story <- MakeMessage(story, paste0("Installing '", packageName,
+    story <- makeMessage(story, paste0("Installing '", packageName,
                                        "' from branch '", branchName, "'"))
     res <- tryCatch({
       remotes::install_github(githubPackage, ref = branchName)
@@ -78,13 +78,13 @@ installGithubPackage <- function(packageName, branchName = "master",
       return(err)
     })
 
-    story <- MakeMessage(story, res)
+    story <- makeMessage(story, res)
   }
   else {
-    story <- MakeMessage(story, "No additional packages to install")
+    story <- makeMessage(story, "No additional packages to install")
   }
 
-  story <- MakeMessage(story, "Done")
+  story <- makeMessage(story, "Done")
 
   return(story)
 
