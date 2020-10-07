@@ -18,7 +18,7 @@ LoadRegData <- function(registryName, query, dbType = "mysql") {
 
   lifecycle::deprecate_warn("1.12.0", "rapbase::LoadRegData()",
                             "rapbase::loadRegData()")
-  
+
   dbList <- rapOpenDbConnection(registryName, dbType)
   if (registryName == "nkr") { # nocov start
     # ugly hack to get past 'out of heap mem' for nkr
@@ -44,6 +44,6 @@ loadRegData <- function(registryName, query, dbType = "mysql") {
   regData <- DBI::dbGetQuery(dbList$con, query)
   rapCloseDbConnection(dbList$con)
   dbList <- NULL
-  
+
   return(regData)
 }
