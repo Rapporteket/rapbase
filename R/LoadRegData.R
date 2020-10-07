@@ -7,11 +7,18 @@
 #' @param query String SQL query to obtain the data
 #' @param dbType String Type of db to query, currently "mysql" (default) and
 #' "mssql"
-#' @return RegData dataframe Registry data
-#' @export
+#' @return regData data frame containing registry data
+#' @name loadRegData
+#' @aliases LoadRegData loadRegData
+NULL
 
+#' @rdname loadRegData
+#' @export
 LoadRegData <- function(registryName, query, dbType = "mysql") {
 
+  lifecycle::deprecate_warn("1.12.0", "rapbase::LoadRegData()",
+                            "rapbase::loadRegData()")
+  
   dbList <- rapOpenDbConnection(registryName, dbType)
   if (registryName == "nkr") { # nocov start
     # ugly hack to get past 'out of heap mem' for nkr
@@ -26,5 +33,17 @@ LoadRegData <- function(registryName, query, dbType = "mysql") {
   rapCloseDbConnection(dbList$con)
   dbList <- NULL
 
+  return(regData)
+}
+
+#' @rdname loadRegData
+#' @export
+loadRegData <- function(registryName, query, dbType = "mysql") {
+
+  dbList <- rapOpenDbConnection(registryName, dbType)
+  regData <- DBI::dbGetQuery(dbList$con, query)
+  rapCloseDbConnection(dbList$con)
+  dbList <- NULL
+  
   return(regData)
 }
