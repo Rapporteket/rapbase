@@ -556,10 +556,16 @@ makeUserSubscriptionTab <- function(session) {
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
 #' @importFrom magrittr "%>%"
-#' @export
+#' @name makeUserSubscriptionTabV2
+#' @aliases makeUserSubscriptionTab_v2 makeUserSubscriptionTabV2
+NULL
 
+#' @rdname makeUserSubscriptionTabV2
+#' @export
 makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
 
+  lifecycle::deprecate_warn("1.12.0", "rapbase::makeUserSubscriiptionTab_v2()",
+                            "rapbase::makeUserSubscriiptionTabV2()")
   . <- ""
 
   l <- list()
@@ -605,6 +611,62 @@ makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
     if (!is.null(map_resh_name)) {
       l$Avdeling <- map_resh_name$Sykehusnavn[match(as.numeric(l$Avdeling),
                                                       map_resh_name$AvdRESH)]
+    }
+  }
+  l
+}
+
+#' @rdname makeUserSubscriptionTabV2
+#' @export
+makeUserSubscriptionTabV2 <- function(session, map_resh_name = NULL) {
+
+  . <- ""
+
+  l <- list()
+  autoRep <- readAutoReportData() %>%
+    selectByReg(., reg = getUserGroups(session)) %>%
+    selectByOwner(., owner = getUserName(session)) %>%
+    selectByOrganization(., organization = getUserReshId(session))
+
+  dateFormat <- "%A %e. %B %Y"
+
+  for (n in names(autoRep)) {
+    nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
+                                returnFormat = dateFormat)
+    if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
+      nextDate <- "Utl\u00F8pt"
+    }
+    r <- list("Rapport" = autoRep[[n]]$synopsis,
+              "Periode" = autoRep[[n]]$intervalName,
+              "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
+                                      format = "%b %Y"),
+              "Neste" = nextDate,
+              "Mottakere" = autoRep[[n]]$email,
+              "Avdeling" =
+                if ("reshID" %in%  names(unlist(autoRep[[n]]$params))) {
+                  unlist(autoRep[[n]]$params)[["reshID"]]
+                } else {
+                  autoRep[[n]]$organization
+                }
+              ,
+              "Slett" = as.character(
+                shiny::actionButton(
+                	inputId = paste0("del_", n),
+                	label = "",
+                	icon = shiny::icon("trash"),
+                	onclick = 'Shiny.onInputChange(\"del_button\",
+                                    this.id)')))
+    l <- rbind(l, r)
+  }
+  if (!is.null(dim(l))) {
+    l <- as.data.frame(l, row.names = F)
+    l[["Mottakere"]] <- purrr::map_chr(l[["Mottakere"]], function(x) {
+      paste0(x, collapse = "<br />")})
+    l[["Avdeling"]] <- purrr::map_chr(l[["Avdeling"]], function(x) x)
+    if (!is.null(map_resh_name)) {
+      l[["Avdeling"]] <-
+        map_resh_name[["Sykehusnavn"]][match(as.numeric(l[["Avdeling"]]),
+                                             map_resh_name[["AvdRESH"]])]
     }
   }
   l

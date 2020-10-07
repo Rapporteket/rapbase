@@ -90,8 +90,12 @@ test_that("A per-user subscription table (for shiny) can be made", {
   expect_true(is.list(makeUserSubscriptionTab(session = shinySession)))
 })
 
+test_that("per user subscription table provides warning for deprecated v2", {
+  expect_warning(makeUserSubscriptionTab_v2(session = shinySession))
+})
+
 test_that("A per-user subscription table for v2 (for shiny) can be made", {
-  expect_true(is.list(makeUserSubscriptionTab_v2(session = shinySession)))
+  expect_true(is.list(makeUserSubscriptionTabV2(session = shinySession)))
 })
 
 test_that("Writing conf with undefined R_RAP_CONFIG_PATH provides an error", {
