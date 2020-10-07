@@ -9,11 +9,18 @@
 #' @param timeStamp Logical [TRUE] Add a time stamp to the message. TRUE by
 #' default
 #' @return story String The whole story...
+#' @name makeMessage
+#' @aliases MakeMessage makeMessage
+NULL
+
+#' @rdname makeMessage
 #' @export
-
-
 MakeMessage <- function(story, message, newLine = TRUE, newPara = FALSE,
                         timeStamp = TRUE) {
+  
+  lifecycle::deprecate_warn("1.12.0", "rapbase::MakeMessage()",
+                            "rapbase::makeMessage()",
+                            details = "Purely camelCase conformity :-)")
 
   if (timeStamp) {
     message <- paste(format(Sys.time(), "%F %H:%M:%S"), message)
@@ -27,6 +34,27 @@ MakeMessage <- function(story, message, newLine = TRUE, newPara = FALSE,
     message <- paste0("\n\n", message)
   }
 
+  story <- paste(story, message)
+  story
+}
+
+#' @rdname makeMessage
+#' @export
+makeMessage <- function(story, message, newLine = TRUE, newPara = FALSE,
+                        timeStamp = TRUE) {
+  
+  if (timeStamp) {
+    message <- paste(format(Sys.time(), "%F %H:%M:%S"), message)
+  }
+  
+  if (newLine & !newPara) {
+    message <- paste0("\n", message)
+  }
+  
+  if (newPara) {
+    message <- paste0("\n\n", message)
+  }
+  
   story <- paste(story, message)
   story
 }
