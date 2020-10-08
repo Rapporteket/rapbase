@@ -14,9 +14,14 @@
 Top-level information regarding *Rapporteket* is [provided on a dedicated site (in Norwegian)](https://rapporteket.github.io/rapporteket).
 
 ## Install
-Install the released version of *rapbase* from CRAN:
+Install *rapbase* from CRAN:
 ```r
 install.packages("rapbase")
+```
+
+The latest realease of the package can be installed from GitHub:
+```r
+remotes::install("Rapporteket/rapbase@*release")
 ```
 
 Or install the development version from GitHub with:
