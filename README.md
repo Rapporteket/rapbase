@@ -28,7 +28,7 @@ Alternatively, the package source code can be [cloned from GitHub](https://githu
 ## Usage
 Once the package is installed functions can be called from within R, *e.g.*:
 ```r
-rapbase::HalloRapporteket()
+rapbase::halloRapporteket()
 ```
 For a complete and updated view of the package documentation please consult the [*rapbase*-site](https://rapporteket.github.io/rapbase/index.html). Looking into [how others have implemented *rapbase* for various registries](https://github.com/Rapporteket) is also an excellent way of learning the use of *rapbase*. In the [rapRegTemplate package (in Norwegian)](https://github.com/Rapporteket/rapRegTemplate) that provides a Shiny application template to be used for making registries there is some boiler plate code to aid start up. Please feel free to also contact the maintainers and authors directly. 
 
