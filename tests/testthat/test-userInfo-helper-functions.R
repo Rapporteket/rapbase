@@ -8,8 +8,9 @@ currentInstance <- Sys.getenv("R_RAP_INSTANCE")
 conf <- getConfig(fileName = "rapbaseConfig.yml")
 d <- conf$r$testUser
 
-Sys.setenv(R_RAP_INSTANCE="")
-test_that("Helpers provide config data in empty context when provided session object is empty", {
+Sys.setenv(R_RAP_INSTANCE = "")
+test_that(paste("Helpers provide config data in empty context when provided",
+                "session object is empty"), {
   expect_equal(getUserName(shinySession = NULL), d$user)
   expect_equal(getUserGroups(shinySession = NULL), d$groups)
   expect_equal(getUserReshId(shinySession = NULL), d$resh_id)
@@ -19,8 +20,9 @@ test_that("Helpers provide config data in empty context when provided session ob
   expect_equal(getUserPhone(shinySession = NULL), d$phone)
 })
 
-Sys.setenv(R_RAP_INSTANCE="DEV")
-test_that("Helpers ultimately provide errors in DEV context when no session data present", {
+Sys.setenv(R_RAP_INSTANCE = "DEV")
+test_that(paste("Helpers ultimately provide errors in DEV context when no",
+                "session data present"), {
   expect_error(getUserName())
   expect_error(getUserGroups())
   expect_error(getUserReshId())
@@ -32,9 +34,9 @@ test_that("Helpers ultimately provide errors in DEV context when no session data
 
 
 # Simulated session
-shinySession <- list(user="user1")
+shinySession <- list(user = "user1")
 shinySession$groups <- "group1,group2"
-shinySession$request <- list(HTTP_RESHID="789012")
+shinySession$request <- list(HTTP_RESHID = "789012")
 shinySession$request$HTTP_ROLE <- "LC"
 shinySession$request$HTTP_EMAIL <- "user1@nowhere.no"
 shinySession$request$HTTP_FULLNAME <- "T Test"
@@ -42,7 +44,7 @@ shinySession$request$HTTP_PHONE <- "04050607"
 # simulate ShinySession class for above list
 attr(shinySession, "class") <- "ShinySession"
 
-Sys.setenv(R_RAP_INSTANCE="PRODUCTION")
+Sys.setenv(R_RAP_INSTANCE = "PRODUCTION")
 test_that("Helpers provide session data", {
   expect_equal(getUserName(shinySession), "user1")
   expect_equal(getUserGroups(shinySession), "group1,group2")
@@ -55,4 +57,4 @@ test_that("Helpers provide session data", {
 
 
 # Restore instance
-Sys.setenv(R_RAP_INSTANCE=currentInstance)
+Sys.setenv(R_RAP_INSTANCE = currentInstance)

@@ -1,5 +1,5 @@
 #' Provide user attributes based on environment context
-#' 
+#'
 #' Extracts elements from either config, url (shiny) or session (shiny)
 #' relevant for user data such as name, group, role and reshId. Source of info
 #' is based on environment context and can be controlled by altering the default
@@ -24,7 +24,7 @@
 #' from the url call to a shiny application. Hence, for this context the
 #' corresponding shiny session object must also be provided. The instances
 #' provided cannot overlap instances provided in any other contexts. By default
-#' set to \code{c("TEST")}. 
+#' set to \code{c("TEST")}.
 #' @param prodContexts A character vector providing unique instances to be
 #' regarded as a production context. In this context user attributes will be
 #' read from the shiny session object (as shiny server interacts with an
@@ -32,33 +32,33 @@
 #' session object must also be provided. The instances provided cannot overlap
 #' instances provided in any other contexts. By default set to
 #' \code{c("QA", "PRODUCTION")}.
-#' 
+#'
 #' @return String of single user data element
-#' 
+#'
 #' @seealso \code{\link{getUserName}}, \code{\link{getUserGroups}},
 #' \code{\link{getUserReshId}}, \code{\link{getUserRole}}
-#' 
+#'
 #' @export
 
 userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
                      testContexts = c("TEST"),
                      prodContexts = c("QA", "PRODUCTION")) {
-  
+
   # check for valid entities
   if (!(entity %in% c("user", "groups", "resh_id", "role", "email",
                       "full_name", "phone"))) {
     stop("Incorrect entity provided! Must be one of 'user', 'groups', 'resh_id'
          'role' or 'email'")
   }
-  
+
   # check if any contexts overlap, and stop if so
   if (any(table(c(devContexts, testContexts, prodContexts)) > 1)) {
     stop("Contexts overlapping! Please adjust. Stopping.")
   }
-  
+
   # get current system context
   context <- Sys.getenv("R_RAP_INSTANCE")
-  
+
   if (context == "") {
     message("System has no defined instance. Configuration as provided by
             'rapbaseConfig.yml' will be used as source for user data.")
@@ -72,18 +72,18 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     full_name <- d$full_name
     phone <- d$phone
   }
-  
+
   if (context %in% devContexts) {
-    
+
     if (is.null(shinySession)) {
       stop("Session information is empty! Eventually, that will come bite you")
     }
-    
+
     if (!c("ShinySession") %in% attributes(shinySession)$class) {
       stop(paste("Got no object of class 'ShinySession'!",
                  "Your carma is way below threshold..."))
     }
-    
+
     conf <- getConfig(fileName = "rapbaseConfig.yml")
     d <- conf$r$testUser
     user <- d$user
@@ -94,17 +94,17 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     full_name <- d$full_name
     phone <- d$phone
   }
-  
+
   if (context %in% testContexts | context %in% prodContexts) {
-    
+
     if (is.null(shinySession)) {
       stop("Session information is empty!. Cannot do anything")
     }
-    
+
     if (!c("ShinySession") %in% attributes(shinySession)$class) {
       stop("Got no object of class 'ShinySession'! Cannot do anything")
     }
-    
+
     if (context %in% testContexts) {
       us <- shiny::parseQueryString(shinySession$clientData$url_search)
       user <- us$`X-USER`
@@ -115,7 +115,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
       full_name <- us$full_name
       phone <- us$phone
     }
-    
+
     if (context %in% prodContexts) {
       user <- shinySession$user
       groups <- shinySession$groups
@@ -135,5 +135,5 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
          email = email,
          full_name = full_name,
          phone = phone)
-  
+
 }

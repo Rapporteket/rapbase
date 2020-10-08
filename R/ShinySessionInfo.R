@@ -1,5 +1,5 @@
 #' Provide elements from a shiny session object
-#' 
+#'
 #' Extracts elements from a shiny session object relevant for user data. This
 #' function will normally be used via its helper functions.
 #'
@@ -11,29 +11,29 @@
 #' url of the shiny application request. Default FALSE
 #'
 #' @return String of single user data element
-#' 
+#'
 #' @seealso \code{\link{getShinyUserName}}, \code{\link{getShinyUserGroups}},
 #' \code{\link{getShinyUserReshId}}, \code{\link{getShinyUserRole}}
-#' 
+#'
 #' @export
 
 shinySessionInfo <- function(shinySession, entity, testCase = FALSE) {
   lifecycle::deprecate_warn("1.10.0", "rapbase::shinySessionInfo()",
                             "rapbase::userInfo()")
-  
+
   if (is.null(shinySession)) {
     stop("Session information is empty!. Cannot do anything")
   }
-  
+
   if (!c("ShinySession") %in% attributes(shinySession)$class) {
     stop("Got no object of class 'ShinySession'! Cannot do anything")
   }
-  
+
   if (!(entity %in% c("user", "groups", "resh_id", "role"))) {
     stop("Incorrect entity provided! Must be one of 'user', 'groups', 'resh_id'
          or 'role'")
   }
-  
+
   if (testCase) {
     #warning("This is a test. Not to be applied in production!",
     #        immediate. = TRUE)
@@ -48,11 +48,11 @@ shinySessionInfo <- function(shinySession, entity, testCase = FALSE) {
     resh_id <- shinySession$request$HTTP_RESH_ID
     role <- shinySession$request$HTTP_ROLE
   }
-  
+
   switch(entity,
          user = user,
          groups = groups,
          resh_id = resh_id,
          role = role)
-  
+
 }

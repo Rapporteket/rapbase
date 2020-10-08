@@ -22,8 +22,3 @@ runShinyApp start a shiny application residing within an R package. First
 attempt is to keep this function generic (across packages). It might not
 prove wise and future implementation might be per-package.
 }
-\details{
-Idea and code (partly) taken from Dean Attali's
-\href{http://www.r-bloggers.com/supplementing-your-r-package-with-a-shiny-app/}{R Blog}.
-Gratitude.
-}

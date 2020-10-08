@@ -10,9 +10,9 @@
 #' getRapPackages()
 
 getRapPackages <- function() {
-  allPkg <- as.data.frame(library()$result, stringsAsFactors=FALSE)
+  allPkg <- as.data.frame(library()$result, stringsAsFactors = FALSE)
   res <- sapply(allPkg$Package, isPkgRapReg)
-  res <- names(res[res==TRUE])
+  res <- names(res[res == TRUE])
   # make sure a vector is always returned
   if (length(res[!is.na(res)]) == 0) {
     # nocov start
@@ -21,5 +21,4 @@ getRapPackages <- function() {
   } else {
     res[!is.na(res)]
   }
-  
 }

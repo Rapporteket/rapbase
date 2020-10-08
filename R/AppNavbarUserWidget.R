@@ -1,9 +1,9 @@
 #' Create widget for registry apps at Rapporteket
-#' 
+#'
 #' Provides a widget-like information and utility block to be applied to all
 #' registry apps at Rapporteket. Contains the user name, organization and
 #' logout/exit as hyperlinked text.
-#' 
+#'
 #' Normally, user information will be be provided through the session parameter
 #' and hence this will have to be provided from the server. The "rendering" of
 #' this info must hence be done within a layout element at the client such as
@@ -19,18 +19,19 @@
 #'   output$appUserOrg <- renderText(getUserReshId(session))
 #'   ...
 #' }
-#' 
+#'
 #' ui <- tagList(
 #'   navbarPage(
 #'     ...,
 #'     tabPanel(...,
-#'     appNavbarUserWidget(user = uiOutput(appUserName), organization = textOutput(appUserOrg))
+#'     appNavbarUserWidget(user = uiOutput(appUserName),
+#'     organization = textOutput(appUserOrg))
 #'     ),
 #'     ...
 #'   )
 #' )
 #' }
-#' 
+#'
 #' @param user String providing the name of the user
 #' @param organization String providing the organization of the user
 #' @param addUserInfo Logical defining wether a user data pop-up is to be part
@@ -45,7 +46,7 @@
 appNavbarUserWidget <- function(user = "Undefined person",
                                 organization = "Undefined organization",
                                 addUserInfo = FALSE) {
-  
+
   if (addUserInfo) {
   userInfo <- shiny::tags$a(
     id = "userInfo",
@@ -55,15 +56,16 @@ appNavbarUserWidget <- function(user = "Undefined person",
   } else {
     userInfo <- character()
   }
-  
+
   txtWidget <-
     paste0("var header = $('.navbar> .container-fluid');\n",
-         "header.append('<div class=\"navbar-brand\" style=\"float:right;vertical-align:super;font-size:65%\">",
+         "header.append('<div class=\"navbar-brand\" ",
+         "style=\"float:right;vertical-align:super;font-size:65%\">",
          userInfo,
          user,
          organization,
          "</div>');\n",
          "console.log(header)")
-  
+
   shiny::tags$script(shiny::HTML(txtWidget))
 }

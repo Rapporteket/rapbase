@@ -20,10 +20,11 @@ san <- function(str) {
 <<insertAnnotations, results='asis', echo=F, eval=T>>=
 if (exists("attachFiles") && length(attachFiles) > 0) {
   for (anFile in attachFiles) {
-    cat(paste(san(anFile), ': ', '\\attachfile[icon=Paperclip, description=', anFile, ']{', anFile, '}', ' \\\\', '\n', sep=''))
+    cat(paste(san(anFile), ": ", "\\attachfile[icon=Paperclip, description=",
+              anFile, "]{", anFile, "}", " \\\\", "\n", sep = ""))
   }
 } else {
-  cat('Annotations wanted but found no files to add!\n')
-  cat('Annotasjoner ønskes, men fant ingen filer å legge ved!\n')
+  cat("Annotations wanted but found no files to add!\n")
+  cat("Annotasjoner ønskes, men fant ingen filer å legge ved!\n")
 }
 @

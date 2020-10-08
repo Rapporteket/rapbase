@@ -3,8 +3,8 @@ context("Handling db connections")
 # For these test to work locally make sure an instance of mysql server is
 # running and that the necassary user privileges are provided, e.g. as SQL:
 #   grant all privileges on [DATABASE].* to '[USER]'@'localhost';
-# where [DATABASE] and [USER] correspond to whatever given in rapbase config:
-#   conf <- rapbase::getConf()
+# where [DATABASE] and [USER] correspond to whatever given in rapbase config.
+#
 # When run at Travis build servers [USER] must be set to 'travis' and with
 # an empty password (as also assumed in the above localhost example). See also
 # .travis.yml
@@ -17,7 +17,7 @@ checkDb <- function() {
   } else if (Sys.getenv("TRAVIS") == "true") {
     NULL
   } else {
-    skip("Test skipped due to lack of database infrastructure")
+    testthat::skip("Test skipped due to lack of database infrastructure")
   }
 }
 
@@ -62,10 +62,16 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
   expect_false(RMariaDB::dbIsValid(l$con))
 })
 
+test_that("Deprecated interface provides a warning", {
+  checkDb()
+  query <- "SELECT * FROM testTable"
+  expect_warning(LoadRegData(regName, query, dbType = "mysql"))
+})
+
 test_that("Data can be queried from (MySQL) db", {
   checkDb()
   query <- "SELECT * FROM testTable"
-  expect_output(str(LoadRegData(regName, query, dbType = "mysql")),
+  expect_output(str(loadRegData(regName, query, dbType = "mysql")),
                 "data.frame")
 })
 
@@ -87,7 +93,8 @@ test_that("Bigints are returned as integers (not bit64::integer64)", {
   expect_is(df[["someBigInt"]], "integer")
 })
 
-test_that("The use of MSSQL in no longer possible with an appropriate message", {
-  expect_error(LoadRegData(regName, query, dbType = "mssql"),
+test_that(paste("The use of MSSQL in no longer possible with an appropriate",
+                "message"), {
+  expect_error(loadRegData(regName, query, dbType = "mssql"),
                 regexp = "Use of MSSQL is no longer supported. Exiting")
 })

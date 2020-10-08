@@ -1,0 +1,4 @@
+linters: with_defaults(
+  object_name_linter(c("camelCase", "snake_case")),
+  cyclocomp_linter(complexity_limit = 25),
+  line_length_linter(80))

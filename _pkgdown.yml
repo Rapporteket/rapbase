@@ -19,7 +19,7 @@ reference:
     desc: >
       Handle database connections and queries
     contents:
-    - LoadRegData
+    - loadRegData
     - rapOpenDbConnection
     - rapCloseDbConnection
     
@@ -54,7 +54,7 @@ reference:
     - selectByOrganization
     - selectByReg
     - makeUserSubscriptionTab
-    - makeUserSubscriptionTab_v2
+    - makeUserSubscriptionTabV2
     - makeRunDayOfYearSequence
     - isPkgRapReg
     - getRegs
@@ -73,12 +73,12 @@ reference:
     desc: >
       Various tools
     contents:
-    - HalloRapporteket
+    - halloRapporteket
     - fireInTheHole
     - howWeDealWithPersonalData
-    - MakeMessage
-    - PushGist
-    - RunNoweb
+    - makeMessage
+    - pushGist
+    - runNoweb
     - getRapPackages
     - installGithubPackage
     - isRapContext
