@@ -651,10 +651,10 @@ makeUserSubscriptionTabV2 <- function(session, map_resh_name = NULL) {
               ,
               "Slett" = as.character(
                 shiny::actionButton(
-                	inputId = paste0("del_", n),
-                	label = "",
-                	icon = shiny::icon("trash"),
-                	onclick = 'Shiny.onInputChange(\"del_button\",
+                  inputId = paste0("del_", n),
+                  label = "",
+                  icon = shiny::icon("trash"),
+                  onclick = 'Shiny.onInputChange(\"del_button\",
                                     this.id)')))
     l <- rbind(l, r)
   }
