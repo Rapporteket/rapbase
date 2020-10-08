@@ -1,3 +1,7 @@
+# rapbase 1.11.4
+
+* clean-up code also deprecating some function for v1.12
+
 # rapbase 1.11.3
 
 * Remove rJava dependency
