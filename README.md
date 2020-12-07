@@ -4,7 +4,7 @@
 [![R build status](https://github.com/Rapporteket/rapbase/workflows/R-CMD-check/badge.svg)](https://github.com/Rapporteket/rapbase/actions)
 [![codecov.io](https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=rel)](https://codecov.io/github/Rapporteket/rapbase?branch=rel)
 [![CRAN status](https://www.r-pkg.org/badges/version/rapbase)](https://CRAN.R-project.org/package=rapbase)
-[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable.svg)](https://www.tidyverse.org/lifecycle/#stable)
+[![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://www.tidyverse.org/lifecycle/#stable)
 [![Doc](https://img.shields.io/badge/Doc--grey.svg)](https://rapporteket.github.io/rapbase/)
 <!-- badges: end -->
 
