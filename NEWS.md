@@ -1,3 +1,10 @@
+# rapbase 1.12.0
+
+* Relevant version info added to user pop-up #46
+* Looks of user pop-up info changed #49
+* Migrated ci from travis to gh actions
+*
+
 # rapbase 1.11.4
 
 * clean-up code also deprecating some function for v1.12
