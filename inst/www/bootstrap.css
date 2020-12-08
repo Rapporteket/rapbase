@@ -7046,3 +7046,14 @@ Rapporteket logo
 .navbar-inverse .logo:focus {
   fill: #2c3e50;
 }
+
+/*
+Rapporteket info pop-up
+*/
+.sweet-alert p {
+  text-align: left !important;
+  font-size: 14px !important;
+}
+.sweet-alert h6 {
+  text-align: center;
+}
