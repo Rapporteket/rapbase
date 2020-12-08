@@ -1,6 +1,7 @@
 # rapbase <img src="man/figures/logo.svg" align="right" height="150" />
 
 <!-- badges: start -->
+[![Version](https://img.shields.io/github/v/release/rapporteket/rapbase?sort=semver)](https://github.com/rapporteket/rapbase/releases)
 [![R build status](https://github.com/Rapporteket/rapbase/workflows/R-CMD-check/badge.svg)](https://github.com/Rapporteket/rapbase/actions)
 [![codecov.io](https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=rel)](https://codecov.io/github/Rapporteket/rapbase?branch=rel)
 [![CRAN status](https://www.r-pkg.org/badges/version/rapbase)](https://CRAN.R-project.org/package=rapbase)
