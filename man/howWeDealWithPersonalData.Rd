@@ -4,10 +4,12 @@
 \alias{howWeDealWithPersonalData}
 \title{Render text in pop-up}
 \usage{
-howWeDealWithPersonalData(session)
+howWeDealWithPersonalData(session, .topenv = parent.frame())
 }
 \arguments{
 \item{session}{A shiny session object used to personalize the text}
+
+\item{.topenv}{}
 }
 \value{
 html pop-up text

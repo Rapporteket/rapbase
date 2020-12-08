@@ -34,6 +34,16 @@ test_that("an html doc regarding 'how we deal with...' can be provided", {
   expect_output(howWeDealWithPersonalData(session = list()), "")
 })
 
+test_that("pop-up html can add an installed pacakge to info", {
+  expect_output(howWeDealWithPersonalData(session = list(),
+                                          callerPkg = "base"), "")
+})
+
+test_that("pop-up html provide a warning for a non-existing pacakge", {
+  expect_warning(howWeDealWithPersonalData(sessio = list(),
+                                           callerPkg = "notapackage"))
+})
+
 # a logical providing info if context is Rapporteket
 test_that("we currently do not reside within a Rapportekte context", {
   expect_false(isRapContext())

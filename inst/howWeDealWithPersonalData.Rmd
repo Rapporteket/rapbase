@@ -3,11 +3,16 @@ title: "How we deal with personal data"
 output: html_document
 params:
   session: list()
+  caller: ""
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+`r pkg_info`
+
+---
 
 Hei, `r rapbase::getUserFullName(session)`! Her er en kort oppsummering av hva [Rapporteket](https://rapporteket.github.io/rapporteket/articles/kort_introduksjon.html) vet om deg og hvordan denne informasjonen brukes og lagres.
 
