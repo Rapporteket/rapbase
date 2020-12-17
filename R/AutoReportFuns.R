@@ -145,7 +145,9 @@ readAutoReportData <- function(fileName = "autoReport.yml",
     config_file <- file.path(path, fileName)
   }
 
-  yaml::yaml.load_file(config_file)
+  conf <- yaml::yaml.load_file(config_file)
+  
+  upgradeAutoReportData(conf)
 
 }
 

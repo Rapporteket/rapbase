@@ -130,7 +130,7 @@ test_that("Auto reports can be processed (shipment by email not tested)", {
 reportId <- names(rd)[length(rd)]
 
 test_that("Auto report can be deleted", {
-  expect_silent(deleteAutoReport(reportId))
+  expect_message(deleteAutoReport(reportId))
   expect_true(is.na(names(readAutoReportData())[reportId]))
 })
 
