@@ -32,6 +32,10 @@ test_that("Config data can be filterd by registry on empty input", {
   expect_true(is.list(selectByReg(list(), "test")))
 })
 
+test_that("config data can be filterd by type on empty input", {
+  expect_true(is.list(selectByType(list(), "test")))
+})
+
 test_that("Config data can be filterd by owner on empty input", {
   expect_true(is.list(selectByOwner(list(), "test")))
 })
@@ -61,6 +65,10 @@ rd <- readAutoReportData()
 
 test_that("Auto reports can be filtered by registry/package", {
   expect_true(is.list(selectByReg(rd, package)))
+})
+
+test_that("Auto reports can be filtered by type", {
+  expect_true(is.list(selectByType(rd, type)))
 })
 
 test_that("Auto reports can be filtered by owner", {

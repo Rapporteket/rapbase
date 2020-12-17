@@ -262,6 +262,32 @@ selectByReg <- function(config, reg) {
 }
 
 
+#' Select data by type from config (list)
+#'
+#' Pick reports of a given type
+#'
+#' @param config List of configuration for automated reports
+#' @param type Character string giving the type
+#'
+#' @return list with config for reports of a given type
+#' @export
+
+selectByType <- function(config, type) {
+  
+  if (length(config) == 0) {
+    list()
+  } else {
+    ind <- integer()
+    for (i in seq_len(length(config))) {
+      if (config[[i]]$type == type) {
+        ind <- c(ind, i)
+      }
+    }
+    c(config[ind])
+  }
+}
+
+
 #' Select data on one owner from config (list)
 #'
 #' Pick all config corresponding to a given owner (of the report)
