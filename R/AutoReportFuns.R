@@ -561,6 +561,65 @@ findNextRunDate <- function(runDayOfYear,
 }
 
 
+#' Make table of registry dispatchments of reports
+#'
+#' Make a table to be rendered in a shiny app providing the active
+#' dispatchments from a given registry as obtained from the shiny session
+#' object provided
+#'
+#' @param session A shiny session object
+#' @param mapOrgId Data frame containing the two columns 'name' and 'id'
+#' corresponding to unique name and id of organizations. Defult is NULL in
+#' which case the ids provided in auto report data will be used. In case
+#' mapOrgId is not NULL but no id match is found the id fond in the auto
+#' report data will also be used
+#'
+#' @return Matrix providing a table to be rendered in a shiny app
+#' @importFrom magrittr "%>%"
+#' @export
+
+makeRegDispatchmentTab <- function(session, mapOrgId = NULL) {
+  
+  . <- ""
+  
+  l <- list()
+  autoRep <- readAutoReportData() %>%
+    selectByReg(., reg = getUserGroups(session)) %>%
+    selectByType(., type = "dispatchment")
+  
+  dateFormat <- "%A %e. %B %Y"
+  
+  for (n in names(autoRep)) {
+    nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
+                                returnFormat = dateFormat)
+    if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
+      nextDate <- "Utl\u00F8pt"
+    }
+    dataSource <- autoRep[[n]]$organization
+    if (!is.null(mapOrgId)) {
+      if (dataSource %in% mapOrgId$id) {
+        dataSource <- mapOrgId$name[mapOrgId$id == dataSource]
+      }
+    }
+    r <- list("Rapport" = autoRep[[n]]$synopsis,
+              "Datakilde" = dataSource,
+              "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
+              "Periode" = autoRep[[n]]$intervalName,
+              "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
+                                      format = "%b %Y"),
+              "Neste" = nextDate,
+              "Slett" = as.character(
+                shiny::actionButton(inputId = paste0("del_", n),
+                                    label = "",
+                                    icon = shiny::icon("trash"),
+                                    onclick = 'Shiny.onInputChange(\"del_button\",
+                             this.id)')))
+    l <- rbind(l, r)
+  }
+  l
+}
+
+
 #' Make table of subscriptions of reports
 #'
 #' Make a table to be rendered in a shiny app providing the active
