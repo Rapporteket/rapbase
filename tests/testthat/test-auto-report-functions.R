@@ -9,6 +9,7 @@ Sys.setenv(R_RAP_CONFIG_PATH = "")
 # make test data
 synopsis <- "Test of auto report"
 package <- "rapbase"
+type <- "subscription"
 fun <- ".testAutoReport"
 paramNames <- c("aNum", "aChar", "anExp")
 paramValues <- c(1, "someString", "Sys.Date()")
@@ -17,6 +18,15 @@ email <- "tester@skde.no"
 organization <- "000000"
 runDayOfYear <- as.POSIXlt(Sys.Date())$yday + 1
 dryRun <- FALSE
+
+test_that("auto report config can be upgraded", {
+  expect_message(upgradeAutoReportData(list(list(synopsis = "test"))))
+})
+
+test_that("already upgraded auto report config is left as is", {
+  c <- list(list(type = "subscription"))
+  expect_equal(c, upgradeAutoReportData(c))
+})
 
 test_that("Config data can be filterd by registry on empty input", {
   expect_true(is.list(selectByReg(list(), "test")))
@@ -32,7 +42,7 @@ test_that("Config data can be filtered by organization on empty input", {
 
 
 test_that("Auto report can be created as dry run (stout)", {
-  res <- createAutoReport(synopsis, package, fun, paramNames,
+  res <- createAutoReport(synopsis, package, type, fun, paramNames,
                           paramValues, owner, email, organization,
                           runDayOfYear, dryRun = TRUE)
   expect_true(is.list(res))
@@ -40,7 +50,7 @@ test_that("Auto report can be created as dry run (stout)", {
 
 Sys.setenv(R_RAP_INSTANCE = "PRODUCTION")
 test_that("auto report can be created as dry run (stout) in an PROD context", {
-  res <- createAutoReport(synopsis, package, fun, paramNames,
+  res <- createAutoReport(synopsis, package, type, fun, paramNames,
                           paramValues, owner, email, organization,
                           runDayOfYear, dryRun = TRUE)
   expect_true(is.list(res))
@@ -125,7 +135,7 @@ test_that("Auto report can be deleted", {
 })
 
 test_that("Auto report can be created and written to file", {
-  expect_silent(createAutoReport(synopsis, package, fun, paramNames,
+  expect_silent(createAutoReport(synopsis, package, type, fun, paramNames,
                                  paramValues, owner, email, organization,
                                  runDayOfYear, dryRun))
 })

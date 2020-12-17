@@ -7,6 +7,7 @@
 createAutoReport(
   synopsis,
   package,
+  type = "subscription",
   fun,
   paramNames,
   paramValues,
@@ -25,6 +26,9 @@ createAutoReport(
 subject field of email distributed reports}
 
 \item{package}{String with package name also corresponding to registry}
+
+\item{type}{Character string defining type of auto report. Currently, one of
+'subscription' (default) or 'dispatchment'}
 
 \item{fun}{String providing name of function to be called for generating
 report}

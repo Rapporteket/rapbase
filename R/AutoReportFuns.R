@@ -10,6 +10,8 @@
 #' @param synopsis String with description of the report and to be used in
 #' subject field of email distributed reports
 #' @param package String with package name also corresponding to registry
+#' @param type Character string defining type of auto report. Currently, one of
+#' 'subscription' (default) or 'dispatchment'
 #' @param fun String providing name of function to be called for generating
 #' report
 #' @param paramNames String vector where each element corresponds to the input
@@ -38,8 +40,9 @@
 #' @seealso \code{\link{deleteAutoReport}}
 #' @export
 
-createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
-                             owner, email, organization, runDayOfYear,
+createAutoReport <- function(synopsis, package, type = "subscription", fun,
+                             paramNames, paramValues, owner, email,
+                             organization, runDayOfYear,
                              terminateDate = NULL, interval = "",
                              intervalName = "", dryRun = FALSE) {
 
@@ -70,6 +73,7 @@ createAutoReport <- function(synopsis, package, fun, paramNames, paramValues,
 
   l$synopsis <- synopsis
   l$package <- package
+  l$type <- type
   l$fun <- fun
   l$params <- paramsListVector
   l$owner <- owner
@@ -144,6 +148,39 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   yaml::yaml.load_file(config_file)
 
 }
+
+#' Upgrade auto reports
+#' 
+#' Upgrade auto report config as new features emerge. Currently, the type
+#' definition is added and set to 'subscription' that historically has been
+#' the only type used
+#'
+#' @param config List of auto report configuration
+#'
+#' @return List of (upgraded) auto report configuration
+#' @export
+
+upgradeAutoReportData <- function(config) {
+  
+  upgrade <- FALSE
+  
+  for (i in seq_len(length(config))) {
+    rep <- config[[i]]
+    if (! "type" %in% names(rep)) {
+      upgrade <- TRUE
+      config[[i]]$type <- "subscription"
+    }
+  }
+  
+  if (upgrade) {
+    message(paste("Auto report definitions were upgraded:",
+                  "auto reports with no type defined now set to",
+                  "'subscription'"))
+  }
+  
+  config
+} 
+
 
 #' Write automated report metadata
 #'
