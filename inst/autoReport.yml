@@ -1,6 +1,7 @@
 testAutoReportFirst:
   synopsis: Test, the first one
   package: rapbase
+  type: dispatchment
   fun: .testAutoReport
   params:
   - aNum: 1
