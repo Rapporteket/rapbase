@@ -104,6 +104,14 @@ shinySession <- list(user = "tester")
 shinySession$groups <- "rapbase"
 attr(shinySession, "class") <- "ShinySession"
 
+mapOrgId <- data.frame(id='999999', name='HUS', stringsAsFactors = FALSE)
+
+test_that("a registry dispatchment table (for shiny) can be made", {
+  expect_true(is.list(
+    makeRegDispatchmentTab(shinySession, mapOrgId)
+  ))
+})
+
 test_that("A per-user subscription table (for shiny) can be made", {
   expect_true(is.list(makeUserSubscriptionTab(session = shinySession)))
 })
