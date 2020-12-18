@@ -566,6 +566,10 @@ findNextRunDate <- function(runDayOfYear,
 #' Make a table to be rendered in a shiny app providing the active
 #' dispatchments from a given registry as obtained from the shiny session
 #' object provided
+#' 
+#' Take a look at the example shiny server function in
+#' \href{https://github.com/Rapporteket/rapRegTemplate}{rapRegTemplate} on how
+#' this function may be implemented
 #'
 #' @param session A shiny session object
 #' @param mapOrgId Data frame containing the two columns 'name' and 'id'
@@ -626,6 +630,9 @@ makeRegDispatchmentTab <- function(session, mapOrgId = NULL) {
 #' subscriptions of a given user within a given registry which are
 #' both collected from the shiny session object provided
 #'
+#' Take a look at the example shiny server function in
+#' \href{https://github.com/Rapporteket/rapRegTemplate}{rapRegTemplate} on how
+#' this function may be implemented
 #' @param session A shiny session object
 #'
 #' @return Matrix providing a table to be rendered in a shiny app

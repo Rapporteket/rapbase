@@ -17,3 +17,8 @@ Make a table to be rendered in a shiny app providing the active
 subscriptions of a given user within a given registry which are
 both collected from the shiny session object provided
 }
+\details{
+Take a look at the example shiny server function in
+\href{https://github.com/Rapporteket/rapRegTemplate}{rapRegTemplate} on how
+this function may be implemented
+}
