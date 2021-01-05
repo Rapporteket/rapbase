@@ -640,12 +640,17 @@ makeRegDispatchmentTab <- function(session, mapOrgId = NULL) {
 #' \href{https://github.com/Rapporteket/rapRegTemplate}{rapRegTemplate} on how
 #' this function may be implemented
 #' @param session A shiny session object
+#' @param mapOrgId Data frame containing the two columns 'name' and 'id'
+#' corresponding to unique name and id of organizations. Defult is NULL in
+#' which case the ids provided in auto report data will be used. In case
+#' mapOrgId is not NULL but no id match is found the id fond in the auto
+#' report data will also be used
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
 #' @importFrom magrittr "%>%"
 #' @export
 
-makeUserSubscriptionTab <- function(session) {
+makeUserSubscriptionTab <- function(session, mapOrgId = NULL) {
 
   . <- ""
 
@@ -663,8 +668,14 @@ makeUserSubscriptionTab <- function(session) {
     if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
       nextDate <- "Utl\u00F8pt"
     }
+    dataSource <- autoRep[[n]]$organization
+    if (!is.null(mapOrgId)) {
+      if (dataSource %in% mapOrgId$id) {
+        dataSource <- mapOrgId$name[mapOrgId$id == dataSource]
+      }
+    }
     r <- list("Rapport" = autoRep[[n]]$synopsis,
-              "Enhet" = autoRep[[n]]$organization,
+              "Enhet" = dataSource,
               "Periode" = autoRep[[n]]$intervalName,
               "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
                                       format = "%b %Y"),
