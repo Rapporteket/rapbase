@@ -612,6 +612,12 @@ makeRegDispatchmentTab <- function(session, mapOrgId = NULL) {
               "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
                                       format = "%b %Y"),
               "Neste" = nextDate,
+              "Endre" = as.character(
+                shiny::actionButton(inputId = paste0("edit_", n),
+                                    label = "",
+                                    icon = shiny::icon("edit"),
+                                    onclick = 'Shiny.onInputChange(\"edit_button\",
+                             this.id)')),
               "Slett" = as.character(
                 shiny::actionButton(inputId = paste0("del_", n),
                                     label = "",
