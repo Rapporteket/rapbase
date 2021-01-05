@@ -626,7 +626,7 @@ makeRegDispatchmentTab <- function(session, mapOrgId = NULL) {
                              this.id)')))
     l <- rbind(l, r)
   }
-  l
+  as.matrix(l)
 }
 
 
@@ -677,7 +677,7 @@ makeUserSubscriptionTab <- function(session) {
                              this.id)')))
     l <- rbind(l, r)
   }
-  l
+  as.matrix(l)
 }
 
 #' Make table of subscriptions of reports
