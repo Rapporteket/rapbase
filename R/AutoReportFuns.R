@@ -712,8 +712,18 @@ NULL
 #' @export
 makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
 
-  lifecycle::deprecate_warn("1.12.0", "rapbase::makeUserSubscriiptionTab_v2()",
-                            "rapbase::makeUserSubscriiptionTabV2()")
+  lifecycle::deprecate_warn(
+    "1.12.0", "rapbase::makeUserSubscriptionTab_v2()",
+    "rapbase::makeUserDispatchmentTab()",
+    details = paste("Important: from version 1.12 the automated reports",
+                    "'type' was introduced. Auto report data with no type",
+                    "definition (i.e. historcal data) will be regarded as",
+                    "type 'subscription'. For historical auto reports that",
+                    "cannot be regarded as subscriptions (e.g. they are",
+                    "of type 'dispatchment') manual correction of types needs",
+                    "to be performed in auto report data.")
+    )
+  
   . <- ""
 
   l <- list()
@@ -767,6 +777,18 @@ makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
 #' @rdname makeUserSubscriptionTabV2
 #' @export
 makeUserSubscriptionTabV2 <- function(session, map_resh_name = NULL) {
+  
+  lifecycle::deprecate_warn(
+    "1.12.0", "rapbase::makeUserSubscriptionTabV2()",
+    "rapbase::makeUserDispatchmentTab()",
+    details = paste("Important: from version 1.12 the automated reports",
+                    "'type' was introduced. Auto report data with no type",
+                    "definition (i.e. historcal data) will be regarded as",
+                    "type 'subscription'. For historical auto reports that",
+                    "cannot be regarded as subscriptions (e.g. they are",
+                    "of type 'dispatchment') manual correction of types needs",
+                    "to be performed in auto report data.")
+  )
 
   . <- ""
 
