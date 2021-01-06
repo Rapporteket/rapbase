@@ -4,10 +4,16 @@
 \alias{makeUserSubscriptionTab}
 \title{Make table of subscriptions of reports}
 \usage{
-makeUserSubscriptionTab(session)
+makeUserSubscriptionTab(session, mapOrgId = NULL)
 }
 \arguments{
 \item{session}{A shiny session object}
+
+\item{mapOrgId}{Data frame containing the two columns 'name' and 'id'
+corresponding to unique name and id of organizations. Defult is NULL in
+which case the ids provided in auto report data will be used. In case
+mapOrgId is not NULL but no id match is found the id fond in the auto
+report data will also be used}
 }
 \value{
 Matrix providing a table to be rendered in a shiny app
@@ -18,6 +24,18 @@ subscriptions of a given user within a given registry which are
 both collected from the shiny session object provided
 }
 \details{
+Each table record (line) represents a uniqely defined dispatchment. For
+each line a shiny action button is provided to allow for deleting uniqe
+dispatchments. For applications implementing this subscription table
+observing events on this action button may be used to allow users to manage
+subscriptions by GUI. The action button for deleting is provided with the
+static input id \emph{del_button} and upon clicking the
+\emph{button} part of its id will change to the uniqe id of the
+dispatchment. Hence, a GUI call for deleting a subscription can be catched by
+\code{shiny::observeEvent("del_button")} and within this event the
+subscription id is obtained by collecting the string after the underscore,
+\emph{e.g.} \code{strsplit(input$del_button, "_")[[1]][2]}.
+
 Take a look at the example shiny server function in
 \href{https://github.com/Rapporteket/rapRegTemplate}{rapRegTemplate} on how
 this function may be implemented

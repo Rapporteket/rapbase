@@ -565,7 +565,20 @@ findNextRunDate <- function(runDayOfYear,
 #'
 #' Make a table to be rendered in a shiny app providing the active
 #' dispatchments from a given registry as obtained from the shiny session
-#' object provided
+#' object provided.
+#' 
+#' Each table record (line) represents a uniqely defined
+#' dispatchment. For each line two shiny action buttons are provided to allow
+#' for editing and deleting uniqe dispatchments, respectively. For applications
+#' implementing this dispatchment table observing events on these action
+#' buttons may be used to allow users to manage dispatchments by GUI. The
+#' action buttons for editing and deleting are provided with the static input
+#' ids \emph{edit_button} and \emph{del_button} and upon clicking the
+#' \emph{button} part of their ids will change to the uniqe id of the
+#' dispatchment. Hence, a GUI call for editing a dispatchment can be catched by
+#' \code{shiny::observeEvent("edit_button")} and within this event the
+#' dispatchment id is obtained by collecting the string after the underscore,
+#' \emph{e.g.} \code{strsplit(input$edit_button, "_")[[1]][2]}.
 #' 
 #' Take a look at the example shiny server function in
 #' \href{https://github.com/Rapporteket/rapRegTemplate}{rapRegTemplate} on how
@@ -636,9 +649,22 @@ makeRegDispatchmentTab <- function(session, mapOrgId = NULL) {
 #' subscriptions of a given user within a given registry which are
 #' both collected from the shiny session object provided
 #'
+#' Each table record (line) represents a uniqely defined dispatchment. For
+#' each line a shiny action button is provided to allow for deleting uniqe
+#' dispatchments. For applications implementing this subscription table
+#' observing events on this action button may be used to allow users to manage
+#' subscriptions by GUI. The action button for deleting is provided with the
+#' static input id \emph{del_button} and upon clicking the
+#' \emph{button} part of its id will change to the uniqe id of the
+#' dispatchment. Hence, a GUI call for deleting a subscription can be catched by
+#' \code{shiny::observeEvent("del_button")} and within this event the
+#' subscription id is obtained by collecting the string after the underscore,
+#' \emph{e.g.} \code{strsplit(input$del_button, "_")[[1]][2]}.
+#'
 #' Take a look at the example shiny server function in
 #' \href{https://github.com/Rapporteket/rapRegTemplate}{rapRegTemplate} on how
 #' this function may be implemented
+#' 
 #' @param session A shiny session object
 #' @param mapOrgId Data frame containing the two columns 'name' and 'id'
 #' corresponding to unique name and id of organizations. Defult is NULL in
