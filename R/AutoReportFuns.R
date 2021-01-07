@@ -446,12 +446,6 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                                          package = "rapbase"))
   # get sender from common config
   conf <- rapbase::getConfig("rapbaseConfig.yml")
-  from <- conf$network$sender
-
-  # apply RFC 1342 on headers (i.e. subject)
-  charset <- "=?UTF-8?"
-  enc <- "B?"
-  headPost <- "?="
 
   for (i in seq_len(length(reps))) {
     tryCatch({
@@ -463,21 +457,10 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
         attFile <- do.call(what = f, args = rep$params)
         if (dryRun) {
           message(paste("No emails sent. Attachment is", attFile))
-        } else { # nocov start
-          # escape spaces (e.g. when full name is added to <email>)
-          to <- gsub(" ", "\\ ", rep$email, fixed = TRUE)
-          # Subject is a header field, hence non-ascii must be handled this way
-          subject <- charToRaw(rep$synopsis)
-          subject <- base64enc::base64encode(subject, linewidth = 70,
-                                             newline = "\n")
-          subject <- paste0(charset, enc, subject, headPost)
-          body <- list(stdTxt, sendmailR::mime_part(attFile))
-          # ship the shite
-          sendmailR::sendmail(
-            from, to, subject, body,
-            control = list(smtpServer = conf$network$smtp$server,
-                           smtpPortSMTP = conf$network$smtp$port))
-        } # nocov end
+        } else {
+          sendEmail(conf = conf, to = rep$email, subject = rep$synopsis,
+                    text = stdTxt, attFile = attFile)
+        }
       }
     },
     error = function(e) {
