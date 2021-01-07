@@ -39,9 +39,9 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
 	subject <- paste0(charset, enc, subject, headPost)
 	
 	if (is.null(attFile)) {
-		body <- list(stdTxt)
+		body <- list(text)
 	} else {
-		body <- list(stdTxt, sendmailR::mime_part(attFile))
+		body <- list(text, sendmailR::mime_part(attFile))
 	}
 	
 	sendmailR::sendmail(
