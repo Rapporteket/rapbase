@@ -106,6 +106,18 @@ attr(shinySession, "class") <- "ShinySession"
 
 mapOrgId <- data.frame(id='999999', name='HUS', stringsAsFactors = FALSE)
 
+test_that("auto report tables (for shiny) can be made", {
+  expect_true(is.list(
+    makeAutoReportTab(shinySession, type = "subscription", mapOrgId = mapOrgId)
+  ))
+  expect_true(is.list(
+    makeAutoReportTab(shinySession, type = "dispatchment", mapOrgId = mapOrgId)
+  ))
+  expect_true(is.list(
+    makeAutoReportTab(shinySession, type = "bulletin", mapOrgId = mapOrgId)
+  ))
+})
+
 test_that("a registry dispatchment table (for shiny) can be made", {
   expect_true(is.list(
     makeRegDispatchmentTab(shinySession, mapOrgId)
