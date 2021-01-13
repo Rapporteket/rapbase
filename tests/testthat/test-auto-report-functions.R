@@ -121,7 +121,7 @@ test_that("auto report tables (for shiny) can be made", {
 
 test_that("a registry dispatchment table (for shiny) can be made", {
   expect_true(is.list(
-    makeRegDispatchmentTab(shinySession, mapOrgId)
+    makeAutoReportTab(shinySession, type = "dispatchment", mapOrgId)
   ))
 })
 

@@ -12,6 +12,7 @@ createAutoReport(
   paramNames,
   paramValues,
   owner,
+  ownerName = "",
   email,
   organization,
   runDayOfYear,
@@ -39,6 +40,9 @@ parameter to be used in the above function}
 \item{paramValues}{String vector with corresponding values to paramNames}
 
 \item{owner}{String providing the owner of the report. Usually a user name}
+
+\item{ownerName}{String providing full name of owner. Defaults to an empty
+string to maintain backwards compatibility}
 
 \item{email}{String with email address to recipient of email containing the
 report}
