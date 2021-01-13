@@ -678,6 +678,11 @@ makeAutoReportTab <- function(session, type = "subscription",
 #' @export
 
 makeUserSubscriptionTab <- function(session, mapOrgId = NULL) {
+  
+  lifecycle::deprecate_warn(
+    "1.12.0", "rapbase::makeUserSubscriptionTab()",
+    "rapbase::makeAutoReportTab()"
+  )
 
   . <- ""
 
