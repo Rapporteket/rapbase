@@ -428,12 +428,15 @@ getRegs <- function(config) {
 #'
 #' Usually to be called by a scheduler, e.g. cron. If the provided day of
 #' year matches those of the config the report is run as otherwise specified in
-#' config. Functions called upon are expected to return a path to a file that
-#' can be attached to an email. The email itself is defined and sent to
-#' recipients defined in the config
+#' config. Functions called upon are expected to return a character string
+#' providing a path to a file that can be attached to an email or, in case of a
+#' bulletin, the email body itself. For bulletins, files cannot be attached.
+#' The email itself is prepared and sent to recipients defined in the config
 #'
 #' @param dayNumber Integer day of year where January 1st is 1. Defaults to
 #' current day, i.e. as.POSIXlt(Sys.Date())$yday+1 (POSIXlt yday is base 0)
+#' @param bulletin Logical if function will handle bullitins only. Default is
+#' FALSE in which all reports but bulletins will be processed
 #' @param dryRun Logical defining if emails are to be sent. If TRUE a message
 #' with reference to the payload file is given but no emails will actually be
 #' sent. Default is FALSE
@@ -449,10 +452,12 @@ getRegs <- function(config) {
 #' }
 
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
+                          type = c("subscription", "dispatchment"),
                           dryRun = FALSE) {
 
   # get report candidates
-  reps <- readAutoReportData()
+  reps <- readAutoReportData() %>% 
+    selectByType(., type = type)
 
   # standard text for email body
   stdTxt <- readr::read_file(system.file("autoReportStandardEmailText.txt",
@@ -463,16 +468,23 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
   for (i in seq_len(length(reps))) {
     tryCatch({
       rep <- reps[[i]]
-      # get explicit referenced function
-      f <- .getFun(paste0(rep$package, "::", rep$fun))
       if (dayNumber %in% rep$runDayOfYear &&
           as.Date(rep$terminateDate) > Sys.Date()) {
-        attFile <- do.call(what = f, args = rep$params)
+        # get explicit referenced function and call it
+        f <- .getFun(paste0(rep$package, "::", rep$fun))
+        content <- do.call(what = f, args = rep$params)
+        if (rep$type == "bulletin") {
+          text <- content
+          attFile <- NULL
+        } else {
+          text <- stdTxt
+          attFile <- content
+        }
         if (dryRun) {
-          message(paste("No emails sent. Attachment is", attFile))
+          message(paste("No emails sent. Content is", content))
         } else {
           sendEmail(conf = conf, to = rep$email, subject = rep$synopsis,
-                    text = stdTxt, attFile = attFile)
+                    text = text, attFile = attFile)
         }
       }
     },
