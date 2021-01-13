@@ -167,20 +167,30 @@ readAutoReportData <- function(fileName = "autoReport.yml",
 
 upgradeAutoReportData <- function(config) {
   
-  upgrade <- FALSE
+  upgradeType <- FALSE
+  upgradeOwnerName <- FALSE
   
   for (i in seq_len(length(config))) {
     rep <- config[[i]]
     if (! "type" %in% names(rep)) {
-      upgrade <- TRUE
+      upgradeType <- TRUE
       config[[i]]$type <- "subscription"
+    }
+    if (! "ownerName" %in% names(rep)) {
+      upgradeOwnerName <- TRUE
+      config[[i]]$ownerName <- ""
     }
   }
   
-  if (upgrade) {
-    message(paste("Auto report definitions were upgraded:",
+  if (upgradeType) {
+    message(paste("Auto report data were upgraded:",
                   "auto reports with no type defined now set to",
-                  "'subscription'"))
+                  "'subscription'."))
+  }
+  if (upgradeOwnerName) {
+    message(paste("Auto report data were upgraded:",
+                  "auto reports with no owner name defined now set to",
+                  "an empty string."))
   }
   
   config

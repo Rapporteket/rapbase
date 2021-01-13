@@ -25,7 +25,7 @@ test_that("auto report config can be upgraded", {
 })
 
 test_that("already upgraded auto report config is left as is", {
-  c <- list(list(type = "subscription"))
+  c <- list(list(type = "subscription", ownerName = "Tore Tester"))
   expect_equal(c, upgradeAutoReportData(c))
 })
 
