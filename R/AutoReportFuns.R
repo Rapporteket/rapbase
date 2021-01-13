@@ -18,6 +18,8 @@
 #' parameter to be used in the above function
 #' @param paramValues String vector with corresponding values to paramNames
 #' @param owner String providing the owner of the report. Usually a user name
+#' @param ownerName String providing full name of owner. Defaults to an empty
+#' string to maintain backwards compatibility
 #' @param email String with email address to recipient of email containing the
 #' report
 #' @param organization String identifying the organization the owner belongs to
@@ -41,8 +43,8 @@
 #' @export
 
 createAutoReport <- function(synopsis, package, type = "subscription", fun,
-                             paramNames, paramValues, owner, email,
-                             organization, runDayOfYear,
+                             paramNames, paramValues, owner, ownerName = "",
+                             email, organization, runDayOfYear,
                              terminateDate = NULL, interval = "",
                              intervalName = "", dryRun = FALSE) {
 
@@ -77,6 +79,7 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   l$fun <- fun
   l$params <- paramsListVector
   l$owner <- owner
+  l$ownerName <- ownerName
   l$email <- email
   l$organization <- organization
   l$terminateDate <- as.character(terminateDate)

@@ -14,6 +14,7 @@ fun <- ".testAutoReport"
 paramNames <- c("aNum", "aChar", "anExp")
 paramValues <- c(1, "someString", "Sys.Date()")
 owner <- "tester"
+ownerName <- "Tore Tester"
 email <- "tester@skde.no"
 organization <- "000000"
 runDayOfYear <- as.POSIXlt(Sys.Date())$yday + 1
@@ -47,7 +48,7 @@ test_that("Config data can be filtered by organization on empty input", {
 
 test_that("Auto report can be created as dry run (stout)", {
   res <- createAutoReport(synopsis, package, type, fun, paramNames,
-                          paramValues, owner, email, organization,
+                          paramValues, owner, ownerName, email, organization,
                           runDayOfYear, dryRun = TRUE)
   expect_true(is.list(res))
 })
@@ -55,7 +56,7 @@ test_that("Auto report can be created as dry run (stout)", {
 Sys.setenv(R_RAP_INSTANCE = "PRODUCTION")
 test_that("auto report can be created as dry run (stout) in an PROD context", {
   res <- createAutoReport(synopsis, package, type, fun, paramNames,
-                          paramValues, owner, email, organization,
+                          paramValues, owner, ownerName, email, organization,
                           runDayOfYear, dryRun = TRUE)
   expect_true(is.list(res))
 })
