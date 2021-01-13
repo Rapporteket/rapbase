@@ -280,9 +280,9 @@ selectByReg <- function(config, reg) {
 #' Pick reports of a given type
 #'
 #' @param config List of configuration for automated reports
-#' @param type Character string giving the type
+#' @param type Character vector with desired types
 #'
-#' @return list with config for reports of a given type
+#' @return list with config for reports of given types
 #' @export
 
 selectByType <- function(config, type) {
@@ -292,7 +292,7 @@ selectByType <- function(config, type) {
   } else {
     ind <- integer()
     for (i in seq_len(length(config))) {
-      if (config[[i]]$type == type) {
+      if (config[[i]]$type %in% type) {
         ind <- c(ind, i)
       }
     }
