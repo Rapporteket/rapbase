@@ -153,7 +153,14 @@ test_that("Auto report config can be created from package default", {
 # day 90
 test_that("Auto reports can be processed (shipment by email not tested)", {
   expect_message(runAutoReport(dayNumber = 90, dryRun = TRUE),
-                 "No emails sent. Attachment is", all = FALSE)
+                 "No emails sent. Content is:", all = FALSE)
+})
+
+# Do the same for a bulletin, above conditions also apply!
+test_that("Auto reports can be processed (shipment by email not tested)", {
+  expect_message(
+    runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = TRUE),
+    "No emails sent. Content is: This is a simple", all = FALSE)
 })
 
 reportId <- names(rd)[length(rd)]

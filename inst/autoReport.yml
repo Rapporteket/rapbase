@@ -38,6 +38,29 @@ testAutoReportSecond:
   - 30
   - 60
   - 90
+testAutoReportThird:
+  synopsis: Test, the second one
+  type: bulletin
+  package: rapbase
+  fun: .testAutoReport
+  params:
+  - aNum: 2.0
+  - aChar: '3.14'
+  - anExp: sessionInfo()
+  - bulletin: yes
+  owner: ttester
+  ownerName: Tore Tester
+  email:
+  - <someone@nowhere.com>
+  - jesus@sky.com
+  organization: '999999'
+  terminateDate: '9999-12-31'
+  interval:
+  intervalName:
+  runDayOfYear:
+  - 30
+  - 60
+  - 90
 5a0e7e28fd4c641be535a2b292a6b7b2:
   synopsis: Test of auto report
   package: rapbase
