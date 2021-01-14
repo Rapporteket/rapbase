@@ -389,8 +389,15 @@ getRegs <- function(config) {
 #' @examples
 #' .testAutoReport()
 
-.testAutoReport <- function(aNum = 1, aChar = "a", anExp = Sys.Date()) {
+.testAutoReport <- function(aNum = 1, aChar = "a", anExp = Sys.Date(),
+                            bulletin = 0) {
 
+  if (bulletin == 0) {
+    bulletin <- FALSE
+  } else {
+    bulletin <- TRUE
+  }
+  
   msg <- paste("This is a simple test of automated reports.",
                "Arguments provided:\n",
                "aNum:", as.character(aNum), ",\n",
@@ -401,7 +408,11 @@ getRegs <- function(config) {
   cat(msg, file = fileName)
   close(con)
 
-  fileName
+  if (bulletin) {
+    msg
+  } else {
+    fileName
+  }
 }
 
 
@@ -481,7 +492,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
           attFile <- content
         }
         if (dryRun) {
-          message(paste("No emails sent. Content is", content))
+          message(paste("No emails sent. Content is:", content))
         } else {
           sendEmail(conf = conf, to = rep$email, subject = rep$synopsis,
                     text = text, attFile = attFile)
