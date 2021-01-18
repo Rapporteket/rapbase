@@ -48,16 +48,20 @@ test_that("Config data can be filtered by organization on empty input", {
 
 test_that("Auto report can be created as dry run (stout)", {
   res <- createAutoReport(synopsis, package, type, fun, paramNames,
-                          paramValues, owner, ownerName, email, organization,
-                          runDayOfYear, dryRun = TRUE)
+    paramValues, owner, ownerName, email, organization,
+    runDayOfYear,
+    dryRun = TRUE
+  )
   expect_true(is.list(res))
 })
 
 Sys.setenv(R_RAP_INSTANCE = "PRODUCTION")
 test_that("auto report can be created as dry run (stout) in an PROD context", {
   res <- createAutoReport(synopsis, package, type, fun, paramNames,
-                          paramValues, owner, ownerName, email, organization,
-                          runDayOfYear, dryRun = TRUE)
+    paramValues, owner, ownerName, email, organization,
+    runDayOfYear,
+    dryRun = TRUE
+  )
   expect_true(is.list(res))
 })
 Sys.setenv(R_RAP_INSTANCE = "")
@@ -96,16 +100,18 @@ test_that("A year-day sequence can be mande", {
 
 test_that("The next run day in sequence can be identified", {
   expect_equal(as.numeric(
-    findNextRunDate(runDayOfYear = c(10, 20, 30), baseDayNum = 11,
-                    returnFormat = "%j")), 20
+    findNextRunDate(
+      runDayOfYear = c(10, 20, 30), baseDayNum = 11,
+      returnFormat = "%j"
     )
+  ), 20)
 })
 
 shinySession <- list(user = "tester")
 shinySession$groups <- "rapbase"
 attr(shinySession, "class") <- "ShinySession"
 
-mapOrgId <- data.frame(id='999999', name='HUS', stringsAsFactors = FALSE)
+mapOrgId <- data.frame(id = "999999", name = "HUS", stringsAsFactors = FALSE)
 
 test_that("auto report tables (for shiny) can be made", {
   expect_true(is.list(
@@ -139,11 +145,13 @@ test_that("per-user subscription table for v2 also provides dep warning", {
 
 test_that("Writing conf with undefined R_RAP_CONFIG_PATH provides an error", {
   expect_error(writeAutoReportData(config = NULL))
-  })
+})
 
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
-file.copy(system.file("rapbaseConfig.yml", package = "rapbase"),
-          Sys.getenv("R_RAP_CONFIG_PATH"))
+file.copy(
+  system.file("rapbaseConfig.yml", package = "rapbase"),
+  Sys.getenv("R_RAP_CONFIG_PATH")
+)
 
 test_that("Auto report config can be created from package default", {
   expect_warning(readAutoReportData())
@@ -153,14 +161,18 @@ test_that("Auto report config can be created from package default", {
 # day 90
 test_that("Auto reports can be processed (shipment by email not tested)", {
   expect_message(runAutoReport(dayNumber = 90, dryRun = TRUE),
-                 "No emails sent. Content is:", all = FALSE)
+    "No emails sent. Content is:",
+    all = FALSE
+  )
 })
 
 # Do the same for a bulletin, above conditions also apply!
 test_that("Auto reports can be processed (shipment by email not tested)", {
   expect_message(
     runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = TRUE),
-    "No emails sent. Content is: This is a simple", all = FALSE)
+    "No emails sent. Content is: This is a simple",
+    all = FALSE
+  )
 })
 
 reportId <- names(rd)[length(rd)]
@@ -171,28 +183,37 @@ test_that("Auto report can be deleted", {
 })
 
 test_that("Auto report can be created and written to file", {
-  expect_silent(createAutoReport(synopsis, package, type, fun, paramNames,
-                                 paramValues, owner, email, organization,
-                                 runDayOfYear, dryRun))
+  expect_silent(createAutoReport(
+    synopsis, package, type, fun, paramNames,
+    paramValues, owner, email, organization,
+    runDayOfYear, dryRun
+  ))
 })
 
 
 test_that("Backup of auto report config can be made", {
   writeAutoReportData(config = rd)
-  expect_true(file.exists(file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
-                                    "autoReportBackup")))
+  expect_true(file.exists(file.path(
+    Sys.getenv("R_RAP_CONFIG_PATH"),
+    "autoReportBackup"
+  )))
 })
 
-bckFile <- list.files(file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
-                                "autoReportBackup"), full.names = TRUE)
+bckFile <- list.files(file.path(
+  Sys.getenv("R_RAP_CONFIG_PATH"),
+  "autoReportBackup"
+), full.names = TRUE)
 Sys.setFileTime(bckFile, "2019-01-01")
 writeAutoReportData(config = rd)
 
 f <- file.remove(
   list.files(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReportBackup"),
-             full.names = TRUE))
+    full.names = TRUE
+  )
+)
 f <- file.remove(
-  file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReportBackup"))
+  file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReportBackup")
+)
 f <- file.remove(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReport.yml"))
 Sys.setenv(R_RAP_CONFIG_PATH = "")
 

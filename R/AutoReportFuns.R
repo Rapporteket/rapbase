@@ -106,14 +106,12 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
 #' @export
 
 deleteAutoReport <- function(autoReportId) {
-
   rd <- readAutoReportData()
   # just stop with an error if report does not exist
   stopifnot(!is.null(rd[[autoReportId]]))
   ind <- names(rd) == autoReportId
   rd <- rd[!ind]
   writeAutoReportData(config = rd)
-
 }
 
 #' Read automated report metadata
@@ -130,10 +128,8 @@ deleteAutoReport <- function(autoReportId) {
 #'
 #' @examples
 #' readAutoReportData()
-
 readAutoReportData <- function(fileName = "autoReport.yml",
                                packageName = "rapbase") {
-
   path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
   if (path == "") {
@@ -141,8 +137,10 @@ readAutoReportData <- function(fileName = "autoReport.yml",
     config_file <- system.file(fileName, package = packageName)
   } else {
     if (!file.exists(file.path(path, fileName))) {
-      warning(paste("No configuration file found in", path,
-                    ". A new file will be made from the package default"))
+      warning(paste(
+        "No configuration file found in", path,
+        ". A new file will be made from the package default"
+      ))
       file.copy(system.file(fileName, package = packageName), path)
     }
     config_file <- file.path(path, fileName)
@@ -151,7 +149,6 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   conf <- yaml::yaml.load_file(config_file)
 
   upgradeAutoReportData(conf)
-
 }
 
 #' Upgrade auto reports
@@ -166,31 +163,34 @@ readAutoReportData <- function(fileName = "autoReport.yml",
 #' @export
 
 upgradeAutoReportData <- function(config) {
-
   upgradeType <- FALSE
   upgradeOwnerName <- FALSE
 
   for (i in seq_len(length(config))) {
     rep <- config[[i]]
-    if (! "type" %in% names(rep)) {
+    if (!"type" %in% names(rep)) {
       upgradeType <- TRUE
       config[[i]]$type <- "subscription"
     }
-    if (! "ownerName" %in% names(rep)) {
+    if (!"ownerName" %in% names(rep)) {
       upgradeOwnerName <- TRUE
       config[[i]]$ownerName <- ""
     }
   }
 
   if (upgradeType) {
-    message(paste("Auto report data were upgraded:",
-                  "auto reports with no type defined now set to",
-                  "'subscription'."))
+    message(paste(
+      "Auto report data were upgraded:",
+      "auto reports with no type defined now set to",
+      "'subscription'."
+    ))
   }
   if (upgradeOwnerName) {
-    message(paste("Auto report data were upgraded:",
-                  "auto reports with no owner name defined now set to",
-                  "an empty string."))
+    message(paste(
+      "Auto report data were upgraded:",
+      "auto reports with no owner name defined now set to",
+      "an empty string."
+    ))
   }
 
   config
@@ -211,18 +211,19 @@ upgradeAutoReportData <- function(config) {
 #' config <- readAutoReportData()
 #' writeAutoReportData(config = config)
 #' }
-
+#'
 writeAutoReportData <- function(fileName = "autoReport.yml", config,
                                 packageName = "rapbase") {
-
   path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
   if (path == "") {
     # cannot proceed if there is nowhere to store config
-    stop(paste("There is nowhere to store config data.",
-               "The environment variable R_RAP_CONFIG_PATH must be defined",
-               "providing av path to a directory where configuration can",
-               "be written. Stopping"))
+    stop(paste(
+      "There is nowhere to store config data.",
+      "The environment variable R_RAP_CONFIG_PATH must be defined",
+      "providing av path to a directory where configuration can",
+      "be written. Stopping"
+    ))
   } else {
     oriFile <- file.path(path, fileName)
     # in case we screw-up, make a backup
@@ -233,12 +234,15 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
     if (!dir.exists(bckFilePath)) {
       dir.create(bckFilePath)
     }
-    file.copy(from = oriFile, to = file.path(bckFilePath, bckFileName),
-              overwrite = TRUE)
+    file.copy(
+      from = oriFile, to = file.path(bckFilePath, bckFileName),
+      overwrite = TRUE
+    )
     # to maintain some order, remove files older than 30 days
     files <- file.info(list.files(bckFilePath, full.names = TRUE))
     rmFiles <- rownames(files[difftime(Sys.time(), files[, "mtime"],
-                                       units = "days") > 30, ])
+      units = "days"
+    ) > 30, ])
     file.remove(rmFiles)
     con <- file(oriFile, "w")
   }
@@ -260,7 +264,6 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #' @export
 
 selectByReg <- function(config, reg) {
-
   if (length(config) == 0) {
     list()
   } else {
@@ -286,7 +289,6 @@ selectByReg <- function(config, reg) {
 #' @export
 
 selectByType <- function(config, type) {
-
   if (length(config) == 0) {
     list()
   } else {
@@ -312,7 +314,6 @@ selectByType <- function(config, type) {
 #' @export
 
 selectByOwner <- function(config, owner) {
-
   if (length(config) == 0) {
     list()
   } else {
@@ -338,7 +339,6 @@ selectByOwner <- function(config, owner) {
 #' @export
 
 selectByOrganization <- function(config, organization) {
-
   if (length(config) == 0) {
     list()
   } else {
@@ -390,21 +390,21 @@ getRegs <- function(config) {
 #'
 #' @examples
 #' .testAutoReport()
-
 .testAutoReport <- function(aNum = 1, aChar = "a", anExp = Sys.Date(),
                             bulletin = 0) {
-
   if (bulletin == 0) {
     bulletin <- FALSE
   } else {
     bulletin <- TRUE
   }
 
-  msg <- paste("This is a simple test of automated reports.",
-               "Arguments provided:\n",
-               "aNum:", as.character(aNum), ",\n",
-               "aChar:", aChar, ",\n",
-               "anExp:", as.character(anExp), "\n")
+  msg <- paste(
+    "This is a simple test of automated reports.",
+    "Arguments provided:\n",
+    "aNum:", as.character(aNum), ",\n",
+    "aChar:", aChar, ",\n",
+    "anExp:", as.character(anExp), "\n"
+  )
   fileName <- paste0(tempfile(), ".txt")
   con <- file(fileName, "w")
   cat(msg, file = fileName)
@@ -426,14 +426,12 @@ getRegs <- function(config) {
 #' @export
 
 .getFun <- function(x) {
-
   if (length(grep("::", x)) > 0) {
     parts <- strsplit(x, "::")[[1]]
     getExportedValue(parts[1], parts[2])
   } else { # nocov start
     x
   } # nocov end
-
 }
 
 
@@ -465,7 +463,7 @@ getRegs <- function(config) {
 #' # Example depend on environment variable R_RAP_CONFIG_PATH being set
 #' runAutoReport()
 #' }
-
+#'
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                           type = c("subscription", "dispatchment"),
                           dryRun = FALSE) {
@@ -476,46 +474,56 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
 
   # standard text for email body
   stdTxt <- readr::read_file(system.file("autoReportStandardEmailText.txt",
-                                         package = "rapbase"))
+    package = "rapbase"
+  ))
   # get sender from common config
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
   for (i in seq_len(length(reps))) {
-    tryCatch({
-      rep <- reps[[i]]
-      if (dayNumber %in% rep$runDayOfYear &&
+    tryCatch(
+      {
+        rep <- reps[[i]]
+        if (dayNumber %in% rep$runDayOfYear &&
           as.Date(rep$terminateDate) > Sys.Date()) {
-        # get explicit referenced function and call it
-        f <- .getFun(paste0(rep$package, "::", rep$fun))
-        content <- do.call(what = f, args = rep$params)
-        if (rep$type == "bulletin") {
-          text <- content
-          attFile <- NULL
-        } else {
-          text <- stdTxt
-          attFile <- content
+          # get explicit referenced function and call it
+          f <- .getFun(paste0(rep$package, "::", rep$fun))
+          content <- do.call(what = f, args = rep$params)
+          if (rep$type == "bulletin") {
+            text <- content
+            attFile <- NULL
+          } else {
+            text <- stdTxt
+            attFile <- content
+          }
+          if (dryRun) {
+            message(paste("No emails sent. Content is:", content))
+          } else {
+            # nocov start
+            autLogger(
+              user = rep$owner,
+              name = rep$ownerName,
+              registryName = rep$package,
+              reshId = rep$organization,
+              type = rep$type,
+              msg = paste("Recipients:", paste(rep$email,
+                collapse = ", "
+              ))
+            )
+            # nocov end
+            sendEmail(
+              conf = conf, to = rep$email, subject = rep$synopsis,
+              text = text, attFile = attFile
+            )
+          }
         }
-        if (dryRun) {
-          message(paste("No emails sent. Content is:", content))
-        } else {
-          # nocov start
-          autLogger(user = rep$owner,
-                    name = rep$ownerName,
-                    registryName = rep$package,
-                    reshId = rep$organization,
-                    type = rep$type,
-                    msg = paste("Recipients:", paste(rep$email,
-                                                     collapse = ", ")))
-          # nocov end
-          sendEmail(conf = conf, to = rep$email, subject = rep$synopsis,
-                    text = text, attFile = attFile)
-        }
+      },
+      error = function(e) {
+        message(paste(
+          "Report could not be processed (moving on to the next):",
+          e
+        ))
       }
-    },
-    error = function(e) {
-      message(paste("Report could not be processed (moving on to the next):",
-                    e))
-    })
+    )
   }
 }
 
@@ -538,7 +546,6 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
 #'
 #' @examples
 #' makeRunDayOfYearSequence(interval = "month")
-#'
 makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 
   # set end to a year from start
@@ -575,11 +582,10 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 findNextRunDate <- function(runDayOfYear,
                             baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
                             returnFormat = "%A %e. %B %Y") {
-
   year <- as.POSIXlt(Sys.Date())$year + 1900
 
   if (baseDayNum >= max(runDayOfYear) | length(runDayOfYear) == 1 &
-      baseDayNum >= max(runDayOfYear)) {
+    baseDayNum >= max(runDayOfYear)) {
     # next run will be first run of next year
     nextDayNum <- min(runDayOfYear)
     year <- year + 1
@@ -589,7 +595,6 @@ findNextRunDate <- function(runDayOfYear,
   }
 
   format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
-
 }
 
 
@@ -632,7 +637,6 @@ findNextRunDate <- function(runDayOfYear,
 
 makeAutoReportTab <- function(session, type = "subscription",
                               mapOrgId = NULL) {
-
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
   . <- ""
@@ -652,7 +656,8 @@ makeAutoReportTab <- function(session, type = "subscription",
 
   for (n in names(autoRep)) {
     nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
-                                returnFormat = dateFormat)
+      returnFormat = dateFormat
+    )
     if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
       nextDate <- "Utl\u00F8pt"
     }
@@ -662,25 +667,34 @@ makeAutoReportTab <- function(session, type = "subscription",
         dataSource <- mapOrgId$name[mapOrgId$id == dataSource]
       }
     }
-    r <- list("Rapport" = autoRep[[n]]$synopsis,
-              "Datakilde" = dataSource,
-              "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
-              "Periode" = autoRep[[n]]$intervalName,
-              "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
-                                      format = "%b %Y"),
-              "Neste" = nextDate,
-              "Endre" = as.character(
-                shiny::actionButton(inputId = paste0("edit_", n),
-                                    label = "",
-                                    icon = shiny::icon("edit"),
-                                    onclick = 'Shiny.onInputChange(\"edit_button\",
-                             this.id)')),
-              "Slett" = as.character(
-                shiny::actionButton(inputId = paste0("del_", n),
-                                    label = "",
-                                    icon = shiny::icon("trash"),
-                                    onclick = 'Shiny.onInputChange(\"del_button\",
-                             this.id)')))
+    r <- list(
+      "Rapport" = autoRep[[n]]$synopsis,
+      "Datakilde" = dataSource,
+      "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
+      "Periode" = autoRep[[n]]$intervalName,
+      "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
+        format = "%b %Y"
+      ),
+      "Neste" = nextDate,
+      "Endre" = as.character(
+        shiny::actionButton(
+          inputId = paste0("edit_", n),
+          label = "",
+          icon = shiny::icon("edit"),
+          onclick = 'Shiny.onInputChange(\"edit_button\",
+                             this.id)'
+        )
+      ),
+      "Slett" = as.character(
+        shiny::actionButton(
+          inputId = paste0("del_", n),
+          label = "",
+          icon = shiny::icon("trash"),
+          onclick = 'Shiny.onInputChange(\"del_button\",
+                             this.id)'
+        )
+      )
+    )
     if (!type %in% c("subscription")) {
       r <- c(list(Ansvarlig = autoRep[[n]]$ownerName), r)
     }
@@ -724,7 +738,6 @@ makeAutoReportTab <- function(session, type = "subscription",
 #' @export
 
 makeUserSubscriptionTab <- function(session, mapOrgId = NULL) {
-
   lifecycle::deprecate_warn(
     "1.12.0", "rapbase::makeUserSubscriptionTab()",
     "rapbase::makeAutoReportTab()"
@@ -742,7 +755,8 @@ makeUserSubscriptionTab <- function(session, mapOrgId = NULL) {
 
   for (n in names(autoRep)) {
     nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
-                                returnFormat = dateFormat)
+      returnFormat = dateFormat
+    )
     if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
       nextDate <- "Utl\u00F8pt"
     }
@@ -752,18 +766,24 @@ makeUserSubscriptionTab <- function(session, mapOrgId = NULL) {
         dataSource <- mapOrgId$name[mapOrgId$id == dataSource]
       }
     }
-    r <- list("Rapport" = autoRep[[n]]$synopsis,
-              "Enhet" = dataSource,
-              "Periode" = autoRep[[n]]$intervalName,
-              "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
-                                      format = "%b %Y"),
-              "Neste" = nextDate,
-              "Slett" = as.character(
-                shiny::actionButton(inputId = paste0("del_", n),
-                  label = "",
-                  icon = shiny::icon("trash"),
-                  onclick = 'Shiny.onInputChange(\"del_button\",
-                             this.id)')))
+    r <- list(
+      "Rapport" = autoRep[[n]]$synopsis,
+      "Enhet" = dataSource,
+      "Periode" = autoRep[[n]]$intervalName,
+      "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
+        format = "%b %Y"
+      ),
+      "Neste" = nextDate,
+      "Slett" = as.character(
+        shiny::actionButton(
+          inputId = paste0("del_", n),
+          label = "",
+          icon = shiny::icon("trash"),
+          onclick = 'Shiny.onInputChange(\"del_button\",
+                             this.id)'
+        )
+      )
+    )
     l <- rbind(l, r)
   }
   as.matrix(l)
@@ -789,83 +809,18 @@ NULL
 #' @rdname makeUserSubscriptionTabV2
 #' @export
 makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
-
   lifecycle::deprecate_warn(
     "1.12.0", "rapbase::makeUserSubscriptionTab_v2()",
     "rapbase::makeUserDispatchmentTab()",
-    details = paste("Important: from version 1.12 the automated reports",
-                    "'type' was introduced. Auto report data with no type",
-                    "definition (i.e. historcal data) will be regarded as",
-                    "type 'subscription'. For historical auto reports that",
-                    "cannot be regarded as subscriptions (e.g. they are",
-                    "of type 'dispatchment') manual correction of types needs",
-                    "to be performed in auto report data.")
+    details = paste(
+      "Important: from version 1.12 the automated reports",
+      "'type' was introduced. Auto report data with no type",
+      "definition (i.e. historcal data) will be regarded as",
+      "type 'subscription'. For historical auto reports that",
+      "cannot be regarded as subscriptions (e.g. they are",
+      "of type 'dispatchment') manual correction of types needs",
+      "to be performed in auto report data."
     )
-
-  . <- ""
-
-  l <- list()
-  autoRep <- readAutoReportData() %>%
-    selectByReg(., reg = getUserGroups(session)) %>%
-    selectByOwner(., owner = getUserName(session)) %>%
-    selectByOrganization(., organization = getUserReshId(session))
-
-  dateFormat <- "%A %e. %B %Y"
-
-  for (n in names(autoRep)) {
-    nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
-                                returnFormat = dateFormat)
-    if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
-      nextDate <- "Utl\u00F8pt"
-    }
-    r <- list("Rapport" = autoRep[[n]]$synopsis,
-              "Periode" = autoRep[[n]]$intervalName,
-              "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
-                                    format = "%b %Y"),
-              "Neste" = nextDate,
-              "Mottakere" = autoRep[[n]]$email,
-              "Avdeling" =
-                if ("reshID" %in%  names(unlist(autoRep[[n]]$params))) {
-                  unlist(autoRep[[n]]$params)[["reshID"]]
-                } else {
-                  autoRep[[n]]$organization
-                }
-              ,
-              "Slett" = as.character(
-                shiny::actionButton(inputId = paste0("del_", n),
-                  label = "",
-                  icon = shiny::icon("trash"),
-                  onclick = 'Shiny.onInputChange(\"del_button\",
-                                    this.id)')))
-    l <- rbind(l, r)
-  }
-  if (!is.null(dim(l))) {
-    l <- as.data.frame(l, row.names = F)
-    l$Mottakere <- purrr::map_chr(l$Mottakere, function(x) {
-      paste0(x, collapse = "<br />")})
-    l$Avdeling <- purrr::map_chr(l$Avdeling, function(x) x)
-    if (!is.null(map_resh_name)) {
-      l$Avdeling <- map_resh_name$Sykehusnavn[match(as.numeric(l$Avdeling),
-                                                      map_resh_name$AvdRESH)]
-    }
-  }
-  l
-}
-
-#' @rdname makeUserSubscriptionTabV2
-#' @export
-makeUserSubscriptionTabV2 <- function(session, map_resh_name = NULL) {
-
-  lifecycle::deprecate_warn(
-    "1.12.0", "rapbase::makeUserSubscriptionTabV2()",
-    "rapbase::makeUserDispatchmentTab()",
-    details = paste("Important: from version 1.12 the automated reports",
-                    "'type' was introduced. Auto report data with no type",
-                    "definition (i.e. historcal data) will be regarded as",
-                    "type 'subscription'. For historical auto reports that",
-                    "cannot be regarded as subscriptions (e.g. they are",
-                    "of type 'dispatchment') manual correction of types needs",
-                    "to be performed in auto report data.")
   )
 
   . <- ""
@@ -880,41 +835,125 @@ makeUserSubscriptionTabV2 <- function(session, map_resh_name = NULL) {
 
   for (n in names(autoRep)) {
     nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
-                                returnFormat = dateFormat)
+      returnFormat = dateFormat
+    )
     if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
       nextDate <- "Utl\u00F8pt"
     }
-    r <- list("Rapport" = autoRep[[n]]$synopsis,
-              "Periode" = autoRep[[n]]$intervalName,
-              "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
-                                      format = "%b %Y"),
-              "Neste" = nextDate,
-              "Mottakere" = autoRep[[n]]$email,
-              "Avdeling" =
-                if ("reshID" %in%  names(unlist(autoRep[[n]]$params))) {
-                  unlist(autoRep[[n]]$params)[["reshID"]]
-                } else {
-                  autoRep[[n]]$organization
-                }
-              ,
-              "Slett" = as.character(
-                shiny::actionButton(
-                  inputId = paste0("del_", n),
-                  label = "",
-                  icon = shiny::icon("trash"),
-                  onclick = 'Shiny.onInputChange(\"del_button\",
-                                    this.id)')))
+    r <- list(
+      "Rapport" = autoRep[[n]]$synopsis,
+      "Periode" = autoRep[[n]]$intervalName,
+      "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
+        format = "%b %Y"
+      ),
+      "Neste" = nextDate,
+      "Mottakere" = autoRep[[n]]$email,
+      "Avdeling" =
+        if ("reshID" %in% names(unlist(autoRep[[n]]$params))) {
+          unlist(autoRep[[n]]$params)[["reshID"]]
+        } else {
+          autoRep[[n]]$organization
+        },
+      "Slett" = as.character(
+        shiny::actionButton(
+          inputId = paste0("del_", n),
+          label = "",
+          icon = shiny::icon("trash"),
+          onclick = 'Shiny.onInputChange(\"del_button\",
+                                    this.id)'
+        )
+      )
+    )
+    l <- rbind(l, r)
+  }
+  if (!is.null(dim(l))) {
+    l <- as.data.frame(l, row.names = F)
+    l$Mottakere <- purrr::map_chr(l$Mottakere, function(x) {
+      paste0(x, collapse = "<br />")
+    })
+    l$Avdeling <- purrr::map_chr(l$Avdeling, function(x) x)
+    if (!is.null(map_resh_name)) {
+      l$Avdeling <- map_resh_name$Sykehusnavn[match(
+        as.numeric(l$Avdeling),
+        map_resh_name$AvdRESH
+      )]
+    }
+  }
+  l
+}
+
+#' @rdname makeUserSubscriptionTabV2
+#' @export
+makeUserSubscriptionTabV2 <- function(session, map_resh_name = NULL) {
+  lifecycle::deprecate_warn(
+    "1.12.0", "rapbase::makeUserSubscriptionTabV2()",
+    "rapbase::makeUserDispatchmentTab()",
+    details = paste(
+      "Important: from version 1.12 the automated reports",
+      "'type' was introduced. Auto report data with no type",
+      "definition (i.e. historcal data) will be regarded as",
+      "type 'subscription'. For historical auto reports that",
+      "cannot be regarded as subscriptions (e.g. they are",
+      "of type 'dispatchment') manual correction of types needs",
+      "to be performed in auto report data."
+    )
+  )
+
+  . <- ""
+
+  l <- list()
+  autoRep <- readAutoReportData() %>%
+    selectByReg(., reg = getUserGroups(session)) %>%
+    selectByOwner(., owner = getUserName(session)) %>%
+    selectByOrganization(., organization = getUserReshId(session))
+
+  dateFormat <- "%A %e. %B %Y"
+
+  for (n in names(autoRep)) {
+    nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
+      returnFormat = dateFormat
+    )
+    if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
+      nextDate <- "Utl\u00F8pt"
+    }
+    r <- list(
+      "Rapport" = autoRep[[n]]$synopsis,
+      "Periode" = autoRep[[n]]$intervalName,
+      "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
+        format = "%b %Y"
+      ),
+      "Neste" = nextDate,
+      "Mottakere" = autoRep[[n]]$email,
+      "Avdeling" =
+        if ("reshID" %in% names(unlist(autoRep[[n]]$params))) {
+          unlist(autoRep[[n]]$params)[["reshID"]]
+        } else {
+          autoRep[[n]]$organization
+        },
+      "Slett" = as.character(
+        shiny::actionButton(
+          inputId = paste0("del_", n),
+          label = "",
+          icon = shiny::icon("trash"),
+          onclick = 'Shiny.onInputChange(\"del_button\",
+                                    this.id)'
+        )
+      )
+    )
     l <- rbind(l, r)
   }
   if (!is.null(dim(l))) {
     l <- as.data.frame(l, row.names = F)
     l[["Mottakere"]] <- purrr::map_chr(l[["Mottakere"]], function(x) {
-      paste0(x, collapse = "<br />")})
+      paste0(x, collapse = "<br />")
+    })
     l[["Avdeling"]] <- purrr::map_chr(l[["Avdeling"]], function(x) x)
     if (!is.null(map_resh_name)) {
       l[["Avdeling"]] <-
-        map_resh_name[["Sykehusnavn"]][match(as.numeric(l[["Avdeling"]]),
-                                             map_resh_name[["AvdRESH"]])]
+        map_resh_name[["Sykehusnavn"]][match(
+          as.numeric(l[["Avdeling"]]),
+          map_resh_name[["AvdRESH"]]
+        )]
     }
   }
   l

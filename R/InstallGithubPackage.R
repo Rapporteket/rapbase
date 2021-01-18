@@ -11,7 +11,7 @@
 #' @export
 
 installGithubPackage <- function(packageName, branchName = "master",
-                                 readConfig=TRUE) {
+                                 readConfig = TRUE) {
 
   # nocov start
 
@@ -37,8 +37,10 @@ installGithubPackage <- function(packageName, branchName = "master",
   if (!is.null(conf$network$proxy$http)) {
     Sys.setenv(http_proxy = conf$network$proxy$http)
     Sys.setenv(https_proxy = conf$network$proxy$http)
-    httr::set_config(httr::use_proxy(url = conf$network$proxy$http,
-      port = as.numeric(conf$network$proxy$port)))
+    httr::set_config(httr::use_proxy(
+      url = conf$network$proxy$http,
+      port = as.numeric(conf$network$proxy$port)
+    ))
   }
   story <- makeMessage(story, "Set 'libcurl' as download method")
   options(download.file.method = "libcurl")
@@ -48,35 +50,49 @@ installGithubPackage <- function(packageName, branchName = "master",
 
   success <- paste0("'", packageName, "' installed")
   if (packageName == "rapbase") {
-    story <- makeMessage(story,
-                           paste0("Intalling '", githubRapbase,
-                                  "' from branch '", branchName, "'"))
-    res <- tryCatch({
-      remotes::install_github(githubRapbase, ref = branchName)
+    story <- makeMessage(
+      story,
+      paste0(
+        "Intalling '", githubRapbase,
+        "' from branch '", branchName, "'"
+      )
+    )
+    res <- tryCatch(
+      {
+        remotes::install_github(githubRapbase, ref = branchName)
 
-      success
-    }, warning = function(war) {
-      return(war) # nocov
-    }, error = function(err) {
-      return(err)
-    })
+        success
+      },
+      warning = function(war) {
+        return(war) # nocov
+      },
+      error = function(err) {
+        return(err)
+      }
+    )
 
     story <- makeMessage(story, res)
     story <- makeMessage(story, "Done with 'rapbase'")
   }
 
   if (packageName != "rapbase") {
-    story <- makeMessage(story, paste0("Installing '", packageName,
-                                       "' from branch '", branchName, "'"))
-    res <- tryCatch({
-      remotes::install_github(githubPackage, ref = branchName)
+    story <- makeMessage(story, paste0(
+      "Installing '", packageName,
+      "' from branch '", branchName, "'"
+    ))
+    res <- tryCatch(
+      {
+        remotes::install_github(githubPackage, ref = branchName)
 
-      success
-    }, warning = function(war) {
-      return(war) #nocov
-    }, error = function(err) {
-      return(err)
-    })
+        success
+      },
+      warning = function(war) {
+        return(war) # nocov
+      },
+      error = function(err) {
+        return(err)
+      }
+    )
 
     story <- makeMessage(story, res)
   }

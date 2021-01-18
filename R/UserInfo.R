@@ -45,8 +45,10 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
                      prodContexts = c("QA", "PRODUCTION")) {
 
   # check for valid entities
-  if (!(entity %in% c("user", "groups", "resh_id", "role", "email",
-                      "full_name", "phone"))) {
+  if (!(entity %in% c(
+    "user", "groups", "resh_id", "role", "email",
+    "full_name", "phone"
+  ))) {
     stop("Incorrect entity provided! Must be one of 'user', 'groups', 'resh_id'
          'role' or 'email'")
   }
@@ -74,14 +76,15 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
   }
 
   if (context %in% devContexts) {
-
     if (is.null(shinySession)) {
       stop("Session information is empty! Eventually, that will come bite you")
     }
 
     if (!c("ShinySession") %in% attributes(shinySession)$class) {
-      stop(paste("Got no object of class 'ShinySession'!",
-                 "Your carma is way below threshold..."))
+      stop(paste(
+        "Got no object of class 'ShinySession'!",
+        "Your carma is way below threshold..."
+      ))
     }
 
     conf <- getConfig(fileName = "rapbaseConfig.yml")
@@ -96,7 +99,6 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
   }
 
   if (context %in% testContexts | context %in% prodContexts) {
-
     if (is.null(shinySession)) {
       stop("Session information is empty!. Cannot do anything")
     }
@@ -128,12 +130,12 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
   }
 
   switch(entity,
-         user = user,
-         groups = groups,
-         resh_id = resh_id,
-         role = role,
-         email = email,
-         full_name = full_name,
-         phone = phone)
-
+    user = user,
+    groups = groups,
+    resh_id = resh_id,
+    role = role,
+    email = email,
+    full_name = full_name,
+    phone = phone
+  )
 }

@@ -18,8 +18,10 @@
 #' @export
 
 shinySessionInfo <- function(shinySession, entity, testCase = FALSE) {
-  lifecycle::deprecate_warn("1.10.0", "rapbase::shinySessionInfo()",
-                            "rapbase::userInfo()")
+  lifecycle::deprecate_warn(
+    "1.10.0", "rapbase::shinySessionInfo()",
+    "rapbase::userInfo()"
+  )
 
   if (is.null(shinySession)) {
     stop("Session information is empty!. Cannot do anything")
@@ -35,7 +37,7 @@ shinySessionInfo <- function(shinySession, entity, testCase = FALSE) {
   }
 
   if (testCase) {
-    #warning("This is a test. Not to be applied in production!",
+    # warning("This is a test. Not to be applied in production!",
     #        immediate. = TRUE)
     us <- shiny::parseQueryString(shinySession$clientData$url_search)
     user <- us$`X-USER`
@@ -50,9 +52,9 @@ shinySessionInfo <- function(shinySession, entity, testCase = FALSE) {
   }
 
   switch(entity,
-         user = user,
-         groups = groups,
-         resh_id = resh_id,
-         role = role)
-
+    user = user,
+    groups = groups,
+    resh_id = resh_id,
+    role = role
+  )
 }

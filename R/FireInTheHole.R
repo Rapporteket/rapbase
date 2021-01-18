@@ -17,9 +17,8 @@
 #' # Depends on the env var R_RAP_CONFIG_PATH being properly set
 #' fireInTheHole()
 #' }
-
+#'
 fireInTheHole <- function() {
-
   conf <- getConfig(fileName = "rapbaseConfig.yml")
   funs <- conf$r$schedule$nocturnal$funs
 

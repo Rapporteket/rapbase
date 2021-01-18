@@ -12,15 +12,14 @@
 #' @export
 
 howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
-
   . <- ""
 
   pkg <- list()
   pkg$name <- as.vector(installed.packages()[, 1])
   pkg$ver <- as.vector(installed.packages()[, 3])
-  
+
   pkgs <- intersect(c("shiny", "rapbase", "raplog"), pkg$name)
-  
+
   if (!is.null(callerPkg)) {
     if (callerPkg %in% pkg$name) {
       pkgs <- c(pkgs, callerPkg)
@@ -28,24 +27,26 @@ howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
       warning(paste(callerPkg, "is not an installed package."))
     }
   }
-  
+
   ind <- pkg$name %in% pkgs
   pkgs <- pkg$name[ind]
   vers <- pkg$ver[ind]
-  
+
   # add R itself
   pkgs <- c("R", pkgs)
   vers <- c(paste(R.version$major, R.version$minor, sep = "."), vers)
-  
+
   pkg_info <- paste0("^", pkgs, " ^", vers, collapse = ", ")
-  
+
   system.file("howWeDealWithPersonalData.Rmd", package = "rapbase") %>%
     knitr::knit(output = tempfile()) %>%
     markdown::markdownToHTML(.,
-                             options = c("fragment_only",
-                                         "base64_images",
-                                         "highlight_code"),
-                             encoding = "utf-8") %>%
+      options = c(
+        "fragment_only",
+        "base64_images",
+        "highlight_code"
+      ),
+      encoding = "utf-8"
+    ) %>%
     shiny::HTML()
-
 }

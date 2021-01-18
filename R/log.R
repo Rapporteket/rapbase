@@ -18,31 +18,35 @@
 #' @importFrom utils write.table
 
 appendLog <- function(event, name, target, format) {
-
-	if (target == "file") {
-		path <- Sys.getenv("R_RAP_CONFIG_PATH")
-		if (path == "") {
-			stop(paste0("There is nowhere to append the logging event. ",
-									"The environment variable R_RAP_CONFIG_PATH should be ",
-									"defined!"))
-		}
-		name <- paste0(name, ".", format)
-		if (format == "csv") {
-			doAppend <- TRUE
-			doColNames <- FALSE
-			if (!file.exists(file.path(path, name)) ||
-					file.size(file.path(path, name)) == 0) {
-				doAppend <- FALSE
-				doColNames <- TRUE
-			}
-			write.table(event, file = file.path(path, name), append = doAppend,
-									col.names = doColNames, row.names = FALSE, sep = ",")
-		}
-	} else {
-		stop(paste0("Target ", target, " is not supported. ",
-								"Event was not appended!"))
-	}
-
+  if (target == "file") {
+    path <- Sys.getenv("R_RAP_CONFIG_PATH")
+    if (path == "") {
+      stop(paste0(
+        "There is nowhere to append the logging event. ",
+        "The environment variable R_RAP_CONFIG_PATH should be ",
+        "defined!"
+      ))
+    }
+    name <- paste0(name, ".", format)
+    if (format == "csv") {
+      doAppend <- TRUE
+      doColNames <- FALSE
+      if (!file.exists(file.path(path, name)) ||
+        file.size(file.path(path, name)) == 0) {
+        doAppend <- FALSE
+        doColNames <- TRUE
+      }
+      write.table(event,
+        file = file.path(path, name), append = doAppend,
+        col.names = doColNames, row.names = FALSE, sep = ","
+      )
+    }
+  } else {
+    stop(paste0(
+      "Target ", target, " is not supported. ",
+      "Event was not appended!"
+    ))
+  }
 }
 
 
@@ -58,38 +62,34 @@ appendLog <- function(event, name, target, format) {
 #' @export
 #'
 #' @examples
-#' makeLogRecord(list(msg="This is a test"))
-
+#' makeLogRecord(list(msg = "This is a test"))
 makeLogRecord <- function(content, format = "csv") {
+  defaultEntries <- list(
+    time = format(Sys.time(), "%Y-%m-%d %H:%M:%S")
+  )
 
-	defaultEntries <- list(
-		time = format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-	)
+  content <- c(defaultEntries, content)
 
-	content <- c(defaultEntries, content)
-
-	if (format == "csv") {
-		as.data.frame(content)
-	} else {
-		stop(paste0("Format ", format, " is not supported. Event not logged!"))
-	}
-
+  if (format == "csv") {
+    as.data.frame(content)
+  } else {
+    stop(paste0("Format ", format, " is not supported. Event not logged!"))
+  }
 }
 
 getSessionData <- function(session) {
-
-	list(
-		user = rapbase::getUserName(session),
-		name = rapbase::getUserFullName(session),
-		group = rapbase::getUserGroups(session),
-		role = rapbase::getUserRole(session),
-		resh_id = rapbase::getUserReshId(session)
-	)
+  list(
+    user = rapbase::getUserName(session),
+    name = rapbase::getUserFullName(session),
+    group = rapbase::getUserGroups(session),
+    role = rapbase::getUserRole(session),
+    resh_id = rapbase::getUserReshId(session)
+  )
 }
 
 getSessionDataRep <- function(session) {
 
-	# Currently not used
+  # Currently not used
 }
 
 
@@ -204,14 +204,12 @@ NULL
 #' # Depend on the environment variable R_RAP_CONFIG_PATH being set
 #' appLogger(list())
 #' }
-
+#'
 appLogger <- function(session, msg = "No message provided") {
-
-	name <- "appLog"
-	content <- c(getSessionData(session), list(message=msg))
-	event <- makeLogRecord(content, format = "csv")
-	appendLog(event, name, target = "file", format = "csv")
-
+  name <- "appLog"
+  content <- c(getSessionData(session), list(message = msg))
+  event <- makeLogRecord(content, format = "csv")
+  appendLog(event, name, target = "file", format = "csv")
 }
 
 
@@ -222,21 +220,22 @@ appLogger <- function(session, msg = "No message provided") {
 #' # Depend on the environment variable R_RAP_CONFIG_PATH being set
 #' repLogger(list())
 #' }
-
-
+#'
 repLogger <- function(session, msg = "No message provided",
-											.topcall = sys.call(-1), .topenv = parent.frame()) {
-
-	name <- "reportLog"
-	parent_environment <- environmentName(topenv(.topenv))
-	parent_call <- deparse(.topcall, width.cutoff = 160L, nlines = 1L)
-	content <- c(getSessionData(session),
-							 list(
-							 	environment=parent_environment,
-							 	call=parent_call,
-							 	message=msg))
-	event <- makeLogRecord(content, format = "csv")
-	appendLog(event, name, target = "file", format = "csv")
+                      .topcall = sys.call(-1), .topenv = parent.frame()) {
+  name <- "reportLog"
+  parent_environment <- environmentName(topenv(.topenv))
+  parent_call <- deparse(.topcall, width.cutoff = 160L, nlines = 1L)
+  content <- c(
+    getSessionData(session),
+    list(
+      environment = parent_environment,
+      call = parent_call,
+      message = msg
+    )
+  )
+  event <- makeLogRecord(content, format = "csv")
+  appendLog(event, name, target = "file", format = "csv")
 }
 
 
@@ -247,20 +246,25 @@ repLogger <- function(session, msg = "No message provided",
 #' # Depend on the environment variable R_RAP_CONFIG_PATH being set
 #' autLogger(user = "ttester", registryName = "rapbase", reshId = "999999")
 #' }
-
+#'
 autLogger <- function(user, name, registryName, reshId, type,
-											msg = "No message provided",
-											.topenv = parent.frame()) {
-
-	parent_environment <- environmentName(topenv(.topenv))
-	content <- c(list(user = user,
-										name = name,
-										group = registryName,
-										role = "NA",
-										resh_id = reshId),
-							 list(environment=parent_environment,
-							 		 call = type,
-							 		 message = msg))
-	event <- makeLogRecord(content, format = "csv")
-	appendLog(event, name = "reportLog", target = "file", format = "csv")
+                      msg = "No message provided",
+                      .topenv = parent.frame()) {
+  parent_environment <- environmentName(topenv(.topenv))
+  content <- c(
+    list(
+      user = user,
+      name = name,
+      group = registryName,
+      role = "NA",
+      resh_id = reshId
+    ),
+    list(
+      environment = parent_environment,
+      call = type,
+      message = msg
+    )
+  )
+  event <- makeLogRecord(content, format = "csv")
+  appendLog(event, name = "reportLog", target = "file", format = "csv")
 }

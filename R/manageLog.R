@@ -23,27 +23,26 @@
 #' # configuration is present
 #' raplogManager()
 #' }
+#'
+raplogManager <- function(overSize = 1024 * 1000) {
+  logPath <- Sys.getenv("R_RAP_CONFIG_PATH")
+  if (logPath == "") {
+    stop("No path to configuration data provided. Cannot continue!")
+  }
 
-raplogManager <- function(overSize = 1024*1000) {
+  conf <- rapbase::getConfig(fileName = "rapbaseConfig.yml")
 
-	logPath <- Sys.getenv("R_RAP_CONFIG_PATH")
-	if (logPath == "") {
-		stop("No path to configuration data provided. Cannot continue!")
-	}
+  archiveDir <- conf$r$raplog$archiveDir
+  archivePath <- file.path(logPath, archiveDir)
 
-	conf <- rapbase::getConfig(fileName = "rapbaseConfig.yml")
+  if (!dir.exists(archivePath)) {
+    createArchive(archivePath)
+  }
 
-	archiveDir <- conf$r$raplog$archiveDir
-	archivePath <- file.path(logPath, archiveDir)
+  ripeLogs <- logsOverSize(logPath, overSize)
+  archiveLog(archivePath, logPath, logs = ripeLogs)
 
-	if (!dir.exists(archivePath)) {
-		createArchive(archivePath)
-	}
-
-	ripeLogs <- logsOverSize(logPath, overSize)
-	archiveLog(archivePath, logPath, logs = ripeLogs)
-
-	eolDays <- conf$r$raplog$eolDays
-	cleanArchive(archivePath, eolDays)
-	invisible()
+  eolDays <- conf$r$raplog$eolDays
+  cleanArchive(archivePath, eolDays)
+  invisible()
 }

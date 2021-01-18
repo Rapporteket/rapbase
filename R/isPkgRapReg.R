@@ -14,8 +14,6 @@
 #' @examples
 #' # returns FALSE, rapbase has no explicit dependency to itself
 #' isPkgRapReg("rapbase")
-
-
 isPkgRapReg <- function(pkg) {
   grepl("rapbase", utils::packageDescription(pkg)$Depends, fixed = TRUE)
 }

@@ -12,9 +12,7 @@
 #'
 #' @examples
 #' getConfig()
-
 getConfig <- function(fileName = "dbConfig.yml", packageName = "rapbase") {
-
   path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
   if (path == "") {

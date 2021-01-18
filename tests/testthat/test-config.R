@@ -17,11 +17,15 @@ sample_config_file <- tempfile()
 Sys.setenv(R_RAP_CONFIG_PATH = dirname(sample_config_file))
 
 test_that("Configuration can be read from environment var", {
-  sample_config <- list(first = list(a = 1, b = 2),
-                        second = list(a = 3, b = 4))
+  sample_config <- list(
+    first = list(a = 1, b = 2),
+    second = list(a = 3, b = 4)
+  )
   writeLines(yaml::as.yaml(sample_config), sample_config_file)
-  expect_output(str(getConfig(fileName = basename(sample_config_file))),
-                "List of")
+  expect_output(
+    str(getConfig(fileName = basename(sample_config_file))),
+    "List of"
+  )
 })
 
 test_that("Error is provided of configuration is nor present in file system", {

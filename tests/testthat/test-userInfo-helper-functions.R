@@ -9,8 +9,10 @@ conf <- getConfig(fileName = "rapbaseConfig.yml")
 d <- conf$r$testUser
 
 Sys.setenv(R_RAP_INSTANCE = "")
-test_that(paste("Helpers provide config data in empty context when provided",
-                "session object is empty"), {
+test_that(paste(
+  "Helpers provide config data in empty context when provided",
+  "session object is empty"
+), {
   expect_equal(getUserName(shinySession = NULL), d$user)
   expect_equal(getUserGroups(shinySession = NULL), d$groups)
   expect_equal(getUserReshId(shinySession = NULL), d$resh_id)
@@ -21,8 +23,10 @@ test_that(paste("Helpers provide config data in empty context when provided",
 })
 
 Sys.setenv(R_RAP_INSTANCE = "DEV")
-test_that(paste("Helpers ultimately provide errors in DEV context when no",
-                "session data present"), {
+test_that(paste(
+  "Helpers ultimately provide errors in DEV context when no",
+  "session data present"
+), {
   expect_error(getUserName())
   expect_error(getUserGroups())
   expect_error(getUserReshId())

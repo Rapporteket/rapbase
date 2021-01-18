@@ -22,7 +22,5 @@
 
 
 getUserGroups <- function(shinySession = NULL) {
-
   userInfo(shinySession, entity = "groups")
-
 }

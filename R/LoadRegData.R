@@ -15,9 +15,10 @@ NULL
 #' @rdname loadRegData
 #' @export
 LoadRegData <- function(registryName, query, dbType = "mysql") {
-
-  lifecycle::deprecate_warn("1.12.0", "rapbase::LoadRegData()",
-                            "rapbase::loadRegData()")
+  lifecycle::deprecate_warn(
+    "1.12.0", "rapbase::LoadRegData()",
+    "rapbase::loadRegData()"
+  )
 
   dbList <- rapOpenDbConnection(registryName, dbType)
   if (registryName == "nkr") { # nocov start
@@ -39,7 +40,6 @@ LoadRegData <- function(registryName, query, dbType = "mysql") {
 #' @rdname loadRegData
 #' @export
 loadRegData <- function(registryName, query, dbType = "mysql") {
-
   dbList <- rapOpenDbConnection(registryName, dbType)
   regData <- DBI::dbGetQuery(dbList$con, query)
   rapCloseDbConnection(dbList$con)
