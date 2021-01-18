@@ -480,8 +480,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
   for (i in seq_len(length(reps))) {
-    tryCatch(
-      {
+    tryCatch({
         rep <- reps[[i]]
         if (dayNumber %in% rep$runDayOfYear &&
           as.Date(rep$terminateDate) > Sys.Date()) {

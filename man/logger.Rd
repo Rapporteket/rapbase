@@ -134,7 +134,8 @@ server <- function(input, output, session) {
 makeHist <- function(data, var, bins, ...) {
 
   if ("session" \%in\% names(list(...))) {
-    raplog::repLogger(session = list(...)[["session"]], msg = "Providing histogram")
+    raplog::repLogger(session = list(...)[["session"]],
+                      msg = "Providing histogram")
   }
   ...
 }

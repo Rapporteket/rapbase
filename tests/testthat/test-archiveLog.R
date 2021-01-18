@@ -42,7 +42,8 @@ test_that("an oversized log can be detected", {
 })
 
 test_that("nothing is archived when list of logs is empty", {
-  expect_null(archiveLog(archivePath = tempdir, logPath = tempdir, logs = character()))
+  expect_null(archiveLog(archivePath = tempdir, logPath = tempdir,
+                         logs = character()))
 })
 
 test_that("function silently archives...", {

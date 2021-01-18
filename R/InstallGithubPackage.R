@@ -57,8 +57,7 @@ installGithubPackage <- function(packageName, branchName = "master",
         "' from branch '", branchName, "'"
       )
     )
-    res <- tryCatch(
-      {
+    res <- tryCatch({
         remotes::install_github(githubRapbase, ref = branchName)
 
         success
@@ -80,8 +79,7 @@ installGithubPackage <- function(packageName, branchName = "master",
       "Installing '", packageName,
       "' from branch '", branchName, "'"
     ))
-    res <- tryCatch(
-      {
+    res <- tryCatch({
         remotes::install_github(githubPackage, ref = branchName)
 
         success

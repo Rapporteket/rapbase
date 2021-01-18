@@ -22,8 +22,7 @@ pushGist <- function(mdFile, githubUserName = "") {
   # authenticate, if need be
   pat <- conf$github$PAT[githubUserName]
   if (pat != "") {
-    tryCatch(
-      {
+    tryCatch({
         Sys.setenv(GITHUB_PAT = pat)
         gistr::gist_auth()
       },
@@ -38,8 +37,7 @@ pushGist <- function(mdFile, githubUserName = "") {
 
   gistId <- as.character(conf$github$gistId[reportName])
   if (gistId == "") {
-    tryCatch(
-      {
+    tryCatch({
         g <- gistr::run(mdFile, knitopts = list(quiet = TRUE))
         gistr::gist_create(g, browse = FALSE)
       },
@@ -51,8 +49,7 @@ pushGist <- function(mdFile, githubUserName = "") {
       }
     )
   } else {
-    tryCatch(
-      {
+    tryCatch({
         g <- gistr::gist(id = gistId)
         g <- gistr::update_files(g, gistr::run(mdFile,
           knitopts = list(quiet = TRUE)
