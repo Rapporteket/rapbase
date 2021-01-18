@@ -184,6 +184,9 @@ getSessionDataRep <- function(session) {
 #' @param reshId String providing the organization id of the (subscription)
 #' report author. Only used for automated reports that are run outside a shiny
 #' session.
+#' @param type Character string defining the type of report. Only used for
+#' automated reports that are run outside a shiny session in which case its
+#' value will replace that of \code{.topcall}.
 #' @param .topcall Parent call (if any) calling this function. Used to provide
 #' the function call with arguments. Default value is \code{sys.call(-1)}.
 #' @param .topenv Name of the parent environment calling this function. Used to

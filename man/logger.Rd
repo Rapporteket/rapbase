@@ -57,6 +57,10 @@ reports that are run outside a shiny session.}
 \item{reshId}{String providing the organization id of the (subscription)
 report author. Only used for automated reports that are run outside a shiny
 session.}
+
+\item{type}{Character string defining the type of report. Only used for
+automated reports that are run outside a shiny session in which case its
+value will replace that of \code{.topcall}.}
 }
 \value{
 Returns nothing but calls a logging appender
