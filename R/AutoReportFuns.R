@@ -468,6 +468,8 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                           type = c("subscription", "dispatchment"),
                           dryRun = FALSE) {
 
+  . <- ""
+
   # get report candidates
   reps <- readAutoReportData() %>%
     selectByType(., type = type)
