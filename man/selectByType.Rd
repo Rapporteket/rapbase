@@ -9,10 +9,10 @@ selectByType(config, type)
 \arguments{
 \item{config}{List of configuration for automated reports}
 
-\item{type}{Character string giving the type}
+\item{type}{Character vector with desired types}
 }
 \value{
-list with config for reports of a given type
+list with config for reports of given types
 }
 \description{
 Pick reports of a given type

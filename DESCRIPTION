@@ -37,6 +37,7 @@ Imports:
     readr,
     remotes,
     RMariaDB,
+    rio,
     sendmailR,
     shiny,
     utils,

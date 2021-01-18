@@ -149,13 +149,13 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   }
 
   conf <- yaml::yaml.load_file(config_file)
-  
+
   upgradeAutoReportData(conf)
 
 }
 
 #' Upgrade auto reports
-#' 
+#'
 #' Upgrade auto report config as new features emerge. Currently, the type
 #' definition is added and set to 'subscription' that historically has been
 #' the only type used
@@ -166,10 +166,10 @@ readAutoReportData <- function(fileName = "autoReport.yml",
 #' @export
 
 upgradeAutoReportData <- function(config) {
-  
+
   upgradeType <- FALSE
   upgradeOwnerName <- FALSE
-  
+
   for (i in seq_len(length(config))) {
     rep <- config[[i]]
     if (! "type" %in% names(rep)) {
@@ -181,7 +181,7 @@ upgradeAutoReportData <- function(config) {
       config[[i]]$ownerName <- ""
     }
   }
-  
+
   if (upgradeType) {
     message(paste("Auto report data were upgraded:",
                   "auto reports with no type defined now set to",
@@ -192,9 +192,9 @@ upgradeAutoReportData <- function(config) {
                   "auto reports with no owner name defined now set to",
                   "an empty string."))
   }
-  
+
   config
-} 
+}
 
 
 #' Write automated report metadata
@@ -286,7 +286,7 @@ selectByReg <- function(config, reg) {
 #' @export
 
 selectByType <- function(config, type) {
-  
+
   if (length(config) == 0) {
     list()
   } else {
@@ -382,6 +382,8 @@ getRegs <- function(config) {
 #' @param aNum a number
 #' @param aChar a character
 #' @param anExp an expression
+#' @param bulletin Integer defining if report is of type bulletin (1) or not
+#' (0). Set to 0 by default
 #'
 #' @return A simple message listing the contents of the arguments
 #' @export
@@ -397,7 +399,7 @@ getRegs <- function(config) {
   } else {
     bulletin <- TRUE
   }
-  
+
   msg <- paste("This is a simple test of automated reports.",
                "Arguments provided:\n",
                "aNum:", as.character(aNum), ",\n",
@@ -446,8 +448,10 @@ getRegs <- function(config) {
 #'
 #' @param dayNumber Integer day of year where January 1st is 1. Defaults to
 #' current day, i.e. as.POSIXlt(Sys.Date())$yday+1 (POSIXlt yday is base 0)
-#' @param bulletin Logical if function will handle bullitins only. Default is
-#' FALSE in which all reports but bulletins will be processed
+#' @param type Character vector defining the type of reports to be porcessed.
+#' May contain one or more of
+#' \code{c("subscription", "dispatchment", "bulletin")}. Defaults value set to
+#' \code{c("subscription", "dispatchment")}.
 #' @param dryRun Logical defining if emails are to be sent. If TRUE a message
 #' with reference to the payload file is given but no emails will actually be
 #' sent. Default is FALSE
@@ -467,7 +471,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                           dryRun = FALSE) {
 
   # get report candidates
-  reps <- readAutoReportData() %>% 
+  reps <- readAutoReportData() %>%
     selectByType(., type = type)
 
   # standard text for email body
@@ -585,7 +589,7 @@ findNextRunDate <- function(runDayOfYear,
 #' Make a table to be rendered in a shiny app providing automated reports
 #' from a given user or registry as obtained from the shiny session
 #' object provided.
-#' 
+#'
 #' Each table record (line) represents a uniqely defined automated report.
 #' For each line two shiny action buttons are provided to allow
 #' for editing and deleting uniqe dispatchments, respectively. For applications
@@ -598,7 +602,7 @@ findNextRunDate <- function(runDayOfYear,
 #' \code{shiny::observeEvent("edit_button")} and within this event the
 #' dispatchment id is obtained by collecting the string after the underscore,
 #' \emph{e.g.} \code{strsplit(input$edit_button, "_")[[1]][2]}.
-#' 
+#'
 #' Take a look at the example shiny server function in
 #' \href{https://github.com/Rapporteket/rapRegTemplate}{rapRegTemplate} on how
 #' this function may be implemented
@@ -619,24 +623,24 @@ findNextRunDate <- function(runDayOfYear,
 
 makeAutoReportTab <- function(session, type = "subscription",
                               mapOrgId = NULL) {
-  
+
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
-  
+
   . <- ""
-  
+
   l <- list()
   autoRep <- readAutoReportData() %>%
     selectByReg(., reg = getUserGroups(session)) %>%
     selectByType(., type = type)
-  
+
   if (type == "subscription") {
-    autoRep <- autoRep %>% 
+    autoRep <- autoRep %>%
       selectByOwner(., owner = getUserName(session)) %>%
       selectByOrganization(., organization = getUserReshId(session))
   }
-  
+
   dateFormat <- "%A %e. %B %Y"
-  
+
   for (n in names(autoRep)) {
     nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
                                 returnFormat = dateFormat)
@@ -698,7 +702,7 @@ makeAutoReportTab <- function(session, type = "subscription",
 #' Take a look at the example shiny server function in
 #' \href{https://github.com/Rapporteket/rapRegTemplate}{rapRegTemplate} on how
 #' this function may be implemented
-#' 
+#'
 #' @param session A shiny session object
 #' @param mapOrgId Data frame containing the two columns 'name' and 'id'
 #' corresponding to unique name and id of organizations. Defult is NULL in
@@ -711,7 +715,7 @@ makeAutoReportTab <- function(session, type = "subscription",
 #' @export
 
 makeUserSubscriptionTab <- function(session, mapOrgId = NULL) {
-  
+
   lifecycle::deprecate_warn(
     "1.12.0", "rapbase::makeUserSubscriptionTab()",
     "rapbase::makeAutoReportTab()"
@@ -788,7 +792,7 @@ makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
                     "of type 'dispatchment') manual correction of types needs",
                     "to be performed in auto report data.")
     )
-  
+
   . <- ""
 
   l <- list()
@@ -842,7 +846,7 @@ makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
 #' @rdname makeUserSubscriptionTabV2
 #' @export
 makeUserSubscriptionTabV2 <- function(session, map_resh_name = NULL) {
-  
+
   lifecycle::deprecate_warn(
     "1.12.0", "rapbase::makeUserSubscriptionTabV2()",
     "rapbase::makeUserDispatchmentTab()",
