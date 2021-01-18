@@ -22,8 +22,8 @@ autLogger(
   name,
   registryName,
   reshId,
+  type,
   msg = "No message provided",
-  .topcall = sys.call(-1),
   .topenv = parent.frame()
 )
 }
@@ -141,12 +141,15 @@ makeHist <- function(data, var, bins, ...) {
 # Depend on the environment variable R_RAP_CONFIG_PATH being set
 appLogger(list())
 }
+
 \donttest{
 # Depend on the environment variable R_RAP_CONFIG_PATH being set
 repLogger(list())
 }
+
 \donttest{
 # Depend on the environment variable R_RAP_CONFIG_PATH being set
 autLogger(user = "ttester", registryName = "rapbase", reshId = "999999")
 }
+
 }

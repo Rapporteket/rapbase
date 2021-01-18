@@ -23,5 +23,4 @@ setting up automated reports at Rapporteket
 }
 \examples{
 makeRunDayOfYearSequence(interval = "month")
-
 }

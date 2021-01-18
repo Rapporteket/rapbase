@@ -19,5 +19,5 @@ A formatted log entry
 Add default values and make a formatted log record
 }
 \examples{
-makeLogRecord(list(msg="This is a test"))
+makeLogRecord(list(msg = "This is a test"))
 }

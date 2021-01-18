@@ -22,4 +22,5 @@ Monday throug Friday and with emails supressed:
 # Depends on the env var R_RAP_CONFIG_PATH being properly set
 fireInTheHole()
 }
+
 }

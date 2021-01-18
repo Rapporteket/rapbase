@@ -28,6 +28,7 @@ initiated by a scheduler
 # configuration is present
 raplogManager()
 }
+
 }
 \seealso{
 To become orchestrator

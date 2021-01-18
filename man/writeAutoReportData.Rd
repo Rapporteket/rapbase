@@ -30,4 +30,5 @@ Write automated report metadata
 config <- readAutoReportData()
 writeAutoReportData(config = config)
 }
+
 }

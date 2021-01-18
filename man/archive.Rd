@@ -53,19 +53,19 @@ numbered.
 \examples{
 # Create an archive
 createArchive(archivePath = tempfile())
-
 # List all files (with alphanumeric names) larger than 1 Kb in tempdir()
-logsOverSize(logPath = tempdir(), overSize = 1024,
-pattern = "^[1-9a-zA-Z]")
-
+logsOverSize(
+  logPath = tempdir(), overSize = 1024,
+  pattern = "^[1-9a-zA-Z]"
+)
 # Archive a file under the same directory
 fileName <- paste0(tempfile(), ".csv")
 file.create(fileName)
 write.csv(mtcars, fileName)
-archiveLog(archivePath = dirname(fileName), logPath = dirname(fileName),
-logs = c(basename(fileName)))
-
+archiveLog(
+  archivePath = dirname(fileName), logPath = dirname(fileName),
+  logs = c(basename(fileName))
+)
 # Do not delete any files
 cleanArchive(archivePath = tempdir())
-
 }
