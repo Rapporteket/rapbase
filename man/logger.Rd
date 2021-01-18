@@ -19,6 +19,7 @@ repLogger(
 
 autLogger(
   user,
+  name,
   registryName,
   reshId,
   msg = "No message provided",
@@ -30,20 +31,25 @@ autLogger(
 \item{session}{Shiny session object to be used for getting user data.
 For testing and development purposes \code{session} can be replaced by
 \code{list()} in which case various config options might be used to provide
-something sensible}
+something sensible.}
 
 \item{msg}{String providing a user defined message to be added to the log
-record. Default value is 'No message provided'}
+record. Default value is 'No message provided'.}
 
 \item{.topcall}{Parent call (if any) calling this function. Used to provide
-the function call with arguments. Default value is \code{sys.call(-1)}}
+the function call with arguments. Default value is \code{sys.call(-1)}.}
 
 \item{.topenv}{Name of the parent environment calling this function. Used to
 provide package name (\emph{i.e.} register) this function was called from.
-Default value is \code{parent.frame()}}
+Default value is \code{parent.frame()}.}
 
-\item{user}{String providing owner of an automated report. Only used for
-subscription reports that are run outside a shiny session.}
+\item{user}{String providing owner of an automated report. Its value should
+correspond to the actual user name as provided in a shiny session at
+Rapporteket. Only used for subscription reports that are run outside a shiny
+session.}
+
+\item{name}{String providing full name of the report owner. Only used for
+automated reports that are run outside a shiny session.}
 
 \item{registryName}{String providing registry name. Only used for automated
 reports that are run outside a shiny session.}

@@ -170,21 +170,25 @@ getSessionDataRep <- function(session) {
 #' @param session Shiny session object to be used for getting user data.
 #' For testing and development purposes \code{session} can be replaced by
 #' \code{list()} in which case various config options might be used to provide
-#' something sensible
+#' something sensible.
 #' @param msg String providing a user defined message to be added to the log
-#' record. Default value is 'No message provided'
-#' @param user String providing owner of an automated report. Only used for
-#' subscription reports that are run outside a shiny session.
+#' record. Default value is 'No message provided'.
+#' @param user String providing owner of an automated report. Its value should
+#' correspond to the actual user name as provided in a shiny session at
+#' Rapporteket. Only used for subscription reports that are run outside a shiny
+#' session.
+#' @param name String providing full name of the report owner. Only used for
+#' automated reports that are run outside a shiny session.
 #' @param registryName String providing registry name. Only used for automated
 #' reports that are run outside a shiny session.
 #' @param reshId String providing the organization id of the (subscription)
 #' report author. Only used for automated reports that are run outside a shiny
 #' session.
 #' @param .topcall Parent call (if any) calling this function. Used to provide
-#' the function call with arguments. Default value is \code{sys.call(-1)}
+#' the function call with arguments. Default value is \code{sys.call(-1)}.
 #' @param .topenv Name of the parent environment calling this function. Used to
 #' provide package name (\emph{i.e.} register) this function was called from.
-#' Default value is \code{parent.frame()}
+#' Default value is \code{parent.frame()}.
 #'
 #' @name logger
 #' @aliases appLogger repLogger subLogger autLogger
@@ -244,7 +248,7 @@ repLogger <- function(session, msg = "No message provided",
 #' autLogger(user = "ttester", registryName = "rapbase", reshId = "999999")
 #' }
 
-autLogger <- function(user, registryName, reshId,
+autLogger <- function(user, name, registryName, reshId,
 											msg = "No message provided", .topcall = sys.call(-1),
 											.topenv = parent.frame()) {
 
@@ -252,7 +256,7 @@ autLogger <- function(user, registryName, reshId,
 	parent_environment <- environmentName(topenv(.topenv))
 	parent_call <- deparse(.topcall, width.cutoff = 160L, nlines = 1L)
 	content <- c(list(user = user,
-										name = "NA",
+										name = name,
 										group = registryName,
 										role = "NA",
 										resh_id = reshId),
