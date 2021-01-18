@@ -498,6 +498,13 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
         if (dryRun) {
           message(paste("No emails sent. Content is:", content))
         } else {
+          # nocov start
+          autLogger(user = rep$owner,
+                    registryName = rep$package,
+                    reshId = rep$organization,
+                    msg = paste("Recipients:", paste(rep$email,
+                                                     collapse = ", ")))
+          # nocov end
           sendEmail(conf = conf, to = rep$email, subject = rep$synopsis,
                     text = text, attFile = attFile)
         }
