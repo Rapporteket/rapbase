@@ -248,21 +248,19 @@ repLogger <- function(session, msg = "No message provided",
 #' autLogger(user = "ttester", registryName = "rapbase", reshId = "999999")
 #' }
 
-autLogger <- function(user, name, registryName, reshId,
-											msg = "No message provided", .topcall = sys.call(-1),
+autLogger <- function(user, name, registryName, reshId, type,
+											msg = "No message provided",
 											.topenv = parent.frame()) {
 
-	name <- "reportLog"
 	parent_environment <- environmentName(topenv(.topenv))
-	parent_call <- deparse(.topcall, width.cutoff = 160L, nlines = 1L)
 	content <- c(list(user = user,
 										name = name,
 										group = registryName,
 										role = "NA",
 										resh_id = reshId),
 							 list(environment=parent_environment,
-							 		 call=parent_call,
-							 		 message=msg))
+							 		 call = type,
+							 		 message = msg))
 	event <- makeLogRecord(content, format = "csv")
-	appendLog(event, name, target = "file", format = "csv")
+	appendLog(event, name = "reportLog", target = "file", format = "csv")
 }

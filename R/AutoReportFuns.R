@@ -500,8 +500,10 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
         } else {
           # nocov start
           autLogger(user = rep$owner,
+                    name = rep$ownerName,
                     registryName = rep$package,
                     reshId = rep$organization,
+                    type = rep$type,
                     msg = paste("Recipients:", paste(rep$email,
                                                      collapse = ", ")))
           # nocov end

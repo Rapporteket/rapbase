@@ -27,8 +27,9 @@ test_that("logging is performed at report level", {
 })
 
 test_that("logging can be made by (automated) reports outdise session", {
-	expect_silent(autLogger(user = "ttest", registryName = "rapbase",
-													reshId = "999999"))
+	expect_silent(autLogger(user = "ttest", name = "Tore Tester",
+													registryName = "rapbase", reshId = "999999",
+													type = "bulletin"))
 })
 
 test_that("formatter returns error upon non-existing format", {
