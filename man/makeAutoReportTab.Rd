@@ -10,8 +10,8 @@ makeAutoReportTab(session, type = "subscription", mapOrgId = NULL)
 \item{session}{A shiny session object}
 
 \item{type}{Character string defining the type of auto reports to tabulate.
-Must be one of 'subscription', 'dispatchment' or 'bullitin'. Default value
-set to 'subscription'}
+Must be one of \code{"subscription"}, \code{"dispatchment"} or
+\code{"bullitin"}. Default value set to \code{"subscription"}.}
 
 \item{mapOrgId}{Data frame containing the two columns 'name' and 'id'
 corresponding to unique name and id of organizations. Defult is NULL in
@@ -30,18 +30,18 @@ object provided.
 \details{
 Each table record (line) represents a uniqely defined automated report.
 For each line two shiny action buttons are provided to allow
-for editing and deleting uniqe dispatchments, respectively. For applications
+for editing and deleting of each entry. For applications
 implementing this table observing events on these action buttons may be used
 to allow users to manage automated reports by GUI. The
 action buttons for editing and deleting are provided with the static input
 ids \emph{edit_button} and \emph{del_button} and upon clicking the
 \emph{button} part of their ids will change to the uniqe id of the
-dispatchment. Hence, a GUI call for editing a dispatchment can be catched by
+report. Hence, a GUI call for editing a report can be catched by
 \code{shiny::observeEvent("edit_button")} and within this event the
-dispatchment id is obtained by collecting the string after the underscore,
+report id is obtained by collecting the string after the underscore,
 \emph{e.g.} \code{strsplit(input$edit_button, "_")[[1]][2]}.
 
-Take a look at the example shiny server function in
-\href{https://github.com/Rapporteket/rapRegTemplate}{rapRegTemplate} on how
-this function may be implemented
+Take a look at the
+\href{https://github.com/Rapporteket/rapRegTemplate/blob/rel/inst/shinyApps/app1/server.R}{example shiny server function in rapRegTemplate}
+on how this function may be implemented
 }
