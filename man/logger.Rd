@@ -23,6 +23,9 @@ autLogger(
   registryName,
   reshId,
   type,
+  pkg,
+  fun,
+  param,
   msg = "No message provided",
   .topenv = parent.frame()
 )
@@ -61,6 +64,16 @@ session.}
 \item{type}{Character string defining the type of report. Only used for
 automated reports that are run outside a shiny session in which case its
 value will replace that of \code{.topcall}.}
+
+\item{pkg}{Character string naming the package of the function that is to be
+logged. Only used for automated reports that are run outside a shiny
+session.}
+
+\item{fun}{Character string naming the function that should be logged. Only
+used for automated reports that are run outside a shiny session.}
+
+\item{param}{List of named function parameter. Only used for automated
+reports that are run outside a shiny session.}
 }
 \value{
 Returns nothing but calls a logging appender

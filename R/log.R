@@ -188,6 +188,13 @@ getSessionDataRep <- function(session) {
 #' @param type Character string defining the type of report. Only used for
 #' automated reports that are run outside a shiny session in which case its
 #' value will replace that of \code{.topcall}.
+#' @param pkg Character string naming the package of the function that is to be
+#' logged. Only used for automated reports that are run outside a shiny
+#' session.
+#' @param fun Character string naming the function that should be logged. Only
+#' used for automated reports that are run outside a shiny session.
+#' @param param List of named function parameter. Only used for automated
+#' reports that are run outside a shiny session.
 #' @param .topcall Parent call (if any) calling this function. Used to provide
 #' the function call with arguments. Default value is \code{sys.call(-1)}.
 #' @param .topenv Name of the parent environment calling this function. Used to
@@ -251,9 +258,9 @@ repLogger <- function(session, msg = "No message provided",
 #' autLogger(user = "ttester", registryName = "rapbase", reshId = "999999")
 #' }
 #'
-autLogger <- function(user, name, registryName, reshId, type,
-                      msg = "No message provided",
-                      .topenv = parent.frame()) {
+autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
+                      msg = "No message provided", .topenv = parent.frame()) {
+
   parent_environment <- environmentName(topenv(.topenv))
   content <- c(
     list(
@@ -265,8 +272,10 @@ autLogger <- function(user, name, registryName, reshId, type,
     ),
     list(
       environment = parent_environment,
-      call = type,
-      message = msg
+      call = paste0(pkg, "::",
+                    deparse(call(fun, unlist(param, recursive = FALSE)),
+                            width.cutoff = 500)),
+      message = paste(type, msg)
     )
   )
   event <- makeLogRecord(content, format = "csv")

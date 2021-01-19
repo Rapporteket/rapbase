@@ -30,7 +30,10 @@ test_that("logging can be made by (automated) reports outdise session", {
   expect_silent(autLogger(
     user = "ttest", name = "Tore Tester",
     registryName = "rapbase", reshId = "999999",
-    type = "bulletin"
+    type = "bulletin",
+    pkg = "testpkg",
+    fun = "testfun",
+    param = list(testparam = "test")
   ))
 })
 

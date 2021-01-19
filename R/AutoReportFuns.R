@@ -506,7 +506,10 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
               registryName = rep$package,
               reshId = rep$organization,
               type = rep$type,
-              msg = paste("Recipients:", paste(rep$email,
+              pkg = rep$package,
+              fun = rep$fun,
+              param = rep$params,
+              msg = paste("recipients:", paste(rep$email,
                 collapse = ", "
               ))
             )
