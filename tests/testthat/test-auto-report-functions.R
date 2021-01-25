@@ -175,6 +175,13 @@ test_that("Auto reports can be processed (shipment by email not tested)", {
   )
 })
 
+# Try to send an email, but expect error since there is no viable smtp set-up
+test_that("Auto reports can be processed and emailed (but failing send)", {
+  expect_warning(
+    runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = FALSE))
+})
+
+
 reportId <- names(rd)[length(rd)]
 
 test_that("Auto report can be deleted", {
