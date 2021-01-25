@@ -107,6 +107,15 @@ test_that("The next run day in sequence can be identified", {
   ), 20)
 })
 
+test_that("The next run day in sequence can be identified when next year", {
+  expect_equal(as.numeric(
+    findNextRunDate(
+      runDayOfYear = c(10, 20, 30), baseDayNum = 31,
+      returnFormat = "%j"
+    )
+  ), 10)
+})
+
 shinySession <- list(user = "tester")
 shinySession$groups <- "rapbase"
 attr(shinySession, "class") <- "ShinySession"
