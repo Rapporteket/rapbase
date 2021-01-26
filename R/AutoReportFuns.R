@@ -268,7 +268,7 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #'
 #' @examples
 #' ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
-#' filerAutoRep(ar, "type", "B") # ar2
+#' filterAutoRep(ar, "type", "B") # ar2
 
 filterAutoRep <- function(data, by, pass) {
 
@@ -302,6 +302,9 @@ filterAutoRep <- function(data, by, pass) {
 #' @export
 
 selectByReg <- function(config, reg) {
+  lifecycle::deprecate_warn(
+    "1.12.0", "selectByReg()", "filterAutoRep()"
+  )
   if (length(config) == 0) {
     list()
   } else {
