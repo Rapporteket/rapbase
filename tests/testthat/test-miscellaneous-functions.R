@@ -16,7 +16,7 @@ test_that("widget for shiny apps can be provided with user info added", {
   )
 })
 
-# currently, testing of scheduler function is not at all sufficient...
+
 currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
 currentContext <- Sys.getenv("R_RAP_INSTANCE")
 tempdir <- tempdir()
@@ -24,16 +24,10 @@ Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 Sys.setenv(R_RAP_INSTANCE = "")
 file.copy(
   system.file(c("rapbaseConfig.yml", "dbConfig.yml"),
-    package = "rapbase"
+              package = "rapbase"
   ),
   tempdir
 )
-test_that(paste(
-  "scheduler kick-off function can be run based on default",
-  "config (that should provide warnings)"
-), {
-  expect_warning(fireInTheHole())
-})
 
 
 # produce a pop-up text...

@@ -34,6 +34,8 @@ r :
     diurnal:
       startHour: 8
       endHour: 24
+      funs:
+      - rapbase::runBulletin
 
 
 ## Network

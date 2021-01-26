@@ -21,15 +21,14 @@ testAutoReportFirst:
 testAutoReportSecond:
   synopsis: Test, the second one
   package: rapbase
+  type: subscription
   fun: .testAutoReport
   params:
   - aNum: 2.0
   - aChar: '3.14'
   - anExp: sessionInfo()
   owner: ttester
-  email:
-  - <someone@nowhere.com>
-  - jesus@sky.com
+  email: <someone@nowhere.com>
   organization: '999999'
   terminateDate: '9999-12-31'
   interval:
