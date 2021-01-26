@@ -330,6 +330,9 @@ selectByReg <- function(config, reg) {
 #' @export
 
 selectByType <- function(config, type) {
+  lifecycle::deprecate_warn(
+    "1.12.0", "selectByType()", "filterAutoRep()"
+  )
   if (length(config) == 0) {
     list()
   } else {
@@ -355,6 +358,9 @@ selectByType <- function(config, type) {
 #' @export
 
 selectByOwner <- function(config, owner) {
+  lifecycle::deprecate_warn(
+    "1.12.0", "selectByOwner()", "filterAutoRep()"
+  )
   if (length(config) == 0) {
     list()
   } else {
@@ -380,6 +386,9 @@ selectByOwner <- function(config, owner) {
 #' @export
 
 selectByOrganization <- function(config, organization) {
+  lifecycle::deprecate_warn(
+    "1.12.0", "selectByOrganization()", "filterAutoRep()"
+  )
   if (length(config) == 0) {
     list()
   } else {
