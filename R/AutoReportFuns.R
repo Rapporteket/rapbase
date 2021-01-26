@@ -251,6 +251,44 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 }
 
 
+#' Filter auto report data
+#'
+#' Generic function to filter various entities from auto report data
+#'
+#' @param data List (nested) specifying auto reports to be filtered. May be
+#' obtained by \code{rapbase::getConfig(fileName = "autoReport.yml")}
+#' @param by Character string definig the filtering entity and must be one of
+#' \code{c("package", "type", "owner", "organization")}. The term 'package'
+#' represents the registry name
+#' @param pass Character string definig the value of the filtering entity that
+#' will pass through
+#'
+#' @return List of auto reports matching the filtering criteria
+#' @export
+#'
+#' @examples
+#' ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
+#' filerAutoRep(ar, "type", "B") # ar2
+
+filterAutoRep <- function(data, by, pass) {
+
+  stopifnot(by %in% c("package", "type", "owner", "organization"))
+
+  if (length(data) == 0) {
+    list()
+  } else {
+    ind <- integer()
+    for (i in seq_len(length(data))) {
+      if (data[[i]][[by]] == pass) {
+        ind <- c(ind, i)
+      }
+    }
+    c(data[ind])
+  }
+
+}
+
+
 #' Select data on one registry from config (list)
 #'
 #' Pick all config corresponding to a given registry. Registry name is not
