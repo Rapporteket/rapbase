@@ -522,7 +522,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
 
   # get report candidates
   reps <- readAutoReportData() %>%
-    selectByType(., type = type)
+    filterAutoRep(., by = "type", pass = type)
 
   # standard text for email body
   stdTxt <- readr::read_file(system.file("autoReportStandardEmailText.txt",
@@ -695,13 +695,13 @@ makeAutoReportTab <- function(session, type = "subscription",
 
   l <- list()
   autoRep <- readAutoReportData() %>%
-    selectByReg(., reg = getUserGroups(session)) %>%
-    selectByType(., type = type)
+    filterAutoRep(., by = "package", pass = getUserGroups(session)) %>%
+    filterAutoRep(., by = "type", pass = type)
 
   if (type == "subscription") {
     autoRep <- autoRep %>%
-      selectByOwner(., owner = getUserName(session)) %>%
-      selectByOrganization(., organization = getUserReshId(session))
+      filterAutoRep(., by = "owner", pass = getUserName(session)) %>%
+      filterAutoRep(., by = "organization", pass = getUserReshId(session))
   }
 
   dateFormat <- "%A %e. %B %Y"
