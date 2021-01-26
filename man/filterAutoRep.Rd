@@ -14,8 +14,8 @@ obtained by \code{rapbase::getConfig(fileName = "autoReport.yml")}}
 \code{c("package", "type", "owner", "organization")}. The term 'package'
 represents the registry name}
 
-\item{pass}{Character string definig the value of the filtering entity that
-will pass through}
+\item{pass}{Character vector definig the values of the filtering entity that
+will allow reports to pass through the filter}
 }
 \value{
 List of auto reports matching the filtering criteria
@@ -25,5 +25,5 @@ Generic function to filter various entities from auto report data
 }
 \examples{
 ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
-filerAutoRep(ar, "type", "B") # ar2
+filterAutoRep(ar, "type", "B") # ar2
 }
