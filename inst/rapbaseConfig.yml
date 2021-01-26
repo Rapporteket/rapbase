@@ -7,12 +7,12 @@ r :
 
   # Dummy library path
   libpath :
-  
+
   # Activity logging
   raplog :
     archiveDir : logArchive
     eolDays : 730
-  
+
   # User data for testing purposes
   testUser :
     user : ttester
@@ -27,9 +27,14 @@ r :
   # Scedule
   schedule :
     nocturnal :
+      startHour: 0
+      endHour: 8
       funs :
       - rapbase::runAutoReport
-  
+    diurnal:
+      startHour: 8
+      endHour: 24
+
 
 ## Network
 network :
@@ -53,12 +58,12 @@ github :
 
   # Github organization
   organization : Rapporteket
-  
+
   # Dummy gist
   gistId :
     reportName : reportNameGistId
 
-  # Dummy PAT  
+  # Dummy PAT
   PAT :
     githubUserName : PAT
 

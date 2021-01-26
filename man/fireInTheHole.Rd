@@ -4,7 +4,10 @@
 \alias{fireInTheHole}
 \title{Kick off functions at Rapporteket}
 \usage{
-fireInTheHole()
+fireInTheHole(flipPeriod = FALSE)
+}
+\arguments{
+\item{flipPeriod}{Logical only used for testing. FALSE by default}
 }
 \description{
 This function will normally be executed by a cron daemon. Once started this
