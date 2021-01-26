@@ -30,11 +30,11 @@ test_that("already upgraded auto report config is left as is", {
 })
 
 test_that("error is provided when filtering on unknown entity", {
-  expect_error(filterAutoRep(list(), "unknown_entity", "test"))
+  expect_error(filterAutoRep(list(), "unknown_entity", c("test")))
 })
 
 test_that("auto reports can be filterd by valid entity on empty input", {
-  expect_true(is.list(filterAutoRep(list(), "package", "test")))
+  expect_true(is.list(filterAutoRep(list(), "package", c("test"))))
 })
 
 test_that("Config data can be filterd by registry on empty input", {

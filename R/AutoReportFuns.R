@@ -260,8 +260,8 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #' @param by Character string definig the filtering entity and must be one of
 #' \code{c("package", "type", "owner", "organization")}. The term 'package'
 #' represents the registry name
-#' @param pass Character string definig the value of the filtering entity that
-#' will pass through
+#' @param pass Character vector definig the values of the filtering entity that
+#' will allow reports to pass through the filter
 #'
 #' @return List of auto reports matching the filtering criteria
 #' @export
@@ -279,7 +279,7 @@ filterAutoRep <- function(data, by, pass) {
   } else {
     ind <- integer()
     for (i in seq_len(length(data))) {
-      if (data[[i]][[by]] == pass) {
+      if (data[[i]][[by]] %in% pass) {
         ind <- c(ind, i)
       }
     }
