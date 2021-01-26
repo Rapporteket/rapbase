@@ -12,7 +12,8 @@ runAutoReport(
 }
 \arguments{
 \item{dayNumber}{Integer day of year where January 1st is 1. Defaults to
-current day, i.e. as.POSIXlt(Sys.Date())$yday+1 (POSIXlt yday is base 0)}
+current day, \emph{i.e.} \code{as.POSIXlt(Sys.Date())$yday + 1} (POSIXlt
+yday is base 0)}
 
 \item{type}{Character vector defining the type of reports to be porcessed.
 May contain one or more of
