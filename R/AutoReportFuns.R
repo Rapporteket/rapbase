@@ -580,6 +580,18 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
   }
 }
 
+#' Run bulletin auto reports
+#'
+#' This is a wrapper for \code{runAutoReport()} to issue bulletins. Purpose is
+#' to ease simplify fire-in-the-hole at Rapporteket
+#'
+#' @return  Whatever \code{runAutoReport()} might provide
+#' @export
+
+runBulletin <- function() {
+
+  runAutoReport(type = c("bulletin"))
+}
 
 ## Miscellaneous functions
 
