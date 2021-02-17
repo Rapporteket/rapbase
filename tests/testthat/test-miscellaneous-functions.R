@@ -10,28 +10,43 @@ test_that("Widget for shiny apps can be provided", {
 })
 
 test_that("widget for shiny apps can be provided with user info added", {
-  expect_output(str(appNavbarUserWidget(addUserInfo = TRUE)),
-                "script|navbar-brand")
+  expect_output(
+    str(appNavbarUserWidget(addUserInfo = TRUE)),
+    "script|navbar-brand"
+  )
 })
 
-# currently, testing of scheduler function is not at all sufficient...
+
 currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
 currentContext <- Sys.getenv("R_RAP_INSTANCE")
 tempdir <- tempdir()
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 Sys.setenv(R_RAP_INSTANCE = "")
-file.copy(system.file(c("rapbaseConfig.yml", "dbConfig.yml"),
-                      package = "rapbase"),
-          tempdir)
-test_that(paste("scheduler kick-off function can be run based on default",
-                "config (that should provide warnings)"), {
-  expect_warning(fireInTheHole())
-})
+file.copy(
+  system.file(c("rapbaseConfig.yml", "dbConfig.yml"),
+              package = "rapbase"
+  ),
+  tempdir
+)
 
 
 # produce a pop-up text...
 test_that("an html doc regarding 'how we deal with...' can be provided", {
   expect_output(howWeDealWithPersonalData(session = list()), "")
+})
+
+test_that("pop-up html can add an installed pacakge to info", {
+  expect_output(howWeDealWithPersonalData(
+    session = list(),
+    callerPkg = "base"
+  ), "")
+})
+
+test_that("pop-up html provide a warning for a non-existing pacakge", {
+  expect_warning(howWeDealWithPersonalData(
+    sessio = list(),
+    callerPkg = "notapackage"
+  ))
 })
 
 # a logical providing info if context is Rapporteket

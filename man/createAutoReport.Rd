@@ -7,10 +7,12 @@
 createAutoReport(
   synopsis,
   package,
+  type = "subscription",
   fun,
   paramNames,
   paramValues,
   owner,
+  ownerName = "",
   email,
   organization,
   runDayOfYear,
@@ -26,6 +28,9 @@ subject field of email distributed reports}
 
 \item{package}{String with package name also corresponding to registry}
 
+\item{type}{Character string defining type of auto report. Currently, one of
+'subscription' (default) or 'dispatchment'}
+
 \item{fun}{String providing name of function to be called for generating
 report}
 
@@ -35,6 +40,9 @@ parameter to be used in the above function}
 \item{paramValues}{String vector with corresponding values to paramNames}
 
 \item{owner}{String providing the owner of the report. Usually a user name}
+
+\item{ownerName}{String providing full name of owner. Defaults to an empty
+string to maintain backwards compatibility}
 
 \item{email}{String with email address to recipient of email containing the
 report}

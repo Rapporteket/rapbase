@@ -22,7 +22,5 @@
 
 
 getUserReshId <- function(shinySession = NULL) {
-
   userInfo(shinySession, entity = "resh_id")
-
 }

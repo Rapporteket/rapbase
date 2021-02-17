@@ -23,7 +23,5 @@
 
 
 getUserFullName <- function(shinySession = NULL) {
-
   userInfo(shinySession, entity = "full_name")
-
 }

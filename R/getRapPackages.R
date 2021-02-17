@@ -8,7 +8,6 @@
 #'
 #' @examples
 #' getRapPackages()
-
 getRapPackages <- function() {
   allPkg <- as.data.frame(library()$result, stringsAsFactors = FALSE)
   res <- sapply(allPkg$Package, isPkgRapReg)

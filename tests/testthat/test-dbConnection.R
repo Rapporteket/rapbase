@@ -33,18 +33,23 @@ test_that("Error provided when key has no corresponding config", {
 regName <- "rapbase"
 if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
   regName <- "dev"
-  query <- c("DROP DATABASE IF EXISTS rapbase;",
-             "CREATE DATABASE rapbase;",
-             "USE rapbase;",
-             paste("CREATE TABLE testTable (id int, someText varchar(50),",
-                   "someInt INT, someBigInt BIGINT, someFloat DOUBLE,",
-                   "someTime DATETIME);"))
+  query <- c(
+    "DROP DATABASE IF EXISTS rapbase;",
+    "CREATE DATABASE rapbase;",
+    "USE rapbase;",
+    paste(
+      "CREATE TABLE testTable (id int, someText varchar(50),",
+      "someInt INT, someBigInt BIGINT, someFloat DOUBLE,",
+      "someTime DATETIME);"
+    )
+  )
   conf <- getConfig()[[regName]]
   drv <- RMariaDB::MariaDB()
   con <- DBI::dbConnect(drv,
-                        host = conf$host,
-                        user = conf$user,
-                        password = conf$pass)
+    host = conf$host,
+    user = conf$user,
+    password = conf$pass
+  )
   for (q in query) {
     tmp <- DBI::dbExecute(con, q)
   }
@@ -71,18 +76,24 @@ test_that("Deprecated interface provides a warning", {
 test_that("Data can be queried from (MySQL) db", {
   checkDb()
   query <- "SELECT * FROM testTable"
-  expect_output(str(loadRegData(regName, query, dbType = "mysql")),
-                "data.frame")
+  expect_output(
+    str(loadRegData(regName, query, dbType = "mysql")),
+    "data.frame"
+  )
 })
 
 test_that("Bigints are returned as integers (not bit64::integer64)", {
   checkDb()
-  query <- c("DROP DATABASE IF EXISTS rapbase;",
-             "CREATE DATABASE rapbase;",
-             "USE rapbase;",
-             paste("CREATE TABLE testTable (id int, someText varchar(50),",
-             "someInt INT, someBigInt BIGINT, someFloat DOUBLE,",
-             "someTime DATETIME);"))
+  query <- c(
+    "DROP DATABASE IF EXISTS rapbase;",
+    "CREATE DATABASE rapbase;",
+    "USE rapbase;",
+    paste(
+      "CREATE TABLE testTable (id int, someText varchar(50),",
+      "someInt INT, someBigInt BIGINT, someFloat DOUBLE,",
+      "someTime DATETIME);"
+    )
+  )
   l <- rapOpenDbConnection(regName)
   for (q in query) {
     tmp <- DBI::dbExecute(l$con, q)
@@ -93,8 +104,11 @@ test_that("Bigints are returned as integers (not bit64::integer64)", {
   expect_is(df[["someBigInt"]], "integer")
 })
 
-test_that(paste("The use of MSSQL in no longer possible with an appropriate",
-                "message"), {
+test_that(paste(
+  "The use of MSSQL in no longer possible with an appropriate",
+  "message"
+), {
   expect_error(loadRegData(regName, query, dbType = "mssql"),
-                regexp = "Use of MSSQL is no longer supported. Exiting")
+    regexp = "Use of MSSQL is no longer supported. Exiting"
+  )
 })

@@ -10,7 +10,6 @@
 
 
 pushGist <- function(mdFile, githubUserName = "") {
-
   reportName <- strsplit(basename(mdFile), ".", fixed = TRUE)[[1]][1]
 
   conf <- getConfig()
@@ -24,36 +23,45 @@ pushGist <- function(mdFile, githubUserName = "") {
   pat <- conf$github$PAT[githubUserName]
   if (pat != "") {
     tryCatch({
-      Sys.setenv(GITHUB_PAT = pat)
-      gistr::gist_auth()
-    }, warning = function(war) {
-      return(paste("Authentication warning:", war))
-    }, error = function(err) {
-      return(paste("Authentication error:", err))
-    })
+        Sys.setenv(GITHUB_PAT = pat)
+        gistr::gist_auth()
+      },
+      warning = function(war) {
+        return(paste("Authentication warning:", war))
+      },
+      error = function(err) {
+        return(paste("Authentication error:", err))
+      }
+    )
   }
 
   gistId <- as.character(conf$github$gistId[reportName])
   if (gistId == "") {
     tryCatch({
-      g <- gistr::run(mdFile, knitopts = list(quiet = TRUE))
-      gistr::gist_create(g, browse = FALSE)
-    }, warning = function(war) {
-      return(paste("Create gist warning:", war))
-    }, error = function(err) {
-      return(paste("Create gist error:", err))
-    })
+        g <- gistr::run(mdFile, knitopts = list(quiet = TRUE))
+        gistr::gist_create(g, browse = FALSE)
+      },
+      warning = function(war) {
+        return(paste("Create gist warning:", war))
+      },
+      error = function(err) {
+        return(paste("Create gist error:", err))
+      }
+    )
   } else {
     tryCatch({
-      g <- gistr::gist(id = gistId)
-      g <- gistr::update_files(g, gistr::run(mdFile,
-                                             knitopts = list(quiet = TRUE)))
-      g <- gistr::update(g)
-    }, warning = function(war) {
-      return(paste("Update gist warning:", war))
-    }, error = function(err) {
-      return(paste("Update gist error:", err))
-    })
+        g <- gistr::gist(id = gistId)
+        g <- gistr::update_files(g, gistr::run(mdFile,
+          knitopts = list(quiet = TRUE)
+        ))
+        g <- gistr::update(g)
+      },
+      warning = function(war) {
+        return(paste("Update gist warning:", war))
+      },
+      error = function(err) {
+        return(paste("Update gist error:", err))
+      }
+    )
   }
-
 }

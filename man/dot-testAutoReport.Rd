@@ -4,7 +4,7 @@
 \alias{.testAutoReport}
 \title{Simple test of automated report}
 \usage{
-.testAutoReport(aNum = 1, aChar = "a", anExp = Sys.Date())
+.testAutoReport(aNum = 1, aChar = "a", anExp = Sys.Date(), bulletin = 0)
 }
 \arguments{
 \item{aNum}{a number}
@@ -12,6 +12,9 @@
 \item{aChar}{a character}
 
 \item{anExp}{an expression}
+
+\item{bulletin}{Integer defining if report is of type bulletin (1) or not
+(0). Set to 0 by default}
 }
 \value{
 A simple message listing the contents of the arguments

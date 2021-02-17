@@ -19,20 +19,26 @@ attr(shinySession, "class") <- "ShinySession"
 
 # now deprecated, main function
 test_that("shinySessionInfo() is deprecated", {
-  expect_warning(shinySessionInfo(shinySession = shinySession,
-                                  entity = "user"))
+  expect_warning(shinySessionInfo(
+    shinySession = shinySession,
+    entity = "user"
+  ))
 })
 
 # now deprecated, wrapper functions
 test_that("wrapper funs are deprecated", {
   expect_warning(getShinyUserName(shinySession),
-                 class = "lifecycle_warning_deprecated")
+    class = "lifecycle_warning_deprecated"
+  )
   expect_warning(getShinyUserGroups(shinySession),
-                 class = "lifecycle_warning_deprecated")
+    class = "lifecycle_warning_deprecated"
+  )
   expect_warning(getShinyUserReshId(shinySession),
-                 class = "lifecycle_warning_deprecated")
+    class = "lifecycle_warning_deprecated"
+  )
   expect_warning(getShinyUserRole(shinySession),
-                 class = "lifecycle_warning_deprecated")
+    class = "lifecycle_warning_deprecated"
+  )
 })
 
 # now deprecated, but should still work
@@ -46,19 +52,29 @@ test_that("Default is to assume real data scenario", {
 })
 
 test_that("Also working for test cases", {
-  expect_equal(getShinyUserName(shinySessionTest, testCase = TRUE),
-               "testUser1")
-  expect_equal(getShinyUserGroups(shinySessionTest, testCase = TRUE),
-               "testGroup1,testGroup2")
-  expect_equal(getShinyUserReshId(shinySessionTest, testCase = TRUE),
-               "123456")
+  expect_equal(
+    getShinyUserName(shinySessionTest, testCase = TRUE),
+    "testUser1"
+  )
+  expect_equal(
+    getShinyUserGroups(shinySessionTest, testCase = TRUE),
+    "testGroup1,testGroup2"
+  )
+  expect_equal(
+    getShinyUserReshId(shinySessionTest, testCase = TRUE),
+    "123456"
+  )
   expect_equal(getShinyUserRole(shinySessionTest, testCase = TRUE), "LU")
 })
 
 test_that("Function handle errors", {
   expect_error(shinySessionInfo(shinySession = NULL, entity = "user"))
-  expect_error(shinySessionInfo(shinySession = shinySessionWrongClass,
-                                entity = "user"))
-  expect_error(shinySessionInfo(shinySession = shinySession,
-                                entity = ""))
+  expect_error(shinySessionInfo(
+    shinySession = shinySessionWrongClass,
+    entity = "user"
+  ))
+  expect_error(shinySessionInfo(
+    shinySession = shinySession,
+    entity = ""
+  ))
 })

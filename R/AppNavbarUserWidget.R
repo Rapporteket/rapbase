@@ -42,30 +42,31 @@
 #'
 #' @examples
 #' appNavbarUserWidget()
-
 appNavbarUserWidget <- function(user = "Undefined person",
                                 organization = "Undefined organization",
                                 addUserInfo = FALSE) {
-
   if (addUserInfo) {
-  userInfo <- shiny::tags$a(
-    id = "userInfo",
-    href = "#",
-    class = "action-button",
-    "Om:")
+    userInfo <- shiny::tags$a(
+      id = "userInfo",
+      href = "#",
+      class = "action-button",
+      "Om:"
+    )
   } else {
     userInfo <- character()
   }
 
   txtWidget <-
-    paste0("var header = $('.navbar> .container-fluid');\n",
-         "header.append('<div class=\"navbar-brand\" ",
-         "style=\"float:right;vertical-align:super;font-size:65%\">",
-         userInfo,
-         user,
-         organization,
-         "</div>');\n",
-         "console.log(header)")
+    paste0(
+      "var header = $('.navbar> .container-fluid');\n",
+      "header.append('<div class=\"navbar-brand\" ",
+      "style=\"float:right;vertical-align:super;font-size:65%\">",
+      userInfo,
+      user,
+      organization,
+      "</div>');\n",
+      "console.log(header)"
+    )
 
   shiny::tags$script(shiny::HTML(txtWidget))
 }

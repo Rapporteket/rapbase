@@ -23,7 +23,5 @@
 
 
 getUserPhone <- function(shinySession = NULL) {
-
   userInfo(shinySession, entity = "phone")
-
 }

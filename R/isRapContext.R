@@ -9,9 +9,7 @@
 #'
 #' @examples
 #' isRapContext()
-
 isRapContext <- function() {
-
   if (Sys.getenv("R_RAP_INSTANCE") %in% c("DEV", "TEST", "QA", "PRODUCTION")) {
     return(TRUE)
   } else {

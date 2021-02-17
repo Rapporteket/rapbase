@@ -1,3 +1,14 @@
+# rapbase 1.12.0
+
+* Relevant version info added to user pop-up #46
+* Looks of user pop-up info changed #49
+* Logging functions previously found in raplog now delivered by this package
+* Built-in logging of automated reports #56
+* New generic function for auto report GUI with option for name-id mapping #54
+* Added new types of automated reports (dispatchment and bulletin) #47, #48
+* Deprecated some functions for future clean-up #55
+* Migrated ci from travis to gh actions
+
 # rapbase 1.11.4
 
 * clean-up code also deprecating some function for v1.12

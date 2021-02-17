@@ -4,11 +4,21 @@
 \alias{runAutoReport}
 \title{Run reports as defined in yaml config and ship content by email}
 \usage{
-runAutoReport(dayNumber = as.POSIXlt(Sys.Date())$yday + 1, dryRun = FALSE)
+runAutoReport(
+  dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
+  type = c("subscription", "dispatchment"),
+  dryRun = FALSE
+)
 }
 \arguments{
 \item{dayNumber}{Integer day of year where January 1st is 1. Defaults to
-current day, i.e. as.POSIXlt(Sys.Date())$yday+1 (POSIXlt yday is base 0)}
+current day, \emph{i.e.} \code{as.POSIXlt(Sys.Date())$yday + 1} (POSIXlt
+yday is base 0)}
+
+\item{type}{Character vector defining the type of reports to be porcessed.
+May contain one or more of
+\code{c("subscription", "dispatchment", "bulletin")}. Defaults value set to
+\code{c("subscription", "dispatchment")}.}
 
 \item{dryRun}{Logical defining if emails are to be sent. If TRUE a message
 with reference to the payload file is given but no emails will actually be
@@ -21,13 +31,15 @@ message
 \description{
 Usually to be called by a scheduler, e.g. cron. If the provided day of
 year matches those of the config the report is run as otherwise specified in
-config. Functions called upon are expected to return a path to a file that
-can be attached to an email. The email itself is defined and sent to
-recipients defined in the config
+config. Functions called upon are expected to return a character string
+providing a path to a file that can be attached to an email or, in case of a
+bulletin, the email body itself. For bulletins, files cannot be attached.
+The email itself is prepared and sent to recipients defined in the config
 }
 \examples{
 \donttest{
 # Example depend on environment variable R_RAP_CONFIG_PATH being set
 runAutoReport()
 }
+
 }

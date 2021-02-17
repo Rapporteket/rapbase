@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 1.11.4.9000
+Version: 1.12.0
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -37,6 +37,7 @@ Imports:
     readr,
     remotes,
     RMariaDB,
+    rio,
     sendmailR,
     shiny,
     utils,

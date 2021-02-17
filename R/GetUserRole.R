@@ -22,7 +22,5 @@
 
 
 getUserRole <- function(shinySession = NULL) {
-
   userInfo(shinySession, entity = "role")
-
 }
