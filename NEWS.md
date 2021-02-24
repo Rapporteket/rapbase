@@ -1,3 +1,8 @@
+# rapbase 1.12.1
+
+* Update contributor guidelines
+* Re-establish build site as part of ci
+
 # rapbase 1.12.0
 
 * Relevant version info added to user pop-up #46
