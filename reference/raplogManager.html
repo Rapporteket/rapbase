@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make table of subscriptions of reports — makeUserSubscriptionTab • rapbase</title>
+<title>Management of shiny application and report logging at Rapporteket — raplogManager • rapbase</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,10 +46,11 @@
 
 
 
-<meta property="og:title" content="Make table of subscriptions of reports — makeUserSubscriptionTab" />
-<meta property="og:description" content="Make a table to be rendered in a shiny app providing the active
-subscriptions of a given user within a given registry which are
-both collected from the shiny session object provided" />
+<meta property="og:title" content="Management of shiny application and report logging at Rapporteket — raplogManager" />
+<meta property="og:description" content="A tool to aid archiving and cleanup of logs containing data on use of shiny
+application and reports at Rapporteket. This function is ment to be called
+from a scheduler (e.g. chron) directly or as part of a process chain
+initiated by a scheduler" />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -131,56 +132,49 @@ both collected from the shiny session object provided" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make table of subscriptions of reports</h1>
-    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/AutoReportFuns.R'><code>R/AutoReportFuns.R</code></a></small>
-    <div class="hidden name"><code>makeUserSubscriptionTab.Rd</code></div>
+    <h1>Management of shiny application and report logging at Rapporteket</h1>
+    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/manageLog.R'><code>R/manageLog.R</code></a></small>
+    <div class="hidden name"><code>raplogManager.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Make a table to be rendered in a shiny app providing the active
-subscriptions of a given user within a given registry which are
-both collected from the shiny session object provided</p>
+    <p>A tool to aid archiving and cleanup of logs containing data on use of shiny
+application and reports at Rapporteket. This function is ment to be called
+from a scheduler (<em>e.g.</em> chron) directly or as part of a process chain
+initiated by a scheduler</p>
     </div>
 
-    <pre class="usage"><span class='fu'>makeUserSubscriptionTab</span><span class='op'>(</span><span class='va'>session</span>, mapOrgId <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>raplogManager</span><span class='op'>(</span>overSize <span class='op'>=</span> <span class='fl'>1024</span> <span class='op'>*</span> <span class='fl'>1000</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>session</th>
-      <td><p>A shiny session object</p></td>
-    </tr>
-    <tr>
-      <th>mapOrgId</th>
-      <td><p>Data frame containing the two columns 'name' and 'id'
-corresponding to unique name and id of organizations. Defult is NULL in
-which case the ids provided in auto report data will be used. In case
-mapOrgId is not NULL but no id match is found the id fond in the auto
-report data will also be used</p></td>
+      <th>overSize</th>
+      <td><p>Integer size in bytes from where larger files will be listed
+as candidates for archiving. Not used by this function <em>per se</em> but
+rather passed on to <code><a href='archive.html'>logsOverSize()</a></code>. Normally, its value does not need
+to be set but may be convenient in rare cases (such as full scale tests).
+Default value set to 1 Mb (1024 * 1000)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Matrix providing a table to be rendered in a shiny app</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>Silently exits after successful file operations</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>Each table record (line) represents a uniqely defined dispatchment. For
-each line a shiny action button is provided to allow for deleting uniqe
-dispatchments. For applications implementing this subscription table
-observing events on this action button may be used to allow users to manage
-subscriptions by GUI. The action button for deleting is provided with the
-static input id <em>del_button</em> and upon clicking the
-<em>button</em> part of its id will change to the uniqe id of the
-dispatchment. Hence, a GUI call for deleting a subscription can be catched by
-<code><a href='https://rdrr.io/pkg/shiny/man/observeEvent.html'>shiny::observeEvent("del_button")</a></code> and within this event the
-subscription id is obtained by collecting the string after the underscore,
-<em>e.g.</em> <code>strsplit(input$del_button, "_")[[1]][2]</code>.</p>
-<p>Take a look at the example shiny server function in
-<a href='https://github.com/Rapporteket/rapRegTemplate'>rapRegTemplate</a> on how
-this function may be implemented</p>
+    <div class='dont-index'><p>To become orchestrator
+<code><a href='runAutoReport.html'>runAutoReport</a></code> in package <em>rapbase</em></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='co'># Depend on the R_RAP_CONFIG_PATH being defined and that relevant</span>
+<span class='co'># configuration is present</span>
+<span class='fu'>raplogManager</span><span class='op'>(</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='error'>Error in raplogManager(): No path to configuration data provided. Cannot continue!</span></div><div class='input'><span class='co'># }</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

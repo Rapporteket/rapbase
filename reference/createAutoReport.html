@@ -93,13 +93,19 @@ entry and saves the updated system configuration." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.12.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="../index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -109,7 +115,7 @@ entry and saves the updated system configuration." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/Rapporteket/rapbase/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -141,10 +147,12 @@ entry and saves the updated system configuration.</p>
     <pre class="usage"><span class='fu'>createAutoReport</span><span class='op'>(</span>
   <span class='va'>synopsis</span>,
   <span class='va'>package</span>,
+  type <span class='op'>=</span> <span class='st'>"subscription"</span>,
   <span class='va'>fun</span>,
   <span class='va'>paramNames</span>,
   <span class='va'>paramValues</span>,
   <span class='va'>owner</span>,
+  ownerName <span class='op'>=</span> <span class='st'>""</span>,
   <span class='va'>email</span>,
   <span class='va'>organization</span>,
   <span class='va'>runDayOfYear</span>,
@@ -167,6 +175,11 @@ subject field of email distributed reports</p></td>
       <td><p>String with package name also corresponding to registry</p></td>
     </tr>
     <tr>
+      <th>type</th>
+      <td><p>Character string defining type of auto report. Currently, one of
+'subscription' (default) or 'dispatchment'</p></td>
+    </tr>
+    <tr>
       <th>fun</th>
       <td><p>String providing name of function to be called for generating
 report</p></td>
@@ -183,6 +196,11 @@ parameter to be used in the above function</p></td>
     <tr>
       <th>owner</th>
       <td><p>String providing the owner of the report. Usually a user name</p></td>
+    </tr>
+    <tr>
+      <th>ownerName</th>
+      <td><p>String providing full name of owner. Defaults to an empty
+string to maintain backwards compatibility</p></td>
     </tr>
     <tr>
       <th>email</th>
@@ -246,7 +264,7 @@ will be returned</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

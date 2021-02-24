@@ -49,9 +49,10 @@
 <meta property="og:title" content="Run reports as defined in yaml config and ship content by email — runAutoReport" />
 <meta property="og:description" content="Usually to be called by a scheduler, e.g. cron. If the provided day of
 year matches those of the config the report is run as otherwise specified in
-config. Functions called upon are expected to return a path to a file that
-can be attached to an email. The email itself is defined and sent to
-recipients defined in the config" />
+config. Functions called upon are expected to return a character string
+providing a path to a file that can be attached to an email or, in case of a
+bulletin, the email body itself. For bulletins, files cannot be attached.
+The email itself is prepared and sent to recipients defined in the config" />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -94,13 +95,19 @@ recipients defined in the config" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.12.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="../index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -110,7 +117,7 @@ recipients defined in the config" />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/Rapporteket/rapbase/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -135,12 +142,17 @@ recipients defined in the config" />
     <div class="ref-description">
     <p>Usually to be called by a scheduler, e.g. cron. If the provided day of
 year matches those of the config the report is run as otherwise specified in
-config. Functions called upon are expected to return a path to a file that
-can be attached to an email. The email itself is defined and sent to
-recipients defined in the config</p>
+config. Functions called upon are expected to return a character string
+providing a path to a file that can be attached to an email or, in case of a
+bulletin, the email body itself. For bulletins, files cannot be attached.
+The email itself is prepared and sent to recipients defined in the config</p>
     </div>
 
-    <pre class="usage"><span class='fu'>runAutoReport</span><span class='op'>(</span>dayNumber <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXlt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>$</span><span class='va'>yday</span> <span class='op'>+</span> <span class='fl'>1</span>, dryRun <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>runAutoReport</span><span class='op'>(</span>
+  dayNumber <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXlt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>$</span><span class='va'>yday</span> <span class='op'>+</span> <span class='fl'>1</span>,
+  type <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"subscription"</span>, <span class='st'>"dispatchment"</span><span class='op'>)</span>,
+  dryRun <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -148,7 +160,15 @@ recipients defined in the config</p>
     <tr>
       <th>dayNumber</th>
       <td><p>Integer day of year where January 1st is 1. Defaults to
-current day, i.e. as.POSIXlt(Sys.Date())$yday+1 (POSIXlt yday is base 0)</p></td>
+current day, <em>i.e.</em> <code>as.POSIXlt(Sys.Date())$yday + 1</code> (POSIXlt
+yday is base 0)</p></td>
+    </tr>
+    <tr>
+      <th>type</th>
+      <td><p>Character vector defining the type of reports to be porcessed.
+May contain one or more of
+<code><a href='https://rdrr.io/r/base/c.html'>c("subscription", "dispatchment", "bulletin")</a></code>. Defaults value set to
+<code><a href='https://rdrr.io/r/base/c.html'>c("subscription", "dispatchment")</a></code>.</p></td>
     </tr>
     <tr>
       <th>dryRun</th>
@@ -167,7 +187,8 @@ message</p>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'># Example depend on environment variable R_RAP_CONFIG_PATH being set</span>
 <span class='fu'>runAutoReport</span><span class='op'>(</span><span class='op'>)</span>
-<span class='co'># }</span>
+</div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: auto reports with no type defined now set to 'subscription'.</span></div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: auto reports with no owner name defined now set to an empty string.</span></div><div class='input'><span class='co'># }</span>
+
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -184,7 +205,7 @@ message</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

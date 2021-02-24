@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make table of subscriptions of reports — makeUserSubscriptionTab • rapbase</title>
+<title>Make a log record — makeLogRecord • rapbase</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,10 +46,8 @@
 
 
 
-<meta property="og:title" content="Make table of subscriptions of reports — makeUserSubscriptionTab" />
-<meta property="og:description" content="Make a table to be rendered in a shiny app providing the active
-subscriptions of a given user within a given registry which are
-both collected from the shiny session object provided" />
+<meta property="og:title" content="Make a log record — makeLogRecord" />
+<meta property="og:description" content="Add default values and make a formatted log record" />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -131,56 +129,39 @@ both collected from the shiny session object provided" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make table of subscriptions of reports</h1>
-    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/AutoReportFuns.R'><code>R/AutoReportFuns.R</code></a></small>
-    <div class="hidden name"><code>makeUserSubscriptionTab.Rd</code></div>
+    <h1>Make a log record</h1>
+    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/log.R'><code>R/log.R</code></a></small>
+    <div class="hidden name"><code>makeLogRecord.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Make a table to be rendered in a shiny app providing the active
-subscriptions of a given user within a given registry which are
-both collected from the shiny session object provided</p>
+    <p>Add default values and make a formatted log record</p>
     </div>
 
-    <pre class="usage"><span class='fu'>makeUserSubscriptionTab</span><span class='op'>(</span><span class='va'>session</span>, mapOrgId <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>makeLogRecord</span><span class='op'>(</span><span class='va'>content</span>, format <span class='op'>=</span> <span class='st'>"csv"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>session</th>
-      <td><p>A shiny session object</p></td>
+      <th>content</th>
+      <td><p>A named list of values to be logged</p></td>
     </tr>
     <tr>
-      <th>mapOrgId</th>
-      <td><p>Data frame containing the two columns 'name' and 'id'
-corresponding to unique name and id of organizations. Defult is NULL in
-which case the ids provided in auto report data will be used. In case
-mapOrgId is not NULL but no id match is found the id fond in the auto
-report data will also be used</p></td>
+      <th>format</th>
+      <td><p>String defining the format of the log record. Supported
+values: 'csv' (default)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Matrix providing a table to be rendered in a shiny app</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+    <p>A formatted log entry</p>
 
-    <p>Each table record (line) represents a uniqely defined dispatchment. For
-each line a shiny action button is provided to allow for deleting uniqe
-dispatchments. For applications implementing this subscription table
-observing events on this action button may be used to allow users to manage
-subscriptions by GUI. The action button for deleting is provided with the
-static input id <em>del_button</em> and upon clicking the
-<em>button</em> part of its id will change to the uniqe id of the
-dispatchment. Hence, a GUI call for deleting a subscription can be catched by
-<code><a href='https://rdrr.io/pkg/shiny/man/observeEvent.html'>shiny::observeEvent("del_button")</a></code> and within this event the
-subscription id is obtained by collecting the string after the underscore,
-<em>e.g.</em> <code>strsplit(input$del_button, "_")[[1]][2]</code>.</p>
-<p>Take a look at the example shiny server function in
-<a href='https://github.com/Rapporteket/rapRegTemplate'>rapRegTemplate</a> on how
-this function may be implemented</p>
-
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>makeLogRecord</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>msg <span class='op'>=</span> <span class='st'>"This is a test"</span><span class='op'>)</span><span class='op'>)</span>
+</div><div class='output co'>#&gt;                  time            msg
+#&gt; 1 2021-02-24 13:03:19 This is a test</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

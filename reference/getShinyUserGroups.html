@@ -90,13 +90,19 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.12.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="../index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -106,7 +112,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/Rapporteket/rapbase/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -161,15 +167,11 @@ url of the shiny application request. Default FALSE</p></td>
     <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
 <span class='co'># Requires a valid shiny session object</span>
 <span class='fu'>getShinyUserGroups</span><span class='op'>(</span><span class='va'>shinySessionObject</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='warning'>Warning: `GetShinyUserGroups()` is deprecated as of rapbase 1.10.0.</span>
-#&gt; <span class='warning'>Please use `getUserGroups()` instead.</span>
-#&gt; <span class='warning'><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='output co'>#&gt; <span class='warning'>Warning: `shinySessionInfo()` is deprecated as of rapbase 1.10.0.</span>
-#&gt; <span class='warning'>Please use `userInfo()` instead.</span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>This warning is displayed once every 8 hours.</span><span></span>
-#&gt; <span class='warning'></span><span style='color: #555555;'>Call `lifecycle::last_warnings()` to see where this warning was generated.</span><span></span></div><div class='output co'>#&gt; <span class='error'>Error in shinySessionInfo(shinySession, entity = "groups", testCase): object 'shinySessionObject' not found</span></div><div class='input'><span class='co'># }</span>
+</div><div class='output co'>#&gt; <span class='warning'>Warning: `GetShinyUserGroups()` was deprecated in rapbase 1.10.0.</span>
+#&gt; <span class='warning'>Please use `getUserGroups()` instead.</span></div><div class='output co'>#&gt; <span class='warning'>Warning: `shinySessionInfo()` was deprecated in rapbase 1.10.0.</span>
+#&gt; <span class='warning'>Please use `userInfo()` instead.</span></div><div class='output co'>#&gt; <span class='error'>Error in shinySessionInfo(shinySession, entity = "groups", testCase): object 'shinySessionObject' not found</span></div><div class='input'><span class='co'># }</span>
 
-</div></span></pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -185,7 +187,7 @@ url of the shiny application request. Default FALSE</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

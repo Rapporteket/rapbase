@@ -90,13 +90,19 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.12.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="../index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -106,7 +112,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/Rapporteket/rapbase/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -157,12 +163,15 @@ defined (empty)</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>readAutoReportData</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $testAutoReportFirst
+</div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: auto reports with no type defined now set to 'subscription'.</span></div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: auto reports with no owner name defined now set to an empty string.</span></div><div class='output co'>#&gt; $testAutoReportFirst
 #&gt; $testAutoReportFirst$synopsis
 #&gt; [1] "Test, the first one"
 #&gt; 
 #&gt; $testAutoReportFirst$package
 #&gt; [1] "rapbase"
+#&gt; 
+#&gt; $testAutoReportFirst$type
+#&gt; [1] "dispatchment"
 #&gt; 
 #&gt; $testAutoReportFirst$fun
 #&gt; [1] ".testAutoReport"
@@ -205,6 +214,9 @@ defined (empty)</p></td>
 #&gt; $testAutoReportFirst$runDayOfYear
 #&gt; [1] 30 60
 #&gt; 
+#&gt; $testAutoReportFirst$ownerName
+#&gt; [1] ""
+#&gt; 
 #&gt; 
 #&gt; $testAutoReportSecond
 #&gt; $testAutoReportSecond$synopsis
@@ -212,6 +224,9 @@ defined (empty)</p></td>
 #&gt; 
 #&gt; $testAutoReportSecond$package
 #&gt; [1] "rapbase"
+#&gt; 
+#&gt; $testAutoReportSecond$type
+#&gt; [1] "subscription"
 #&gt; 
 #&gt; $testAutoReportSecond$fun
 #&gt; [1] ".testAutoReport"
@@ -237,7 +252,7 @@ defined (empty)</p></td>
 #&gt; [1] "ttester"
 #&gt; 
 #&gt; $testAutoReportSecond$email
-#&gt; [1] "&lt;someone@nowhere.com&gt;" "jesus@sky.com"        
+#&gt; [1] "&lt;someone@nowhere.com&gt;"
 #&gt; 
 #&gt; $testAutoReportSecond$organization
 #&gt; [1] "999999"
@@ -252,6 +267,69 @@ defined (empty)</p></td>
 #&gt; NULL
 #&gt; 
 #&gt; $testAutoReportSecond$runDayOfYear
+#&gt; [1] 30 60 90
+#&gt; 
+#&gt; $testAutoReportSecond$ownerName
+#&gt; [1] ""
+#&gt; 
+#&gt; 
+#&gt; $testAutoReportThird
+#&gt; $testAutoReportThird$synopsis
+#&gt; [1] "Test, the second one"
+#&gt; 
+#&gt; $testAutoReportThird$type
+#&gt; [1] "bulletin"
+#&gt; 
+#&gt; $testAutoReportThird$package
+#&gt; [1] "rapbase"
+#&gt; 
+#&gt; $testAutoReportThird$fun
+#&gt; [1] ".testAutoReport"
+#&gt; 
+#&gt; $testAutoReportThird$params
+#&gt; $testAutoReportThird$params[[1]]
+#&gt; $testAutoReportThird$params[[1]]$aNum
+#&gt; [1] 2
+#&gt; 
+#&gt; 
+#&gt; $testAutoReportThird$params[[2]]
+#&gt; $testAutoReportThird$params[[2]]$aChar
+#&gt; [1] "3.14"
+#&gt; 
+#&gt; 
+#&gt; $testAutoReportThird$params[[3]]
+#&gt; $testAutoReportThird$params[[3]]$anExp
+#&gt; [1] "sessionInfo()"
+#&gt; 
+#&gt; 
+#&gt; $testAutoReportThird$params[[4]]
+#&gt; $testAutoReportThird$params[[4]]$bulletin
+#&gt; [1] TRUE
+#&gt; 
+#&gt; 
+#&gt; 
+#&gt; $testAutoReportThird$owner
+#&gt; [1] "ttester"
+#&gt; 
+#&gt; $testAutoReportThird$ownerName
+#&gt; [1] "Tore Tester"
+#&gt; 
+#&gt; $testAutoReportThird$email
+#&gt; [1] "&lt;someone@nowhere.com&gt;" "jesus@sky.com"        
+#&gt; 
+#&gt; $testAutoReportThird$organization
+#&gt; [1] "999999"
+#&gt; 
+#&gt; $testAutoReportThird$terminateDate
+#&gt; [1] "9999-12-31"
+#&gt; 
+#&gt; $testAutoReportThird$interval
+#&gt; NULL
+#&gt; 
+#&gt; $testAutoReportThird$intervalName
+#&gt; NULL
+#&gt; 
+#&gt; $testAutoReportThird$runDayOfYear
 #&gt; [1] 30 60 90
 #&gt; 
 #&gt; 
@@ -303,6 +381,12 @@ defined (empty)</p></td>
 #&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$runDayOfYear
 #&gt; [1] 170
 #&gt; 
+#&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$type
+#&gt; [1] "subscription"
+#&gt; 
+#&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$ownerName
+#&gt; [1] ""
+#&gt; 
 #&gt; 
 #&gt; $cd467ac14dd848b8798a384a3e51512c
 #&gt; $cd467ac14dd848b8798a384a3e51512c$synopsis
@@ -352,6 +436,12 @@ defined (empty)</p></td>
 #&gt; $cd467ac14dd848b8798a384a3e51512c$runDayOfYear
 #&gt; [1] 171
 #&gt; 
+#&gt; $cd467ac14dd848b8798a384a3e51512c$type
+#&gt; [1] "subscription"
+#&gt; 
+#&gt; $cd467ac14dd848b8798a384a3e51512c$ownerName
+#&gt; [1] ""
+#&gt; 
 #&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -368,7 +458,7 @@ defined (empty)</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -89,13 +89,19 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.11.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.12.1</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
+  <a href="../index.html">
+    <span class="fas fa-home fa-lg"></span>
+     
+  </a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
 <li>
@@ -105,7 +111,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="http://github.com/Rapporteket/rapbase/">
-    <span class="fab fa fab fa-github fa-lg"></span>
+    <span class="fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -277,6 +283,49 @@
     </tbody><tbody>
       <tr>
         <th colspan="2">
+          <h2 id="section-logging" class="hasAnchor"><a href="#section-logging" class="anchor"></a>Logging</h2>
+          <p class="section-desc"><p>Handle logging</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="logger.html">appLogger()</a></code> <code><a href="logger.html">repLogger()</a></code> <code><a href="logger.html">autLogger()</a></code> </p>
+        </td>
+        <td><p>Log user events in shiny applications at Rapporteket</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="makeLogRecord.html">makeLogRecord()</a></code> </p>
+        </td>
+        <td><p>Make a log record</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="appendLog.html">appendLog()</a></code> </p>
+        </td>
+        <td><p>Append a log record</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="raplogManager.html">raplogManager()</a></code> </p>
+        </td>
+        <td><p>Management of shiny application and report logging at Rapporteket</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="archive.html">createArchive()</a></code> <code><a href="archive.html">logsOverSize()</a></code> <code><a href="archive.html">archiveLog()</a></code> <code><a href="archive.html">cleanArchive()</a></code> </p>
+        </td>
+        <td><p>Archive functions for logs at Rapporteket</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
           <h2 id="section-automated-reports" class="hasAnchor"><a href="#section-automated-reports" class="anchor"></a>Automated reports</h2>
           <p class="section-desc"><p>Handle automated reports</p></p>
         </th>
@@ -301,9 +350,21 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="upgradeAutoReportData.html">upgradeAutoReportData()</a></code> </p>
+        </td>
+        <td><p>Upgrade auto reports</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="runAutoReport.html">runAutoReport()</a></code> </p>
         </td>
         <td><p>Run reports as defined in yaml config and ship content by email</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="runBulletin.html">runBulletin()</a></code> </p>
+        </td>
+        <td><p>Run bulletin auto reports</p></td>
       </tr><tr>
         
         <td>
@@ -316,6 +377,12 @@
           <p><code><a href="deleteAutoReport.html">deleteAutoReport()</a></code> </p>
         </td>
         <td><p>Delete existing report from config</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="selectByType.html">selectByType()</a></code> </p>
+        </td>
+        <td><p>Select data by type from config (list)</p></td>
       </tr><tr>
         
         <td>
@@ -334,6 +401,12 @@
           <p><code><a href="selectByReg.html">selectByReg()</a></code> </p>
         </td>
         <td><p>Select data on one registry from config (list)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="makeAutoReportTab.html">makeAutoReportTab()</a></code> </p>
+        </td>
+        <td><p>Make table of automated reports</p></td>
       </tr><tr>
         
         <td>
@@ -370,6 +443,12 @@
           <p><code><a href="findNextRunDate.html">findNextRunDate()</a></code> </p>
         </td>
         <td><p>Find next run date for automated reports</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="filterAutoRep.html">filterAutoRep()</a></code> </p>
+        </td>
+        <td><p>Filter auto report data</p></td>
       </tr><tr>
         
         <td>
@@ -432,6 +511,12 @@
           <p><code><a href="fireInTheHole.html">fireInTheHole()</a></code> </p>
         </td>
         <td><p>Kick off functions at Rapporteket</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="sendEmail.html">sendEmail()</a></code> </p>
+        </td>
+        <td><p>Send email from Rapporteket</p></td>
       </tr><tr>
         
         <td>
@@ -537,7 +622,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.9000.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
