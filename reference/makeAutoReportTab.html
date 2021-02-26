@@ -92,7 +92,7 @@ object provided." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.12.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.12.2</span>
       </span>
     </div>
 
@@ -184,9 +184,12 @@ report. Hence, a GUI call for editing a report can be catched by
 <code><a href='https://rdrr.io/pkg/shiny/man/observeEvent.html'>shiny::observeEvent("edit_button")</a></code> and within this event the
 report id is obtained by collecting the string after the underscore,
 <em>e.g.</em> <code>strsplit(input$edit_button, "_")[[1]][2]</code>.</p>
+<p>The last column in the table provide the unique id of each report to allow
+further development for registry speciffic purposes. Regardless, this column
+should normally be hidden in the GUI.</p>
 <p>Take a look at the
 <a href='https://github.com/Rapporteket/rapRegTemplate/blob/rel/inst/shinyApps/app1/server.R'>example shiny server function in rapRegTemplate</a>
-on how this function may be implemented</p>
+on how this function may be implemented.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
