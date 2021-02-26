@@ -682,9 +682,13 @@ findNextRunDate <- function(runDayOfYear,
 #' report id is obtained by collecting the string after the underscore,
 #' \emph{e.g.} \code{strsplit(input$edit_button, "_")[[1]][2]}.
 #'
+#' The last column in the table provide the unique id of each report to allow
+#' further development for registry speciffic purposes. Regardless, this column
+#' should normally be hidden in the GUI.
+#'
 #' Take a look at the
 #' \href{https://github.com/Rapporteket/rapRegTemplate/blob/rel/inst/shinyApps/app1/server.R}{example shiny server function in rapRegTemplate}
-#' on how this function may be implemented
+#' on how this function may be implemented.
 #'
 #' @param session A shiny session object
 #' @param type Character string defining the type of auto reports to tabulate.
