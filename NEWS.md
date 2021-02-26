@@ -1,3 +1,7 @@
+# rapbase 1.12.2
+
+* Auto report id added to table to aid needs during registry implementation
+
 # rapbase 1.12.1
 
 * Update contributor guidelines
