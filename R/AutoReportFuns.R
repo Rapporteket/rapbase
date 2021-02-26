@@ -758,7 +758,8 @@ makeAutoReportTab <- function(session, type = "subscription",
           onclick = 'Shiny.onInputChange(\"del_button\",
                              this.id)'
         )
-      )
+      ),
+      "id" = n
     )
     if (!type %in% c("subscription")) {
       r <- c(list(Ansvarlig = autoRep[[n]]$ownerName), r)
