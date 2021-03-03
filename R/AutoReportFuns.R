@@ -697,7 +697,7 @@ findNextRunDate <- function(runDayOfYear,
 #' @param mapOrgId Data frame containing the two columns 'name' and 'id'
 #' corresponding to unique name and id of organizations. Defult is NULL in
 #' which case the ids provided in auto report data will be used. In case
-#' mapOrgId is not NULL but no id match is found the id fond in the auto
+#' mapOrgId is not NULL but no id match is found the id found in the auto
 #' report data will also be used
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
