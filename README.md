@@ -21,7 +21,7 @@ install.packages("rapbase")
 
 The latest realease of the package can be installed from GitHub:
 ```r
-remotes::install("Rapporteket/rapbase@*release")
+remotes::install_github("Rapporteket/rapbase@*release")
 ```
 
 Or install the development version from GitHub with:
