@@ -91,7 +91,7 @@ Underlying this function is rapbase::RapporteketDbConnection" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.12.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.13.0</span>
       </span>
     </div>
 
@@ -142,7 +142,9 @@ Underlying this function is rapbase::RapporteketDbConnection</p>
 
     <pre class="usage"><span class='fu'>LoadRegData</span><span class='op'>(</span><span class='va'>registryName</span>, <span class='va'>query</span>, dbType <span class='op'>=</span> <span class='st'>"mysql"</span><span class='op'>)</span>
 
-<span class='fu'>loadRegData</span><span class='op'>(</span><span class='va'>registryName</span>, <span class='va'>query</span>, dbType <span class='op'>=</span> <span class='st'>"mysql"</span><span class='op'>)</span></pre>
+<span class='fu'>loadRegData</span><span class='op'>(</span><span class='va'>registryName</span>, <span class='va'>query</span>, dbType <span class='op'>=</span> <span class='st'>"mysql"</span><span class='op'>)</span>
+
+<span class='fu'>describeRegistryDb</span><span class='op'>(</span><span class='va'>registryName</span>, tabs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -160,11 +162,17 @@ Underlying this function is rapbase::RapporteketDbConnection</p>
       <td><p>String Type of db to query, currently "mysql" (default) and
 "mssql"</p></td>
     </tr>
+    <tr>
+      <th>tabs</th>
+      <td><p>Character vector for optional definition of tables to describe.
+Defaults to an empty vector in which case all tables are used</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>regData data frame containing registry data</p>
+    <p>data frame containing registry data or a list with table names and
+corresponding fields with attributes</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
