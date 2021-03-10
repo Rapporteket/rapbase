@@ -3,11 +3,14 @@
 \name{loadRegData}
 \alias{loadRegData}
 \alias{LoadRegData}
+\alias{describeRegistryDb}
 \title{Provider of data for registries at Rapporteket}
 \usage{
 LoadRegData(registryName, query, dbType = "mysql")
 
 loadRegData(registryName, query, dbType = "mysql")
+
+describeRegistryDb(registryName, tabs = c())
 }
 \arguments{
 \item{registryName}{String Name of the registry as defined in dbConfig.yml}
@@ -16,9 +19,13 @@ loadRegData(registryName, query, dbType = "mysql")
 
 \item{dbType}{String Type of db to query, currently "mysql" (default) and
 "mssql"}
+
+\item{tabs}{Character vector for optional definition of tables to describe.
+Defaults to an empty vector in which case all tables are used}
 }
 \value{
-regData data frame containing registry data
+data frame containing registry data or a list with table names and
+corresponding fields with attributes
 }
 \description{
 Generic to registries, provide reporting data obtained from sql databases
