@@ -82,6 +82,22 @@ test_that("Data can be queried from (MySQL) db", {
   )
 })
 
+test_that("metadata can be queried from db", {
+  checkDb()
+  expect_equal(
+    class(describeRegistryDb(regName)),
+    "list"
+  )
+})
+
+test_that("metadata can be queried from some tabs in db", {
+  checkDb()
+  expect_equal(
+    class(describeRegistryDb(regName, tabs = c("testTable"))),
+    "list"
+  )
+})
+
 test_that("Bigints are returned as integers (not bit64::integer64)", {
   checkDb()
   query <- c(

@@ -1,3 +1,7 @@
+# rapbase 1.13.0
+
+* New function providing registry db metadata
+
 # rapbase 1.12.2
 
 * Auto report id added to table to aid needs during registry implementation
