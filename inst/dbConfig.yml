@@ -10,8 +10,8 @@ nordummy:
 rapbase:
   host : 127.0.0.1
   name : rapbase
-  user : travis
-  pass : 
+  user : root
+  pass : root
   disp : ForTestingOnly
 
 # for testing, in rap-dev-data container
