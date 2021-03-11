@@ -40,13 +40,20 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
-      - name: db unit tests in ubuntu/linux only
+      - name: Db unit tests in ubuntu/linux only
+        if: runner.os != 'Windows'
         run: |
           if [[ ${{ runner.os }} == Linux ]]; then
             echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=true" >> $GITHUB_ENV
           else
             echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=false" >> $GITHUB_ENV
           fi
+
+      - name: Set up MySQL, ubuntu only
+        if: runner.os == 'Linux'
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e 'CREATE DATABASE ${{ env.DB_DATABASE }};' -u${{ env.DB_USER }} -p${{ env.DB_PASSWORD }}
 
       - name: Query dependencies
         run: |
