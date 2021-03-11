@@ -1,3 +1,7 @@
+# rapbase 1.13.1
+
+* Included unit tests and coverage reporting depending on a test database during github actions (ci) 
+
 # rapbase 1.13.0
 
 * New function providing registry db metadata
