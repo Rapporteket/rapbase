@@ -14,7 +14,7 @@ context("Handling db connections")
 checkDb <- function() {
   if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
     NULL
-  } else if (Sys.getenv("TRAVIS") == "true") {
+  } else if (Sys.getenv("GITHUB_ACTIONS_RUN_DB_UNIT_TESTS") == "true") {
     NULL
   } else {
     testthat::skip("Test skipped due to lack of database infrastructure")

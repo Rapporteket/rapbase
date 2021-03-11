@@ -40,6 +40,14 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
+      - name: db unit tests in ubuntu/linux only
+        run: |
+          if [[ ${{ runner.os }} == Linux ]]; then
+            echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=true" >> $GITHUB_ENV
+          else
+            echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=false" >> $GITHUB_ENV
+          fi
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
