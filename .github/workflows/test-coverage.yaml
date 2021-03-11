@@ -13,13 +13,19 @@ jobs:
     runs-on: ubuntu-20.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      GITHUB_ACTIONS_RUN_DB_UNIT_TESTS: true
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Install unmet sys deps
         run: |
           sudo apt update
           sudo apt install -y --no-install-recommends libcurl4-openssl-dev libgit2-dev
+
+      - name: Set up MySQL for unit testing
+        run: |
+          sudo /etc/init.d/mysql start
+          mysql -e 'CREATE DATABASE IF NOT EXISTS rapbase; USE rapbase; CREATE TABLE testTable (id INT, someText VARCHAR(50), someInt INT, someFloat DOUBLE, someTime DATETIME);' -uroot -proot
 
       - uses: r-lib/actions/setup-r@v1
 
