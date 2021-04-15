@@ -34,8 +34,8 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
   # Subject is a header field, hence non-ascii must be handled this way
   subject <- charToRaw(subject)
   subject <- base64enc::base64encode(subject,
-    linewidth = 70,
-    newline = "\n"
+    linewidth = 60,
+    newline = "r\n "
   )
   subject <- paste0(charset, enc, subject, headPost)
 
