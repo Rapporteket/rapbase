@@ -124,7 +124,8 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
       resh_id <- shinySession$request$HTTP_RESHID
       role <- shinySession$request$HTTP_ROLE
       email <- shinySession$request$HTTP_EMAIL
-      full_name <- shinySession$request$HTTP_FULLNAME
+      full_name <-
+        parse(text = paste0("'", shinySession$request$HTTP_FULLNAME, "'"))[[1]]
       phone <- shinySession$request$HTTP_PHONE
     }
   }
