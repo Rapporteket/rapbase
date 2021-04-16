@@ -31,13 +31,13 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
   from <- conf$network$sender
   # escape spaces (e.g. when full name is added to <email>)
   to <- gsub(" ", "\\ ", to, fixed = TRUE)
-  # Subject is a header field, hence non-ascii must be handled this way
+  # Subject is a header field, hence non-ascii to be base64 encoded
+  # Header lines must be 76 chars or less and split by a newline
+  # and contain consistent encoded-word(s)
   subject <- charToRaw(subject)
-  subject <- base64enc::base64encode(subject,
-    linewidth = 60,
-    newline = "r\n "
-  )
-  subject <- paste0(charset, enc, subject, headPost)
+  subject <- base64enc::base64encode(subject, linewidth = 63)
+  subject <- paste(paste0(charset, enc, subject, headPost),
+                   collapse = "\r\n")
 
   if (is.null(attFile)) {
     body <- list(text)
