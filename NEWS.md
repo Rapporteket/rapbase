@@ -1,3 +1,8 @@
+# rapbase 1.13.2 (#66)
+
+* Fixed email encoded subject (header field) split
+* Properly parsing full names from session object containing unicode characters
+
 # rapbase 1.13.1
 
 * Included unit tests and coverage reporting depending on a test database during github actions (ci) 
