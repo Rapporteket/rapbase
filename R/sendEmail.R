@@ -32,7 +32,7 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
   # escape spaces (e.g. when full name is added to <email>)
   to <- gsub(" ", "\\ ", to, fixed = TRUE)
   # Subject is a header field, hence non-ascii to be base64 encoded
-  # Header lines must be 76 chars or less and split by a newline
+  # Header lines must be 76 chars or less and split by a space
   # and contain consistent encoded-word(s)
   subject <- charToRaw(subject)
   subject <- base64enc::base64encode(subject, linewidth = 63)
