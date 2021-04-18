@@ -1,3 +1,7 @@
+# rapbase 1.13.3 (#68)
+
+* Minor adjustment to email subject (header field) format 
+
 # rapbase 1.13.2 (#66)
 
 * Fixed email encoded subject (header field) split
