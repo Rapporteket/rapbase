@@ -1,0 +1,29 @@
+---
+params:
+  title: 'Eksempelrapport i RMarkdown'
+  author: 'Rapporteket'
+  hospitalName: 'ikke definert sykehus'
+  reshId: 'locallyDefined'
+  userRole: 'MyRole'
+  startDate: '2017-01-01'
+  endDate: '2017-12-31'
+  year: '2016'
+  tableFormat: 'html'
+  registryName: 'rapbase'
+  shinySession: list()
+  reglogo: reglogo
+title: '`r paste(params$title)`'
+subtitle: '`r paste("For et", params$hospitalName, " i perioden fra ", params$startDate, " til ", params$endDate)`'
+author: '`r params$author`'
+date: '`r format(Sys.time(), "%d\\. %B, %Y")`'
+abstract: Skriv inn sammendraget her.
+reglogo: '`r params$reglogo`'
+regtext: Skriv inn en tekst om registeret og/eller rapporten her.
+
+---
+
+# Et kapittel
+Dette er et kapittel med datadrevet tekst og tabell.
+
+## Et underkapittel
+Dette er et underkapittel som også inneholder en datadrevet figur.
