@@ -35,7 +35,8 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
 	on.exit(setwd(owd))
 
 	# copy all files to temporary workdir
-	templateFiles <- c("default.latex", "logo.png")
+	templateFiles <- c("default.latex", "logo.png", "_output.yml",
+										 "_bookdown.yml")
 	file.copy(system.file(
 		file.path("template", templateFiles), package = "rapbase"), ".",
 						overwrite = TRUE)
