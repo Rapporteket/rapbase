@@ -63,8 +63,8 @@
       \includegraphics[width=\hsize]{$reglogo$}%
       $endif$
       \raggedleft\footnotesize%
-      {$if(reglogo)$\\$endif$$if(regtext)$$regtext$$endif$\par}
-      \includegraphics[width=\hsize]{logo_rapporteket_gray60}%
+      {$if(reglogo)$\\ $endif$$if(regtext)$$regtext$$endif$\par}
+      \includegraphics[width=\hsize]{logo.png}%
       {\\ RAPPORTEKET er en analysetjenste som tilbyr interaktiv undersøkelse
       av rådata, rutinemessig utsending av rapporter og visualisering av
       resultater. Tjenesten utvikles og vedlikeholdes av Nasjonalt servicemiljø
