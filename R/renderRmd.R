@@ -41,11 +41,8 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
 						overwrite = TRUE)
 	file.copy(sourceFile, ".", overwrite = TRUE)
 	if (!is.null(logoFile)) {
-		print(logoFile)
 		file.copy(logoFile, ".", overwrite = TRUE)
 	}
-
-	print(sourceFile)
 
 	rmarkdown::render(
 		input = basename(sourceFile),
