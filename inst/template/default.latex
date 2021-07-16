@@ -2,6 +2,8 @@
 \usepackage{hyperref}
 \usepackage{graphicx}
 \usepackage{ragged2e}
+\usepackage{float}
+\usepackage{booktabs}
 \usepackage[24hr]{datetime}
 \usepackage{xcolor}
 \usepackage{sectsty}
@@ -77,8 +79,8 @@
       (\dimexpr\Gm@lmargin-\marginparsep,\dimexpr\paperheight-\Gm@bmargin)
       \raggedleft\footnotesize\itshape%
       {\large\rmfamily\upshape\bfseries Om rapporten\par}%
-      {\textbf{Bestilt av}\\\@author\par}%
-      {\textbf{Ansvarlig for innhold}\\ Smerteregisteret\par}%
+      {\textbf{Bestilt av}\\{ }$if(userFullName)$$userFullName$$else$$empty$$endif$\par}%
+      {\textbf{Ansvarlig for innhold}\\{ }$if(registryName)$$registryName$$else$$empty$$endif$\par}%
       {\textbf{Produsert av}\\ Rapporteket\par}%
       {\textbf{Dato}\\ \today\par}%
       {\textbf{Tid}\\ \currenttime\par}%
