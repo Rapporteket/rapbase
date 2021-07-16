@@ -40,27 +40,31 @@ NULL
 #' @rdname makeStandardTable
 #' @export
 mst <- function(tab, col_names = colnames(tab), type = "latex", cap = "",
-								label = "", digs = 0, align = NULL, fs = 8, lsd = FALSE) {
+                label = "", digs = 0, align = NULL, fs = 8, lsd = FALSE) {
+  if (type == "latex") {
+    if (lsd) {
+      lo <- c("HOLD_position", "scale_down")
+    } else {
+      lo <- c("HOLD_position")
+    }
+    k <- knitr::kable(tab,
+      format = type, col.names = col_names, caption = cap,
+      label = label, digits = digs,
+      align = align, booktabs = TRUE
+    ) %>%
+      kableExtra::kable_styling(latex_options = lo, font_size = fs)
+  }
 
-	if (type == "latex") {
-		if (lsd) {
-			lo <- c("HOLD_position", "scale_down")
-		} else {
-			lo <- c("HOLD_position")
-		}
-		k <- knitr::kable(tab, format = type, col.names = col_names, caption = cap,
-											label = label, digits = digs,
-											align = align, booktabs = TRUE) %>%
-			kableExtra::kable_styling(latex_options = lo, font_size = fs)
-	}
-
-	if (type == "html") {
-		k <- knitr::kable(tab, format = type, col.names = col_names, caption = cap,
-											label = label, digits = digs,
-											align = align) %>%
-			kableExtra::kable_styling(
-				bootstrap_options = c("striped", "hover", "condensed"),
-				full_width = FALSE)
-	}
-	k
+  if (type == "html") {
+    k <- knitr::kable(tab,
+      format = type, col.names = col_names, caption = cap,
+      label = label, digits = digs,
+      align = align
+    ) %>%
+      kableExtra::kable_styling(
+        bootstrap_options = c("striped", "hover", "condensed"),
+        full_width = FALSE
+      )
+  }
+  k
 }

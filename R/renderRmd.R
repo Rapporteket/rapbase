@@ -28,46 +28,50 @@
 #' @export
 
 renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
-											params = list()) {
+                      params = list()) {
+  stopifnot(file.exists(sourceFile))
+  stopifnot(outputType %in% c("html", "html_fragment", "pdf"))
 
-	stopifnot(file.exists(sourceFile))
-	stopifnot(outputType %in% c("html", "html_fragment", "pdf"))
+  # do work in tempdir and return to origin on exit
+  owd <- setwd(tempdir())
+  on.exit(setwd(owd))
 
-	# do work in tempdir and return to origin on exit
-	owd <- setwd(tempdir())
-	on.exit(setwd(owd))
+  # copy all files to temporary workdir
+  templateFiles <- c(
+    "default.latex", "logo.png", "_output.yml",
+    "_bookdown.yml"
+  )
+  file.copy(system.file(
+    file.path("template", templateFiles),
+    package = "rapbase"
+  ), ".",
+  overwrite = TRUE
+  )
+  file.copy(sourceFile, ".", overwrite = TRUE)
+  if (!is.null(logoFile)) {
+    file.copy(logoFile, ".", overwrite = TRUE)
+  }
 
-	# copy all files to temporary workdir
-	templateFiles <- c("default.latex", "logo.png", "_output.yml",
-										 "_bookdown.yml")
-	file.copy(system.file(
-		file.path("template", templateFiles), package = "rapbase"), ".",
-						overwrite = TRUE)
-	file.copy(sourceFile, ".", overwrite = TRUE)
-	if (!is.null(logoFile)) {
-		file.copy(logoFile, ".", overwrite = TRUE)
-	}
+  f <- rmarkdown::render(
+    input = basename(sourceFile),
+    output_format =
+      switch(outputType,
+        pdf = bookdown::pdf_document2(
+          pandoc_args = c("--template=default.latex")),
+        html = bookdown::html_document2(),
+        html_fragment = bookdown::html_fragment2(),
+        beamer = rmarkdown::beamer_presentation(theme = "Hannover"),
+        reveal = revealjs::revealjs_presentation(theme = "sky")
+      ),
+    output_file = tempfile(pattern = ""),
+    clean = TRUE,
+    params = params,
+    envir = new.env()
+  )
 
-	f <- rmarkdown::render(
-		input = basename(sourceFile),
-		output_format =
-			switch(
-				outputType,
-				pdf = bookdown::pdf_document2(pandoc_args = c("--template=default.latex")),
-				html = bookdown::html_document2(),
-				html_fragment = bookdown::html_fragment2(),
-				beamer = rmarkdown::beamer_presentation(theme = "Hannover"),
-				reveal = revealjs::revealjs_presentation(theme = "sky")
-			),
-		output_file = tempfile(pattern = ""),
-		clean = TRUE,
-		params = params,
-		envir = new.env())
-
-	if (outputType == "html_fragment") {
-		return(shiny::HTML(readLines(f)))
-	} else {
-		return(f)
-	}
-
+  if (outputType == "html_fragment") {
+    return(shiny::HTML(readLines(f)))
+  } else {
+    return(f)
+  }
 }
