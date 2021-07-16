@@ -25,6 +25,7 @@ Depends:
     R (>= 3.5.0)
 Imports:
     base64enc,
+    bookdown,
     DBI,
     devtools,
     digest,
@@ -36,7 +37,9 @@ Imports:
     purrr,
     readr,
     remotes,
+    revealjs,
     RMariaDB,
+    rmarkdown,
     rio,
     sendmailR,
     shiny,
