@@ -36,17 +36,12 @@ howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
   pkgs <- c("R", pkgs)
   vers <- c(paste(R.version$major, R.version$minor, sep = "."), vers)
 
-  pkg_info <- paste0("^", pkgs, " ^", vers, collapse = ", ")
+  pkgInfo <- paste0(pkgs, vers, collapse = ", ")
 
-  system.file("howWeDealWithPersonalData.Rmd", package = "rapbase") %>%
-    knitr::knit(output = tempfile()) %>%
-    markdown::markdownToHTML(.,
-      options = c(
-        "fragment_only",
-        "base64_images",
-        "highlight_code"
-      ),
-      encoding = "utf-8"
-    ) %>%
-    shiny::HTML()
+  sourceFile <- system.file(
+    "howWeDealWithPersonalData.Rmd", package = "rapbase")
+
+  rapbase::renderRmd(sourceFile = sourceFile, outputType = "html_fragment",
+                     params = list(session = session,
+                                   pkgInfo = pkgInfo))
 }
