@@ -57,6 +57,12 @@ jobs:
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE IF NOT EXISTS rapbase; USE rapbase; CREATE TABLE testTable (id INT, someText VARCHAR(50), someInt INT, someFloat DOUBLE, someTime DATETIME);' -uroot -proot
 
+      - name: Set up system fonts, macOS only
+        if: runner.os == 'macOS'
+        run: |
+          install.packages('systemfonts')
+        shell: Rscript {0}
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
