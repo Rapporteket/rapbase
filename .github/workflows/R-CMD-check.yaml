@@ -60,8 +60,7 @@ jobs:
       - name: Set up system fonts, macOS only
         if: runner.os == 'macOS'
         run: |
-          install.packages('systemfonts')
-        shell: Rscript {0}
+          brew cask install xquartz
 
       - name: Query dependencies
         run: |
