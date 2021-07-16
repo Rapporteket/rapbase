@@ -40,6 +40,8 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
+      - uses: r-lib/actions/setup-tinytex@v1
+
       - name: Db unit tests in ubuntu/linux only
         if: runner.os != 'Windows'
         run: |
