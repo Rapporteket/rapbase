@@ -18,7 +18,7 @@ howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
   pkg$name <- as.vector(utils::installed.packages()[, 1])
   pkg$ver <- as.vector(utils::installed.packages()[, 3])
 
-  pkgs <- intersect(c("shiny", "rapbase", "raplog"), pkg$name)
+  pkgs <- intersect(c("shiny", "rapbase"), pkg$name)
 
   if (!is.null(callerPkg)) {
     if (callerPkg %in% pkg$name) {
