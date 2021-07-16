@@ -59,8 +59,7 @@ jobs:
 
       - name: Set up system fonts, macOS only
         if: runner.os == 'macOS'
-        run: |
-          brew cask install xquartz
+        run: brew install --cask xquartz
 
       - name: Query dependencies
         run: |
