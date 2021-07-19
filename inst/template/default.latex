@@ -14,7 +14,7 @@
             top=2.25cm,%
             bottom=2.25cm,%
             headheight=12pt,%
-            letterpaper,%
+            a4paper,%
             reversemarginpar,%
             marginparwidth=3.25cm,%
             marginparsep=2em%
