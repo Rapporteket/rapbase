@@ -40,7 +40,8 @@ NULL
 #' @rdname makeStandardTable
 #' @export
 mst <- function(tab, col_names = colnames(tab), type = "pdf", cap = "",
-                label = "", digs = 0, align = NULL, fs = 8, lsd = FALSE) {
+                label = knitr::opts_current$get("label"), digs = 0,
+                align = NULL, fs = 8, lsd = FALSE) {
   if (type == "pdf") {
     if (lsd) {
       lo <- c("HOLD_position", "scale_down")
