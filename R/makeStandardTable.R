@@ -10,8 +10,8 @@
 #' @param tab Data frame or matrix represetnting the table
 #' @param col_names Character vector with column names. Defaults
 #' \code{colnames(tab)}
-#' @param type Character string defining output, either 'html' or 'latex'.
-#' Default is 'latex'
+#' @param type Character string defining output, either "html" or "pdf".
+#' Default is "pdf".
 #' @param cap Character string with table caption. Empty string by default
 #' @param label Character string defining the label in case the table needs to
 #' be referenced elsewhere in the overall document. For instance, setting this
@@ -20,7 +20,7 @@
 #' LaTex and HTML the bookdown document processing functions must be used,
 #' \emph{i.e.} bookdown:pdf_document2() and bookdown::html_document2(),
 #' respectively. Default value is \code{knitr::opts_current$get("label")}.
-#' @param digs Numeric number of digits to use. = by default
+#' @param digs Numeric number of digits to use. 0 by default
 #' @param align Character vector specifying column alignment in the LaTeX way,
 #' \emph{e.g.} \code{c("l", "c", "r")} will align the first column to the left,
 #' center the second and right-aling the last one. Default is NULL in which case
@@ -39,16 +39,16 @@ NULL
 
 #' @rdname makeStandardTable
 #' @export
-mst <- function(tab, col_names = colnames(tab), type = "latex", cap = "",
+mst <- function(tab, col_names = colnames(tab), type = "pdf", cap = "",
                 label = "", digs = 0, align = NULL, fs = 8, lsd = FALSE) {
-  if (type == "latex") {
+  if (type == "pdf") {
     if (lsd) {
       lo <- c("HOLD_position", "scale_down")
     } else {
       lo <- c("HOLD_position")
     }
     k <- knitr::kable(tab,
-      format = type, col.names = col_names, caption = cap,
+      format = "latex", col.names = col_names, caption = cap,
       label = label, digits = digs,
       align = align, booktabs = TRUE
     ) %>%
@@ -57,7 +57,7 @@ mst <- function(tab, col_names = colnames(tab), type = "latex", cap = "",
 
   if (type == "html") {
     k <- knitr::kable(tab,
-      format = type, col.names = col_names, caption = cap,
+      format = "html", col.names = col_names, caption = cap,
       label = label, digits = digs,
       align = align
     ) %>%
