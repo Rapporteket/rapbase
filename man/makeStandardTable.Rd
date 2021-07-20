@@ -8,9 +8,9 @@
 mst(
   tab,
   col_names = colnames(tab),
-  type = "latex",
+  type = "pdf",
   cap = "",
-  label = "",
+  label = knitr::opts_current$get("label"),
   digs = 0,
   align = NULL,
   fs = 8,
@@ -18,35 +18,39 @@ mst(
 )
 }
 \arguments{
-\item{tab}{Data frame or matrix represetnting the table}
+\item{tab}{Data frame or matrix represetnting the table.}
 
 \item{col_names}{Character vector with column names. Defaults
-\code{colnames(tab)}}
+\code{colnames(tab)}.}
 
-\item{type}{Character string defining output, either 'html' or 'latex'.
-Default is 'latex'}
+\item{type}{Character string defining output, either "html" or "pdf".
+Default is "pdf".}
 
-\item{cap}{Character string with table caption. Empty string by default}
+\item{cap}{Character string with table caption. Empty string by default.}
 
 \item{label}{Character string defining the label in case the table needs to
 be referenced elsewhere in the overall document. For instance, setting this
 to 'my_table' the corresponding inline rmarkdown reference to use is
 \code{\\@ref(tab:my_table)}. Please note that for this to work for both
 LaTex and HTML the bookdown document processing functions must be used,
-\emph{i.e.} bookdown:pdf_document2() and bookdown::html_document2(),
-respectively. Default value is \code{knitr::opts_current$get("label")}.}
+\emph{i.e.} \code{bookdown::pdf_document2()} and
+\code{bookdown::html_document2()}, respectively. Default value is
+\code{knitr::opts_current$get("label")} in which case the name of the
+current R chunk will be used as label.}
 
-\item{digs}{Numeric number of digits to use. = by default}
+\item{digs}{Integer number of digits to use. 0 by default.}
 
 \item{align}{Character vector specifying column alignment in the LaTeX way,
 \emph{e.g.} \code{c("l", "c", "r")} will align the first column to the left,
-center the second and right-aling the last one. Default is NULL in which case}
+center the second and right-aling the last one. Default is NULL in which
+case numeric columns are right-aligned and all other columns are
+left-aligned.}
 
-\item{fs}{Numeric providing the font size. Only apply for LaTeX output.
-Default value is 8}
+\item{fs}{Integer providing the font size. Applies only for pdf output.
+Default value is 8.}
 
-\item{lsd}{Logical if table is to be scaled down. Only apply for LaTeX
-output. FALSE by default}
+\item{lsd}{Logical if table is to be scaled down. Applies only for pdf
+output. FALSE by default.}
 }
 \value{
 Character string containing RMarkdown table code
