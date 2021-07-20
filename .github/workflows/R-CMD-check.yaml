@@ -40,6 +40,8 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v1
 
+      - uses: r-lib/actions/setup-tinytex@v1
+
       - name: Db unit tests in ubuntu/linux only
         if: runner.os != 'Windows'
         run: |
@@ -54,6 +56,10 @@ jobs:
         run: |
           sudo /etc/init.d/mysql start
           mysql -e 'CREATE DATABASE IF NOT EXISTS rapbase; USE rapbase; CREATE TABLE testTable (id INT, someText VARCHAR(50), someInt INT, someFloat DOUBLE, someTime DATETIME);' -uroot -proot
+
+      - name: Set up system fonts, macOS only
+        if: runner.os == 'macOS'
+        run: brew install --cask xquartz
 
       - name: Query dependencies
         run: |

@@ -53,18 +53,24 @@ test_that("formatter returns as expected", {
 Sys.setenv(R_RAP_CONFIG_PATH = "")
 
 test_that("nothing will be appended if path is not defined", {
-  expect_error(appendLog(event = data.frame(foo = "bar"), name = "",
-  											 target = "file", format = "csv"))
+  expect_error(appendLog(
+    event = data.frame(foo = "bar"), name = "",
+    target = "file", format = "csv"
+  ))
 })
 
 test_that("nothing will be appended if (file) format is not recognized", {
-  expect_error(appendLog(event = data.frame(foo = "bar"), name = "",
-  											 target = "file", format = "a4"))
+  expect_error(appendLog(
+    event = data.frame(foo = "bar"), name = "",
+    target = "file", format = "a4"
+  ))
 })
 
 test_that("error is provided when target is not supported", {
-  expect_error(appendLog(event = data.frame(foo = "bar"), name = "",
-  											 target = "moon", format = "a4"))
+  expect_error(appendLog(
+    event = data.frame(foo = "bar"), name = "",
+    target = "moon", format = "a4"
+  ))
 })
 
 

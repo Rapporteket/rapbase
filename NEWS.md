@@ -1,8 +1,16 @@
-# rapbase 1.13.3 (#68)
+# rapbase 1.14.0 ([#70](https://github.com/Rapporteket/rapbase/pull/70))
 
-* Minor adjustment to email subject (header field) format 
+* Added latex template for rendering RMarkdown through pandoc
+* In addition, graphics and bookdown stuff also added as part of new template directory
+* Added generic function for rendering RMarkdown for standalone and fragment use
+* Added generic function for making sensible tables for both html and pdf output formats
+* Fixed an error in general app info info ([#60](https://github.com/Rapporteket/rapbase/issues/60))
 
-# rapbase 1.13.2 (#66)
+# rapbase 1.13.3 ([#68](https://github.com/Rapporteket/rapbase/pull/68))
+
+* Minor adjustment to email subject (header field) format
+
+# rapbase 1.13.2  ([#66](https://github.com/Rapporteket/rapbase/pull/66))
 
 * Fixed email encoded subject (header field) split
 * Properly parsing full names from session object containing unicode characters

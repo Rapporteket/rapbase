@@ -1,0 +1,10 @@
+pdf_document:
+  includes:
+    in_header: preamble.tex
+  dev: "cairo_pdf"
+  latex_engine: xelatex
+  keep_tex: true
+  toc: false
+html_document:
+  dev: svglite
+  stylesheet: css/style.css

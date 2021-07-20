@@ -1,0 +1,259 @@
+\documentclass{article}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{ragged2e}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage[24hr]{datetime}
+\usepackage{xcolor}
+\usepackage{sectsty}
+\usepackage{marginnote}
+\usepackage[norsk]{babel}
+\usepackage[left=5cm,%
+            right=2cm,%
+            top=2.25cm,%
+            bottom=2.25cm,%
+            headheight=12pt,%
+            a4paper,%
+            reversemarginpar,%
+            marginparwidth=3.25cm,%
+            marginparsep=2em%
+            ]{geometry}
+
+% Oppsett av fonter
+\usepackage[defaultsans]{lato}
+\renewcommand{\familydefault}{\sfdefault}
+
+\usepackage[font={rm},labelfont={bf,sf},%
+            labelsep=period,%
+            skip=4pt,tableposition=top,%
+            singlelinecheck=false,justification=centering]{caption}
+
+% Oppsett hode, kne og tå
+\usepackage{fancyhdr}  % custom headers/footers
+\usepackage{lastpage}  % Number of pages in the document
+\pagestyle{fancy}      % Enables the custom headers/footers
+
+% Headers
+\makeatletter
+\renewcommand{\sectionmark}[1]{\markright{#1}}
+\renewcommand{\subsectionmark}[1]{\markright{#1}}
+\lhead{\small\sffamily\bfseries\@author}%
+\chead{}%
+\rhead{\small\sffamily\bfseries\nouppercase{\rightmark}}%
+% Footers
+\lfoot{\small\sffamily\bfseries\@title}%
+\cfoot{}%
+\rfoot{\small\sffamily\bfseries\thepage/\pageref{LastPage}}%
+\renewcommand{\headrulewidth}{0.1pt}%
+\renewcommand{\footrulewidth}{0.1pt}%
+\makeatother
+
+
+% Oppsett tittelside
+\makeatletter
+\let\authblk@author\author
+\let\oldaffil\affil
+
+\usepackage[absolute]{textpos}
+\renewcommand{\@maketitle}{%
+    \def\@makefnmark{}%
+    \begin{textblock*}{\marginparwidth}[1,0]%
+      (\dimexpr\Gm@lmargin-\marginparsep,\Gm@tmargin)
+      $if(reglogo)$
+      \raggedleft\footnotesize%
+      \includegraphics[width=\hsize]{$reglogo$}%
+      $endif$
+      \raggedleft\footnotesize%
+      {$if(reglogo)$\\ $endif$$if(regtext)$$regtext$$endif$\par}
+      \includegraphics[width=\hsize]{logo.png}%
+      {\\ RAPPORTEKET er en analysetjenste som tilbyr interaktiv undersøkelse
+      av rådata, rutinemessig utsending av rapporter og visualisering av
+      resultater. Tjenesten utvikles og vedlikeholdes av Nasjonalt servicemiljø
+      for medisinske kvalitetsregistre ved Senter for Klinisk Dokumentasjon og
+      Evaluering (SKDE) og arbeidet finansieres av Helse- og
+      omsorgsdepartementet.}%
+    \end{textblock*}
+    %
+    \begin{textblock*}{\marginparwidth}[1,1]%
+      (\dimexpr\Gm@lmargin-\marginparsep,\dimexpr\paperheight-\Gm@bmargin)
+      \raggedleft\footnotesize\itshape%
+      {\large\rmfamily\upshape\bfseries Om rapporten\par}%
+      {\textbf{Bestilt av}\\{ }$if(userFullName)$$userFullName$$else$$empty$$endif$\par}%
+      {\textbf{Ansvarlig for innhold}\\{ }$if(registryName)$$registryName$$else$$empty$$endif$\par}%
+      {\textbf{Produsert av}\\ Rapporteket\par}%
+      {\textbf{Dato}\\ \today\par}%
+      {\textbf{Tid}\\ \currenttime\par}%
+    \end{textblock*}
+
+    {\raggedright\sffamily\bfseries\fontsize{20}{25}\selectfont $title$\par}%
+    \vskip10pt
+    {\raggedright $author$\par}
+    \vskip18pt%
+}
+\apptocmd{\maketitle}{\thispagestyle{empty}}{}{}
+\makeatother
+%-----------------------------------------------
+
+
+
+
+% Bruk hf-rager på nivå 1 og 2 overskrifter
+\definecolor{hfmork}{RGB}{0,82,155}
+\definecolor{hflys}{RGB}{104,174,224}
+\subsectionfont{\color{hflys}}
+\sectionfont{\color{hfmork}}
+
+\usepackage[explicit]{titlesec}
+\titleformat{\section}
+  {\color{hfmork}\large\sffamily\bfseries}
+  {\thesection}
+  {0.5em}
+  {#1}
+  []
+\titleformat{name=\section,numberless}
+  {\color{hfmork}\large\sffamily\bfseries}
+  {}
+  {0em}
+  {#1}
+  []
+\titleformat{\subsection}
+  {\color{hflys}\sffamily\bfseries}
+  {\thesubsection}
+  {0.5em}
+  {#1}
+  []
+\titleformat{\subsubsection}
+  {\sffamily\small\bfseries\itshape}
+  {\thesubsubsection}
+  {0.5em}
+  {#1}
+  []
+\titleformat{\paragraph}[runin]
+  {\sffamily\small\bfseries}
+  {}
+  {0em}
+  {#1}
+
+\makeatletter
+\titlespacing*{\section}{0pc}{3ex \@plus4pt \@minus3pt}{5pt}
+\titlespacing*{\subsection}{0pc}{2.5ex \@plus5pt \@minus2pt}{3pt}
+\titlespacing*{\subsubsection}{0pc}{2ex \@plus4.5pt \@minus1.5pt}{2pt}
+\titlespacing*{\paragraph}{0pc}{1.5ex \@plus4pt \@minus1pt}{10pt}
+\makeatother
+
+% Gjør alle lenker mørkeblå
+\definecolor{darkblue}{rgb}{0.0,0.0,0.3}
+\hypersetup{colorlinks,breaklinks,linkcolor=darkblue,urlcolor=darkblue,anchorcolor=darkblue,citecolor=darkblue}
+
+
+
+% Bruk mørk grå på all annen tekst
+\definecolor{text}{RGB}{40,40,40}
+
+\makeatletter
+\newcommand{\globalcolor}[1]{%
+  \color{#1}\global\let\default@color\current@color
+}
+\makeatother
+
+\AtBeginDocument{\globalcolor{text}}
+
+$if(author)$
+\author{$author$}
+$endif$
+
+\begin{document}
+$if(title)$
+$if(beamer)$
+\frame{\titlepage}
+$else$
+\maketitle
+$endif$
+$if(abstract)$
+\begin{abstract}
+  \hbox{\vrule height .2pt width 33pc}
+  \vskip 8.5pt % \small
+  \noindent $abstract$
+
+$if(keywords)$
+  \vskip 8.5pt \noindent \emph{Nøkkelord}: $keywords$ \par
+  \hbox{\vrule height .2pt width 33pc}
+$else$
+  \hbox{\vrule height .2pt width 33pc}
+$endif$
+
+\end{abstract}
+$endif$
+$endif$
+
+$for(include-before)$
+$include-before$
+
+$endfor$
+$if(toc)$
+$if(toc-title)$
+\renewcommand*\contentsname{$toc-title$}
+$endif$
+$if(beamer)$
+\begin{frame}
+$if(toc-title)$
+\frametitle{$toc-title$}
+$endif$
+\tableofcontents[hideallsubsections]
+\end{frame}
+$else$
+{
+$if(colorlinks)$
+\hypersetup{linkcolor=$if(toccolor)$$toccolor$$else$$endif$}
+$endif$
+\setcounter{tocdepth}{$toc-depth$}
+\tableofcontents
+}
+$endif$
+$endif$
+$if(lot)$
+\listoftables
+$endif$
+$if(lof)$
+\listoffigures
+$endif$
+$body$
+
+$if(natbib)$
+$if(bibliography)$
+$if(biblio-title)$
+$if(book-class)$
+\renewcommand\bibname{$biblio-title$}
+$else$
+\renewcommand\refname{$biblio-title$}
+$endif$
+$endif$
+$if(beamer)$
+\begin{frame}[allowframebreaks]{$biblio-title$}
+\bibliographytrue
+$endif$
+\bibliography{$for(bibliography)$$bibliography$$sep$,$endfor$}
+$if(beamer)$
+\end{frame}
+$endif$
+
+$endif$
+$endif$
+$if(biblatex)$
+$if(beamer)$
+\begin{frame}[allowframebreaks]{$biblio-title$}
+\bibliographytrue
+\printbibliography[heading=none]
+\end{frame}
+$else$
+\printbibliography$if(biblio-title)$[title=$biblio-title$]$endif$
+$endif$
+
+$endif$
+$for(include-after)$
+$include-after$
+
+$endfor$
+\end{document}
+

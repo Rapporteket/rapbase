@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 1.13.3
+Version: 1.14.0
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -25,18 +25,22 @@ Depends:
     R (>= 3.5.0)
 Imports:
     base64enc,
+    bookdown,
     DBI,
     devtools,
     digest,
     gistr,
     httr,
+    kableExtra,
     knitr,
     magrittr,
     markdown,
     purrr,
     readr,
     remotes,
+    revealjs,
     RMariaDB,
+    rmarkdown,
     rio,
     sendmailR,
     shiny,

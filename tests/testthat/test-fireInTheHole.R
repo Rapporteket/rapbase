@@ -4,10 +4,10 @@ tempdir <- tempdir()
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 Sys.setenv(R_RAP_INSTANCE = "")
 file.copy(
-	system.file(c("rapbaseConfig.yml", "dbConfig.yml", "autoReport.yml"),
-							package = "rapbase"
-	),
-	tempdir
+  system.file(c("rapbaseConfig.yml", "dbConfig.yml", "autoReport.yml"),
+    package = "rapbase"
+  ),
+  tempdir
 )
 
 # We do not (yet) have testing facilities to properly test email shipment.
@@ -22,11 +22,11 @@ reps$testAutoReportThird$runDayOfYear <- c(0)
 writeAutoReportData(fileName = "autoReport.yml", reps)
 
 test_that(paste(
-	"scheduler kick-off function can be run based on default",
-	"config (that should provide warnings)"
+  "scheduler kick-off function can be run based on default",
+  "config (that should provide warnings)"
 ), {
-	expect_silent(fireInTheHole())
-	expect_silent(fireInTheHole(flipPeriod = TRUE))
+  expect_silent(fireInTheHole())
+  expect_silent(fireInTheHole(flipPeriod = TRUE))
 })
 
 # Restore env

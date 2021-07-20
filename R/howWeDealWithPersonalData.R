@@ -18,7 +18,7 @@ howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
   pkg$name <- as.vector(utils::installed.packages()[, 1])
   pkg$ver <- as.vector(utils::installed.packages()[, 3])
 
-  pkgs <- intersect(c("shiny", "rapbase", "raplog"), pkg$name)
+  pkgs <- intersect(c("shiny", "rapbase"), pkg$name)
 
   if (!is.null(callerPkg)) {
     if (callerPkg %in% pkg$name) {
@@ -36,17 +36,12 @@ howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
   pkgs <- c("R", pkgs)
   vers <- c(paste(R.version$major, R.version$minor, sep = "."), vers)
 
-  pkg_info <- paste0("^", pkgs, " ^", vers, collapse = ", ")
+  pkgInfo <- paste0(pkgs, vers, collapse = ", ")
 
-  system.file("howWeDealWithPersonalData.Rmd", package = "rapbase") %>%
-    knitr::knit(output = tempfile()) %>%
-    markdown::markdownToHTML(.,
-      options = c(
-        "fragment_only",
-        "base64_images",
-        "highlight_code"
-      ),
-      encoding = "utf-8"
-    ) %>%
-    shiny::HTML()
+  sourceFile <- system.file(
+    "howWeDealWithPersonalData.Rmd", package = "rapbase")
+
+  rapbase::renderRmd(sourceFile = sourceFile, outputType = "html_fragment",
+                     params = list(session = session,
+                                   pkgInfo = pkgInfo))
 }

@@ -1,20 +1,21 @@
 ---
 title: "How we deal with personal data"
-output: html_document
+pkgInfo: '`r params$pkgInfo`'
 params:
   session: list()
   caller: ""
+  pkgInfo: missing
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-###### `r pkg_info`
+###### `r params$pkgInfo`
 
 ---
 
-Hei, `r rapbase::getUserFullName(session)`! Her er en kort oppsummering av hva [Rapporteket](https://rapporteket.github.io/rapporteket/articles/kort_introduksjon.html) vet om deg og hvordan denne informasjonen brukes og lagres.
+Hei, `r rapbase::getUserFullName(params$session)`! Her er en kort oppsummering av hva [Rapporteket](https://rapporteket.github.io/rapporteket/articles/kort_introduksjon.html) vet om deg og hvordan denne informasjonen brukes og lagres.
 
 * Før bruk av [Rapporteket](https://rapporteket.github.io/rapporteket/articles/kort_introduksjon.html) må du gjennom en identitets- og adgangskontroll hos [helseregister.no](https://helseregister.no/), [FALK](https://www.kvalitetsregistre.no/artikkel/ny-losning-palogging-testes-ut-i-februar) eller lignende. Etter innlogging mottar Rapporteket et sett av informasjon om deg slik som _navn_, _epostadresse_ og _telefonnummer_ samt informasjon om din tilknytning til et gitt register, eksempelvis din rolle/funksjon samt tilhørighet til grupper og organisasjoner. Slik informasjon er nødvendig for at Rapporteket skal kunne fungere som en god og sikker resultattjeneste.
 
