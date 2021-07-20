@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Provide connection handle for data source at Rapporteket — rapOpenDbConnection • rapbase</title>
+<title>Render documents from rmarkdown files at Rapporteket — renderRmd • rapbase</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,13 @@
 
 
 
-<meta property="og:title" content="Provide connection handle for data source at Rapporteket — rapOpenDbConnection" />
-<meta property="og:description" content="Generic to registries, handle the data source connections, including
-usernames and passwords needed to open these connections" />
+<meta property="og:title" content="Render documents from rmarkdown files at Rapporteket — renderRmd" />
+<meta property="og:description" content="Function that renders documents at Rapporteket from rmarkdown sorce files.
+Output formats may be (vanilla) HTML or PDF based on our own pandoc latex
+template or fragements of html when the result is to be embedded in existing
+web pages. Rmarkdown allow parameters to be part of report processing. Thus,
+parameters that are speciffic to reports must be provided (as a named list)
+when calling renderRmd()." />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -130,37 +134,58 @@ usernames and passwords needed to open these connections" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Provide connection handle for data source at Rapporteket</h1>
-    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/RapporteketDbConnection.R'><code>R/RapporteketDbConnection.R</code></a></small>
-    <div class="hidden name"><code>rapOpenDbConnection.Rd</code></div>
+    <h1>Render documents from rmarkdown files at Rapporteket</h1>
+    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/renderRmd.R'><code>R/renderRmd.R</code></a></small>
+    <div class="hidden name"><code>renderRmd.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Generic to registries, handle the data source connections, including
-usernames and passwords needed to open these connections</p>
+    <p>Function that renders documents at Rapporteket from rmarkdown sorce files.
+Output formats may be (vanilla) HTML or PDF based on our own pandoc latex
+template or fragements of html when the result is to be embedded in existing
+web pages. Rmarkdown allow parameters to be part of report processing. Thus,
+parameters that are speciffic to reports must be provided (as a named list)
+when calling <code>renderRmd()</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>rapOpenDbConnection</span><span class='op'>(</span><span class='va'>registryName</span>, dbType <span class='op'>=</span> <span class='st'>"mysql"</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>renderRmd</span><span class='op'>(</span><span class='va'>sourceFile</span>, outputType <span class='op'>=</span> <span class='st'>"html"</span>, logoFile <span class='op'>=</span> <span class='cn'>NULL</span>, params <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>registryName</th>
-      <td><p>String id used for the registry in global configuration
-file from which information on the database connection is provided</p></td>
+      <th>sourceFile</th>
+      <td><p>Character string providing the path to the rmarkdown
+source file.</p></td>
     </tr>
     <tr>
-      <th>dbType</th>
-      <td><p>String providing type of data source, one of
-"mysql" and "mssql". Defaults to "mysql"</p></td>
+      <th>outputType</th>
+      <td><p>Character string specifying the output format. Must be one
+of <code><a href='https://rdrr.io/r/base/c.html'>c("pdf", "html", "html_fragment")</a></code>. Default value is "html".</p></td>
+    </tr>
+    <tr>
+      <th>logoFile</th>
+      <td><p>Character string with path to the logo to be used for PDF
+output. Often, this will be the registry logo. Only PNG and PDF graphics are
+allowed. Default value is <code>NULL</code> in which case no such logo will be
+added to the output document.</p></td>
+    </tr>
+    <tr>
+      <th>params</th>
+      <td><p>List of report parameters (as named values) to override the
+corresponding entries under <em>params</em> in the rmarkdown document yaml
+header. Default is <code>NULL</code> in which case no parameters as defined in the
+rmarkdown document will be overridden.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>con Data source connection object</p>
-<p>drv DBIDriver object</p>
+    <p>Character string with path to the rendered file or, if
+<code>outputType</code> is set to "html_fragment", a character string providing an
+html fragment. Files are named according to <code><a href='https://rdrr.io/r/base/tempfile.html'>tempfile()</a></code> with an empty
+pattern and with the extention according to <code>outputType</code>
+("pdf" or "html").</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

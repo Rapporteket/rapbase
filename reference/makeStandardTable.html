@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create widget for registry apps at Rapporteket — appNavbarUserWidget • rapbase</title>
+<title>Make standard table for rmarkdown reports — makeStandardTable • rapbase</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,10 +46,8 @@
 
 
 
-<meta property="og:title" content="Create widget for registry apps at Rapporteket — appNavbarUserWidget" />
-<meta property="og:description" content="Provides a widget-like information and utility block to be applied to all
-registry apps at Rapporteket. Contains the user name, organization and
-logout/exit as hyperlinked text." />
+<meta property="og:title" content="Make standard table for rmarkdown reports — makeStandardTable" />
+<meta property="og:description" content="Functions that will return tables used in reports." />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -131,78 +129,118 @@ logout/exit as hyperlinked text." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create widget for registry apps at Rapporteket</h1>
-    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/AppNavbarUserWidget.R'><code>R/AppNavbarUserWidget.R</code></a></small>
-    <div class="hidden name"><code>appNavbarUserWidget.Rd</code></div>
+    <h1>Make standard table for rmarkdown reports</h1>
+    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/makeStandardTable.R'><code>R/makeStandardTable.R</code></a></small>
+    <div class="hidden name"><code>makeStandardTable.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Provides a widget-like information and utility block to be applied to all
-registry apps at Rapporteket. Contains the user name, organization and
-logout/exit as hyperlinked text.</p>
+    <p>Functions that will return tables used in reports.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>appNavbarUserWidget</span><span class='op'>(</span>
-  user <span class='op'>=</span> <span class='st'>"Undefined person"</span>,
-  organization <span class='op'>=</span> <span class='st'>"Undefined organization"</span>,
-  addUserInfo <span class='op'>=</span> <span class='cn'>FALSE</span>
+    <pre class="usage"><span class='fu'>mst</span><span class='op'>(</span>
+  <span class='va'>tab</span>,
+  col_names <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>tab</span><span class='op'>)</span>,
+  type <span class='op'>=</span> <span class='st'>"pdf"</span>,
+  cap <span class='op'>=</span> <span class='st'>""</span>,
+  label <span class='op'>=</span> <span class='fu'>knitr</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/knitr/man/opts_chunk.html'>opts_current</a></span><span class='op'>$</span><span class='fu'>get</span><span class='op'>(</span><span class='st'>"label"</span><span class='op'>)</span>,
+  digs <span class='op'>=</span> <span class='fl'>0</span>,
+  align <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fs <span class='op'>=</span> <span class='fl'>8</span>,
+  lsd <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>user</th>
-      <td><p>String providing the name of the user</p></td>
+      <th>tab</th>
+      <td><p>Data frame or matrix represetnting the table.</p></td>
     </tr>
     <tr>
-      <th>organization</th>
-      <td><p>String providing the organization of the user</p></td>
+      <th>col_names</th>
+      <td><p>Character vector with column names. Defaults
+<code><a href='https://rdrr.io/r/base/colnames.html'>colnames(tab)</a></code>.</p></td>
     </tr>
     <tr>
-      <th>addUserInfo</th>
-      <td><p>Logical defining wether a user data pop-up is to be part
-of the widget (TRUE) or not (FALSE, default)</p></td>
+      <th>type</th>
+      <td><p>Character string defining output, either "html" or "pdf".
+Default is "pdf".</p></td>
+    </tr>
+    <tr>
+      <th>cap</th>
+      <td><p>Character string with table caption. Empty string by default.</p></td>
+    </tr>
+    <tr>
+      <th>label</th>
+      <td><p>Character string defining the label in case the table needs to
+be referenced elsewhere in the overall document. For instance, setting this
+to 'my_table' the corresponding inline rmarkdown reference to use is
+<code>\@ref(tab:my_table)</code>. Please note that for this to work for both
+LaTex and HTML the bookdown document processing functions must be used,
+<em>i.e.</em> <code><a href='https://pkgs.rstudio.com/bookdown/reference/html_document2.html'>bookdown::pdf_document2()</a></code> and
+<code><a href='https://pkgs.rstudio.com/bookdown/reference/html_document2.html'>bookdown::html_document2()</a></code>, respectively. Default value is
+<code>knitr::opts_current$get("label")</code> in which case the name of the
+current R chunk will be used as label.</p></td>
+    </tr>
+    <tr>
+      <th>digs</th>
+      <td><p>Integer number of digits to use. 0 by default.</p></td>
+    </tr>
+    <tr>
+      <th>align</th>
+      <td><p>Character vector specifying column alignment in the LaTeX way,
+<em>e.g.</em> <code><a href='https://rdrr.io/r/base/c.html'>c("l", "c", "r")</a></code> will align the first column to the left,
+center the second and right-aling the last one. Default is NULL in which
+case numeric columns are right-aligned and all other columns are
+left-aligned.</p></td>
+    </tr>
+    <tr>
+      <th>fs</th>
+      <td><p>Integer providing the font size. Applies only for pdf output.
+Default value is 8.</p></td>
+    </tr>
+    <tr>
+      <th>lsd</th>
+      <td><p>Logical if table is to be scaled down. Applies only for pdf
+output. FALSE by default.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Ready made html script</p>
+    <p>Character string containing RMarkdown table code</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Normally, user information will be be provided through the session parameter
-and hence this will have to be provided from the server. The "rendering" of
-this info must hence be done within a layout element at the client such as
-a <code>tabPanel</code>. Selecting any one of them should be fine... At the
-client, both <code>uiOutput</code> and <code>textOutput</code> will be fine "rendering
-the information provided by the server.</p>
-<p>Example of use in shiny (pseudo code):</p><pre>
-<span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span> <span class='op'>{</span>
-  <span class='va'>...</span>
-  <span class='va'>output</span><span class='op'>$</span><span class='va'>appUserName</span> <span class='op'>&lt;-</span> <span class='fu'>renderText</span><span class='op'>(</span><span class='fu'><a href='getUserName.html'>getUserName</a></span><span class='op'>(</span><span class='va'>session</span><span class='op'>)</span><span class='op'>)</span>
-  <span class='va'>output</span><span class='op'>$</span><span class='va'>appUserOrg</span> <span class='op'>&lt;-</span> <span class='fu'>renderText</span><span class='op'>(</span><span class='fu'><a href='getUserReshId.html'>getUserReshId</a></span><span class='op'>(</span><span class='va'>session</span><span class='op'>)</span><span class='op'>)</span>
-  <span class='va'>...</span>
-<span class='op'>}</span>
-
-<span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'>tagList</span><span class='op'>(</span>
-  <span class='fu'>navbarPage</span><span class='op'>(</span>
-    <span class='va'>...</span>,
-    <span class='fu'>tabPanel</span><span class='op'>(</span><span class='va'>...</span>,
-    <span class='fu'>appNavbarUserWidget</span><span class='op'>(</span>user <span class='op'>=</span> <span class='fu'>uiOutput</span><span class='op'>(</span><span class='va'>appUserName</span><span class='op'>)</span>,
-    organization <span class='op'>=</span> <span class='fu'>textOutput</span><span class='op'>(</span><span class='va'>appUserOrg</span><span class='op'>)</span><span class='op'>)</span>
-    <span class='op'>)</span>,
-    <span class='va'>...</span>
-  <span class='op'>)</span>
-<span class='op'>)</span>
-</pre>
-
+    <p><code>mst()</code> creates RMarkdown code for creating standard tables.</p>
+<p><code>prettyTab()</code> creates a table with cells containing percentages of
+totals and observations optinally with a marginal row count</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>appNavbarUserWidget</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; &lt;script&gt;var header = $('.navbar&gt; .container-fluid');
-#&gt; header.append('&lt;div class="navbar-brand" style="float:right;vertical-align:super;font-size:65%"&gt;Undefined personUndefined organization&lt;/div&gt;');
-#&gt; console.log(header)&lt;/script&gt;</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>mst</span><span class='op'>(</span>tab <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, <span class='op'>]</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; \begin{table}[H]
+#&gt; 
+#&gt; \caption{}
+#&gt; \centering
+#&gt; \fontsize{8}{10}\selectfont
+#&gt; \begin{tabular}[t]{lrrrrrrrrrrr}
+#&gt; \toprule
+#&gt;   &amp; mpg &amp; cyl &amp; disp &amp; hp &amp; drat &amp; wt &amp; qsec &amp; vs &amp; am &amp; gear &amp; carb\\
+#&gt; \midrule
+#&gt; Mazda RX4 &amp; 21 &amp; 6 &amp; 160 &amp; 110 &amp; 4 &amp; 3 &amp; 16 &amp; 0 &amp; 1 &amp; 4 &amp; 4\\
+#&gt; Mazda RX4 Wag &amp; 21 &amp; 6 &amp; 160 &amp; 110 &amp; 4 &amp; 3 &amp; 17 &amp; 0 &amp; 1 &amp; 4 &amp; 4\\
+#&gt; Datsun 710 &amp; 23 &amp; 4 &amp; 108 &amp; 93 &amp; 4 &amp; 2 &amp; 19 &amp; 1 &amp; 1 &amp; 4 &amp; 1\\
+#&gt; Hornet 4 Drive &amp; 21 &amp; 6 &amp; 258 &amp; 110 &amp; 3 &amp; 3 &amp; 19 &amp; 1 &amp; 0 &amp; 3 &amp; 1\\
+#&gt; Hornet Sportabout &amp; 19 &amp; 8 &amp; 360 &amp; 175 &amp; 3 &amp; 3 &amp; 17 &amp; 0 &amp; 0 &amp; 3 &amp; 2\\
+#&gt; \addlinespace
+#&gt; Valiant &amp; 18 &amp; 6 &amp; 225 &amp; 105 &amp; 3 &amp; 3 &amp; 20 &amp; 1 &amp; 0 &amp; 3 &amp; 1\\
+#&gt; Duster 360 &amp; 14 &amp; 8 &amp; 360 &amp; 245 &amp; 3 &amp; 4 &amp; 16 &amp; 0 &amp; 0 &amp; 3 &amp; 4\\
+#&gt; Merc 240D &amp; 24 &amp; 4 &amp; 147 &amp; 62 &amp; 4 &amp; 3 &amp; 20 &amp; 1 &amp; 0 &amp; 4 &amp; 2\\
+#&gt; Merc 230 &amp; 23 &amp; 4 &amp; 141 &amp; 95 &amp; 4 &amp; 3 &amp; 23 &amp; 1 &amp; 0 &amp; 4 &amp; 2\\
+#&gt; Merc 280 &amp; 19 &amp; 6 &amp; 168 &amp; 123 &amp; 4 &amp; 3 &amp; 18 &amp; 1 &amp; 0 &amp; 4 &amp; 4\\
+#&gt; \bottomrule
+#&gt; \end{tabular}
+#&gt; \end{table}</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
