@@ -40,8 +40,8 @@ jobs:
       - name: Install package
         run: R CMD INSTALL .
 
-      - name: Deploy package
+      - name: Test function reference site doc consistency
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          Rscript -e 'testthat::expect_warning(pkgdown::build_reference(pkg = find.package("rapbase"), preview = FALSE), regexp = NA)'
+          Rscript -e 'testthat::expect_warning(pkgdown::build_reference(preview = FALSE), regexp = NA)'
