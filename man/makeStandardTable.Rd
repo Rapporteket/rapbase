@@ -56,13 +56,10 @@ output. FALSE by default.}
 Character string containing RMarkdown table code
 }
 \description{
-Functions that will return tables used in reports.
+Function that will return tables used in reports.
 }
 \details{
 \code{mst()} creates RMarkdown code for creating standard tables.
-
-\code{prettyTab()} creates a table with cells containing percentages of
-totals and observations optinally with a marginal row count
 }
 \examples{
 mst(tab = mtcars[1:10, ])

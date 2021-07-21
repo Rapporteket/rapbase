@@ -99,6 +99,8 @@ reference:
     - installGithubPackage
     - isRapContext
     - noOptOutOk
+    - renderRmd
+    - makeStandardTable
 
   - title: Data
     desc: >
