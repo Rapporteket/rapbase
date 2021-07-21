@@ -100,6 +100,7 @@ reference:
     - isRapContext
     - noOptOutOk
     - renderRmd
+    - makeStandardTable
 
   - title: Data
     desc: >
