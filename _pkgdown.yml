@@ -99,6 +99,8 @@ reference:
     - installGithubPackage
     - isRapContext
     - noOptOutOk
+    - renderRmd
+    - mst
 
   - title: Data
     desc: >
