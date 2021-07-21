@@ -1,3 +1,7 @@
+# rapbase 1.14.1
+
+* New functions added to site doc
+
 # rapbase 1.14.0 ([#70](https://github.com/Rapporteket/rapbase/pull/70))
 
 * Added latex template for rendering RMarkdown through pandoc
