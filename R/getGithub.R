@@ -8,7 +8,7 @@
 #' @param .token Character string providing av valid token that will be used if
 #' the api call requires authentication.
 #'
-#' @return
+#' @return Character vector with results from the GitHub api request
 #' @export
 
 getGithub <- function(what, value, .token = NULL) {
