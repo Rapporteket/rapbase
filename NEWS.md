@@ -1,3 +1,7 @@
+# rapbase 1.15.0
+
+* New functions handling database exports ([#]())
+
 # rapbase 1.14.1
 
 * New functions added to site doc

@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 1.14.1
+Version: 1.15.0
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -29,6 +29,7 @@ Imports:
     DBI,
     devtools,
     digest,
+    gh,
     gistr,
     httr,
     kableExtra,
