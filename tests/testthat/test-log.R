@@ -26,7 +26,7 @@ test_that("logging is performed at report level", {
   expect_true(file.exists(file.path(tempdir, "reportLog.csv")))
 })
 
-test_that("logging can be made by (automated) reports outdise session", {
+test_that("logging can be made by (automated) reports outside session", {
   expect_silent(autLogger(
     user = "ttest", name = "Tore Tester",
     registryName = "rapbase", reshId = "999999",
