@@ -5,8 +5,12 @@ test_that("a abbreviated named list can be provided from key(s)", {
 
 })
 
-# rest of test on db export will have to be performed where a db is present
-# and with a valid shiny session object
+# rest of test on db export will have to be performed where a db is present,
+# a valid shiny session object and somewhere to do logging
+
+## store current instance and set temporary
+currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
+Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 
 ## shiny session object
 session <- list()
@@ -60,3 +64,7 @@ test_that("an existing file name is provided", {
   f <- exportDb("rapbase", compress = TRUE, session = session)
   expect_true(file.exists(f))
 })
+
+
+# Restore instance
+Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)
