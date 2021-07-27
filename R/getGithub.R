@@ -30,4 +30,3 @@ getGithub <- function(what, value, .token = NULL) {
     "[[", "", vName
   )
 }
-

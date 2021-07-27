@@ -12,7 +12,6 @@
 #' @export
 
 howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
-  . <- ""
 
   pkg <- list()
   pkg$name <- as.vector(utils::installed.packages()[, 1])

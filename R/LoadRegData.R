@@ -29,7 +29,7 @@ LoadRegData <- function(registryName, query, dbType = "mysql") {
     res <- DBI::dbSendQuery(dbList$con, query)
     regData <- DBI::dbFetch(res, n = 20000)
     regData <- rbind(regData, DBI::dbFetch(res, n = -1))
-    tmp <- DBI::dbClearResult(res)
+    invisible(DBI::dbClearResult(res))
     # nocov end
   } else {
     regData <- DBI::dbGetQuery(dbList$con, query)

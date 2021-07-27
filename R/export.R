@@ -38,7 +38,7 @@ exportDb <- function(registryName, compress = FALSE, session) {
   cmd <- "mysqldump --no-tablespaces --single-transaction --add-drop-database "
   cmd <- paste0(cmd, "-B -u ", conf$user, " -p", conf$pass, " -h ", conf$host,
          " ", conf$name, " > ", f)
-  out <- system(cmd)
+  invisible(system(cmd))
 
   if (compress) {
     inFile <- f
