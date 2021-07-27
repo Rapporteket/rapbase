@@ -11,7 +11,8 @@ test_that("a abbreviated named list can be provided from key(s)", {
 ## store current instance and set temporary config
 currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
-file.copy(system.file(c("rapbaseConfig.yml", "dbConfig.yml"), package = "rabase"),
+file.copy(system.file(c("rapbaseConfig.yml", "dbConfig.yml"),
+                      package = "rapbase"),
           Sys.getenv("R_RAP_CONFIG_PATH"))
 
 ## shiny session object
