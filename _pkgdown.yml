@@ -101,6 +101,8 @@ reference:
     - noOptOutOk
     - renderRmd
     - makeStandardTable
+    - exportDb
+    - getGithub
 
   - title: Data
     desc: >
