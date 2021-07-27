@@ -44,7 +44,7 @@ exportDb <- function(registryName, compress = FALSE, session) {
     inFile <- f
     f <- paste0(inFile, ".gz")
     cmd <- paste("gzip -f", inFile, ">", f)
-    out <- system(cmd)
+    invisible(system(cmd))
   }
 
   rapbase::repLogger(session, msg = paste(registryName, "db dump created."))
