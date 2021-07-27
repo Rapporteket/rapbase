@@ -64,7 +64,7 @@ if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
 
 test_that("an existing file name is provided", {
   checkDb()
-  f <- exportDb("rapbase", compress = TRUE, session = session)
+  f <- exportDb(regName, compress = TRUE, session = session)
   expect_true(file.exists(f))
 })
 
