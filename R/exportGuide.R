@@ -8,7 +8,7 @@
 #' @aliases exportGuideUI exportGuideServer exportGuideApp
 #' @examples
 #' ui <- shiny::fluidPage(
-#' exportGuideUI("exportGuide")
+#'   exportGuideUI("exportGuide")
 #' )
 #'
 #' server <- function(input, output, session) {
