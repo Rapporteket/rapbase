@@ -36,7 +36,7 @@ exportUCServer <- function(id, registryName) {
 
     rv <- shiny::reactiveValues(
       exportFile = NULL,
-      exportText = "Kryptér",
+      exportText = "Krypt\u00e9r",
       exportIcon = "lock-open",
       exportClass = "btn-warning"
     )
@@ -49,19 +49,19 @@ exportUCServer <- function(id, registryName) {
     ## observers
     shiny::observeEvent(input$exportPid, {
       rv$exportFile <- NULL
-      rv$exportText <- "Kryptér"
+      rv$exportText <- "Krypt\u00e9r"
       rv$exportIcon <- "lock-open"
       rv$exportClass <- "btn-warning"
     })
     shiny::observeEvent(input$exportKey, {
       rv$exportFile <- NULL
-      rv$exportText <- "Kryptér"
+      rv$exportText <- "Krypt\u00e9r"
       rv$exportIcon <- "lock-open"
       rv$exportClass <- "btn-warning"
     })
     shiny::observeEvent(input$exportCompress, {
       rv$exportFile <- NULL
-      rv$exportText <- "Kryptér"
+      rv$exportText <- "Krypt\u00e9r"
       rv$exportIcon <- "lock-open"
       rv$exportClass <- "btn-warning"
     })
@@ -104,7 +104,7 @@ exportUCServer <- function(id, registryName) {
         shiny::selectInput(
           shiny::NS(id, "exportKey"),
           label = shiny::tags$div(
-            shiny::HTML(as.character(shiny::icon("key")), "Velg nøkkel:")
+            shiny::HTML(as.character(shiny::icon("key")), "Velg \u00f8kkel:")
           ),
           choices = rapbase::selectListPubkey(pubkey()))
       }
