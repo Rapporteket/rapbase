@@ -33,7 +33,7 @@ server <- function(input, output, session) {
   exportGuideServer("exportGuide", "test")
 }
 
-if (interactive) {
+if (interactive()) {
   shiny::shinyApp(ui, server)
 }
 }

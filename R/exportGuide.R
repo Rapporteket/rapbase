@@ -15,7 +15,7 @@
 #'   exportGuideServer("exportGuide", "test")
 #' }
 #'
-#' if (interactive) {
+#' if (interactive()) {
 #'   shiny::shinyApp(ui, server)
 #' }
 NULL
