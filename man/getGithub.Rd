@@ -18,7 +18,7 @@ for "keys" this should be a github user name.}
 the api call requires authentication.}
 }
 \value{
-
+Character vector with results from the GitHub api request
 }
 \description{
 Collect various data from the GitHub API

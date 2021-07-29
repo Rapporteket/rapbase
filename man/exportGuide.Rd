@@ -17,13 +17,6 @@ exportGuideApp()
 \item{id}{Character string module ID}
 
 \item{registryName}{Character string registry name key}
-
-\item{input}{Data object shiny app inputs}
-
-\item{output}{Data object shiny app outputs}
-
-\item{session}{Data object session from which to make the (module) child
-scope}
 }
 \value{
 Functions ui and server representing the (module) app

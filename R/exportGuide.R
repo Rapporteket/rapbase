@@ -2,10 +2,6 @@
 #'
 #' @param id Character string module ID
 #' @param registryName Character string registry name key
-#' @param input Data object shiny app inputs
-#' @param output Data object shiny app outputs
-#' @param session Data object session from which to make the (module) child
-#' scope
 #'
 #' @return Functions ui and server representing the (module) app
 #' @name exportGuide
