@@ -2,18 +2,29 @@
 % Please edit documentation in R/export.R
 \name{export}
 \alias{export}
+\alias{exportUCInput}
+\alias{exportUCServer}
+\alias{exportUCApp}
 \alias{selectListPubkey}
 \alias{exportDb}
-\title{Tools for exporting data}
+\title{Shiny modules providing GUI and server logic for Export}
 \usage{
+exportUCInput(id)
+
+exportUCServer(id, registryName)
+
+exportUCApp(registryName = "rapbase")
+
 selectListPubkey(pubkey)
 
 exportDb(registryName, compress = FALSE, session)
 }
 \arguments{
-\item{pubkey}{Character vector with public keys}
+\item{id}{Character string module ID}
 
 \item{registryName}{Character string registry name key}
+
+\item{pubkey}{Character vector with public keys}
 
 \item{compress}{Logical if export data is to be compressed (using gzip).
 FALSE by default.}
@@ -21,9 +32,10 @@ FALSE by default.}
 \item{session}{Shiny session object}
 }
 \value{
-Some data structure with info obtained from the github api
+Shiny objects, mostly. Helper functions may return other stuff too.
 }
 \description{
-Functions tools for registries that want implement exporting of registry
-databases for local development purposes.
+Functions for registries that wants to implement exporting of registry
+databases, \emph{e.g.} for local development purposes. Also includes
+relevant helper functions
 }
