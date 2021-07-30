@@ -26,7 +26,7 @@ Shiny modules providing the Export Guide
 }
 \examples{
 ui <- shiny::fluidPage(
-exportGuideUI("exportGuide")
+  exportGuideUI("exportGuide")
 )
 
 server <- function(input, output, session) {
