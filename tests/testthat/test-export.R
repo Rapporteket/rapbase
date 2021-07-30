@@ -69,5 +69,36 @@ test_that("an existing file name is provided", {
 })
 
 
+# The remainig test the corresponding shiny modules
+test_that("export UC input returns a shiny tag list", {
+  expect_true("shiny.tag.list" %in% class(exportUCInput("id")))
+})
+
+test_that("guide module server provides sensible output", {
+  #local_edition(3)
+  #rv <- shiny::reactiveVal()
+  shiny::testServer(exportUCServer, args = list(registryName = "rapbase"), {
+    expect_equal(class(output$exportPidUI), "list")
+    session$setInputs(exportPid = "areedv")
+    expect_equal("character", class(pubkey()))
+    session$setInputs(exportKey = pubkey())
+    expect_equal(class(output$exportKeyUI), "list")
+    session$setInputs(exportCompress = TRUE)
+    expect_true(is.null(rv$exportFile))
+    expect_equal(class(output$exportEncryptUI), "list")
+  })
+})
+
+test_that("guide test app returns an app object", {
+  expect_equal(class(exportUCApp()), "shiny.appobj")
+})
+
+# test_that("test app can run", {
+#   shiny::testServer(exportUCApp, args = list(registryName = "rapbase"), {
+#     print(class(server))
+#   })
+# })
+
+
 # Restore instance
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)
