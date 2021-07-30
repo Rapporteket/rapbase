@@ -71,7 +71,8 @@ exportUCServer <- function(id, registryName) {
         f <- rapbase::exportDb(registryName,
                                compress = input$exportCompress,
                                session = session)
-        rv$exportFile <- sship::enc(f, pid = NULL, pubkey = input$exportKey)
+        rv$exportFile <- sship::enc(f, pid = NULL, pubkey_holder = NULL,
+                                    pubkey = input$exportKey)
         rv$exportText <- "Kryptert!"
         rv$exportIcon <- "lock"
         rv$exportClass <- "btn-success"
@@ -110,11 +111,15 @@ exportUCServer <- function(id, registryName) {
       }
     })
     output$exportEncryptUI <- shiny::renderUI({
-      shiny::actionButton(
-        shiny::NS(id, "exportEncrypt"),
-        label = rv$exportText,
-        icon = shiny::icon(rv$exportIcon),
-        class = rv$exportClass)
+      if (length(pubkey()) == 0) {
+        NULL
+      } else {
+        shiny::actionButton(
+          shiny::NS(id, "exportEncrypt"),
+          label = rv$exportText,
+          icon = shiny::icon(rv$exportIcon),
+          class = rv$exportClass)
+      }
     })
     output$exportDownloadUI <- shiny::renderUI({
       if (is.null(rv$exportFile)) {
