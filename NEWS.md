@@ -1,5 +1,6 @@
 # rapbase 1.15.0
 
+* Shiny modules for report use statistics that can be applied by registries ([#]()) 
 * New functions and modules handling database exports ([#74](https://github.com/Rapporteket/rapbase/pull/74))
 
 # rapbase 1.14.1
