@@ -1,3 +1,7 @@
+# rapbase 1.15.0
+
+* New functions and modules handling database exports ([#74](https://github.com/Rapporteket/rapbase/pull/74))
+
 # rapbase 1.14.1
 
 * New functions added to site doc
