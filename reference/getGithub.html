@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run bulletin auto reports — runBulletin • rapbase</title>
+<title>Collect various data from the GitHub API — getGithub • rapbase</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,8 @@
 
 
 
-<meta property="og:title" content="Run bulletin auto reports — runBulletin" />
-<meta property="og:description" content="This is a wrapper for runAutoReport() to issue bulletins. Purpose is
-to ease simplify fire-in-the-hole at Rapporteket" />
+<meta property="og:title" content="Collect various data from the GitHub API — getGithub" />
+<meta property="og:description" content="Collect various data from the GitHub API" />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -130,22 +129,41 @@ to ease simplify fire-in-the-hole at Rapporteket" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Run bulletin auto reports</h1>
-    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/AutoReportFuns.R'><code>R/AutoReportFuns.R</code></a></small>
-    <div class="hidden name"><code>runBulletin.Rd</code></div>
+    <h1>Collect various data from the GitHub API</h1>
+    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/getGithub.R'><code>R/getGithub.R</code></a></small>
+    <div class="hidden name"><code>getGithub.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This is a wrapper for <code><a href='runAutoReport.html'>runAutoReport()</a></code> to issue bulletins. Purpose is
-to ease simplify fire-in-the-hole at Rapporteket</p>
+    <p>Collect various data from the GitHub API</p>
     </div>
 
-    <pre class="usage"><span class='fu'>runBulletin</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>getGithub</span><span class='op'>(</span><span class='va'>what</span>, <span class='va'>value</span>, .token <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>what</th>
+      <td><p>Character string defining the api endpoint. Currently one of
+<code><a href='https://rdrr.io/r/base/c.html'>c("contributors", "keys")</a></code>.</p></td>
+    </tr>
+    <tr>
+      <th>value</th>
+      <td><p>Character string specifying what to collect from the given
+endpoint. For "contributors" this should be the name of the repository and
+for "keys" this should be a github user name.</p></td>
+    </tr>
+    <tr>
+      <th>.token</th>
+      <td><p>Character string providing av valid token that will be used if
+the api call requires authentication.</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Whatever <code><a href='runAutoReport.html'>runAutoReport()</a></code> might provide</p>
+    <p>Character vector with results from the GitHub api request</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

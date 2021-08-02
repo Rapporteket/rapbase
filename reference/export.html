@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Run bulletin auto reports — runBulletin • rapbase</title>
+<title>Shiny modules providing GUI and server logic for Export — export • rapbase</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,10 @@
 
 
 
-<meta property="og:title" content="Run bulletin auto reports — runBulletin" />
-<meta property="og:description" content="This is a wrapper for runAutoReport() to issue bulletins. Purpose is
-to ease simplify fire-in-the-hole at Rapporteket" />
+<meta property="og:title" content="Shiny modules providing GUI and server logic for Export — export" />
+<meta property="og:description" content="Functions for registries that wants to implement exporting of registry
+databases, e.g. for local development purposes. Also includes
+relevant helper functions" />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -130,22 +131,56 @@ to ease simplify fire-in-the-hole at Rapporteket" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Run bulletin auto reports</h1>
-    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/AutoReportFuns.R'><code>R/AutoReportFuns.R</code></a></small>
-    <div class="hidden name"><code>runBulletin.Rd</code></div>
+    <h1>Shiny modules providing GUI and server logic for Export</h1>
+    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/export.R'><code>R/export.R</code></a></small>
+    <div class="hidden name"><code>export.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This is a wrapper for <code><a href='runAutoReport.html'>runAutoReport()</a></code> to issue bulletins. Purpose is
-to ease simplify fire-in-the-hole at Rapporteket</p>
+    <p>Functions for registries that wants to implement exporting of registry
+databases, <em>e.g.</em> for local development purposes. Also includes
+relevant helper functions</p>
     </div>
 
-    <pre class="usage"><span class='fu'>runBulletin</span><span class='op'>(</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>exportUCInput</span><span class='op'>(</span><span class='va'>id</span><span class='op'>)</span>
 
+<span class='fu'>exportUCServer</span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>registryName</span><span class='op'>)</span>
+
+<span class='fu'>exportUCApp</span><span class='op'>(</span>registryName <span class='op'>=</span> <span class='st'>"rapbase"</span><span class='op'>)</span>
+
+<span class='fu'>selectListPubkey</span><span class='op'>(</span><span class='va'>pubkey</span><span class='op'>)</span>
+
+<span class='fu'>exportDb</span><span class='op'>(</span><span class='va'>registryName</span>, compress <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>session</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>id</th>
+      <td><p>Character string module ID</p></td>
+    </tr>
+    <tr>
+      <th>registryName</th>
+      <td><p>Character string registry name key</p></td>
+    </tr>
+    <tr>
+      <th>pubkey</th>
+      <td><p>Character vector with public keys</p></td>
+    </tr>
+    <tr>
+      <th>compress</th>
+      <td><p>Logical if export data is to be compressed (using gzip).
+FALSE by default.</p></td>
+    </tr>
+    <tr>
+      <th>session</th>
+      <td><p>Shiny session object</p></td>
+    </tr>
+    </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Whatever <code><a href='runAutoReport.html'>runAutoReport()</a></code> might provide</p>
+    <p>Shiny objects, mostly. Helper functions may return other stuff too.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
