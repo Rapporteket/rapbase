@@ -6,6 +6,9 @@
 \alias{statsUI}
 \alias{statsServer}
 \alias{statsApp}
+\alias{getRegistryLog}
+\alias{logFormat}
+\alias{logTimeFrame}
 \title{Shiny modules and helper functions for registry usage reports}
 \usage{
 statsInput(id)
@@ -15,6 +18,12 @@ statsUI(id)
 statsServer(id, registryName)
 
 statsApp()
+
+getRegistryLog(registryName, type = "app")
+
+logFormat(log)
+
+logTimeFrame(log, startDate, endDate)
 }
 \arguments{
 \item{id}{Character string shiny module id}
@@ -29,9 +38,9 @@ These modules may be used by registries for easy setup of usage reports.
 The intended purpose is to provide registry staff access to when and by
 whom the resources at Rapporteket were used, \emph{i.e.} application
 start-up and single report usage. As such, this will be a tool to provide
-useful statistics. However, it might also serve as a formal logging utility
-but only if carefully implemented throughout the relevant functions that
-make up the registry application at Rapporteket.
+useful statistics. However, it might also serve as a formal monitor utility
+but only if logging is carefully implemented throughout the relevant
+functions that make up the registry application at Rapporteket.
 }
 \examples{
 # client user interface function
