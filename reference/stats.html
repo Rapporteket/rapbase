@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Simple test of automated report — .testAutoReport • rapbase</title>
+<title>Shiny modules and helper functions for registry usage reports — stats • rapbase</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,14 @@
 
 
 
-<meta property="og:title" content="Simple test of automated report — .testAutoReport" />
-<meta property="og:description" content="Simple test of automated reporting from definitions provided in a yaml
-config file" />
+<meta property="og:title" content="Shiny modules and helper functions for registry usage reports — stats" />
+<meta property="og:description" content="These modules may be used by registries for easy setup of usage reports.
+The intended purpose is to provide registry staff access to when and by
+whom the resources at Rapporteket were used, i.e. application
+start-up and single report usage. As such, this will be a tool to provide
+useful statistics. However, it might also serve as a formal monitor utility
+but only if logging is carefully implemented throughout the relevant
+functions that make up the registry application at Rapporteket." />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -130,47 +135,71 @@ config file" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Simple test of automated report</h1>
-    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/AutoReportFuns.R'><code>R/AutoReportFuns.R</code></a></small>
-    <div class="hidden name"><code>dot-testAutoReport.Rd</code></div>
+    <h1>Shiny modules and helper functions for registry usage reports</h1>
+    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/stats.R'><code>R/stats.R</code></a></small>
+    <div class="hidden name"><code>stats.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Simple test of automated reporting from definitions provided in a yaml
-config file</p>
+    <p>These modules may be used by registries for easy setup of usage reports.
+The intended purpose is to provide registry staff access to when and by
+whom the resources at Rapporteket were used, <em>i.e.</em> application
+start-up and single report usage. As such, this will be a tool to provide
+useful statistics. However, it might also serve as a formal monitor utility
+but only if logging is carefully implemented throughout the relevant
+functions that make up the registry application at Rapporteket.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>.testAutoReport</span><span class='op'>(</span>aNum <span class='op'>=</span> <span class='fl'>1</span>, aChar <span class='op'>=</span> <span class='st'>"a"</span>, anExp <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span>, bulletin <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>statsInput</span><span class='op'>(</span><span class='va'>id</span><span class='op'>)</span>
+
+<span class='fu'>statsUI</span><span class='op'>(</span><span class='va'>id</span><span class='op'>)</span>
+
+<span class='fu'>statsServer</span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>registryName</span><span class='op'>)</span>
+
+<span class='fu'>statsApp</span><span class='op'>(</span><span class='op'>)</span>
+
+<span class='fu'>getRegistryLog</span><span class='op'>(</span><span class='va'>registryName</span>, type <span class='op'>=</span> <span class='st'>"app"</span><span class='op'>)</span>
+
+<span class='fu'>logFormat</span><span class='op'>(</span><span class='va'>log</span><span class='op'>)</span>
+
+<span class='fu'>logTimeFrame</span><span class='op'>(</span><span class='va'>log</span>, <span class='va'>startDate</span>, <span class='va'>endDate</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>aNum</th>
-      <td><p>a number</p></td>
+      <th>id</th>
+      <td><p>Character string shiny module id</p></td>
     </tr>
     <tr>
-      <th>aChar</th>
-      <td><p>a character</p></td>
-    </tr>
-    <tr>
-      <th>anExp</th>
-      <td><p>an expression</p></td>
-    </tr>
-    <tr>
-      <th>bulletin</th>
-      <td><p>Integer defining if report is of type bulletin (1) or not
-(0). Set to 0 by default</p></td>
+      <th>registryName</th>
+      <td><p>Character string registry name key</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A simple message listing the contents of the arguments</p>
+    <p>Shiny objects, mostly. Helper functions may return other stuff too.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>.testAutoReport</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpDwyYlv/file7f9354d37d4.txt"</div></pre>
+    <pre class="examples"><div class='input'><span class='co'># client user interface function</span>
+<span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/fluidPage.html'>fluidPage</a></span><span class='op'>(</span>
+  <span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/sidebarLayout.html'>sidebarLayout</a></span><span class='op'>(</span>
+    <span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/sidebarLayout.html'>sidebarPanel</a></span><span class='op'>(</span><span class='fu'>statsInput</span><span class='op'>(</span><span class='st'>"test"</span><span class='op'>)</span><span class='op'>)</span>,
+    <span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/sidebarLayout.html'>mainPanel</a></span><span class='op'>(</span><span class='fu'>statsUI</span><span class='op'>(</span><span class='st'>"test"</span><span class='op'>)</span><span class='op'>)</span>
+  <span class='op'>)</span>
+<span class='op'>)</span>
+
+<span class='co'># server function</span>
+<span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='fu'>statsServer</span><span class='op'>(</span><span class='st'>"test"</span>, registryName <span class='op'>=</span> <span class='st'>"rapbase"</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+<span class='co'># run the shiny app in an interactive environment</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/shinyApp.html'>shinyApp</a></span><span class='op'>(</span><span class='va'>ui</span>, <span class='va'>server</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -142,7 +142,12 @@ from a given user or registry as obtained from the shiny session
 object provided.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>makeAutoReportTab</span><span class='op'>(</span><span class='va'>session</span>, type <span class='op'>=</span> <span class='st'>"subscription"</span>, mapOrgId <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>makeAutoReportTab</span><span class='op'>(</span>
+  <span class='va'>session</span>,
+  type <span class='op'>=</span> <span class='st'>"subscription"</span>,
+  mapOrgId <span class='op'>=</span> <span class='cn'>NULL</span>,
+  includeReportId <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -165,6 +170,11 @@ which case the ids provided in auto report data will be used. In case
 mapOrgId is not NULL but no id match is found the id found in the auto
 report data will also be used</p></td>
     </tr>
+    <tr>
+      <th>includeReportId</th>
+      <td><p>Logical if the unique report id should be added as
+the last column in the table. FALSE by default.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -184,9 +194,9 @@ report. Hence, a GUI call for editing a report can be catched by
 <code><a href='https://rdrr.io/pkg/shiny/man/observeEvent.html'>shiny::observeEvent("edit_button")</a></code> and within this event the
 report id is obtained by collecting the string after the underscore,
 <em>e.g.</em> <code>strsplit(input$edit_button, "_")[[1]][2]</code>.</p>
-<p>The last column in the table provide the unique id of each report to allow
-further development for registry speciffic purposes. Regardless, this column
-should normally be hidden in the GUI.</p>
+<p>Optionally, report id may be provided as the last column in the table to
+allow further development for registry speciffic purposes. Regardless, this
+column should normally be hidden in the GUI.</p>
 <p>Take a look at the
 <a href='https://github.com/Rapporteket/rapRegTemplate/blob/rel/inst/shinyApps/app1/server.R'>example shiny server function in rapRegTemplate</a>
 on how this function may be implemented.</p>
