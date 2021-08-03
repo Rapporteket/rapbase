@@ -85,6 +85,7 @@ reference:
     - appNavbarUserWidget
     - exportGuide
     - export
+    - stats
 
   - title: Miscellaneous
     desc: >
@@ -111,6 +112,7 @@ reference:
       Data contained by the package
     contents:
     - Helligdager2008til2022
+    - appLog
 
   - title: Meta
     desc: >
