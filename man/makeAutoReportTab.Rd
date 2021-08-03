@@ -4,7 +4,12 @@
 \alias{makeAutoReportTab}
 \title{Make table of automated reports}
 \usage{
-makeAutoReportTab(session, type = "subscription", mapOrgId = NULL)
+makeAutoReportTab(
+  session,
+  type = "subscription",
+  mapOrgId = NULL,
+  includeReportId = FALSE
+)
 }
 \arguments{
 \item{session}{A shiny session object}
@@ -18,6 +23,9 @@ corresponding to unique name and id of organizations. Defult is NULL in
 which case the ids provided in auto report data will be used. In case
 mapOrgId is not NULL but no id match is found the id found in the auto
 report data will also be used}
+
+\item{includeReportId}{Logical if the unique report id should be added as
+the last column in the table. FALSE by default.}
 }
 \value{
 Matrix providing a table to be rendered in a shiny app
@@ -41,9 +49,9 @@ report. Hence, a GUI call for editing a report can be catched by
 report id is obtained by collecting the string after the underscore,
 \emph{e.g.} \code{strsplit(input$edit_button, "_")[[1]][2]}.
 
-The last column in the table provide the unique id of each report to allow
-further development for registry speciffic purposes. Regardless, this column
-should normally be hidden in the GUI.
+Optionally, report id may be provided as the last column in the table to
+allow further development for registry speciffic purposes. Regardless, this
+column should normally be hidden in the GUI.
 
 Take a look at the
 \href{https://github.com/Rapporteket/rapRegTemplate/blob/rel/inst/shinyApps/app1/server.R}{example shiny server function in rapRegTemplate}

@@ -132,13 +132,16 @@ mapOrgId <- data.frame(id = "999999", name = "HUS", stringsAsFactors = FALSE)
 
 test_that("auto report tables (for shiny) can be made", {
   expect_true(is.list(
-    makeAutoReportTab(shinySession, type = "subscription", mapOrgId = mapOrgId)
+    makeAutoReportTab(shinySession, type = "subscription", mapOrgId = mapOrgId,
+                      includeReportId = TRUE)
   ))
   expect_true(is.list(
-    makeAutoReportTab(shinySession, type = "dispatchment", mapOrgId = mapOrgId)
+    makeAutoReportTab(shinySession, type = "dispatchment", mapOrgId = mapOrgId,
+                      includeReportId = TRUE)
   ))
   expect_true(is.list(
-    makeAutoReportTab(shinySession, type = "bulletin", mapOrgId = mapOrgId)
+    makeAutoReportTab(shinySession, type = "bulletin", mapOrgId = mapOrgId,
+                      includeReportId = TRUE)
   ))
 })
 
