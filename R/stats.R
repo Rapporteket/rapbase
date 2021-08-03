@@ -76,6 +76,7 @@ statsServer <- function(id, registryName) {
     })
 
     logFrame <- shiny::reactive({
+      shiny::req(input$period)
       logTimeFrame(log(), input$period[1], input$period[2])
     })
 
