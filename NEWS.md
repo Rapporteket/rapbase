@@ -1,7 +1,9 @@
 # rapbase 1.15.0
 
-* Shiny modules for report use statistics that can be applied by registries ([#]()) 
 * New functions and modules handling database exports ([#74](https://github.com/Rapporteket/rapbase/pull/74))
+* Shiny modules for report use statistics that can be applied by registries ([#75](https://github.com/Rapporteket/rapbase/pull/75))
+* Minor adjustment so that the presence of ids in auto report tables is optional upon table creation  
+
 
 # rapbase 1.14.1
 
