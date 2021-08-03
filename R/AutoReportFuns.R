@@ -682,9 +682,9 @@ findNextRunDate <- function(runDayOfYear,
 #' report id is obtained by collecting the string after the underscore,
 #' \emph{e.g.} \code{strsplit(input$edit_button, "_")[[1]][2]}.
 #'
-#' The last column in the table provide the unique id of each report to allow
-#' further development for registry speciffic purposes. Regardless, this column
-#' should normally be hidden in the GUI.
+#' Optionally, report id may be provided as the last column in the table to
+#' allow further development for registry speciffic purposes. Regardless, this
+#' column should normally be hidden in the GUI.
 #'
 #' Take a look at the
 #' \href{https://github.com/Rapporteket/rapRegTemplate/blob/rel/inst/shinyApps/app1/server.R}{example shiny server function in rapRegTemplate}
@@ -699,13 +699,15 @@ findNextRunDate <- function(runDayOfYear,
 #' which case the ids provided in auto report data will be used. In case
 #' mapOrgId is not NULL but no id match is found the id found in the auto
 #' report data will also be used
+#' @param includeReportId Logical if the unique report id should be added as
+#' the last column in the table. FALSE by default.
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
 #' @importFrom magrittr "%>%"
 #' @export
 
 makeAutoReportTab <- function(session, type = "subscription",
-                              mapOrgId = NULL) {
+                              mapOrgId = NULL, includeReportId = FALSE) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
   . <- ""
@@ -762,9 +764,11 @@ makeAutoReportTab <- function(session, type = "subscription",
           onclick = 'Shiny.onInputChange(\"del_button\",
                              this.id)'
         )
-      ),
-      "id" = n
+      )
     )
+    if (includeReportId) {
+      r <- c(r, list("id" = n))
+    }
     if (!type %in% c("subscription")) {
       r <- c(list(Ansvarlig = autoRep[[n]]$ownerName), r)
     }
