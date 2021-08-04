@@ -1,3 +1,7 @@
+# rapbase 1.15.1
+
+* Allow GitHub API calls by proxy ([#76](https://github.com/Rapporteket/rapbase/pull/76))
+
 # rapbase 1.15.0
 
 * New functions and modules handling database exports ([#74](https://github.com/Rapporteket/rapbase/pull/74))
