@@ -15,6 +15,9 @@ getGithub <- function(what, value, .token = NULL) {
 
   stopifnot(what %in% c("contributors", "keys"))
 
+  conf <- rapbase::getConfig(fileName = "rapbaseConfig.yml",
+                             packageName = "rapbase")
+
   if (what %in% c("contributors")) {
     endpoint <- paste0("/repos/rapporteket/", value, "/contributors")
     vName <- "login"
@@ -24,6 +27,8 @@ getGithub <- function(what, value, .token = NULL) {
     endpoint <- paste0("/users/", value, "/keys")
     vName <- "key"
   }
+
+  httr::set_config(httr::use_proxy(url = conf$network$proxy$http))
 
   vapply(
     gh::gh(endpoint, .token = .token),
