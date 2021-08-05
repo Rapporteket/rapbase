@@ -104,8 +104,12 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
       stop("Session information is empty!. Cannot do anything")
     }
 
-    if (!c("ShinySession") %in% attributes(shinySession)$class) {
-      stop("Got no object of class 'ShinySession'! Cannot do anything")
+    if (!any(c("ShinySession", "session_proxy") %in%
+             attributes(shinySession)$class)) {
+      stop(paste(
+        "Got no object of class 'ShinySession' or 'session_proxy'!",
+        "Cannot do anything"
+      ))
     }
 
     if (context %in% testContexts) {

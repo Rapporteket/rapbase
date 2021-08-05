@@ -1,6 +1,7 @@
 # rapbase 1.15.1
 
 * Allow GitHub API calls by proxy ([#76](https://github.com/Rapporteket/rapbase/pull/76))
+* Fixed failing error check for TEST and PROD contexts ([#77](https://github.com/Rapporteket/rapbase/pull/77))
 
 # rapbase 1.15.0
 
