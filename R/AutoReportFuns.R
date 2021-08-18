@@ -693,7 +693,7 @@ findNextRunDate <- function(runDayOfYear,
 #' @param session A shiny session object
 #' @param type Character string defining the type of auto reports to tabulate.
 #' Must be one of \code{"subscription"}, \code{"dispatchment"} or
-#' \code{"bullitin"}. Default value set to \code{"subscription"}.
+#' \code{"bulletin"}. Default value set to \code{"subscription"}.
 #' @param mapOrgId Data frame containing the two columns 'name' and 'id'
 #' corresponding to unique name and id of organizations. Defult is NULL in
 #' which case the ids provided in auto report data will be used. In case
