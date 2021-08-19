@@ -1,4 +1,24 @@
+#' Shiny modules and helper functions for registry auto reports
+#'
+#' These shiny modules may be used to set up auto reporting from registries at
+#' Rapporteket
+#'
+#' @param id Character string shiny module id
+#' @param registryName Character string registry name key. Must correspond to
+#' the R package name
+#' @param type Character string defining the type of auto reports. Must be one
+#' of \code{c("subscription", "dispatchment", "bulletin")}
+#' @param reports List of reports that will be provided as automated reports.
+#' Describe further...
+#' @param orgs List of named organizations and values. Describe further...
+#'
+#' @return Shiny objects, mostly. Helper functions may return other stuff too.
+#' @name autoReport
+#' @aliases autoReportUI autoReportInput autoReportServer autoReportApp
+NULL
 
+#' @rdname autoReport
+#' @export
 autoReportUI <- function(id) {
 
   shiny::tagList(
@@ -6,6 +26,8 @@ autoReportUI <- function(id) {
   )
 }
 
+#' @rdname autoReport
+#' @export
 autoReportInput <- function(id) {
 
   shiny::tagList(
@@ -22,6 +44,8 @@ autoReportInput <- function(id) {
   )
 }
 
+#' @rdname autoReport
+#' @export
 autoReportServer <- function(id, registryName, type, reports = NULL,
                              orgs = NULL) {
 
@@ -31,7 +55,7 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
       tab = rapbase::makeAutoReportTab(session = session, namespace = id,
                                        type = type, mapOrgId = NULL),
       report = names(reports)[1],
-      org = unlist(orgs, use.names = FALSE)[2],
+      org = unlist(orgs, use.names = FALSE)[1],
       freq = "Månedlig-month",
       email = vector()
     )
@@ -292,7 +316,8 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
 
 }
 
-
+#' @rdname autoReport
+#' @export
 autoReportApp <- function(registryName = "rapbase", type = "subscription",
                           reports = NULL, orgs = NULL) {
   ui <- shiny::fluidPage(
