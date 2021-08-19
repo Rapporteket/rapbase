@@ -691,6 +691,9 @@ findNextRunDate <- function(runDayOfYear,
 #' on how this function may be implemented.
 #'
 #' @param session A shiny session object
+#' @param namespace String naming namespace. Defaults to \code{character()} in
+#' which case no namespace will be created. When this function is used by shiny
+#' modules namespace must be provided.
 #' @param type Character string defining the type of auto reports to tabulate.
 #' Must be one of \code{"subscription"}, \code{"dispatchment"} or
 #' \code{"bulletin"}. Default value set to \code{"subscription"}.
@@ -706,8 +709,10 @@ findNextRunDate <- function(runDayOfYear,
 #' @importFrom magrittr "%>%"
 #' @export
 
-makeAutoReportTab <- function(session, type = "subscription",
-                              mapOrgId = NULL, includeReportId = FALSE) {
+
+makeAutoReportTab <- function(session, namespace = character(),
+                              type = "subscription", mapOrgId = NULL,
+                              includeReportId = FALSE) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
   . <- ""
@@ -749,20 +754,20 @@ makeAutoReportTab <- function(session, type = "subscription",
       "Neste" = nextDate,
       "Endre" = as.character(
         shiny::actionButton(
-          inputId = paste0("edit_", n),
+          inputId = shiny::NS(namespace, paste0("edit_", n)),
           label = "",
           icon = shiny::icon("edit"),
-          onclick = 'Shiny.onInputChange(\"edit_button\",
-                             this.id)'
+          onclick = sprintf("Shiny.onInputChange('%s', this.id)",
+                            shiny::NS(namespace, "edit_button"))
         )
       ),
       "Slett" = as.character(
         shiny::actionButton(
-          inputId = paste0("del_", n),
+          inputId = shiny::NS(namespace, paste0("del_", n)),
           label = "",
           icon = shiny::icon("trash"),
-          onclick = 'Shiny.onInputChange(\"del_button\",
-                             this.id)'
+          onclick = sprintf("Shiny.onInputChange('%s', this.id)",
+                            shiny::NS(namespace, "del_button"))
         )
       )
     )
