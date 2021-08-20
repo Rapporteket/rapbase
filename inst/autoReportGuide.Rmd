@@ -2,6 +2,7 @@
 title: "Veiledning for automatisk utsending av rapporter"
 params:
   registryName: rapbase
+  type: subscription
 author: rapbase
 date: '`r format(Sys.time(), "%d. %B %Y")`'
 
@@ -9,17 +10,52 @@ date: '`r format(Sys.time(), "%d. %B %Y")`'
 
 
 ## Veiledning for utsendinger
-Her kan du sette opp rutinemessig produksjon og utsending av resultater i form av pdf-dokumneter som sendes til angitte mottakere per epost.
+Her kan det settes opp rutinemessig produksjon og utsending av resultater per epost.
 
 ### Bruk
 Fra menyen til venstre
 
-1. velg rapport som skal sendes ut,
-1. angi datakilden som skal benyttes,
-1. velg hvor hyppig rapporten skal sendes ut,
-1. angi mottakers epostadresse og trykk `r shiny::icon("plus-square")` for å legg til på mottakerlista
+1. velg hvilken rapport `r shiny::icon("file")` som skal sendes ut,
+```{r, echo=FALSE, results='asis', include=FALSE}
+if(params$type %in% c("dispatchment", "bulletin")) {
+  t <- shiny::HTML("1. angi datakilden",
+                   as.character(shiny::icon("database")),
+                   "som skal benyttes,")
+  cat(paste0(t, "\n"))
+}
+```
+1. velg hvor hyppig `r shiny::icon("clock")` rapporten skal sendes ut,
+1. om nødvendig, endre dato for første utsending `r shiny::icon("calendar")`, og
+```{r, echo=FALSE, results='asis'}
+if(params$type %in% c("dispatchment", "bulletin")) {
+  t <- shiny::HTML("1. angi epostadresse",
+                   as.character(shiny::icon("at")),
+                   "til mottaker av rapporten og trykk",
+                   as.character(shiny::icon("plus-square")),
+                   "for å legge til lista over mottakere.")
+  cat(paste0(t, "\n"))
+}
+```
 
-Når alt er klart trykk `r shiny::icon("save")` og utsendingen vil bli lagt til tabellen under. Trykk `r shiny::icon("trash")` til høyre i tabellen for å slette en utsending. Aktive utsendinger kan endres ved å trykke på `r shiny::icon("edit")` til høyre i tabellen. Oppføringen vil da slettes fra tabellen og flyttes til menyen til venstre. Ved etablering eller endring av en utsending kan mottakere slettes ved å angi aktuell epostadresse og trykke på `r shiny::icon("minus-square")`.
+```{r, echo=FALSE, results='asis'}
+if(params$type %in% c("subscription")) {
+  t <- shiny::HTML("1. velg i hvilket filformat",
+                   as.character(shiny::icon("file-pdf")),
+                   "rapporten skal mottas.")
+  cat(paste0(t, "\n"))
+}
+```
+
+Når alt er klart trykk `r shiny::icon("save")` for å aktivere utsendingen. Oppføringen vil da vises i tabellen. Trykk `r shiny::icon("trash")` til høyre i tabellen for å slette en utsending. Aktive utsendinger kan endres ved å trykke på `r shiny::icon("edit")` til høyre i tabellen. Utsendingen vil da slettes og flyttes over i menyen til venstre. Ved etablering eller endring av en utsending kan mottakere slettes ved å angi aktuell epostadresse og trykke på `r shiny::icon("minus-square")`
 
 ### Lurt å tenke over
-Alle utsendinger skjer per epost og det betyr at rapportene som sendes ut __ikke__ skal inneholde person- og helseopplysninger. Du står selv som ansvarlig for de utsendinger du etablerer. Det er en god regel å ikke sende ut for ofte men heller med passelige intervaller basert på når nye data i registeret bør presenteres. Alle slike utsendinger produseres og sendes ut nattestid. Om du har mange utsendinger kan det være lurt å spre disse på litt ulike tidspunkter slik at ikke alle skjer på samme dag. Og, siden det er mer ressurskrevende å lage en rapport enn å sende den ut så vil det være en fin gest til miljøet å etterstrebe få utsendinger og heller legge til flere mottakere for hver utsending `r shiny::icon("leaf")`
+Alle utsendinger skjer per epost og det betyr at rapportene som sendes ut __ikke__ skal inneholde person- og helseopplysninger. Du står selv som ansvarlig for de utsendinger du etablerer. Det er en god regel å ikke sende ut for ofte men heller med passelige intervaller basert på når nye data i registeret bør presenteres. Alle slike utsendinger produseres og sendes ut nattestid. Om du har mange ukentlige utsendinger kan det være lurt å spre disse på ulike ukedager for god fordeling av arbeidsbelastningen.
+```{r, echo=FALSE, results='asis'}
+if(params$type %in% c("dispatchment", "bulletin")) {
+  cat(paste("Og, siden det er mer ressurskrevende å lage en rapport enn å",
+            "sende den ut så vil det også være en fin gest til miljøet å",
+            "etterstrebe få utsendinger og heller legge til flere mottakere",
+            "for hver utsending",
+            as.character(shiny::icon("leaf"))))
+}
+```
