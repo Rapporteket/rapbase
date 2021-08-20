@@ -16,7 +16,7 @@ Her kan det settes opp rutinemessig produksjon og utsending av resultater per ep
 Fra menyen til venstre
 
 1. velg hvilken rapport `r shiny::icon("file")` som skal sendes ut,
-```{r, echo=FALSE, results='asis', include=FALSE}
+```{r, echo=FALSE, results='asis'}
 if(params$type %in% c("dispatchment", "bulletin")) {
   t <- shiny::HTML("1. angi datakilden",
                    as.character(shiny::icon("database")),
