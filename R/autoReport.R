@@ -32,6 +32,8 @@ autoReportInput <- function(id) {
 
   shiny::tagList(
     shiny::uiOutput(shiny::NS(id, "reports")),
+    shiny::uiOutput(shiny::NS(id, "synopsis")),
+    shiny::tags$hr(),
     shiny::uiOutput(shiny::NS(id, "orgs")),
     shiny::uiOutput(shiny::NS(id, "freq")),
     shiny::uiOutput(shiny::NS(id, "start")),
@@ -141,6 +143,7 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
                                    mapOrgId = NULL)
     })
 
+    # outputs
     output$reports <- shiny::renderUI({
       if (is.null(reports)) {
         NULL
@@ -154,6 +157,17 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
           choices = names(reports),
           selected = autoReport$report)
       }
+    })
+
+    output$synopsis <- shiny::renderUI({
+      shiny::req(input$report)
+      shiny::HTML(
+        paste0(
+          "Rapportbeskrivelse:<br/><i>",
+          reports[[input$report]]$synopsis,
+          "</i>"
+        )
+      )
     })
 
     output$orgs <- shiny::renderUI({
@@ -254,7 +268,7 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
     output$recipient <- shiny::renderUI({
       if (type %in% c("dispatchment", "bulletin")) {
         recipientList <- paste0(autoReport$email, sep = "<br/>", collapse = "")
-        shiny::HTML(paste0("<b>Mottakere:</b><br/>", recipientList))
+        shiny::HTML(paste0("Mottakere:<br/><i/>", recipientList))
       } else {
         NULL
       }
@@ -310,7 +324,7 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
       rapbase::renderRmd(
         sourceFile = system.file("autoReportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
-        params = list(registryName = registryName))
+        params = list(registryName = registryName, type = type))
     })
   })
 
