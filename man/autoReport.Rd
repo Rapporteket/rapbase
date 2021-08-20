@@ -22,16 +22,17 @@ autoReportApp(
 )
 }
 \arguments{
-\item{id}{Character string shiny module id}
+\item{id}{Character string providing the shiny module id.}
 
-\item{registryName}{Character string registry name key. Must correspond to
-the R package name}
+\item{registryName}{Character string with the registry name key. Must
+correspond to the registry R package name.}
 
 \item{type}{Character string defining the type of auto reports. Must be one
 of \code{c("subscription", "dispatchment", "bulletin")}}
 
-\item{reports}{List of reports that will be provided as automated reports.
-Describe further...}
+\item{reports}{List of a given structure that provides meta data for the
+reports that are made available as automated reports. See Details for further
+description.}
 
 \item{orgs}{List of named organizations and values. Describe further...}
 }
@@ -41,4 +42,63 @@ Shiny objects, mostly. Helper functions may return other stuff too.
 \description{
 These shiny modules may be used to set up auto reporting from registries at
 Rapporteket
+}
+\details{
+The \emph{reports} argument must be a list where each entry
+represents one report and its name will be used in the auto report user
+interface for selecting reports, \emph{e.g.}
+\code{reports = list(MagicReport = ...)} will produce the entry "MagicReport"
+in the GUI selectable reports. The value of each entry must be another list
+with the following names and values:
+\describe{
+  \item{synopsis}{character string describing the report}
+  \item{fun}{report function base name (without"()")}
+  \item{paramNames}{character vector naming all arguments of \emph{fun}}
+  \item{paramValues}{vector with values corresponding to \emph{paramNames}}
+}
+These named values will be used to run reports none-interactively on a given
+schedule and must therefore represent existing and exported functions from
+the registry R package.
+}
+\examples{
+# make a list for report metadata
+reports <- list(
+  FirstReport = list(
+    synopsis = "First example report",
+    fun = "fun1",
+    paramNames = c("a", "b"),
+    paramValues = c(1, "yes")
+  ),
+  SecondReport = list(
+    synopsis = "Second example report",
+    fun = "fun2",
+    paramNames = "x",
+    paramValues = 0
+  )
+)
+
+# make a list of organization names and numbers
+orgs <- list(
+  OrgOne = 111111,
+  OrgTwo = 222222
+)
+
+# client user interface function
+ui <- shiny::fluidPage(
+  shiny::sidebarLayout(
+    shiny::sidebarPanel(autoReportInput("test")),
+    shiny::mainPanel(autoReportUI("test"))
+  )
+)
+
+# server function
+server <- function(input, output, session) {
+  autoReportServer(id = "test", registryName = "rapbase",
+                   type = "subscription", reports = reports, orgs = orgs)
+}
+
+# run the shiny app in an interactive environment
+if (interactive()) {
+  shiny::shinyApp(ui, server)
+}
 }
