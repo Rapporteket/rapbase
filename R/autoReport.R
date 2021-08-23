@@ -32,6 +32,7 @@
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name autoReport
 #' @aliases autoReportUI autoReportInput autoReportServer autoReportApp
+#' orgList2df
 #' @examples
 #' # make a list for report metadata
 #' reports <- list(
@@ -113,7 +114,8 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
 
     autoReport <- shiny::reactiveValues(
       tab = rapbase::makeAutoReportTab(session = session, namespace = id,
-                                       type = type, mapOrgId = NULL),
+                                       type = type,
+                                       mapOrgId = orgList2df(orgs)),
       report = names(reports)[1],
       org = unlist(orgs, use.names = FALSE)[1],
       freq = "Månedlig-month",
@@ -159,7 +161,7 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
       )
       autoReport$tab <-
         rapbase::makeAutoReportTab(session, namespace = id, type = type,
-                                   mapOrgId = NULL)
+                                   mapOrgId = orgList2df(orgs))
       autoReport$email <- vector()
     })
 
@@ -179,7 +181,7 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
       rapbase::deleteAutoReport(repId)
       autoReport$tab <-
         rapbase::makeAutoReportTab(session, namespace = id, type = type,
-                                   mapOrgId = NULL)
+                                   mapOrgId = orgList2df(orgs))
 
 
       if (rep$type == "subscription") {
@@ -198,7 +200,7 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
       rapbase::deleteAutoReport(repId)
       autoReport$tab <-
         rapbase::makeAutoReportTab(session, namespace= id, type = type,
-                                   mapOrgId = NULL)
+                                   mapOrgId = orgList2df(orgs))
     })
 
     # outputs
@@ -405,4 +407,15 @@ autoReportApp <- function(registryName = "rapbase", type = "subscription",
   }
 
   shiny::shinyApp(ui, server)
+}
+
+
+#' @rdname autoReport
+#' @export
+orgList2df <- function(orgs) {
+
+  data.frame(
+    name = names(orgs),
+    id = as.vector(sapply(orgs, unname))
+  )
 }

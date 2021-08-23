@@ -6,6 +6,7 @@
 \alias{autoReportInput}
 \alias{autoReportServer}
 \alias{autoReportApp}
+\alias{orgList2df}
 \title{Shiny modules and helper functions for registry auto reports}
 \usage{
 autoReportUI(id)
@@ -20,6 +21,8 @@ autoReportApp(
   reports = NULL,
   orgs = NULL
 )
+
+orgList2df(orgs)
 }
 \arguments{
 \item{id}{Character string providing the shiny module id.}
