@@ -90,6 +90,7 @@ test_that("new dispatchment can be written to and removed from file", {
     args = list(registryName = registryName, type = type,
                 reports = reports, orgs = orgs), {
                   session$setInputs(report = "FirstReport")
+                  session$setInputs(org = 111111)
                   session$setInputs(freq = "Månedlig-month")
                   session$setInputs(start = as.character(Sys.Date()))
                   session$setInputs(email = "true@email.no")
