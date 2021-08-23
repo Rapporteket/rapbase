@@ -27,7 +27,9 @@
 #' @param reports List of a given structure that provides meta data for the
 #' reports that are made available as automated reports. See Details for further
 #' description.
-#' @param orgs List of named organizations and values. Describe further...
+#' @param orgs Named list of organizations (names) and ids (values). When set to
+#' \code{NULL} (default) the ids found in auto report data will be used in the
+#' table listing existing auto reports.
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name autoReport
