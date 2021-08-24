@@ -74,6 +74,7 @@ reference:
     - getRegs
     - findNextRunDate
     - filterAutoRep
+    - autoReport
     - .testAutoReport
     - .getFun
 
