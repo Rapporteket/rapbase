@@ -50,7 +50,6 @@ Imports:
     rpivotTable,
     sendmailR,
     shiny,
-    sship,
     utils,
     withr,
     yaml
