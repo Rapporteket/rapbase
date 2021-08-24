@@ -10,6 +10,13 @@
 #'
 #' @param id Character string shiny module id
 #' @param registryName Character string registry name key
+#' @param type Character string defining data level. One of
+#' \code{c("app", "report")}.
+#' @param log Data frame containing log data (in Rapporteket format)
+#' @param startDate Date object defining start of interval (character
+#' representation "YYYY-MM-DD")
+#' @param endDate Date object defining end of interval (character representation
+#' "YYYY-MM-DD")
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name stats
