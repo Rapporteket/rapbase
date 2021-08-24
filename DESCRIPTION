@@ -43,6 +43,7 @@ Imports:
     readr,
     remotes,
     revealjs,
+    rlang,
     RMariaDB,
     rmarkdown,
     rio,

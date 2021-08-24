@@ -171,14 +171,14 @@ logFormat <- function(log) {
 
   log <- log %>%
     dplyr::mutate(
-      datetime = as.POSIXct(time),
-      date = as.Date(datetime),
-      time = format(datetime, "%H:%M:%S"),
-      year = lubridate::year(datetime),
-      month = lubridate::month(datetime),
-      day = lubridate::day(datetime),
+      datetime = as.POSIXct(.data$time),
+      date = as.Date(.data$datetime),
+      time = format(.data$datetime, "%H:%M:%S"),
+      year = lubridate::year(.data$datetime),
+      month = lubridate::month(.data$datetime),
+      day = lubridate::day(.data$datetime),
       weekday = lubridate::wday(
-        datetime,
+        .data$datetime,
         week_start = 1,
         abbr = FALSE)
     )
