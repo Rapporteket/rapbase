@@ -14,8 +14,8 @@
 #' @examples
 #' \donttest{
 #' # Requires a valid shiny session object
-#' getUserRole()
-#' getUserRole(shinySessionObject)
+#' try(getUserRole())
+#' try(getUserRole(shinySessionObject))
 #' }
 #'
 #' @export

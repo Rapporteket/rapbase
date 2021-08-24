@@ -24,8 +24,8 @@ redefining contexts is needed, please use \code{\link{userInfo}} instead.
 \examples{
 \donttest{
 # Requires a valid shiny session object
-getUserPhone()
-getUserPhone(shinySessionObject)
+try(getUserPhone())
+try(getUserPhone(shinySessionObject))
 }
 
 }

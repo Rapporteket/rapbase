@@ -157,17 +157,17 @@ makeHist <- function(data, var, bins, ...) {
 \examples{
 \donttest{
 # Depend on the environment variable R_RAP_CONFIG_PATH being set
-appLogger(list())
+try(appLogger(list()))
 }
 
 \donttest{
 # Depend on the environment variable R_RAP_CONFIG_PATH being set
-repLogger(list())
+try(repLogger(list()))
 }
 
 \donttest{
 # Depend on the environment variable R_RAP_CONFIG_PATH being set
-autLogger(user = "ttester", registryName = "rapbase", reshId = "999999")
+try(autLogger(user = "ttester", registryName = "rapbase", reshId = "999999"))
 }
 
 }

@@ -19,13 +19,6 @@ String user resh_id
 \description{
 Get user resh_id from a shiny session object
 }
-\examples{
-\donttest{
-# Requires a valid shiny session object
-getShinyUserReshId(shinySessionObject)
-}
-
-}
 \seealso{
 \code{\link{getShinyUserName}}, \code{\link{getShinyUserGroups}},
 \code{\link{getShinyUserRole}}
