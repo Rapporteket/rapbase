@@ -120,7 +120,7 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
                                        mapOrgId = orgList2df(orgs)),
       report = names(reports)[1],
       org = unlist(orgs, use.names = FALSE)[1],
-      freq = "Månedlig-month",
+      freq = "M\u00E5nedlig-month",
       email = vector()
     )
 
@@ -254,11 +254,11 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("clock")), "Frekvens:")
         ),
-        choices = list(Årlig = "Årlig-year",
-                        Kvartalsvis = "Kvartalsvis-quarter",
-                        Månedlig = "Månedlig-month",
-                        Ukentlig = "Ukentlig-week",
-                        Daglig = "Daglig-day"),
+        choices = list("\u00C5rlig" = "\u00C5rlig-year",
+                        "Kvartalsvis" = "Kvartalsvis-quarter",
+                        "M\u00E5nedlig" = "M\u00E5nedlig-month",
+                        "Ukentlig" = "Ukentlig-week",
+                        "Daglig" = "Daglig-day"),
         selected = autoReport$freq
       )
     })
@@ -269,7 +269,7 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
         shiny::NS(id, "start"),
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("calendar")),
-                      "Første utsending:")
+                      "F\u00F8rste utsending:")
         ),
         value = seq.Date(Sys.Date(),
                          by = strsplit(input$freq, "-")[[1]][2],
@@ -338,14 +338,15 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
 
     output$makeAutoReport <- shiny::renderUI({
       if (type %in% c("subscription")) {
-        shiny::actionButton(shiny::NS(id, "makeAutoReport"), "Lag oppføring",
+        shiny::actionButton(shiny::NS(id, "makeAutoReport"), "Lag oppf\u00F8ring",
                             icon = shiny::icon("save"))
       } else {
         shiny::req(input$email)
         if (length(autoReport$email) == 0) {
           NULL
         } else {
-          shiny::actionButton(shiny::NS(id, "makeAutoReport"), "Lag oppføring",
+          shiny::actionButton(shiny::NS(id, "makeAutoReport"),
+                              "Lag oppf\u00F8ring",
                               icon = shiny::icon("save"))
         }
       }
@@ -368,14 +369,14 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
     output$autoReportTable <- shiny::renderUI({
       if (length(autoReport$tab) == 0) {
         shiny::tagList(
-          shiny::h2("Det finnes ingen oppføringer"),
-          shiny::p(paste("Nye oppføringer kan lages fra menyen til venstre,",
-                         "se veiledingen under.")),
+          shiny::h2("Det finnes ingen oppf\u00F8ringer"),
+          shiny::p(paste("Nye oppf\u00F8ringer kan lages fra menyen til",
+                         "venstre, se veiledingen under.")),
           shiny::htmlOutput(shiny::NS(id, "autoReportGuide"))
         )
       } else {
         shiny::tagList(
-          shiny::h2("Aktive oppføringer:"),
+          shiny::h2("Aktive oppf\u00F8ringer:"),
           DT::dataTableOutput(shiny::NS(id, "activeReports")),
           shiny::htmlOutput(shiny::NS(id, "autoReportGuide"))
         )
