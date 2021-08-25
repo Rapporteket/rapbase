@@ -4,10 +4,7 @@ currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
 # make pristine and dedicated config to avoid interference with other tests
 Sys.setenv(R_RAP_CONFIG_PATH = file.path(tempdir(), "autoReportTesting"))
 dir.create(Sys.getenv("R_RAP_CONFIG_PATH"))
-# file.copy(system.file(c("rapbaseConfig.yml", "dbConfig.yml", "autoReport.yml"),
-#                       package = "rapbase"),
-#           Sys.getenv("R_RAP_CONFIG_PATH"))
-file.copy(system.file(c("rapbaseConfig.yml", "dbConfig.yml"),
+file.copy(system.file(c("rapbaseConfig.yml", "dbConfig.yml", "autoReport.yml"),
                       package = "rapbase"),
           Sys.getenv("R_RAP_CONFIG_PATH"))
 
@@ -73,9 +70,7 @@ test_that("email can be added and deleted for dispatchment", {
     autoReportServer,
     args = list(registryName = registryName, type = type,
                 reports = reports, orgs = orgs), {
-                  print(input$email)
                   session$setInputs(email = "true@email.no")
-                  print(input$email)
                   expect_equal(length(autoReport$email), 0)
                   session$setInputs(addEmail = 1)
                   expect_equal(autoReport$email[1], "true@email.no")
@@ -100,7 +95,6 @@ test_that("new dispatchment can be written to and removed from file", {
                   session$setInputs(email = "true@email.no")
                   session$setInputs(addEmail = 1)
                   session$setInputs(makeAutoReport = 1)
-                  print(readLines(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReport.yml")))
                   expect_true(origFileSize < file.size(
                     file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
                               "autoReport.yml")))
