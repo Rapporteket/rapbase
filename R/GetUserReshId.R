@@ -14,8 +14,8 @@
 #' @examples
 #' \donttest{
 #' # Requires a valid shiny session object
-#' getUserReshId()
-#' getUserReshId(shinySessionObject)
+#' try(getUserReshId())
+#' try(getUserReshId(shinySessionObject))
 #' }
 #'
 #' @export

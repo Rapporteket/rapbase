@@ -19,13 +19,6 @@ String user groups
 \description{
 Get user groups from a shiny session object
 }
-\examples{
-\donttest{
-# Requires a valid shiny session object
-getShinyUserGroups(shinySessionObject)
-}
-
-}
 \seealso{
 \code{\link{getShinyUserName}}, \code{\link{getShinyUserReshId}},
 \code{\link{getShinyUserRole}}

@@ -6,6 +6,7 @@
 \usage{
 makeAutoReportTab(
   session,
+  namespace = character(),
   type = "subscription",
   mapOrgId = NULL,
   includeReportId = FALSE
@@ -14,12 +15,16 @@ makeAutoReportTab(
 \arguments{
 \item{session}{A shiny session object}
 
+\item{namespace}{String naming namespace. Defaults to \code{character()} in
+which case no namespace will be created. When this function is used by shiny
+modules namespace must be provided.}
+
 \item{type}{Character string defining the type of auto reports to tabulate.
 Must be one of \code{"subscription"}, \code{"dispatchment"} or
-\code{"bullitin"}. Default value set to \code{"subscription"}.}
+\code{"bulletin"}. Default value set to \code{"subscription"}.}
 
 \item{mapOrgId}{Data frame containing the two columns 'name' and 'id'
-corresponding to unique name and id of organizations. Defult is NULL in
+corresponding to unique name and id of organizations. Default is NULL in
 which case the ids provided in auto report data will be used. In case
 mapOrgId is not NULL but no id match is found the id found in the auto
 report data will also be used}

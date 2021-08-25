@@ -7,12 +7,6 @@
 #' @seealso \code{\link{getShinyUserName}}, \code{\link{getShinyUserGroups}},
 #' \code{\link{getShinyUserReshId}}, \code{\link{getShinyUserRole}}
 #'
-#' @examples
-#' \donttest{
-#' # Requires a valid shiny session object
-#' getShinyUserName(shinySessionObject)
-#' }
-#'
 #' @export
 
 

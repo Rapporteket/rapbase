@@ -29,6 +29,17 @@ logTimeFrame(log, startDate, endDate)
 \item{id}{Character string shiny module id}
 
 \item{registryName}{Character string registry name key}
+
+\item{type}{Character string defining data level. One of
+\code{c("app", "report")}.}
+
+\item{log}{Data frame containing log data (in Rapporteket format)}
+
+\item{startDate}{Date object defining start of interval (character
+representation "YYYY-MM-DD")}
+
+\item{endDate}{Date object defining end of interval (character representation
+"YYYY-MM-DD")}
 }
 \value{
 Shiny objects, mostly. Helper functions may return other stuff too.

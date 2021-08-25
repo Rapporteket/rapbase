@@ -14,8 +14,8 @@
 #' @examples
 #' \donttest{
 #' # Requires a valid shiny session object
-#' getUserGroups()
-#' getUserGroups(shinySessionObject)
+#' try(getUserGroups())
+#' try(getUserGroups(shinySessionObject))
 #' }
 #'
 #' @export

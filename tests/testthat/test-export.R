@@ -75,8 +75,6 @@ test_that("export UC input returns a shiny tag list", {
 })
 
 test_that("guide module server provides sensible output", {
-  #local_edition(3)
-  #rv <- shiny::reactiveVal()
   shiny::testServer(exportUCServer, args = list(registryName = "rapbase"), {
     expect_equal(class(output$exportPidUI), "list")
     session$setInputs(exportPid = "areedv")
@@ -92,13 +90,6 @@ test_that("guide module server provides sensible output", {
 test_that("guide test app returns an app object", {
   expect_equal(class(exportUCApp()), "shiny.appobj")
 })
-
-# test_that("test app can run", {
-#   shiny::testServer(exportUCApp, args = list(registryName = "rapbase"), {
-#     print(class(server))
-#   })
-# })
-
 
 # Restore instance
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)

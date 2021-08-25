@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 1.15.1
+Version: 1.16.0
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -30,6 +30,7 @@ Imports:
     devtools,
     digest,
     dplyr,
+    DT,
     gh,
     gistr,
     httr,
@@ -42,13 +43,13 @@ Imports:
     readr,
     remotes,
     revealjs,
+    rlang,
     RMariaDB,
     rmarkdown,
     rio,
     rpivotTable,
     sendmailR,
     shiny,
-    sship,
     utils,
     withr,
     yaml
@@ -58,5 +59,6 @@ RoxygenNote: 7.1.1
 URL: http://github.com/Rapporteket/rapbase
 BugReports: http://github.com/Rapporteket/rapbase/issues
 Suggests:
-    testthat,
-    lifecycle
+    lifecycle,
+    rvest,
+    testthat

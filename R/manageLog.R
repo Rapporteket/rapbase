@@ -21,7 +21,7 @@
 #' \donttest{
 #' # Depend on the R_RAP_CONFIG_PATH being defined and that relevant
 #' # configuration is present
-#' raplogManager()
+#' try(raplogManager())
 #' }
 #'
 raplogManager <- function(overSize = 1024 * 1000) {

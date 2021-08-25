@@ -19,13 +19,6 @@ String user role
 \description{
 Get user role from a shiny session object
 }
-\examples{
-\donttest{
-# Requires a valid shiny session object
-getShinyUserRole(shinySessionObject)
-}
-
-}
 \seealso{
 \code{\link{getShinyUserName}}, \code{\link{getShinyUserGroups}},
 \code{\link{getShinyUserReshId}}

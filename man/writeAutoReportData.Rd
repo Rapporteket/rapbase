@@ -28,7 +28,7 @@ Write automated report metadata
 \donttest{
 # Example depend on environment variable R_RAP_CONFIG_PATH being set
 config <- readAutoReportData()
-writeAutoReportData(config = config)
+try(writeAutoReportData(config = config))
 }
 
 }
