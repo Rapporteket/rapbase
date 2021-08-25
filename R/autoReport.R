@@ -201,7 +201,7 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
       repId <- strsplit(input$del_button, "_")[[1]][2]
       rapbase::deleteAutoReport(repId)
       autoReport$tab <-
-        rapbase::makeAutoReportTab(session, namespace= id, type = type,
+        rapbase::makeAutoReportTab(session, namespace = id, type = type,
                                    mapOrgId = orgList2df(orgs))
     })
 
@@ -338,7 +338,8 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
 
     output$makeAutoReport <- shiny::renderUI({
       if (type %in% c("subscription")) {
-        shiny::actionButton(shiny::NS(id, "makeAutoReport"), "Lag oppf\u00F8ring",
+        shiny::actionButton(shiny::NS(id, "makeAutoReport"),
+                            "Lag oppf\u00F8ring",
                             icon = shiny::icon("save"))
       } else {
         shiny::req(input$email)

@@ -190,5 +190,3 @@ exportDb <- function(registryName, compress = FALSE, session) {
 
   invisible(f)
 }
-
-
