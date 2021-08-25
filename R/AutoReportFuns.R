@@ -209,7 +209,7 @@ upgradeAutoReportData <- function(config) {
 #' \donttest{
 #' # Example depend on environment variable R_RAP_CONFIG_PATH being set
 #' config <- readAutoReportData()
-#' writeAutoReportData(config = config)
+#' try(writeAutoReportData(config = config))
 #' }
 #'
 writeAutoReportData <- function(fileName = "autoReport.yml", config,
