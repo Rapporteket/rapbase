@@ -85,7 +85,6 @@ test_that("email can be added and deleted for dispatchment", {
                 })
 })
 
-print(readLines(system.file("autoReport.yml", package = "rapbase")))
 
 test_that("new dispatchment can be written to and removed from file", {
   origFileSize <- file.size(file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
@@ -101,6 +100,7 @@ test_that("new dispatchment can be written to and removed from file", {
                   session$setInputs(email = "true@email.no")
                   session$setInputs(addEmail = 1)
                   session$setInputs(makeAutoReport = 1)
+                  print(readLines(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReport.yml")))
                   expect_true(origFileSize < file.size(
                     file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
                               "autoReport.yml")))
