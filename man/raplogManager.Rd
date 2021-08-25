@@ -26,7 +26,7 @@ initiated by a scheduler
 \donttest{
 # Depend on the R_RAP_CONFIG_PATH being defined and that relevant
 # configuration is present
-raplogManager()
+try(raplogManager())
 }
 
 }
