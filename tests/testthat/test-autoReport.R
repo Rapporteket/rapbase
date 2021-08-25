@@ -85,6 +85,8 @@ test_that("email can be added and deleted for dispatchment", {
                 })
 })
 
+print(readLines(system.file("autoReport.yml", package = "rapbase")))
+
 test_that("new dispatchment can be written to and removed from file", {
   origFileSize <- file.size(file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
                                       "autoReport.yml"))
