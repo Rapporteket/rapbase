@@ -3,17 +3,38 @@
 \name{autoReport}
 \alias{autoReport}
 \alias{autoReportUI}
+\alias{autoReportOrgInput}
+\alias{autoReportOrgServer}
+\alias{autoReportFormatInput}
+\alias{autoReportFormatSercer}
 \alias{autoReportInput}
 \alias{autoReportServer}
 \alias{autoReportApp}
 \alias{orgList2df}
+\alias{autoReportFormatServer}
 \title{Shiny modules and helper functions for registry auto reports}
 \usage{
 autoReportUI(id)
 
+autoReportOrgInput(id)
+
+autoReportOrgServer(id, orgs)
+
+autoReportFormatInput(id)
+
+autoReportFormatServer(id)
+
 autoReportInput(id)
 
-autoReportServer(id, registryName, type, reports = NULL, orgs = NULL)
+autoReportServer(
+  id,
+  registryName,
+  type,
+  org,
+  paramValues,
+  reports = NULL,
+  orgs = NULL
+)
 
 autoReportApp(
   registryName = "rapbase",
@@ -27,6 +48,10 @@ orgList2df(orgs)
 \arguments{
 \item{id}{Character string providing the shiny module id.}
 
+\item{orgs}{Named list of organizations (names) and ids (values). When set to
+\code{NULL} (default) the ids found in auto report data will be used in the
+table listing existing auto reports.}
+
 \item{registryName}{Character string with the registry name key. Must
 correspond to the registry R package name.}
 
@@ -36,17 +61,17 @@ of \code{c("subscription", "dispatchment", "bulletin")}}
 \item{reports}{List of a given structure that provides meta data for the
 reports that are made available as automated reports. See Details for further
 description.}
-
-\item{orgs}{Named list of organizations (names) and ids (values). When set to
-\code{NULL} (default) the ids found in auto report data will be used in the
-table listing existing auto reports.}
 }
 \value{
-Shiny objects, mostly. Helper functions may return other stuff too.
+In general, shiny objects. In particular, \code{autoreportServer}
+returns a named list of "format" and "org" with reactive values providing the
+selected file format and organization as these may be used when this module
+is implemented  by the registries. \code{orgList2df} returns a data frame
+with colums "name" and "id".
 }
 \description{
 These shiny modules may be used to set up auto reporting from registries at
-Rapporteket
+Rapporteket.
 }
 \details{
 The \emph{reports} argument must be a list where each entry
@@ -63,7 +88,11 @@ with the following names and values:
 }
 These named values will be used to run reports none-interactively on a given
 schedule and must therefore represent existing and exported functions from
-the registry R package.
+the registry R package. For subscriptions the \emph{reports} list can be used
+as is, more specifically that the values provided in \emph{paramValues} can
+go unchanged. For dispatchments and bulletins it is likely that paramter
+values must be set dynamically in which case \emph{paramValues} must be
+a reactive part of the application. See Examples.
 }
 \examples{
 # make a list for report metadata

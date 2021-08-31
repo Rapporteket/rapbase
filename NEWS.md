@@ -1,3 +1,7 @@
+# rapbase 1.16.1
+
+* Added missing reactive return from auto report server module ([]())
+
 # rapbase 1.16.0
 
 * New functions and shiny modules providing automated reports (subscriptions, dispatchments and bulletins) for registries ([#78](https://github.com/Rapporteket/rapbase/pull/78))
