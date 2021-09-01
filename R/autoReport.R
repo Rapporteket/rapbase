@@ -19,9 +19,10 @@
 #' schedule and must therefore represent existing and exported functions from
 #' the registry R package. For subscriptions the \emph{reports} list can be used
 #' as is, more specifically that the values provided in \emph{paramValues} can
-#' go unchanged. For dispatchments and bulletins it is likely that paramter
+#' go unchanged. For dispatchments and bulletins it is likely that parameter
 #' values must be set dynamically in which case \emph{paramValues} must be
-#' a reactive part of the application. See Examples.
+#' a reactive part of the application. See Examples on how function arguments
+#' may be used as reactives in an application.
 #'
 #' @param id Character string providing the shiny module id.
 #' @param registryName Character string with the registry name key. Must
@@ -34,6 +35,10 @@
 #' @param orgs Named list of organizations (names) and ids (values). When set to
 #' \code{NULL} (default) the ids found in auto report data will be used in the
 #' table listing existing auto reports.
+#' @param org Shiny reactive value providing the organization id for the auto
+#' report. To be used when auto report function arguments will be a reactive
+#' part of the auto report application.
+#'
 #'
 #' @return In general, shiny objects. In particular, \code{autoreportServer}
 #' returns a named list of "format" and "org" with reactive values providing the
@@ -207,10 +212,6 @@ autoReportServer <- function(id, registryName, type, org, paramValues,
 
     shiny::observeEvent(input$delEmail, {
       autoReport$email <- autoReport$email[!autoReport$email == input$email]
-    })
-
-    shiny::observeEvent(org(), {
-      print(paste("Org value is now changed:", org()))
     })
 
     shiny::observeEvent(input$makeAutoReport, {
@@ -448,13 +449,6 @@ autoReportServer <- function(id, registryName, type, org, paramValues,
         outputType = "html_fragment",
         params = list(registryName = registryName, type = type))
     })
-
-    # return reactive values
-    list(
-      report = shiny::reactive(input$report),
-      org = shiny::reactive(input$org),
-      format = shiny::reactive(input$format)
-    )
   })
 }
 
@@ -480,14 +474,10 @@ autoReportApp <- function(registryName = "rapbase", type = "subscription",
 
     paramValues <- shiny::reactive(c(org$value(), format()))
 
-    ar <- autoReportServer(
+    autoReportServer(
       id = "test", registryName = registryName, type = type, org = org$value,
       paramValues = paramValues, reports = reports, orgs = orgs
     )
-
-    shiny::observeEvent(ar$format(), {
-      print(paste("selected file format is:", ar$format()))
-    })
   }
 
   shiny::shinyApp(ui, server)
