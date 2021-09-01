@@ -197,7 +197,8 @@ autoReportInput <- function(id) {
 
 #' @rdname autoReport
 #' @export
-autoReportServer <- function(id, registryName, type, paramValues,
+autoReportServer <- function(id, registryName, type,
+                             paramValues = shiny::reactiveVal(c("")),
                              reports = NULL, orgs = NULL) {
 
   if (!type %in% c("subscription")) {
@@ -230,11 +231,14 @@ autoReportServer <- function(id, registryName, type, paramValues,
       report <- reports[[input$report]]
       interval <- strsplit(input$freq, "-")[[1]][2]
 
+      paramValues <- report$paramValues
+
       if (type %in% c("subscription") | is.null(orgs)) {
-        paramValues <- report$paramValues
         email <- rapbase::getUserEmail(session)
       } else {
-        paramValues <- paramValues()
+        if (!paramValues()[1] == "") {
+          paramValues <- paramValues()
+        }
         email <- autoReport$email
       }
 
