@@ -30,7 +30,6 @@ autoReportServer(
   id,
   registryName,
   type,
-  org,
   paramValues,
   reports = NULL,
   orgs = NULL
@@ -61,13 +60,18 @@ of \code{c("subscription", "dispatchment", "bulletin")}}
 \item{reports}{List of a given structure that provides meta data for the
 reports that are made available as automated reports. See Details for further
 description.}
+
+\item{org}{Shiny reactive value providing the organization id for the auto
+report. To be used when auto report function arguments will be a reactive
+part of the auto report application.}
 }
 \value{
-In general, shiny objects. In particular, \code{autoreportServer}
-returns a named list of "format" and "org" with reactive values providing the
-selected file format and organization as these may be used when this module
-is implemented  by the registries. \code{orgList2df} returns a data frame
-with colums "name" and "id".
+In general, shiny objects. In particular, \code{autoreportOrgServer}
+returns a list with names "name" and "value" with corresponding reactive
+values for the selected organization name and id. This may be used when
+parameter values of auto report functions needs to be altered at application
+run time. \code{orgList2df} returns a data frame with columns "name" and
+"id".
 }
 \description{
 These shiny modules may be used to set up auto reporting from registries at
@@ -90,45 +94,56 @@ These named values will be used to run reports none-interactively on a given
 schedule and must therefore represent existing and exported functions from
 the registry R package. For subscriptions the \emph{reports} list can be used
 as is, more specifically that the values provided in \emph{paramValues} can
-go unchanged. For dispatchments and bulletins it is likely that paramter
+go unchanged. For dispatchments and bulletins it is likely that parameter
 values must be set dynamically in which case \emph{paramValues} must be
-a reactive part of the application. See Examples.
+a reactive part of the application. See Examples on how function arguments
+may be used as reactives in an application.
 }
 \examples{
-# make a list for report metadata
+## make a list for report metadata
 reports <- list(
   FirstReport = list(
     synopsis = "First example report",
     fun = "fun1",
-    paramNames = c("a", "b"),
-    paramValues = c(1, "yes")
+    paramNames = c("organization", "outputFormat"),
+    paramValues = c(111111, "html")
   ),
   SecondReport = list(
     synopsis = "Second example report",
     fun = "fun2",
-    paramNames = "x",
-    paramValues = 0
+    paramNames = c("organization", "outputFormat"),
+    paramValues = c(111111, "pdf")
   )
 )
 
-# make a list of organization names and numbers
+## make a list of organization names and numbers
 orgs <- list(
   OrgOne = 111111,
   OrgTwo = 222222
 )
 
-# client user interface function
+## client user interface function
 ui <- shiny::fluidPage(
   shiny::sidebarLayout(
+    autoReportOrgInput("test"),
+    autoReportFormatInput("test"),
     shiny::sidebarPanel(autoReportInput("test")),
     shiny::mainPanel(autoReportUI("test"))
   )
 )
 
-# server function
+## server function
 server <- function(input, output, session) {
-  autoReportServer(id = "test", registryName = "rapbase",
-                   type = "subscription", reports = reports, orgs = orgs)
+  org <- autoReportOrgServer("test", orgs)
+  format <- autoReportFormatServer("test")
+
+  ## set reactive paramValues overriding those in the reports list
+  paramValues <- shiny::reactive(c(org$value(), format()))
+
+  autoReportServer(
+    id = "test", registryName = registryName, type = type, org = org$value,
+    paramValues = paramValues, reports = reports, orgs = orgs
+  )
 }
 
 # run the shiny app in an interactive environment
