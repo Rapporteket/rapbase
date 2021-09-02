@@ -10,13 +10,22 @@ file.copy(system.file(c("rapbaseConfig.yml", "dbConfig.yml", "autoReport.yml"),
 
 registryName <- "rapbase"
 
+test_that("auto report UI returns a shiny tag list", {
+  expect_true("shiny.tag.list" %in% class(autoReportUI("id")))
+})
+
+test_that("auto report Org input returns a shiny tag list", {
+  expect_true("shiny.tag.list" %in% class(autoReportOrgInput("id")))
+})
+
+test_that("auto report Format input returns a shiny tag list", {
+  expect_true("shiny.tag.list" %in% class(autoReportFormatInput("id")))
+})
+
 test_that("auto report input returns a shiny tag list", {
   expect_true("shiny.tag.list" %in% class(autoReportInput("id")))
 })
 
-test_that("auto report UI returns a shiny tag list", {
-  expect_true("shiny.tag.list" %in% class(autoReportUI("id")))
-})
 
 # prep arguments
 ## make a list for report metadata
@@ -24,14 +33,14 @@ reports <- list(
   FirstReport = list(
     synopsis = "First example report",
     fun = "fun1",
-    paramNames = c("a", "b"),
-    paramValues = c(1, "yes")
+    paramNames = c("organization", "outputFormat"),
+    paramValues = c(111111, "html")
   ),
   SecondReport = list(
     synopsis = "Second example report",
     fun = "fun2",
-    paramNames = "x",
-    paramValues = 0
+    paramNames = c("organization", "outputFormat"),
+    paramValues = c(111111, "pdf")
   )
 )
 
@@ -40,6 +49,23 @@ orgs <- list(
   OrgOne = 111111,
   OrgTwo = 222222
 )
+
+test_that("module org server returns outputs and list of reactives", {
+  shiny::testServer(autoReportOrgServer, args = list(orgs = orgs), {
+    session$setInputs(org = 111111)
+    expect_equal(class(output$orgs), "list")
+    expect_equal(class(session$returned), "list")
+    expect_true(shiny::is.reactive(session$returned$name))
+    expect_true(shiny::is.reactive(session$returned$value))
+  })
+})
+
+test_that("module format server returns outputs and list of reactives", {
+  shiny::testServer(autoReportFormatServer, {
+    expect_equal(class(output$format), "list")
+    expect_true(shiny::is.reactive(session$returned))
+  })
+})
 
 ## set type
 type <- "subscription"
@@ -89,7 +115,6 @@ test_that("new dispatchment can be written to and removed from file", {
     args = list(registryName = registryName, type = type,
                 reports = reports, orgs = orgs), {
                   session$setInputs(report = "FirstReport")
-                  session$setInputs(org = 111111)
                   session$setInputs(freq = "Maanedlig-month")
                   session$setInputs(start = as.character(Sys.Date()))
                   session$setInputs(email = "true@email.no")
@@ -118,6 +143,27 @@ test_that("new dispatchment can be written to and removed from file", {
                   session$setInputs(del_button = delButton)
                   repsAfter <- dim(autoReport$tab)[1]
                   expect_true(repsAfter == (repsBefore - 1))
+                })
+})
+
+test_that("paramValues can be tweaked when provided", {
+  origFileSize <- file.size(file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
+                                      "autoReport.yml"))
+  shiny::testServer(
+    autoReportServer,
+    args = list(registryName = registryName, type = type,
+                paramNames = shiny::reactive(c("organization", "outputFormat")),
+                paramValues = shiny::reactive(c(999999, "pdf")),
+                reports = reports, orgs = orgs), {
+                  session$setInputs(report = "FirstReport")
+                  session$setInputs(freq = "Maanedlig-month")
+                  session$setInputs(start = as.character(Sys.Date()))
+                  session$setInputs(email = "true@email.no")
+                  session$setInputs(addEmail = 1)
+                  session$setInputs(makeAutoReport = 1)
+                  expect_true(origFileSize < file.size(
+                    file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
+                              "autoReport.yml")))
                 })
 })
 

@@ -1,7 +1,7 @@
 #' Shiny modules and helper functions for registry auto reports
 #'
 #' These shiny modules may be used to set up auto reporting from registries at
-#' Rapporteket
+#' Rapporteket.
 #'
 #' The \emph{reports} argument must be a list where each entry
 #' represents one report and its name will be used in the auto report user
@@ -17,7 +17,12 @@
 #' }
 #' These named values will be used to run reports none-interactively on a given
 #' schedule and must therefore represent existing and exported functions from
-#' the registry R package.
+#' the registry R package. For subscriptions the \emph{reports} list can be used
+#' as is, more specifically that the values provided in \emph{paramValues} can
+#' go unchanged. For dispatchments and bulletins it is likely that parameter
+#' values must be set dynamically in which case \emph{paramValues} must be
+#' a reactive part of the application. See Examples on how function arguments
+#' may be used as reactives in an application.
 #'
 #' @param id Character string providing the shiny module id.
 #' @param registryName Character string with the registry name key. Must
@@ -27,49 +32,83 @@
 #' @param reports List of a given structure that provides meta data for the
 #' reports that are made available as automated reports. See Details for further
 #' description.
+#' @param paramNames Shiny reactive value as a vector of parameter names of
+#' which values are to be set interactively at application run time. Each
+#' element of this vector must match exactly those of \code{paramValues}.
+#' Default value is \code{shiny::reactiveVal("")}.
+#' @param paramValues Shiny reactive value as a vector of those parameter values
+#' to be set interactively, \emph{i.e.} as per user input in the application.
+#' Default value is set to \code{shiny::reactiveVal("")} in which case parameter
+#' values defined in \code{reports} will be used as is. In other words,
+#' explicit use of \code{paramValues} will only be needed if parameter values
+#' must be changed during application run time. If so, each element of this
+#' vector must correspond exactly to those of \code{paramNames}.
 #' @param orgs Named list of organizations (names) and ids (values). When set to
 #' \code{NULL} (default) the ids found in auto report data will be used in the
 #' table listing existing auto reports.
 #'
-#' @return Shiny objects, mostly. Helper functions may return other stuff too.
+#'
+#' @return In general, shiny objects. In particular, \code{autoreportOrgServer}
+#' returns a list with names "name" and "value" with corresponding reactive
+#' values for the selected organization name and id. This may be used when
+#' parameter values of auto report functions needs to be altered at application
+#' run time. \code{orgList2df} returns a data frame with columns "name" and
+#' "id".
 #' @name autoReport
-#' @aliases autoReportUI autoReportInput autoReportServer autoReportApp
-#' orgList2df
+#' @aliases autoReportUI autoReportOrgInput autoReportOrgServer
+#' autoReportFormatInput autoReportFormatSercer autoReportInput autoReportServer
+#' autoReportApp orgList2df
 #' @examples
-#' # make a list for report metadata
+#' ## make a list for report metadata
 #' reports <- list(
 #'   FirstReport = list(
 #'     synopsis = "First example report",
 #'     fun = "fun1",
-#'     paramNames = c("a", "b"),
-#'     paramValues = c(1, "yes")
+#'     paramNames = c("organization", "topic", "outputFormat"),
+#'     paramValues = c(111111, "work", "html")
 #'   ),
 #'   SecondReport = list(
 #'     synopsis = "Second example report",
 #'     fun = "fun2",
-#'     paramNames = "x",
-#'     paramValues = 0
+#'     paramNames = c("organization", "topic", "outputFormat"),
+#'     paramValues = c(111111, "leisure", "pdf")
 #'   )
 #' )
 #'
-#' # make a list of organization names and numbers
+#' ## make a list of organization names and numbers
 #' orgs <- list(
 #'   OrgOne = 111111,
 #'   OrgTwo = 222222
 #' )
 #'
-#' # client user interface function
+#' ## client user interface function
 #' ui <- shiny::fluidPage(
 #'   shiny::sidebarLayout(
-#'     shiny::sidebarPanel(autoReportInput("test")),
-#'     shiny::mainPanel(autoReportUI("test"))
+#'     shiny::sidebarPanel(
+#'       autoReportFormatInput("test"),
+#'       autoReportOrgInput("test"),
+#'       autoReportInput("test")
+#'     ),
+#'     shiny::mainPanel(
+#'       autoReportUI("test")
+#'     )
 #'   )
 #' )
 #'
-#' # server function
+#' ## server function
 #' server <- function(input, output, session) {
-#'   autoReportServer(id = "test", registryName = "rapbase",
-#'                    type = "subscription", reports = reports, orgs = orgs)
+#'   org <- autoReportOrgServer("test", orgs)
+#'   format <- autoReportFormatServer("test")
+#'
+#'   # set reactive parameters overriding those in the reports list
+#'   paramNames <- shiny::reactive(c("organization", "outputFormat"))
+#'   paramValues <- shiny::reactive(c(org$value(), format()))
+#'
+#'   autoReportServer(
+#'     id = "test", registryName = "rapbase", type = "dispatchment",
+#'     paramNames = paramNames, paramValues = paramValues,
+#'     reports = reports, orgs = orgs
+#'   )
 #' }
 #'
 #' # run the shiny app in an interactive environment
@@ -89,16 +128,79 @@ autoReportUI <- function(id) {
 
 #' @rdname autoReport
 #' @export
+autoReportOrgInput <- function(id) {
+
+  shiny::tagList(
+    shiny::uiOutput(shiny::NS(id, "orgs"))
+  )
+}
+
+#' @rdname autoReport
+#' @export
+autoReportOrgServer <- function(id, orgs) {
+  shiny::moduleServer(id, function(input, output, session) {
+
+    output$orgs <- shiny::renderUI({
+      shiny::selectInput(
+        shiny::NS(id, "org"),
+        label = shiny::tags$div(
+          shiny::HTML(as.character(shiny::icon("database")),
+                      "Velg datakilde:")
+        ),
+        choices = orgs,
+        selected = unlist(orgs, use.names = FALSE)[1]
+      )
+    })
+
+    # return reactive of whatever selected
+    list(
+      name = shiny::reactive(
+        names(orgs)[unlist(orgs, use.names = FALSE) == input$org]
+      ),
+      value = shiny::reactive(input$org)
+    )
+  })
+}
+
+#' @rdname autoReport
+#' @export
+autoReportFormatInput <- function(id) {
+
+  shiny::tagList(
+    shiny::uiOutput(shiny::NS(id, "format"))
+  )
+}
+
+#' @rdname autoReport
+#' @export
+autoReportFormatServer <- function(id) {
+  shiny::moduleServer(id, function(input, output, session) {
+
+    output$format <- shiny::renderUI({
+      shiny::selectInput(
+        shiny::NS(id, "format"),
+        label = shiny::tags$div(
+          shiny::HTML(as.character(shiny::icon("file-pdf")), "Fil-format:")
+        ),
+        choices = c("html", "pdf")
+      )
+    })
+
+    # return reactive of whatever selected
+    shiny::reactive(input$format)
+  })
+}
+
+#' @rdname autoReport
+#' @export
 autoReportInput <- function(id) {
 
   shiny::tagList(
     shiny::uiOutput(shiny::NS(id, "reports")),
     shiny::uiOutput(shiny::NS(id, "synopsis")),
     shiny::tags$hr(),
-    shiny::uiOutput(shiny::NS(id, "orgs")),
     shiny::uiOutput(shiny::NS(id, "freq")),
     shiny::uiOutput(shiny::NS(id, "start")),
-    shiny::uiOutput(shiny::NS(id, "format")),
     shiny::uiOutput(shiny::NS(id, "email")),
     shiny::htmlOutput(shiny::NS(id, "editEmail")),
     shiny::htmlOutput(shiny::NS(id, "recipient")),
@@ -109,8 +211,15 @@ autoReportInput <- function(id) {
 
 #' @rdname autoReport
 #' @export
-autoReportServer <- function(id, registryName, type, reports = NULL,
-                             orgs = NULL) {
+autoReportServer <- function(id, registryName, type,
+                             paramNames = shiny::reactiveVal(c("")),
+                             paramValues = shiny::reactiveVal(c("")),
+                             reports = NULL, orgs = NULL) {
+
+  if (!type %in% c("subscription")) {
+    stopifnot(shiny::is.reactive(paramNames))
+    stopifnot(shiny::is.reactive(paramValues))
+  }
 
   shiny::moduleServer(id, function(input, output, session) {
 
@@ -135,11 +244,18 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
     shiny::observeEvent(input$makeAutoReport, {
       report <- reports[[input$report]]
       interval <- strsplit(input$freq, "-")[[1]][2]
+      paramValues <- report$paramValues
+      paramNames <- report$paramNames
+
       if (type %in% c("subscription") | is.null(orgs)) {
-        organization <- rapbase::getUserReshId(session)
         email <- rapbase::getUserEmail(session)
       } else {
-        organization <- input$org
+        if (!paramValues()[1] == "") {
+          stopifnot(length(paramNames()) == length(paramValues()))
+          for (i in seq_len(length(paramNames()))) {
+            paramValues[paramNames == paramNames()[i]] <- paramValues()[i]
+          }
+        }
         email <- autoReport$email
       }
 
@@ -149,11 +265,11 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
         type = type,
         fun = report$fun,
         paramNames = report$paramNames,
-        paramValues = report$paramValues,
+        paramValues = paramValues,
         owner = rapbase::getUserName(session),
         ownerName = rapbase::getUserFullName(session),
         email = email,
-        organization = organization,
+        organization = rapbase::getUserReshId(session),
         runDayOfYear = rapbase::makeRunDayOfYearSequence(
           interval = interval,
           startDay = input$start
@@ -232,22 +348,6 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
       )
     })
 
-    output$orgs <- shiny::renderUI({
-      if (type %in% c("subscription") | is.null(orgs)) {
-        NULL
-      } else {
-        shiny::selectInput(
-          shiny::NS(id, "org"),
-          label = shiny::tags$div(
-            shiny::HTML(as.character(shiny::icon("database")),
-                        "Velg datakilde:")
-          ),
-          choices = orgs,
-          selected = autoReport$org
-        )
-      }
-    })
-
     output$freq <- shiny::renderUI({
       shiny::selectInput(
         shiny::NS(id, "freq"),
@@ -275,19 +375,6 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
                          by = strsplit(input$freq, "-")[[1]][2],
                          length.out = 2)[2]
       )
-    })
-
-    output$format <- shiny::renderUI({
-      if (type %in% c("subscription")) {
-      shiny::selectInput(
-        shiny::NS(id, "format"),
-        label = shiny::tags$div(
-          shiny::HTML(as.character(shiny::icon("file-pdf")), "Fil-format:")
-        ),
-        choices = c("html", "pdf"))
-      } else {
-        NULL
-      }
     })
 
     output$email <- shiny::renderUI({
@@ -337,18 +424,22 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
     })
 
     output$makeAutoReport <- shiny::renderUI({
-      if (type %in% c("subscription")) {
-        shiny::actionButton(shiny::NS(id, "makeAutoReport"),
-                            "Lag oppf\u00F8ring",
-                            icon = shiny::icon("save"))
+      if (is.null(autoReport$report)) {
+        NULL
       } else {
-        shiny::req(input$email)
-        if (length(autoReport$email) == 0) {
-          NULL
-        } else {
+        if (type %in% c("subscription")) {
           shiny::actionButton(shiny::NS(id, "makeAutoReport"),
                               "Lag oppf\u00F8ring",
                               icon = shiny::icon("save"))
+        } else {
+          shiny::req(input$email)
+          if (length(autoReport$email) == 0) {
+            NULL
+          } else {
+            shiny::actionButton(shiny::NS(id, "makeAutoReport"),
+                                "Lag oppf\u00F8ring",
+                                icon = shiny::icon("save"))
+          }
         }
       }
     })
@@ -372,7 +463,7 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
         shiny::tagList(
           shiny::h2("Det finnes ingen oppf\u00F8ringer"),
           shiny::p(paste("Nye oppf\u00F8ringer kan lages fra menyen til",
-                         "venstre, se veiledingen under.")),
+                         "venstre. Bruk gjerne veiledingen under.")),
           shiny::htmlOutput(shiny::NS(id, "autoReportGuide"))
         )
       } else {
@@ -391,23 +482,36 @@ autoReportServer <- function(id, registryName, type, reports = NULL,
         params = list(registryName = registryName, type = type))
     })
   })
-
 }
 
 #' @rdname autoReport
 #' @export
 autoReportApp <- function(registryName = "rapbase", type = "subscription",
-                          reports = NULL, orgs = NULL) {
+                          reports = NULL, paramNames = shiny::reactive(c("")),
+                          orgs = NULL) {
   ui <- shiny::fluidPage(
     shiny::sidebarLayout(
-      shiny::sidebarPanel(autoReportInput("test")),
+      shiny::sidebarPanel(
+        autoReportOrgInput("test"),
+        autoReportFormatInput("test"),
+        autoReportInput("test")
+      ),
       shiny::mainPanel(autoReportUI("test"))
     )
   )
 
   server <- function(input, output, session) {
-    autoReportServer(id = "test", registryName = registryName, type = type,
-                     reports = reports, orgs = orgs)
+
+    org <- autoReportOrgServer("test", orgs)
+    format <- autoReportFormatServer("test")
+
+    paramValues <- shiny::reactive(c(org$value(), format()))
+
+    autoReportServer(
+      id = "test", registryName = registryName, type = type,
+      paramNames = paramNames, paramValues = paramValues, reports = reports,
+      orgs = orgs
+    )
   }
 
   shiny::shinyApp(ui, server)

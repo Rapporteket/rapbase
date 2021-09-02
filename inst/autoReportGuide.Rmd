@@ -15,7 +15,7 @@ Her kan det settes opp rutinemessig produksjon og utsending av resultater per ep
 ### Bruk
 Fra menyen til venstre
 
-1. velg hvilken rapport `r shiny::icon("file")` som skal sendes ut,
+1. hvis aktuelt, velg i hvilket filformat `r shiny::icon("file-pdf")` rapporten skal mottas,
 ```{r, echo=FALSE, results='asis'}
 if(params$type %in% c("dispatchment", "bulletin")) {
   t <- shiny::HTML("1. angi datakilden",
@@ -24,8 +24,9 @@ if(params$type %in% c("dispatchment", "bulletin")) {
   cat(paste0(t, "\n"))
 }
 ```
+1. velg hvilken rapport `r shiny::icon("file")` som skal sendes ut,
 1. velg hvor hyppig `r shiny::icon("clock")` rapporten skal sendes ut,
-1. om nødvendig, endre dato for første utsending `r shiny::icon("calendar")`, og
+1. om nødvendig, endre dato for første utsending `r shiny::icon("calendar")`
 ```{r, echo=FALSE, results='asis'}
 if(params$type %in% c("dispatchment", "bulletin")) {
   t <- shiny::HTML("1. angi epostadresse",
@@ -37,14 +38,6 @@ if(params$type %in% c("dispatchment", "bulletin")) {
 }
 ```
 
-```{r, echo=FALSE, results='asis'}
-if(params$type %in% c("subscription")) {
-  t <- shiny::HTML("1. velg i hvilket filformat",
-                   as.character(shiny::icon("file-pdf")),
-                   "rapporten skal mottas.")
-  cat(paste0(t, "\n"))
-}
-```
 
 Når alt er klart trykk `r shiny::icon("save")` for å aktivere utsendingen. Oppføringen vil da vises i tabellen. Trykk `r shiny::icon("trash")` til høyre i tabellen for å slette en utsending. Aktive utsendinger kan endres ved å trykke på `r shiny::icon("edit")` til høyre i tabellen. Utsendingen vil da slettes og flyttes over i menyen til venstre. Ved etablering eller endring av en utsending kan mottakere slettes ved å angi aktuell epostadresse og trykke på `r shiny::icon("minus-square")`
 
