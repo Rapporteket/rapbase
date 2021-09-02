@@ -30,7 +30,7 @@ autoReportServer(
   id,
   registryName,
   type,
-  paramValues,
+  paramValues = shiny::reactiveVal(c("")),
   reports = NULL,
   orgs = NULL
 )
@@ -125,10 +125,14 @@ orgs <- list(
 ## client user interface function
 ui <- shiny::fluidPage(
   shiny::sidebarLayout(
-    autoReportOrgInput("test"),
-    autoReportFormatInput("test"),
-    shiny::sidebarPanel(autoReportInput("test")),
-    shiny::mainPanel(autoReportUI("test"))
+    shiny::sidebarPanel(
+      autoReportOrgInput("test"),
+      autoReportFormatInput("test"),
+      autoReportInput("test")
+    ),
+    shiny::mainPanel(
+      autoReportUI("test")
+    )
   )
 )
 
@@ -141,8 +145,9 @@ server <- function(input, output, session) {
   paramValues <- shiny::reactive(c(org$value(), format()))
 
   autoReportServer(
-    id = "test", registryName = registryName, type = type, org = org$value,
-    paramValues = paramValues, reports = reports, orgs = orgs
+    id = "test", registryName = "rapbase", type = "dispatchment",
+    org = org$value, paramValues = paramValues,
+    reports = reports, orgs = orgs
   )
 }
 
