@@ -32,12 +32,15 @@
 #' @param reports List of a given structure that provides meta data for the
 #' reports that are made available as automated reports. See Details for further
 #' description.
+#' @param paramValues Shiny reactive value as a vector of all values for
+#' parameters to be passed to the function producing the report. Default value
+#' is set to \code{shiny::reactiveVal("")} in which case parameter values
+#' defined in \code{reports} will be used as is. In other words,
+#' explicit use of \code{paramValues} will only be needed if parameter values
+#' must be changed during application run time.
 #' @param orgs Named list of organizations (names) and ids (values). When set to
 #' \code{NULL} (default) the ids found in auto report data will be used in the
 #' table listing existing auto reports.
-#' @param org Shiny reactive value providing the organization id for the auto
-#' report. To be used when auto report function arguments will be a reactive
-#' part of the auto report application.
 #'
 #'
 #' @return In general, shiny objects. In particular, \code{autoreportOrgServer}
