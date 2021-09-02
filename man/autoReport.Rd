@@ -30,6 +30,7 @@ autoReportServer(
   id,
   registryName,
   type,
+  paramNames = shiny::reactiveVal(c("")),
   paramValues = shiny::reactiveVal(c("")),
   reports = NULL,
   orgs = NULL
@@ -39,6 +40,7 @@ autoReportApp(
   registryName = "rapbase",
   type = "subscription",
   reports = NULL,
+  paramNames = shiny::reactive(c("")),
   orgs = NULL
 )
 
@@ -57,12 +59,18 @@ correspond to the registry R package name.}
 \item{type}{Character string defining the type of auto reports. Must be one
 of \code{c("subscription", "dispatchment", "bulletin")}}
 
-\item{paramValues}{Shiny reactive value as a vector of all values for
-parameters to be passed to the function producing the report. Default value
-is set to \code{shiny::reactiveVal("")} in which case parameter values
-defined in \code{reports} will be used as is. In other words,
+\item{paramNames}{Shiny reactive value as a vector of parameter names of
+which values are to be set interactively at application run time. Each
+element of this vector must match exactly those of \code{paramValues}.
+Default value is \code{shiny::reactiveVal("")}.}
+
+\item{paramValues}{Shiny reactive value as a vector of those parameter values
+to be set interactively, \emph{i.e.} as per user input in the application.
+Default value is set to \code{shiny::reactiveVal("")} in which case parameter
+values defined in \code{reports} will be used as is. In other words,
 explicit use of \code{paramValues} will only be needed if parameter values
-must be changed during application run time.}
+must be changed during application run time. If so, each element of this
+vector must correspond exactly to those of \code{paramNames}.}
 
 \item{reports}{List of a given structure that provides meta data for the
 reports that are made available as automated reports. See Details for further

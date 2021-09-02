@@ -32,12 +32,17 @@
 #' @param reports List of a given structure that provides meta data for the
 #' reports that are made available as automated reports. See Details for further
 #' description.
-#' @param paramValues Shiny reactive value as a vector of all values for
-#' parameters to be passed to the function producing the report. Default value
-#' is set to \code{shiny::reactiveVal("")} in which case parameter values
-#' defined in \code{reports} will be used as is. In other words,
+#' @param paramNames Shiny reactive value as a vector of parameter names of
+#' which values are to be set interactively at application run time. Each
+#' element of this vector must match exactly those of \code{paramValues}.
+#' Default value is \code{shiny::reactiveVal("")}.
+#' @param paramValues Shiny reactive value as a vector of those parameter values
+#' to be set interactively, \emph{i.e.} as per user input in the application.
+#' Default value is set to \code{shiny::reactiveVal("")} in which case parameter
+#' values defined in \code{reports} will be used as is. In other words,
 #' explicit use of \code{paramValues} will only be needed if parameter values
-#' must be changed during application run time.
+#' must be changed during application run time. If so, each element of this
+#' vector must correspond exactly to those of \code{paramNames}.
 #' @param orgs Named list of organizations (names) and ids (values). When set to
 #' \code{NULL} (default) the ids found in auto report data will be used in the
 #' table listing existing auto reports.
@@ -206,11 +211,12 @@ autoReportInput <- function(id) {
 #' @rdname autoReport
 #' @export
 autoReportServer <- function(id, registryName, type,
+                             paramNames = shiny::reactiveVal(c("")),
                              paramValues = shiny::reactiveVal(c("")),
                              reports = NULL, orgs = NULL) {
 
   if (!type %in% c("subscription")) {
-    #stopifnot(shiny::is.reactive(org))
+    stopifnot(shiny::is.reactive(paramNames))
     stopifnot(shiny::is.reactive(paramValues))
   }
 
@@ -245,7 +251,9 @@ autoReportServer <- function(id, registryName, type,
         email <- rapbase::getUserEmail(session)
       } else {
         if (!paramValues()[1] == "") {
-          paramValues <- paramValues()
+          stopifnot(length(paramNames()) == length(paramValues()))
+          ind <- report$paramNames %in% paramNames()
+          paramValues[ind] <- paramValues()
         }
         email <- autoReport$email
       }
@@ -478,7 +486,8 @@ autoReportServer <- function(id, registryName, type,
 #' @rdname autoReport
 #' @export
 autoReportApp <- function(registryName = "rapbase", type = "subscription",
-                          reports = NULL, orgs = NULL) {
+                          reports = NULL, paramNames = shiny::reactive(c("")),
+                          orgs = NULL) {
   ui <- shiny::fluidPage(
     shiny::sidebarLayout(
       shiny::sidebarPanel(
@@ -499,7 +508,8 @@ autoReportApp <- function(registryName = "rapbase", type = "subscription",
 
     autoReportServer(
       id = "test", registryName = registryName, type = type,
-      paramValues = paramValues, reports = reports, orgs = orgs
+      paramNames = paramNames, paramValues = paramValues, reports = reports,
+      orgs = orgs
     )
   }
 

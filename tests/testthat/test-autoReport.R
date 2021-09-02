@@ -152,6 +152,7 @@ test_that("paramValues can be tweaked when provided", {
   shiny::testServer(
     autoReportServer,
     args = list(registryName = registryName, type = type,
+                paramNames = shiny::reactive(c("organization", "outputFormat")),
                 paramValues = shiny::reactive(c(999999, "pdf")),
                 reports = reports, orgs = orgs), {
                   session$setInputs(report = "FirstReport")
