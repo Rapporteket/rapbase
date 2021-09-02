@@ -1,6 +1,6 @@
 # rapbase 1.16.1
 
-* Added missing reactive return from auto report server module ([]())
+* Added missing reactive return from auto report server module ([#79](https://github.com/Rapporteket/rapbase/pull/79))
 
 # rapbase 1.16.0
 
