@@ -137,8 +137,8 @@ orgs <- list(
 ui <- shiny::fluidPage(
   shiny::sidebarLayout(
     shiny::sidebarPanel(
-      autoReportOrgInput("test"),
       autoReportFormatInput("test"),
+      autoReportOrgInput("test"),
       autoReportInput("test")
     ),
     shiny::mainPanel(

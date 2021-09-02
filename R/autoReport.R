@@ -85,8 +85,8 @@
 #' ui <- shiny::fluidPage(
 #'   shiny::sidebarLayout(
 #'     shiny::sidebarPanel(
-#'       autoReportOrgInput("test"),
 #'       autoReportFormatInput("test"),
+#'       autoReportOrgInput("test"),
 #'       autoReportInput("test")
 #'     ),
 #'     shiny::mainPanel(
@@ -463,7 +463,7 @@ autoReportServer <- function(id, registryName, type,
         shiny::tagList(
           shiny::h2("Det finnes ingen oppf\u00F8ringer"),
           shiny::p(paste("Nye oppf\u00F8ringer kan lages fra menyen til",
-                         "venstre, se veiledingen under.")),
+                         "venstre. Bruk gjerne veiledingen under.")),
           shiny::htmlOutput(shiny::NS(id, "autoReportGuide"))
         )
       } else {
