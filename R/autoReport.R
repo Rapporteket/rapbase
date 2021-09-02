@@ -64,14 +64,14 @@
 #'   FirstReport = list(
 #'     synopsis = "First example report",
 #'     fun = "fun1",
-#'     paramNames = c("organization", "outputFormat"),
-#'     paramValues = c(111111, "html")
+#'     paramNames = c("organization", "topic", "outputFormat"),
+#'     paramValues = c(111111, "work", "html")
 #'   ),
 #'   SecondReport = list(
 #'     synopsis = "Second example report",
 #'     fun = "fun2",
-#'     paramNames = c("organization", "outputFormat"),
-#'     paramValues = c(111111, "pdf")
+#'     paramNames = c("organization", "topic", "outputFormat"),
+#'     paramValues = c(111111, "leisure", "pdf")
 #'   )
 #' )
 #'
@@ -100,12 +100,13 @@
 #'   org <- autoReportOrgServer("test", orgs)
 #'   format <- autoReportFormatServer("test")
 #'
-#'   ## set reactive paramValues overriding those in the reports list
+#'   # set reactive parameters overriding those in the reports list
+#'   paramNames <- shiny::reactive(c("organization", "outputFormat"))
 #'   paramValues <- shiny::reactive(c(org$value(), format()))
 #'
 #'   autoReportServer(
 #'     id = "test", registryName = "rapbase", type = "dispatchment",
-#'     org = org$value, paramValues = paramValues,
+#'     paramNames = paramNames, paramValues = paramValues,
 #'     reports = reports, orgs = orgs
 #'   )
 #' }
@@ -241,19 +242,19 @@ autoReportServer <- function(id, registryName, type,
     })
 
     shiny::observeEvent(input$makeAutoReport, {
-
       report <- reports[[input$report]]
       interval <- strsplit(input$freq, "-")[[1]][2]
-
       paramValues <- report$paramValues
+      paramNames <- report$paramNames
 
       if (type %in% c("subscription") | is.null(orgs)) {
         email <- rapbase::getUserEmail(session)
       } else {
         if (!paramValues()[1] == "") {
           stopifnot(length(paramNames()) == length(paramValues()))
-          ind <- report$paramNames %in% paramNames()
-          paramValues[ind] <- paramValues()
+          for (i in seq_len(length(paramNames()))) {
+            paramValues[paramNames == paramNames()[i]] <- paramValues()[i]
+          }
         }
         email <- autoReport$email
       }

@@ -116,14 +116,14 @@ reports <- list(
   FirstReport = list(
     synopsis = "First example report",
     fun = "fun1",
-    paramNames = c("organization", "outputFormat"),
-    paramValues = c(111111, "html")
+    paramNames = c("organization", "topic", "outputFormat"),
+    paramValues = c(111111, "work", "html")
   ),
   SecondReport = list(
     synopsis = "Second example report",
     fun = "fun2",
-    paramNames = c("organization", "outputFormat"),
-    paramValues = c(111111, "pdf")
+    paramNames = c("organization", "topic", "outputFormat"),
+    paramValues = c(111111, "leisure", "pdf")
   )
 )
 
@@ -152,12 +152,13 @@ server <- function(input, output, session) {
   org <- autoReportOrgServer("test", orgs)
   format <- autoReportFormatServer("test")
 
-  ## set reactive paramValues overriding those in the reports list
+  # set reactive parameters overriding those in the reports list
+  paramNames <- shiny::reactive(c("organization", "outputFormat"))
   paramValues <- shiny::reactive(c(org$value(), format()))
 
   autoReportServer(
     id = "test", registryName = "rapbase", type = "dispatchment",
-    org = org$value, paramValues = paramValues,
+    paramNames = paramNames, paramValues = paramValues,
     reports = reports, orgs = orgs
   )
 }
