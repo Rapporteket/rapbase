@@ -2,6 +2,7 @@
 
 * Remove one (of too many) imports ([#80](https://github.com/Rapporteket/rapbase/pull/80))
 * Fixed and improved how organization and logging should be applied and understood for auto reports ([#81](https://github.com/Rapporteket/rapbase/pull/81))
+* Added option for setting eligibility upon calling of modules (list modeules here) ([#82](https://github.com/Rapporteket/rapbase/pull/82))
 
 # rapbase 1.16.1
 
