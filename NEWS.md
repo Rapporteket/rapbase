@@ -1,6 +1,7 @@
 # rapbase 1.17.0
 
 * Remove one (of too many) imports ([#80](https://github.com/Rapporteket/rapbase/pull/80))
+* Fixed and improved how organization and logging should be applied and understood for auto reports ([#81](https://github.com/Rapporteket/rapbase/pull/81))
 
 # rapbase 1.16.1
 
