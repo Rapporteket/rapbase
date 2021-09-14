@@ -116,7 +116,8 @@ getSessionDataRep <- function(session) {
 #'     but for OpenQReg registires 'LU' (local user) and 'SC' (system
 #'     coordinator) are typical values
 #'   \item \code{resh_id}: the organization id of the current user as provided
-#'     by the shiny session object
+#'     by the shiny session object, OR, when source of logging is auto reports,
+#'     the organization ID of the data source used to make the report
 #'   \item \code{environment}: environment from where the logger function was
 #'     called (only provided by \code{repLogger()})
 #'   \item \code{call}: function (with arguments) from where the logger was
