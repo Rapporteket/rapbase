@@ -1,3 +1,7 @@
+# rapbase 1.17.0
+
+* Remove one (of too many) imports ([#80](https://github.com/Rapporteket/rapbase/pull/80))
+
 # rapbase 1.16.1
 
 * Added missing reactive return from auto report server module ([#79](https://github.com/Rapporteket/rapbase/pull/79))
