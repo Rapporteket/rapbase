@@ -269,7 +269,7 @@ autoReportServer <- function(id, registryName, type,
         owner = rapbase::getUserName(session),
         ownerName = rapbase::getUserFullName(session),
         email = email,
-        organization = rapbase::getUserReshId(session),
+        organization = autoReport$org,
         runDayOfYear = rapbase::makeRunDayOfYearSequence(
           interval = interval,
           startDay = input$start
