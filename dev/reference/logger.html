@@ -260,7 +260,8 @@ reports that are run outside a shiny session.</p></td>
     but for OpenQReg registires 'LU' (local user) and 'SC' (system
     coordinator) are typical values</p></li>
 <li><p><code>resh_id</code>: the organization id of the current user as provided
-    by the shiny session object</p></li>
+    by the shiny session object, OR, when source of logging is auto reports,
+    the organization ID of the data source used to make the report</p></li>
 <li><p><code>environment</code>: environment from where the logger function was
     called (only provided by <code>repLogger()</code>)</p></li>
 <li><p><code>call</code>: function (with arguments) from where the logger was
