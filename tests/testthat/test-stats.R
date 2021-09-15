@@ -40,7 +40,7 @@ test_that("time framed log data are returned as data frame", {
 })
 
 
-# The remainig test the shiny modules
+# The remaining test the shiny modules
 test_that("stats UC input returns a shiny tag list", {
   expect_true("shiny.tag.list" %in% class(statsInput("id")))
 })
@@ -54,6 +54,14 @@ test_that("module server provides sensible output", {
     session$setInputs(downloadFormat = "xlsx-csv")
     expect_true(file.exists(output$download))
   })
+})
+
+test_that("module server is restricted when not eligible", {
+  shiny::testServer(
+    statsServer,
+    args = list(registryName = registryName, eligible = FALSE), {
+      expect_true(is.null(output$downloadButton))
+    })
 })
 
 test_that("test app returns an app object", {

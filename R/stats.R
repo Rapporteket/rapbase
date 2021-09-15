@@ -10,6 +10,9 @@
 #'
 #' @param id Character string shiny module id
 #' @param registryName Character string registry name key
+#' @param eligible Logical defining if the module should be allowed to work at
+#' full capacity. This might be useful when access to module products should be
+#' restricted. Default is TRUE, \emph{i.e.} no restrictions.
 #' @param type Character string defining data level. One of
 #' \code{c("app", "report")}.
 #' @param log Data frame containing log data (in Rapporteket format)
@@ -34,7 +37,7 @@
 #'
 #' # server function
 #' server <- function(input, output, session) {
-#'   statsServer("test", registryName = "rapbase")
+#'   statsServer("test", registryName = "rapbase", eligible = TRUE)
 #' }
 #'
 #' # run the shiny app in an interactive environment
@@ -57,7 +60,8 @@ statsInput <- function(id) {
       shiny::NS(id, "downloadFormat"), "Nedlastingsformat:",
       choices = c("csv", "xlsx-csv")
     ),
-    shiny::downloadButton(shiny::NS(id, "download"), "Last ned!")
+    shiny::uiOutput(shiny::NS(id, "downloadButton")),
+    shiny::uiOutput(shiny::NS(id, "eligible"))
   )
 }
 
@@ -73,7 +77,7 @@ statsUI <- function(id) {
 
 #' @rdname stats
 #' @export
-statsServer <- function(id, registryName) {
+statsServer <- function(id, registryName, eligible = TRUE) {
 
   shiny::moduleServer(id, function(input, output, session) {
 
@@ -93,28 +97,54 @@ statsServer <- function(id, registryName) {
         start = min(log()$date), end = max(log()$date), separator = "-"
       )
     })
-    output$download <- shiny::downloadHandler(
-      filename = function() {
-        basename(
-          tempfile(
-            pattern = paste0("useStats-", registryName),
-            fileext = ".csv"
-          )
-        )
-      },
-      content = function(file) {
-        if (input$downloadFormat == "xlsx-csv") {
-          readr::write_excel_csv2(logFrame(), file)
-        } else {
-          readr::write_csv2(logFrame(), file)
-        }
+
+    output$downloadButton <- shiny::renderUI({
+      if (eligible) {
+        shiny::downloadButton(shiny::NS(id, "download"), "Last ned!")
+      } else {
+        NULL
       }
-    )
+    })
+
+    if (eligible) {
+      output$download <- shiny::downloadHandler(
+        filename = function() {
+          basename(
+            tempfile(
+              pattern = paste0("useStats-", registryName),
+              fileext = ".csv"
+            )
+          )
+        },
+        content = function(file) {
+          if (input$downloadFormat == "xlsx-csv") {
+            readr::write_excel_csv2(logFrame(), file)
+          } else {
+            readr::write_csv2(logFrame(), file)
+          }
+        }
+      )
+    }
+
+    output$eligible <- shiny::renderUI({
+      if (eligible) {
+        NULL
+      } else {
+        shiny::tagList(
+          shiny::h4("Funksjonen er ikke tilgjengelig"),
+          shiny::p("Ta kontakt med registeret")
+        )
+      }
+    })
     output$pivot <- rpivotTable::renderRpivotTable(
-      rpivotTable::rpivotTable(logFrame(),
-                               rows = c("name"),
-                               cols = c("year", "month"),
-                               rendererName = "Heatmap")
+      if (eligible) {
+        rpivotTable::rpivotTable(logFrame(),
+                                 rows = c("name"),
+                                 cols = c("year", "month"),
+                                 rendererName = "Heatmap")
+      } else {
+        rpivotTable::rpivotTable(data.frame())
+      }
     )
   })
 }
