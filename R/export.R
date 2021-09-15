@@ -104,15 +104,18 @@ exportUCServer <- function(id, registryName, eligible = TRUE) {
       }
     })
 
-    output$exportDownload <- shiny::downloadHandler(
-      filename = basename(rv$exportFile),
-      content = function(file) {
-        file.copy(rv$exportFile, file)
-        rapbase::repLogger(
-          session,
-          msg = paste("Db export file", basename(rv$exportFile), "downloaded"))
-      }
-    )
+    if (eligible) {
+      output$exportDownload <- shiny::downloadHandler(
+        filename = basename(rv$exportFile),
+        content = function(file) {
+          file.copy(rv$exportFile, file)
+          rapbase::repLogger(
+            session,
+            msg = paste("Db export file", basename(rv$exportFile),
+                        "downloaded"))
+        }
+      )
+    }
 
     ## UC
     output$exportPidUI <- shiny::renderUI({

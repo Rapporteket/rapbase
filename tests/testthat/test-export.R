@@ -69,7 +69,7 @@ test_that("an existing file name is provided", {
 })
 
 
-# The remainig test the corresponding shiny modules
+# The remaining test the corresponding shiny modules
 test_that("export UC input returns a shiny tag list", {
   expect_true("shiny.tag.list" %in% class(exportUCInput("id")))
 })
@@ -85,6 +85,19 @@ test_that("guide module server provides sensible output", {
     expect_true(is.null(rv$exportFile))
     expect_equal(class(output$exportEncryptUI), "list")
   })
+})
+
+test_that("download is prevented when module is not eligible", {
+  checkDb()
+  shiny::testServer(
+    exportUCServer,
+    args = list(registryName = regName, eligible = FALSE), {
+      session$setInputs(exportPid = "areedv")
+      session$setInputs(exportKey = pubkey())
+      session$setInputs(exportCompress = TRUE)
+      session$setInputs(exportEncrypt = 1)
+      expect_false(exists("output$exportDownload"))
+    })
 })
 
 test_that("guide test app returns an app object", {
