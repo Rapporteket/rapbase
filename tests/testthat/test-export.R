@@ -87,6 +87,23 @@ test_that("guide module server provides sensible output", {
   })
 })
 
+# test_that("export module server can provide file for downloading", {
+#   checkDb()
+#   shiny::testServer(exportUCServer, args = list(registryName = regName), {
+#     expect_equal(class(output$exportPidUI), "list")
+#     session$setInputs(exportPid = "areedv")
+#     expect_equal("character", class(pubkey()))
+#     session$setInputs(exportKey = pubkey())
+#     session$setInputs(exportCompress = TRUE)
+#     session$setInputs(exportEncrypt = 1)
+#     Sys.sleep(5)
+#     session$setInputs(exportDownload = 1)
+#     session$flushReact()
+#
+#     print(input$exportDownload)
+#   })
+# })
+
 test_that("download is prevented when module is not eligible", {
   checkDb()
   shiny::testServer(
