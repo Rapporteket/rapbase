@@ -33,7 +33,8 @@ autoReportServer(
   paramNames = shiny::reactiveVal(c("")),
   paramValues = shiny::reactiveVal(c("")),
   reports = NULL,
-  orgs = NULL
+  orgs = NULL,
+  eligible = TRUE
 )
 
 autoReportApp(
@@ -75,6 +76,10 @@ vector must correspond exactly to those of \code{paramNames}.}
 \item{reports}{List of a given structure that provides meta data for the
 reports that are made available as automated reports. See Details for further
 description.}
+
+\item{eligible}{Logical defining if the module should be allowed to work at
+full capacity. This might be useful when access to module products should be
+restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 }
 \value{
 In general, shiny objects. In particular, \code{autoreportOrgServer}
@@ -159,7 +164,7 @@ server <- function(input, output, session) {
   autoReportServer(
     id = "test", registryName = "rapbase", type = "dispatchment",
     paramNames = paramNames, paramValues = paramValues,
-    reports = reports, orgs = orgs
+    reports = reports, orgs = orgs, eligible = TRUE
   )
 }
 

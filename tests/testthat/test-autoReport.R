@@ -218,6 +218,16 @@ test_that("add email button is not created if email is not valid", {
                 })
 })
 
+test_that("no submit button is provided when module is not eligible", {
+  shiny::testServer(
+    autoReportServer,
+    args = list(registryName = registryName, type = "subscription",
+                reports = reports, orgs = orgs, eligible = FALSE), {
+                  session$setInputs(email = "valid.email@format.no")
+                  expect_true(is.null(output$makeAutoReport))
+                })
+})
+
 test_that("tabel is replaced by message when no reports listed", {
   file.remove(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReport.yml"))
   file.create(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReport.yml"))

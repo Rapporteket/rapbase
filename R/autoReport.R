@@ -46,6 +46,9 @@
 #' @param orgs Named list of organizations (names) and ids (values). When set to
 #' \code{NULL} (default) the ids found in auto report data will be used in the
 #' table listing existing auto reports.
+#' @param eligible Logical defining if the module should be allowed to work at
+#' full capacity. This might be useful when access to module products should be
+#' restricted. Default is TRUE, \emph{i.e.} no restrictions.
 #'
 #'
 #' @return In general, shiny objects. In particular, \code{autoreportOrgServer}
@@ -107,7 +110,7 @@
 #'   autoReportServer(
 #'     id = "test", registryName = "rapbase", type = "dispatchment",
 #'     paramNames = paramNames, paramValues = paramValues,
-#'     reports = reports, orgs = orgs
+#'     reports = reports, orgs = orgs, eligible = TRUE
 #'   )
 #' }
 #'
@@ -214,7 +217,7 @@ autoReportInput <- function(id) {
 autoReportServer <- function(id, registryName, type,
                              paramNames = shiny::reactiveVal(c("")),
                              paramValues = shiny::reactiveVal(c("")),
-                             reports = NULL, orgs = NULL) {
+                             reports = NULL, orgs = NULL, eligible = TRUE) {
 
   if (!type %in% c("subscription")) {
     stopifnot(shiny::is.reactive(paramNames))
@@ -424,7 +427,7 @@ autoReportServer <- function(id, registryName, type,
     })
 
     output$makeAutoReport <- shiny::renderUI({
-      if (is.null(autoReport$report)) {
+      if (is.null(autoReport$report) | !eligible) {
         NULL
       } else {
         if (type %in% c("subscription")) {
@@ -459,7 +462,13 @@ autoReportServer <- function(id, registryName, type,
     )
 
     output$autoReportTable <- shiny::renderUI({
-      if (length(autoReport$tab) == 0) {
+      if (!eligible) {
+        shiny::tagList(
+          shiny::h2(paste0("Funksjonen ('", type, "') er utilgjengelig")),
+          shiny::p("Ved spørsmål ta gjerne kontkat med registeret."),
+          shiny::hr()
+        )
+      } else if (length(autoReport$tab) == 0) {
         shiny::tagList(
           shiny::h2("Det finnes ingen oppf\u00F8ringer"),
           shiny::p(paste("Nye oppf\u00F8ringer kan lages fra menyen til",
