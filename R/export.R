@@ -205,10 +205,10 @@ exportDb <- function(registryName, compress = FALSE, session) {
 
   f <- tempfile(pattern = registryName, fileext = ".sql")
   conf <- rapbase::getConfig()[[registryName]]
-  cmd <- paste("mysqldump --column-statistics=0 --no-tablespaces",
-               "--single-transaction --add-drop-database ")
-  cmd <- paste0(cmd, "-B -u ", conf$user, " -p", conf$pass, " -h ", conf$host,
-         " ", conf$name, " > ", f)
+  cmd <- paste0("MYSQL_PWD=", conf$pass, " mysqldump --column-statistics=0 ",
+               "--no-tablespaces --single-transaction --add-drop-database ")
+  cmd <- paste0(cmd, "-B -u ", conf$user, " -h ", conf$host, " ", conf$name,
+                " > ", f)
   invisible(system(cmd))
 
   if (compress) {
