@@ -32,6 +32,13 @@
 #' @param reports List of a given structure that provides meta data for the
 #' reports that are made available as automated reports. See Details for further
 #' description.
+#' @param org Shiny reactive or NULL (default) defining the organization (id)
+#' of the data source used for dispatchments and bulletins (in which case it
+#' cannot be set to NULL) and its value will be used to populate the
+#' \emph{organization} field in auto report data (autoReport.yml) for these auto
+#' report types. On the other hand, since subscriptions are personal (per user)
+#' the only relevant organization id will implicit be that of the user and in
+#' this case any value of \code{org} will be disregarded.
 #' @param paramNames Shiny reactive value as a vector of parameter names of
 #' which values are to be set interactively at application run time. Each
 #' element of this vector must match exactly those of \code{paramValues}.
@@ -46,6 +53,9 @@
 #' @param orgs Named list of organizations (names) and ids (values). When set to
 #' \code{NULL} (default) the ids found in auto report data will be used in the
 #' table listing existing auto reports.
+#' @param eligible Logical defining if the module should be allowed to work at
+#' full capacity. This might be useful when access to module products should be
+#' restricted. Default is TRUE, \emph{i.e.} no restrictions.
 #'
 #'
 #' @return In general, shiny objects. In particular, \code{autoreportOrgServer}
@@ -106,8 +116,8 @@
 #'
 #'   autoReportServer(
 #'     id = "test", registryName = "rapbase", type = "dispatchment",
-#'     paramNames = paramNames, paramValues = paramValues,
-#'     reports = reports, orgs = orgs
+#'     org = org$value, paramNames = paramNames, paramValues = paramValues,
+#'     reports = reports, orgs = orgs, eligible = TRUE
 #'   )
 #' }
 #'
@@ -211,12 +221,13 @@ autoReportInput <- function(id) {
 
 #' @rdname autoReport
 #' @export
-autoReportServer <- function(id, registryName, type,
+autoReportServer <- function(id, registryName, type, org = NULL,
                              paramNames = shiny::reactiveVal(c("")),
                              paramValues = shiny::reactiveVal(c("")),
-                             reports = NULL, orgs = NULL) {
+                             reports = NULL, orgs = NULL, eligible = TRUE) {
 
   if (!type %in% c("subscription")) {
+    stopifnot(shiny::is.reactive(org))
     stopifnot(shiny::is.reactive(paramNames))
     stopifnot(shiny::is.reactive(paramValues))
   }
@@ -249,7 +260,9 @@ autoReportServer <- function(id, registryName, type,
 
       if (type %in% c("subscription") | is.null(orgs)) {
         email <- rapbase::getUserEmail(session)
+        organization <- rapbase::getUserReshId(session)
       } else {
+        organization <- org()
         if (!paramValues()[1] == "") {
           stopifnot(length(paramNames()) == length(paramValues()))
           for (i in seq_len(length(paramNames()))) {
@@ -269,7 +282,7 @@ autoReportServer <- function(id, registryName, type,
         owner = rapbase::getUserName(session),
         ownerName = rapbase::getUserFullName(session),
         email = email,
-        organization = autoReport$org,
+        organization = organization,
         runDayOfYear = rapbase::makeRunDayOfYearSequence(
           interval = interval,
           startDay = input$start
@@ -424,7 +437,7 @@ autoReportServer <- function(id, registryName, type,
     })
 
     output$makeAutoReport <- shiny::renderUI({
-      if (is.null(autoReport$report)) {
+      if (is.null(autoReport$report) | !eligible) {
         NULL
       } else {
         if (type %in% c("subscription")) {
@@ -459,7 +472,13 @@ autoReportServer <- function(id, registryName, type,
     )
 
     output$autoReportTable <- shiny::renderUI({
-      if (length(autoReport$tab) == 0) {
+      if (!eligible) {
+        shiny::tagList(
+          shiny::h2(paste0("Funksjonen ('", type, "') er utilgjengelig")),
+          shiny::p("Ved spørsmål ta gjerne kontkat med registeret."),
+          shiny::hr()
+        )
+      } else if (length(autoReport$tab) == 0) {
         shiny::tagList(
           shiny::h2("Det finnes ingen oppf\u00F8ringer"),
           shiny::p(paste("Nye oppf\u00F8ringer kan lages fra menyen til",

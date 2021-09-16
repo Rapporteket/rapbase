@@ -15,7 +15,7 @@ statsInput(id)
 
 statsUI(id)
 
-statsServer(id, registryName)
+statsServer(id, registryName, eligible = TRUE)
 
 statsApp()
 
@@ -29,6 +29,10 @@ logTimeFrame(log, startDate, endDate)
 \item{id}{Character string shiny module id}
 
 \item{registryName}{Character string registry name key}
+
+\item{eligible}{Logical defining if the module should be allowed to work at
+full capacity. This might be useful when access to module products should be
+restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 
 \item{type}{Character string defining data level. One of
 \code{c("app", "report")}.}
@@ -64,7 +68,7 @@ ui <- shiny::fluidPage(
 
 # server function
 server <- function(input, output, session) {
-  statsServer("test", registryName = "rapbase")
+  statsServer("test", registryName = "rapbase", eligible = TRUE)
 }
 
 # run the shiny app in an interactive environment

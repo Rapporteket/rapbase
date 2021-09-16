@@ -11,7 +11,7 @@
 \usage{
 exportUCInput(id)
 
-exportUCServer(id, registryName)
+exportUCServer(id, registryName, eligible = TRUE)
 
 exportUCApp(registryName = "rapbase")
 
@@ -23,6 +23,10 @@ exportDb(registryName, compress = FALSE, session)
 \item{id}{Character string module ID}
 
 \item{registryName}{Character string registry name key}
+
+\item{eligible}{Logical defining if the module should be allowed to work at
+full capacity. This might be useful when access to module products should be
+restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 
 \item{pubkey}{Character vector with public keys}
 
@@ -38,4 +42,27 @@ Shiny objects, mostly. Helper functions may return other stuff too.
 Functions for registries that wants to implement exporting of registry
 databases, \emph{e.g.} for local development purposes. Also includes
 relevant helper functions
+}
+\examples{
+## client user interface function
+ui <- shiny::fluidPage(
+  shiny::sidebarLayout(
+    shiny::sidebarPanel(
+      exportUCInput("test"),
+    ),
+    shiny::mainPanel(
+      NULL
+    )
+  )
+)
+
+## server function
+server <- function(input, output, session) {
+  exportUCServer("test", registryName = "rapbase")
+}
+
+## run the shiny app in an interactive environment
+if (interactive()) {
+  shiny::shinyApp(ui, server)
+}
 }

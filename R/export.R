@@ -6,6 +6,9 @@
 #'
 #' @param id Character string module ID
 #' @param registryName Character string registry name key
+#' @param eligible Logical defining if the module should be allowed to work at
+#' full capacity. This might be useful when access to module products should be
+#' restricted. Default is TRUE, \emph{i.e.} no restrictions.
 #' @param pubkey Character vector with public keys
 #' @param compress Logical if export data is to be compressed (using gzip).
 #' FALSE by default.
@@ -14,6 +17,28 @@
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name export
 #' @aliases exportUCInput exportUCServer exportUCApp selectListPubkey exportDb
+#' @examples
+#' ## client user interface function
+#' ui <- shiny::fluidPage(
+#'   shiny::sidebarLayout(
+#'     shiny::sidebarPanel(
+#'       exportUCInput("test"),
+#'     ),
+#'     shiny::mainPanel(
+#'       NULL
+#'     )
+#'   )
+#' )
+#'
+#' ## server function
+#' server <- function(input, output, session) {
+#'   exportUCServer("test", registryName = "rapbase")
+#' }
+#'
+#' ## run the shiny app in an interactive environment
+#' if (interactive()) {
+#'   shiny::shinyApp(ui, server)
+#' }
 NULL
 
 # shiny modules
@@ -31,7 +56,7 @@ exportUCInput <- function(id) {
 
 #' @rdname export
 #' @export
-exportUCServer <- function(id, registryName) {
+exportUCServer <- function(id, registryName, eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
 
     rv <- shiny::reactiveValues(
@@ -79,15 +104,18 @@ exportUCServer <- function(id, registryName) {
       }
     })
 
-    output$exportDownload <- shiny::downloadHandler(
-      filename = basename(rv$exportFile),
-      content = function(file) {
-        file.copy(rv$exportFile, file)
-        rapbase::repLogger(
-          session,
-          msg = paste("Db export file", basename(rv$exportFile), "downloaded"))
-      }
-    )
+    if (eligible) {
+      output$exportDownload <- shiny::downloadHandler(
+        filename = basename(rv$exportFile),
+        content = function(file) {
+          file.copy(rv$exportFile, file)
+          rapbase::repLogger(
+            session,
+            msg = paste("Db export file", basename(rv$exportFile),
+                        "downloaded"))
+        }
+      )
+    }
 
     ## UC
     output$exportPidUI <- shiny::renderUI({
@@ -122,7 +150,13 @@ exportUCServer <- function(id, registryName) {
       }
     })
     output$exportDownloadUI <- shiny::renderUI({
-      if (is.null(rv$exportFile)) {
+      if (!eligible) {
+        shiny::tagList(
+          shiny::hr(),
+          shiny::h4("Funksjon utilgjengelig"),
+          shiny::p("Kontakt registeret")
+        )
+      } else if (is.null(rv$exportFile)) {
         NULL
       } else {
         shiny::tagList(
@@ -174,9 +208,10 @@ exportDb <- function(registryName, compress = FALSE, session) {
 
   f <- tempfile(pattern = registryName, fileext = ".sql")
   conf <- rapbase::getConfig()[[registryName]]
-  cmd <- "mysqldump --no-tablespaces --single-transaction --add-drop-database "
-  cmd <- paste0(cmd, "-B -u ", conf$user, " -p", conf$pass, " -h ", conf$host,
-         " ", conf$name, " > ", f)
+  cmd <- paste0("MYSQL_PWD=", conf$pass, " mysqldump --column-statistics=0 ",
+               "--no-tablespaces --single-transaction --add-drop-database ")
+  cmd <- paste0(cmd, "-B -u ", conf$user, " -h ", conf$host, " ", conf$name,
+                " > ", f)
   invisible(system(cmd))
 
   if (compress) {
