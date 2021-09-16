@@ -9,13 +9,21 @@ date: '`r format(Sys.time(), "%d. %B %Y")`'
 ---
 
 
-## Veiledning for utsendinger
-Her kan det settes opp rutinemessig produksjon og utsending av resultater per epost.
+## Veiledning
+```{r, echo=FALSE, results='asis'}
+if(params$type %in% c("dispatchment", "bulletin")) {
+  cat(paste("Her kan det settes opp rutinemessig produksjon og utsending av",
+            "resultater til én eller flere mottakere per epost."))
+} else {
+  cat(paste("Her kan du selv bestille rutinemessig oppdaterte resulter som",
+            "sendes direkte til din registrerte epostadresse"))
+}
+```
 
 ### Bruk
 Fra menyen til venstre
 
-1. hvis aktuelt, velg i hvilket filformat `r shiny::icon("file-pdf")` rapporten skal mottas,
+1. hvis aktuelt, velg filformatet `r shiny::icon("file-pdf")` på rapporten,
 ```{r, echo=FALSE, results='asis'}
 if(params$type %in% c("dispatchment", "bulletin")) {
   t <- shiny::HTML("1. angi datakilden",
@@ -39,13 +47,28 @@ if(params$type %in% c("dispatchment", "bulletin")) {
 ```
 
 
-Når alt er klart trykk `r shiny::icon("save")` for å aktivere utsendingen. Oppføringen vil da vises i tabellen. Trykk `r shiny::icon("trash")` til høyre i tabellen for å slette en utsending. Aktive utsendinger kan endres ved å trykke på `r shiny::icon("edit")` til høyre i tabellen. Utsendingen vil da slettes og flyttes over i menyen til venstre. Ved etablering eller endring av en utsending kan mottakere slettes ved å angi aktuell epostadresse og trykke på `r shiny::icon("minus-square")`
-
-### Lurt å tenke over
-Alle utsendinger skjer per epost og det betyr at rapportene som sendes ut __ikke__ skal inneholde person- og helseopplysninger. Du står selv som ansvarlig for de utsendinger du etablerer. Det er en god regel å ikke sende ut for ofte men heller med passelige intervaller basert på når nye data i registeret bør presenteres. Alle slike utsendinger produseres og sendes ut nattestid. Om du har mange ukentlige utsendinger kan det være lurt å spre disse på ulike ukedager for god fordeling av arbeidsbelastningen.
+Når alt er klart trykk `r shiny::icon("save")` for å aktivere utsendingen. Oppføringen vil da vises i tabellen. Trykk `r shiny::icon("trash")` til høyre i tabellen for å slette en utsending. Aktive utsendinger kan endres ved å trykke på `r shiny::icon("edit")` til høyre i tabellen. Utsendingen vil da slettes og flyttes over i menyen til venstre.
 ```{r, echo=FALSE, results='asis'}
 if(params$type %in% c("dispatchment", "bulletin")) {
-  cat(paste("Og, siden det er mer ressurskrevende å lage en rapport enn å",
+  cat(paste("Ved etablering eller endring av en utsending kan mottakere",
+            "slettes ved å angi aktuell epostadresse og trykke på",
+            as.character(shiny::icon("minus-square"))))
+}
+```
+
+
+```{r, echo=FALSE, results='asis'}
+if(params$type %in% c("dispatchment", "bulletin")) {
+  cat(paste("### Lurt å tenke over\n",
+            "Alle utsendinger skjer per epost og det betyr at rapportene som",
+            "sendes ut __ikke__ skal inneholde person- og helseopplysninger.",
+            "Du står selv som ansvarlig for de utsendinger du etablerer. Det",
+            "er en god regel å ikke sende ut for ofte men heller med passelige",
+            "intervaller basert på når nye data i registeret bør presenteres.",
+            "Alle slike utsendinger produseres og sendes ut nattestid. Om du",
+            "har mange ukentlige utsendinger kan det være lurt å spre disse på",
+            "ulike ukedager for god fordeling av arbeidsbelastningen.",
+            "Og, siden det er mer ressurskrevende å lage en rapport enn å",
             "sende den ut så vil det også være en fin gest til miljøet å",
             "etterstrebe få utsendinger og heller legge til flere mottakere",
             "for hver utsending",
