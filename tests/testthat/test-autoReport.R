@@ -95,6 +95,7 @@ test_that("email can be added and deleted for dispatchment", {
   shiny::testServer(
     autoReportServer,
     args = list(registryName = registryName, type = type,
+                org = shiny::reactive(111111),
                 reports = reports, orgs = orgs), {
                   session$setInputs(email = "true@email.no")
                   expect_equal(length(autoReport$email), 0)
@@ -113,6 +114,7 @@ test_that("new dispatchment can be written to and removed from file", {
   shiny::testServer(
     autoReportServer,
     args = list(registryName = registryName, type = type,
+                org = shiny::reactive(111111),
                 reports = reports, orgs = orgs), {
                   session$setInputs(report = "FirstReport")
                   session$setInputs(freq = "Maanedlig-month")
@@ -152,6 +154,7 @@ test_that("paramValues can be tweaked when provided", {
   shiny::testServer(
     autoReportServer,
     args = list(registryName = registryName, type = type,
+                org = shiny::reactive(111111),
                 paramNames = shiny::reactive(c("organization", "outputFormat")),
                 paramValues = shiny::reactive(c(999999, "pdf")),
                 reports = reports, orgs = orgs), {
@@ -208,6 +211,7 @@ test_that("add email button is not created if email is not valid", {
   shiny::testServer(
     autoReportServer,
     args = list(registryName = registryName, type = type,
+                org = shiny::reactive(111111),
                 reports = reports, orgs = orgs), {
                   session$setInputs(email = "invalid@email-format")
                   expect_true(is.null(output$editEmail))
@@ -234,6 +238,7 @@ test_that("tabel is replaced by message when no reports listed", {
   shiny::testServer(
     autoReportServer,
     args = list(registryName = registryName, type = type,
+                org = shiny::reactive(111111),
                 reports = reports, orgs = orgs), {
                   session$flushReact()
                   expect_true(dim(autoReport$tab)[1] == 0)

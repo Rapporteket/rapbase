@@ -30,6 +30,7 @@ autoReportServer(
   id,
   registryName,
   type,
+  org = NULL,
   paramNames = shiny::reactiveVal(c("")),
   paramValues = shiny::reactiveVal(c("")),
   reports = NULL,
@@ -59,6 +60,14 @@ correspond to the registry R package name.}
 
 \item{type}{Character string defining the type of auto reports. Must be one
 of \code{c("subscription", "dispatchment", "bulletin")}}
+
+\item{org}{Shiny reactive or NULL (default) defining the organization (id)
+of the data source used for dispatchments and bulletins (in which case it
+cannot be set to NULL) and its value will be used to populate the
+\emph{organization} field in auto report data (autoReport.yml) for these auto
+report types. On the other hand, since subscriptions are personal (per user)
+the only relevant organization id will implicit be that of the user and in
+this case any value of \code{org} will be disregarded.}
 
 \item{paramNames}{Shiny reactive value as a vector of parameter names of
 which values are to be set interactively at application run time. Each
@@ -163,7 +172,7 @@ server <- function(input, output, session) {
 
   autoReportServer(
     id = "test", registryName = "rapbase", type = "dispatchment",
-    paramNames = paramNames, paramValues = paramValues,
+    org = org$value, paramNames = paramNames, paramValues = paramValues,
     reports = reports, orgs = orgs, eligible = TRUE
   )
 }
