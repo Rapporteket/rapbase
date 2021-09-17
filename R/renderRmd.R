@@ -33,6 +33,7 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
   # When called from do.call (rapbase::runAutoReport()) arguments are provided
   # as class list. To prevent below switch of output formats to fail, make sure
   # outputType is of class character. See
+  # https://github.com/Rapporteket/rapbase/pull/86
   outputType <- as.character(outputType)
 
   stopifnot(file.exists(sourceFile))
