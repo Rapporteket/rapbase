@@ -1,3 +1,7 @@
+# rapbase 1.17.1
+
+* Fixed bug related to ambiguous class of arguments when rendering reports ([#86](https://github.com/Rapporteket/rapbase/pull/86))
+
 # rapbase 1.17.0
 
 * Remove one (of too many) imports ([#80](https://github.com/Rapporteket/rapbase/pull/80)).
