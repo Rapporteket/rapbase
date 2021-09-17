@@ -191,6 +191,9 @@ getRegistryLog <- function(registryName, type = "app") {
   log <- utils::read.csv(logFile,
                          header = TRUE,
                          stringsAsFactors = FALSE)
+  log <- log %>%
+    dplyr::filter(.data$group == registryName)
+
   invisible(log)
 
 }
