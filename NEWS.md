@@ -1,6 +1,7 @@
 # rapbase 1.17.1
 
 * Fixed bug related to ambiguous class of arguments when rendering reports ([#86](https://github.com/Rapporteket/rapbase/pull/86))
+* Fixed bug in filtering stats per registry ([#87](https://github.com/Rapporteket/rapbase/pull/87))
 
 # rapbase 1.17.0
 
