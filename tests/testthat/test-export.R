@@ -75,6 +75,7 @@ test_that("export UC input returns a shiny tag list", {
 })
 
 test_that("module server provides sensible output", {
+  checkDb()
   shiny::testServer(exportUCServer, args = list(registryName = "rapbase"), {
     expect_equal(class(output$exportPidUI), "list")
     session$setInputs(exportPid = "areedv")
