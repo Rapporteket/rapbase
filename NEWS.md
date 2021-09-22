@@ -2,6 +2,7 @@
 
 * Fixed bug related to ambiguous class of arguments when rendering reports ([#86](https://github.com/Rapporteket/rapbase/pull/86))
 * Fixed bug in filtering stats per registry ([#87](https://github.com/Rapporteket/rapbase/pull/87))
+* Adjusted export with implicit encryption includ fixing of inadequate reactivity in download handler ([#88](https://github.com/Rapporteket/rapbase/pull/88))
 
 # rapbase 1.17.0
 
