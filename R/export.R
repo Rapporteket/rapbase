@@ -49,7 +49,6 @@ exportUCInput <- function(id) {
     shiny::uiOutput(shiny::NS(id, "exportPidUI")),
     shiny::uiOutput(shiny::NS(id, "exportKeyUI")),
     shiny::checkboxInput(shiny::NS(id, "exportCompress"), "Komprimer eksport"),
-    shiny::uiOutput(shiny::NS(id, "exportEncryptUI")),
     shiny::uiOutput(shiny::NS(id, "exportDownloadUI"))
   )
 }
@@ -59,60 +58,30 @@ exportUCInput <- function(id) {
 exportUCServer <- function(id, registryName, eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
 
-    rv <- shiny::reactiveValues(
-      exportFile = NULL,
-      exportText = "Krypt\u00e9r",
-      exportIcon = "lock-open",
-      exportClass = "btn-warning"
-    )
-
     pubkey <- shiny::reactive({
       shiny::req(input$exportPid)
       rapbase::getGithub("keys", input$exportPid)
     })
 
-    ## observers
-    shiny::observeEvent(input$exportPid, {
-      rv$exportFile <- NULL
-      rv$exportText <- "Krypt\u00e9r"
-      rv$exportIcon <- "lock-open"
-      rv$exportClass <- "btn-warning"
-    })
-    shiny::observeEvent(input$exportKey, {
-      rv$exportFile <- NULL
-      rv$exportText <- "Krypt\u00e9r"
-      rv$exportIcon <- "lock-open"
-      rv$exportClass <- "btn-warning"
-    })
-    shiny::observeEvent(input$exportCompress, {
-      rv$exportFile <- NULL
-      rv$exportText <- "Krypt\u00e9r"
-      rv$exportIcon <- "lock-open"
-      rv$exportClass <- "btn-warning"
-    })
-
-    shiny::observeEvent(input$exportEncrypt, {
-      if (is.null(rv$exportFile)) {
-        f <- rapbase::exportDb(registryName,
-                               compress = input$exportCompress,
-                               session = session)
-        rv$exportFile <- sship::enc(f, pid = NULL, pubkey_holder = NULL,
-                                    pubkey = input$exportKey)
-        rv$exportText <- "Kryptert!"
-        rv$exportIcon <- "lock"
-        rv$exportClass <- "btn-success"
-      }
+    encFile <- shiny::reactive({
+      f <- rapbase::exportDb(registryName,
+                             compress = input$exportCompress,
+                             session = session)
+      ef <- sship::enc(f, pid = NULL, pubkey_holder = NULL,
+                       pubkey = input$exportKey)
+      ef
     })
 
     if (eligible) {
       output$exportDownload <- shiny::downloadHandler(
-        filename = basename(rv$exportFile),
+        filename = function() {
+          basename(encFile())
+        },
         content = function(file) {
-          file.copy(rv$exportFile, file)
+          file.copy(encFile(), file)
           rapbase::repLogger(
             session,
-            msg = paste("Db export file", basename(rv$exportFile),
-                        "downloaded"))
+            msg = paste("Db export file", basename(encFile()), "downloaded."))
         }
       )
     }
@@ -138,17 +107,6 @@ exportUCServer <- function(id, registryName, eligible = TRUE) {
           choices = rapbase::selectListPubkey(pubkey()))
       }
     })
-    output$exportEncryptUI <- shiny::renderUI({
-      if (length(pubkey()) == 0) {
-        NULL
-      } else {
-        shiny::actionButton(
-          shiny::NS(id, "exportEncrypt"),
-          label = rv$exportText,
-          icon = shiny::icon(rv$exportIcon),
-          class = rv$exportClass)
-      }
-    })
     output$exportDownloadUI <- shiny::renderUI({
       if (!eligible) {
         shiny::tagList(
@@ -156,8 +114,6 @@ exportUCServer <- function(id, registryName, eligible = TRUE) {
           shiny::h4("Funksjon utilgjengelig"),
           shiny::p("Kontakt registeret")
         )
-      } else if (is.null(rv$exportFile)) {
-        NULL
       } else {
         shiny::tagList(
           shiny::hr(),
@@ -185,7 +141,7 @@ exportUCApp <- function(registryName = "rapbase") {
 }
 
 
-# the rest is helper functions
+# helper functions
 
 #' @rdname export
 #' @export
@@ -221,7 +177,7 @@ exportDb <- function(registryName, compress = FALSE, session) {
     invisible(system(cmd))
   }
 
-  rapbase::repLogger(session, msg = paste(registryName, "db dump created."))
+  rapbase::repLogger(session, msg = paste(registryName, "Db dump created."))
 
   invisible(f)
 }

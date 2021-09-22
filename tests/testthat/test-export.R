@@ -81,9 +81,8 @@ test_that("guide module server provides sensible output", {
     expect_equal("character", class(pubkey()))
     session$setInputs(exportKey = pubkey())
     expect_equal(class(output$exportKeyUI), "list")
-    session$setInputs(exportCompress = TRUE)
-    expect_true(is.null(rv$exportFile))
-    expect_equal(class(output$exportEncryptUI), "list")
+    #session$setInputs(exportCompress = TRUE)
+    #expect_equal(class(output$exportEncryptUI), "list")
   })
 })
 
