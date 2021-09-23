@@ -67,7 +67,7 @@ exportUCServer <- function(id, registryName, eligible = TRUE) {
       f <- rapbase::exportDb(registryName,
                              compress = input$exportCompress,
                              session = session)
-      print(paste("Dump file size:", file.size(f)))
+      message(paste("Dump file size:", file.size(f)))
       ef <- sship::enc(f, pid = NULL, pubkey_holder = NULL,
                        pubkey = input$exportKey)
       ef
