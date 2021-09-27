@@ -49,10 +49,11 @@ Imports:
     rpivotTable,
     sendmailR,
     shiny,
-    sship,
     utils,
     withr,
     yaml
+Remotes:
+    Rapporteket/sship@*release
 RoxygenNote: 7.1.1
 URL: http://github.com/Rapporteket/rapbase
 BugReports: http://github.com/Rapporteket/rapbase/issues
