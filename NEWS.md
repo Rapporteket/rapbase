@@ -1,3 +1,7 @@
+# rapbase 1.18.0
+
+* Added guide for use statistics report ([#90](https://github.com/Rapporteket/rapbase/pull/90))
+
 # rapbase 1.17.1
 
 * Fixed bug related to ambiguous class of arguments when rendering reports ([#86](https://github.com/Rapporteket/rapbase/pull/86)).

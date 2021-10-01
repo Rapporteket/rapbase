@@ -1,0 +1,67 @@
+---
+params:
+  registryName: udefinert register
+title: '`r paste0("Bruksstatistikk for ", params$registryName)`'
+---
+
+```{r dbName, echo=FALSE}
+dbName <- rapbase::getConfig()[[params$registryName]]$name
+```
+
+## Innledning
+Her kan du se på og hente ut informasjon om hvordan Rapporteket for `r params$registryName` brukes. I korte trekk vil det si _hvem_, _hva_ og _når_. Formålet med verktøyet er å kunne gi registeransvarlige informasjon som kan brukes til endring og forbedring av eget innhold på Rapporteket. Videre kan informasjonen også benyttes som del av registerets revisjon av tilganger (til registerdata), men det forutsetter at underliggende registrering av bruk har tatt høyde for slik anvendelse av bruksdata.
+
+## Bruksanvisning
+Fra menyen til høyre velg hvilket datasett `r shiny::icon("shapes")` som skal benyttes. Perioden `r shiny::icon("calendar")` er i utgangspunktet satt til hele tidsspennet i datasettet men kan endres ved behov. Utforsk datasettet ved å flytte variabler i krysstabellen til høyre. Utvalg er mulig ved å trykke på menyen `r shiny::icon("sort-down")` for den variabelen det skal filtreres på. Datasettet kan også lastes ned som en csv fil `r shiny::icon("file-csv")` (til bruk eksempelvis i et regneark) som da vil inneholde alle variablene for perioden `r shiny::icon("calendar")` som er angitt i menyen.
+
+## Beskrivelse av datasett og variabler
+Datagrunnlaget består av to datasett: "Innlogging" og "Enkeltrapporter" der det første inneholder informasjon om innlogging til registeret på Rapporteket. "Enkeltrapporter" inneholder informasjon om bruken av hver enkelt rapport for registeret på Rapporteket. Variablene i datasettene er i stor grad overlappende og er beskrevet under. Å forstå betydningen av variablene er en vesentlig forutsetning for å kunne dra riktige konklusjoner ut fra datasettene. Ellers inneholder datasettene informasjon inntil to år tilbake i tid. Data eldre en to år slettes i utgangspunktet fortløpende.
+
+#### datetime
+Tekstlig formatert tidsstempel for hendelsen.
+
+#### date
+Dato for hendelsen på formatet ÅÅÅÅ-MM-DD. Utledet fra _datetime_.
+
+#### time
+Tidspunkt for hendelsen på formatet TT:MM:SS. Utledet fra _datetime_.
+
+#### year
+År for hendelsen på formatet ÅÅÅÅ. Utledet fra _datetime_.
+
+#### month
+Månedsnummer for hendelsen der januar = 1 og desember = 12. Utledet fra _datetime_.
+
+#### weekday
+Ukedagnummer for hendelsen der mandag = 1 og søndag = 7. Utledet fra _datetime_.
+
+#### day
+Dagnummer i måneden for hendelsen. Utledet fra _datetime_.
+
+#### user
+Brukernavn til brukeren som har initiert hendelsen.
+
+#### name
+Fult navn til brukeren som har initiert hendelsen.
+
+#### group
+Gruppetilhørighet til brukeren som har initiert hendelsen. Normalt vil gruppetilhørighet kunne forstås som registertilhørighet.
+
+#### role
+Rolle til brukeren som har initiert hendelsen. Normalt vil rolle kunne forstås som et gitt nivå av rettigheter innen et register.
+
+#### resh_id
+Kode for organisasjonstilhørighet til brukeren som har initiert hendelsen. Normalt sett vil koden være å forstå som en enhet i Register for enheter i spesialisthelsetjenesten (Resh).
+
+#### message
+Tekst som beskriver hendelsen
+
+#### call
+Tekst som angir hvilken (R) funksjon med tilhørende inngangsverdier (funksjonsargumenter) som ligger til grunn for hendelsen
+
+#### environment
+Tekst som angir (R) konteksten for _call_. Verdien "R_GlobalEnv" betyr i praksis en uspesifisert kontekst og kan bety at registreringen av hendelsen er ufullstendig.
+
+
+## Ytterligerer informasjon
+Ved behov for ytterligere informasjon bør man i første omgang ta kontakt med egen statistiker, altså den eller de som er sanvarlig for utvikling av registerets innhold på Rapporteket. [SKDE](mailto:rapporteket@helse-nord.no) kan i mange tilfeller også bistå om nødvendig.
