@@ -27,7 +27,7 @@ statsGuideUI <- function(id) {
   shiny::htmlOutput(shiny::NS(id, "statsGuide"))
 }
 
-#' @rdname exportGuide
+#' @rdname statsGuide
 #' @export
 statsGuideServer <- function(id, registryName) {
 
@@ -42,7 +42,7 @@ statsGuideServer <- function(id, registryName) {
   })
 }
 
-#' @rdname exportGuide
+#' @rdname statsGuide
 #' @export
 statsGuideApp <- function() {
 

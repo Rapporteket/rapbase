@@ -8,6 +8,10 @@
 \title{Shiny modules providing the Stats Guide}
 \usage{
 statsGuideUI(id)
+
+statsGuideServer(id, registryName)
+
+statsGuideApp()
 }
 \arguments{
 \item{id}{Character string module ID}
