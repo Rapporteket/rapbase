@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 1.17.1
+Version: 1.18.0
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -55,7 +55,7 @@ Imports:
     yaml
 Remotes:
     Rapporteket/sship@*release
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 URL: http://github.com/Rapporteket/rapbase
 BugReports: http://github.com/Rapporteket/rapbase/issues
 Suggests:
