@@ -85,6 +85,7 @@ reference:
     - runShinyApp
     - appNavbarUserWidget
     - exportGuide
+    - statsGuide
     - export
     - stats
 
