@@ -52,12 +52,18 @@ statsInput <- function(id) {
 
   shiny::tagList(
     shiny::radioButtons(
-      shiny::NS(id, "type"), "Kategori:",
+      shiny::NS(id, "type"),
+      label = shiny::tags$div(
+        shiny::HTML(as.character(shiny::icon("shapes")), "Kategori:")
+      ),
       choices = list(Innlogging = "app", Enkeltrapporter = "report")
     ),
     shiny::uiOutput(shiny::NS(id, "period")),
     shiny::radioButtons(
-      shiny::NS(id, "downloadFormat"), "Nedlastingsformat:",
+      shiny::NS(id, "downloadFormat"),
+      label = shiny::tags$div(
+        shiny::HTML(as.character(shiny::icon("file-csv")), "Nedlastingsformat:")
+      ),
       choices = c("csv", "xlsx-csv")
     ),
     shiny::uiOutput(shiny::NS(id, "downloadButton")),
@@ -93,7 +99,10 @@ statsServer <- function(id, registryName, eligible = TRUE) {
 
     output$period <- shiny::renderUI({
       shiny::dateRangeInput(
-        shiny::NS(id, "period"), "Periode:",
+        shiny::NS(id, "period"),
+        label = shiny::tags$div(
+          shiny::HTML(as.character(shiny::icon("calendar")), "Periode:")
+        ),
         start = min(log()$date), end = max(log()$date), separator = "-"
       )
     })
