@@ -33,8 +33,8 @@ pattern and with the extention according to \code{outputType}
 \description{
 Function that renders documents at Rapporteket from rmarkdown sorce files.
 Output formats may be (vanilla) HTML or PDF based on our own pandoc latex
-template or fragements of html when the result is to be embedded in existing
+template or fragments of html when the result is to be embedded in existing
 web pages. Rmarkdown allow parameters to be part of report processing. Thus,
-parameters that are speciffic to reports must be provided (as a named list)
+parameters that are specific to reports must be provided (as a named list)
 when calling \code{renderRmd()}.
 }
