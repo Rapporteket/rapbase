@@ -11,7 +11,7 @@
 \usage{
 exportUCInput(id)
 
-exportUCServer(id, registryName, eligible = TRUE)
+exportUCServer(id, registryName, repoName = registryName, eligible = TRUE)
 
 exportUCApp(registryName = "rapbase")
 
@@ -23,6 +23,9 @@ exportDb(registryName, compress = FALSE, session)
 \item{id}{Character string module ID}
 
 \item{registryName}{Character string registry name key}
+
+\item{repoName}{Character string defining the github repository name of the
+registry. Default value is \code{registryName}.}
 
 \item{eligible}{Logical defining if the module should be allowed to work at
 full capacity. This might be useful when access to module products should be

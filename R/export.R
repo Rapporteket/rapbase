@@ -6,6 +6,8 @@
 #'
 #' @param id Character string module ID
 #' @param registryName Character string registry name key
+#' @param repoName Character string defining the github repository name of the
+#' registry. Default value is \code{registryName}.
 #' @param eligible Logical defining if the module should be allowed to work at
 #' full capacity. This might be useful when access to module products should be
 #' restricted. Default is TRUE, \emph{i.e.} no restrictions.
@@ -55,7 +57,8 @@ exportUCInput <- function(id) {
 
 #' @rdname export
 #' @export
-exportUCServer <- function(id, registryName, eligible = TRUE) {
+exportUCServer <- function(id, registryName, repoName = registryName,
+                           eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
 
     pubkey <- shiny::reactive({
@@ -94,7 +97,7 @@ exportUCServer <- function(id, registryName, eligible = TRUE) {
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("user")), "Velg mottaker:")
         ),
-        choices =  rapbase::getGithub("contributors", registryName))
+        choices =  rapbase::getGithub("contributors", repoName))
     })
     output$exportKeyUI <- shiny::renderUI({
       if (length(pubkey()) == 0) {
