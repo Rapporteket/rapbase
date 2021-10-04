@@ -1,3 +1,7 @@
+# rapbase 1.19.0
+
+* Added option for explicit registry repository name at github when collecting keys for export ([#91](https://github.com/Rapporteket/rapbase/pull/91)) 
+
 # rapbase 1.18.0
 
 * Added guide for use statistics report ([#90](https://github.com/Rapporteket/rapbase/pull/90))
