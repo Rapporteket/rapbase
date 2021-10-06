@@ -4,7 +4,13 @@
 \alias{renderRmd}
 \title{Render documents from rmarkdown files at Rapporteket}
 \usage{
-renderRmd(sourceFile, outputType = "html", logoFile = NULL, params = list())
+renderRmd(
+  sourceFile,
+  outputType = "html",
+  logoFile = NULL,
+  params = list(),
+  template = "default"
+)
 }
 \arguments{
 \item{sourceFile}{Character string providing the path to the rmarkdown
@@ -22,6 +28,10 @@ added to the output document.}
 corresponding entries under \emph{params} in the rmarkdown document yaml
 header. Default is \code{NULL} in which case no parameters as defined in the
 rmarkdown document will be overridden.}
+
+\item{template}{Character string defing which template to use for making pdf
+documents. Must be one of "default" or "document" where the first is assumed
+if this argument is not set.}
 }
 \value{
 Character string with path to the rendered file or, if
