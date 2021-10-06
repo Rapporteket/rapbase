@@ -69,9 +69,8 @@
       \includegraphics[width=\hsize]{logo.png}%
       {\\ RAPPORTEKET er en analysetjenste som tilbyr interaktiv undersøkelse
       av rådata, rutinemessig utsending av rapporter og visualisering av
-      resultater. Tjenesten utvikles og vedlikeholdes av Nasjonalt servicemiljø
-      for medisinske kvalitetsregistre ved Senter for Klinisk Dokumentasjon og
-      Evaluering (SKDE) og arbeidet finansieres av Helse- og
+      resultater for medisinske kvalitetsregistre. Tjenesten utvikles og
+      vedlikeholdes av SKDE og arbeidet finansieres av Helse- og
       omsorgsdepartementet.}%
     \end{textblock*}
     %
