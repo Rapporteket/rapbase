@@ -1,3 +1,9 @@
+# rapbase 1.19.1
+
+* Fixed missing international language when producing pdf at Rapporteket
+* Added option for more latex templates when rendering markdown
+* Added a latex template for plain documents
+
 # rapbase 1.19.0
 
 * Added option for explicit registry repository name at github when collecting keys for export ([#91](https://github.com/Rapporteket/rapbase/pull/91)) 
