@@ -19,6 +19,9 @@
 #' corresponding entries under \emph{params} in the rmarkdown document yaml
 #' header. Default is \code{NULL} in which case no parameters as defined in the
 #' rmarkdown document will be overridden.
+#' @param template Character string defing which template to use for making pdf
+#' documents. Must be one of "default" or "document" where the first is assumed
+#' if this argument is not set.
 #'
 #' @return Character string with path to the rendered file or, if
 #' \code{outputType} is set to "html_fragment", a character string providing an
@@ -28,7 +31,7 @@
 #' @export
 
 renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
-                      params = list()) {
+                      params = list(), template = "default") {
 
   # When called from do.call (rapbase::runAutoReport()) arguments are provided
   # as class list. To prevent below switch of output formats to fail, make sure
@@ -38,21 +41,16 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
 
   stopifnot(file.exists(sourceFile))
   stopifnot(outputType %in% c("html", "html_fragment", "pdf"))
+  stopifnot(template %in% c("default", "document"))
 
   # do work in tempdir and return to origin on exit
   owd <- setwd(tempdir())
   on.exit(setwd(owd))
 
   # copy all files to temporary workdir
-  templateFiles <- c(
-    "default.latex", "logo.png", "_output.yml",
-    "_bookdown.yml"
-  )
-  file.copy(system.file(
-    file.path("template", templateFiles),
-    package = "rapbase"
-  ), ".",
-  overwrite = TRUE
+  file.copy(
+    list.files(system.file("template", package = "rapbase"), full.names = TRUE),
+    ".", overwrite = TRUE
   )
   file.copy(sourceFile, ".", overwrite = TRUE)
   if (!is.null(logoFile)) {
@@ -64,7 +62,7 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
     output_format =
       switch(outputType,
         pdf = bookdown::pdf_document2(
-          pandoc_args = c("--template=default.latex")),
+          pandoc_args = c(paste0("--template=", template, ".latex"))),
         html = bookdown::html_document2(),
         html_fragment = bookdown::html_fragment2(),
         beamer = rmarkdown::beamer_presentation(theme = "Hannover"),
