@@ -8,6 +8,7 @@
 \usepackage{xcolor}
 \usepackage{sectsty}
 \usepackage{marginnote}
+\usepackage[utf8]{inputenc}
 \usepackage[norsk]{babel}
 \usepackage[left=5cm,%
             right=2cm,%
