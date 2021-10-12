@@ -95,7 +95,7 @@ when calling renderRmd()." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.1</span>
       </span>
     </div>
 
@@ -148,7 +148,13 @@ parameters that are specific to reports must be provided (as a named list)
 when calling <code>renderRmd()</code>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>renderRmd</span><span class='op'>(</span><span class='va'>sourceFile</span>, outputType <span class='op'>=</span> <span class='st'>"html"</span>, logoFile <span class='op'>=</span> <span class='cn'>NULL</span>, params <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>renderRmd</span><span class='op'>(</span>
+  <span class='va'>sourceFile</span>,
+  outputType <span class='op'>=</span> <span class='st'>"html"</span>,
+  logoFile <span class='op'>=</span> <span class='cn'>NULL</span>,
+  params <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='op'>)</span>,
+  template <span class='op'>=</span> <span class='st'>"default"</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -176,6 +182,12 @@ added to the output document.</p></td>
 corresponding entries under <em>params</em> in the rmarkdown document yaml
 header. Default is <code>NULL</code> in which case no parameters as defined in the
 rmarkdown document will be overridden.</p></td>
+    </tr>
+    <tr>
+      <th>template</th>
+      <td><p>Character string defing which template to use for making pdf
+documents. Must be one of "default" or "document" where the first is assumed
+if this argument is not set.</p></td>
     </tr>
     </table>
 
