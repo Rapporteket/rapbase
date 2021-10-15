@@ -1,3 +1,7 @@
+# rapbase 1.19.2
+
+* Fixed sub optimal formatting of auto report yaml file, both converting old- and writing new data ([#93](https://github.com/Rapporteket/rapbase/pull/93))
+
 # rapbase 1.19.1
 
 * Fixed missing international language when producing pdf at Rapporteket
