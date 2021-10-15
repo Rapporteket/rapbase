@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.19.2</span>
       </span>
     </div>
 
@@ -163,7 +163,7 @@ defined (empty)</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>readAutoReportData</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: auto reports with no type defined now set to 'subscription'.</span></div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: auto reports with no owner name defined now set to an empty string.</span></div><div class='output co'>#&gt; $testAutoReportFirst
+</div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: auto reports with no type defined now set to 'subscription'.</span></div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: auto reports with no owner name defined now set to an empty string.</span></div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: function params list un-nested. Please check that autor reports for registries are still working as expected.</span></div><div class='output co'>#&gt; $testAutoReportFirst
 #&gt; $testAutoReportFirst$synopsis
 #&gt; [1] "Test, the first one"
 #&gt; 
@@ -177,20 +177,14 @@ defined (empty)</p></td>
 #&gt; [1] ".testAutoReport"
 #&gt; 
 #&gt; $testAutoReportFirst$params
-#&gt; $testAutoReportFirst$params[[1]]
-#&gt; $testAutoReportFirst$params[[1]]$aNum
+#&gt; $testAutoReportFirst$params$aNum
 #&gt; [1] 1
 #&gt; 
-#&gt; 
-#&gt; $testAutoReportFirst$params[[2]]
-#&gt; $testAutoReportFirst$params[[2]]$aChar
+#&gt; $testAutoReportFirst$params$aChar
 #&gt; [1] "a"
 #&gt; 
-#&gt; 
-#&gt; $testAutoReportFirst$params[[3]]
-#&gt; $testAutoReportFirst$params[[3]]$anExp
+#&gt; $testAutoReportFirst$params$anExp
 #&gt; [1] "Sys.Date()"
-#&gt; 
 #&gt; 
 #&gt; 
 #&gt; $testAutoReportFirst$owner
@@ -232,20 +226,14 @@ defined (empty)</p></td>
 #&gt; [1] ".testAutoReport"
 #&gt; 
 #&gt; $testAutoReportSecond$params
-#&gt; $testAutoReportSecond$params[[1]]
-#&gt; $testAutoReportSecond$params[[1]]$aNum
+#&gt; $testAutoReportSecond$params$aNum
 #&gt; [1] 2
 #&gt; 
-#&gt; 
-#&gt; $testAutoReportSecond$params[[2]]
-#&gt; $testAutoReportSecond$params[[2]]$aChar
+#&gt; $testAutoReportSecond$params$aChar
 #&gt; [1] "3.14"
 #&gt; 
-#&gt; 
-#&gt; $testAutoReportSecond$params[[3]]
-#&gt; $testAutoReportSecond$params[[3]]$anExp
+#&gt; $testAutoReportSecond$params$anExp
 #&gt; [1] "sessionInfo()"
-#&gt; 
 #&gt; 
 #&gt; 
 #&gt; $testAutoReportSecond$owner
@@ -287,25 +275,17 @@ defined (empty)</p></td>
 #&gt; [1] ".testAutoReport"
 #&gt; 
 #&gt; $testAutoReportThird$params
-#&gt; $testAutoReportThird$params[[1]]
-#&gt; $testAutoReportThird$params[[1]]$aNum
+#&gt; $testAutoReportThird$params$aNum
 #&gt; [1] 2
 #&gt; 
-#&gt; 
-#&gt; $testAutoReportThird$params[[2]]
-#&gt; $testAutoReportThird$params[[2]]$aChar
+#&gt; $testAutoReportThird$params$aChar
 #&gt; [1] "3.14"
 #&gt; 
-#&gt; 
-#&gt; $testAutoReportThird$params[[3]]
-#&gt; $testAutoReportThird$params[[3]]$anExp
+#&gt; $testAutoReportThird$params$anExp
 #&gt; [1] "sessionInfo()"
 #&gt; 
-#&gt; 
-#&gt; $testAutoReportThird$params[[4]]
-#&gt; $testAutoReportThird$params[[4]]$bulletin
+#&gt; $testAutoReportThird$params$bulletin
 #&gt; [1] TRUE
-#&gt; 
 #&gt; 
 #&gt; 
 #&gt; $testAutoReportThird$owner
@@ -344,20 +324,14 @@ defined (empty)</p></td>
 #&gt; [1] ".testAutoReport"
 #&gt; 
 #&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$params
-#&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$params[[1]]
-#&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$params[[1]]$aNum
+#&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$params$aNum
 #&gt; [1] "1"
 #&gt; 
-#&gt; 
-#&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$params[[2]]
-#&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$params[[2]]$aChar
+#&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$params$aChar
 #&gt; [1] "someString"
 #&gt; 
-#&gt; 
-#&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$params[[3]]
-#&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$params[[3]]$anExp
+#&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$params$anExp
 #&gt; [1] "Sys.Date()"
-#&gt; 
 #&gt; 
 #&gt; 
 #&gt; $`5a0e7e28fd4c641be535a2b292a6b7b2`$owner
@@ -399,20 +373,14 @@ defined (empty)</p></td>
 #&gt; [1] ".testAutoReport"
 #&gt; 
 #&gt; $cd467ac14dd848b8798a384a3e51512c$params
-#&gt; $cd467ac14dd848b8798a384a3e51512c$params[[1]]
-#&gt; $cd467ac14dd848b8798a384a3e51512c$params[[1]]$aNum
+#&gt; $cd467ac14dd848b8798a384a3e51512c$params$aNum
 #&gt; [1] "1"
 #&gt; 
-#&gt; 
-#&gt; $cd467ac14dd848b8798a384a3e51512c$params[[2]]
-#&gt; $cd467ac14dd848b8798a384a3e51512c$params[[2]]$aChar
+#&gt; $cd467ac14dd848b8798a384a3e51512c$params$aChar
 #&gt; [1] "someString"
 #&gt; 
-#&gt; 
-#&gt; $cd467ac14dd848b8798a384a3e51512c$params[[3]]
-#&gt; $cd467ac14dd848b8798a384a3e51512c$params[[3]]$anExp
+#&gt; $cd467ac14dd848b8798a384a3e51512c$params$anExp
 #&gt; [1] "Sys.Date()"
-#&gt; 
 #&gt; 
 #&gt; 
 #&gt; $cd467ac14dd848b8798a384a3e51512c$owner
