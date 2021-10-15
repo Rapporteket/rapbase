@@ -165,6 +165,7 @@ readAutoReportData <- function(fileName = "autoReport.yml",
 upgradeAutoReportData <- function(config) {
   upgradeType <- FALSE
   upgradeOwnerName <- FALSE
+  upgradeParams <- FALSE
 
   for (i in seq_len(length(config))) {
     rep <- config[[i]]
@@ -175,6 +176,16 @@ upgradeAutoReportData <- function(config) {
     if (!"ownerName" %in% names(rep)) {
       upgradeOwnerName <- TRUE
       config[[i]]$ownerName <- ""
+    }
+    if ("params" %in% names(rep) && class(rep$params[[1]]) == "list") {
+      upgradeParams <- TRUE
+      paramName <- vector()
+      paramValue <- vector()
+      for (j in seq_len(length(rep$params))) {
+        paramName[j] <- names(rep$params[[j]])
+        paramValue[j] <- rep$params[[j]]
+      }
+      config[[i]]$params <- as.list(stats::setNames(paramValue, paramName))
     }
   }
 
@@ -190,6 +201,13 @@ upgradeAutoReportData <- function(config) {
       "Auto report data were upgraded:",
       "auto reports with no owner name defined now set to",
       "an empty string."
+    ))
+  }
+  if (upgradeParams) {
+    message(paste(
+      "Auto report data were upgraded:",
+      "function params list un-nested. Please check that autor reports for",
+      "registries are still working as expected."
     ))
   }
 
