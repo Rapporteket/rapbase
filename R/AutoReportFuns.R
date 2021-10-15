@@ -64,20 +64,13 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   ts <- as.character(as.integer(as.POSIXct(Sys.time())))
   autoRepId <- digest::digest(paste0(owner, ts))
 
-  # make current entry, first named list of param names and values pairs
   l <- list()
-  params <- paramValues
-  names(params) <- paramNames
-  paramsListVector <- list()
-  for (i in seq_len(length(params))) {
-    paramsListVector[[i]] <- as.list(params[i])
-  }
 
   l$synopsis <- synopsis
   l$package <- package
   l$type <- type
   l$fun <- fun
-  l$params <- paramsListVector
+  l$params <- as.list(stats::setNames(paramValues, paramNames))
   l$owner <- owner
   l$ownerName <- ownerName
   l$email <- email
@@ -165,6 +158,7 @@ readAutoReportData <- function(fileName = "autoReport.yml",
 upgradeAutoReportData <- function(config) {
   upgradeType <- FALSE
   upgradeOwnerName <- FALSE
+  upgradeParams <- FALSE
 
   for (i in seq_len(length(config))) {
     rep <- config[[i]]
@@ -175,6 +169,16 @@ upgradeAutoReportData <- function(config) {
     if (!"ownerName" %in% names(rep)) {
       upgradeOwnerName <- TRUE
       config[[i]]$ownerName <- ""
+    }
+    if ("params" %in% names(rep) && class(rep$params[[1]]) == "list") {
+      upgradeParams <- TRUE
+      paramName <- vector()
+      paramValue <- vector()
+      for (j in seq_len(length(rep$params))) {
+        paramName[j] <- names(rep$params[[j]])
+        paramValue[j] <- rep$params[[j]]
+      }
+      config[[i]]$params <- as.list(stats::setNames(paramValue, paramName))
     }
   }
 
@@ -190,6 +194,13 @@ upgradeAutoReportData <- function(config) {
       "Auto report data were upgraded:",
       "auto reports with no owner name defined now set to",
       "an empty string."
+    ))
+  }
+  if (upgradeParams) {
+    message(paste(
+      "Auto report data were upgraded:",
+      "function params list un-nested. Please check that autor reports for",
+      "registries are still working as expected."
     ))
   }
 
