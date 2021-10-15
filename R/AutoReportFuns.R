@@ -64,20 +64,13 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   ts <- as.character(as.integer(as.POSIXct(Sys.time())))
   autoRepId <- digest::digest(paste0(owner, ts))
 
-  # make current entry, first named list of param names and values pairs
   l <- list()
-  params <- paramValues
-  names(params) <- paramNames
-  paramsListVector <- list()
-  for (i in seq_len(length(params))) {
-    paramsListVector[[i]] <- as.list(params[i])
-  }
 
   l$synopsis <- synopsis
   l$package <- package
   l$type <- type
   l$fun <- fun
-  l$params <- paramsListVector
+  l$params <- as.list(stats::setNames(paramValues, paramNames))
   l$owner <- owner
   l$ownerName <- ownerName
   l$email <- email
