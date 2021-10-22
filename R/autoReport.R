@@ -475,7 +475,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       if (!eligible) {
         shiny::tagList(
           shiny::h2(paste0("Funksjonen ('", type, "') er utilgjengelig")),
-          shiny::p("Ved spørsmål ta gjerne kontkat med registeret."),
+          shiny::p("Ved sp\u00F8rsm\u00E5l ta gjerne kontakt med registeret."),
           shiny::hr()
         )
       } else if (length(autoReport$tab) == 0) {
