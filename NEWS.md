@@ -1,3 +1,7 @@
+# rapbase 1.19.3
+
+* Added T1 fontencoding to defult LaTeX template for proper printing of symbols (_e.g._ > and <) in pdfs ([#94](https://github.com/Rapporteket/rapbase/pull/94))
+
 # rapbase 1.19.2
 
 * Fixed sub optimal formatting of auto report yaml file, both converting old- and writing new data ([#93](https://github.com/Rapporteket/rapbase/pull/93))
