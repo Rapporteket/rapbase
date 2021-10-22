@@ -10,6 +10,8 @@
 \usepackage{marginnote}
 \usepackage[utf8]{inputenc}
 \usepackage[norsk]{babel}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
 \usepackage[left=5cm,%
             right=2cm,%
             top=2.25cm,%
