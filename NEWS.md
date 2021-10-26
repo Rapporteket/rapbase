@@ -1,3 +1,7 @@
+# rapbase 1.19.4
+
+* Export available to team members only
+
 # rapbase 1.19.3
 
 * Added T1 fontencoding to defult LaTeX template for proper printing of symbols (_e.g._ > and <) in pdfs ([#94](https://github.com/Rapporteket/rapbase/pull/94))
