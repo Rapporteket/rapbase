@@ -61,6 +61,9 @@ exportUCServer <- function(id, registryName, repoName = registryName,
                            eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
 
+
+    conf <- rapbase::getConfig("rapbaseConfig.yml")
+
     pubkey <- shiny::reactive({
       shiny::req(input$exportPid)
       rapbase::getGithub("keys", input$exportPid)
@@ -97,7 +100,9 @@ exportUCServer <- function(id, registryName, repoName = registryName,
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("user")), "Velg mottaker:")
         ),
-        choices =  rapbase::getGithub("contributors", repoName))
+        choices =  rapbase::getGithub(
+          "members", repoName, .token = conf$github$PAT$rapmaskin)
+        )
     })
     output$exportKeyUI <- shiny::renderUI({
       if (length(pubkey()) == 0) {

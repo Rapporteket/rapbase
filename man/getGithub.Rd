@@ -8,14 +8,16 @@ getGithub(what, value, .token = NULL)
 }
 \arguments{
 \item{what}{Character string defining the api endpoint. Currently one of
-\code{c("contributors", "keys")}.}
+\code{c("contributors", "members", "keys")}.}
 
 \item{value}{Character string specifying what to collect from the given
-endpoint. For "contributors" this should be the name of the repository and
-for "keys" this should be a github user name.}
+endpoint. For "contributors" this should be the name of the repository, for
+"members" value should be the team slug and for "keys" this should be a
+github user name.}
 
 \item{.token}{Character string providing av valid token that will be used if
-the api call requires authentication.}
+the api call requires authentication. Listing of team members do require a
+token with the appropriate credentials.}
 }
 \value{
 Character vector with results from the GitHub api request

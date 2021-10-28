@@ -75,6 +75,7 @@ test_that("export UC input returns a shiny tag list", {
 })
 
 test_that("module server provides sensible output", {
+  skip("Reqires API authentication")
   checkDb()
   shiny::testServer(exportUCServer, args = list(registryName = "rapbase"), {
     expect_equal(class(output$exportPidUI), "list")
@@ -107,6 +108,7 @@ test_that("module server provides sensible output", {
 # })
 
 test_that("download is prevented when module is not eligible", {
+  skip("Reqires API authentication")
   checkDb()
   shiny::testServer(
     exportUCServer,
