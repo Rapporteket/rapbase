@@ -83,6 +83,7 @@ reference:
       Helper functions to be used by shiny apps
     contents:
     - runShinyApp
+    - navbarWidget
     - appNavbarUserWidget
     - exportGuide
     - statsGuide
