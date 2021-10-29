@@ -1,3 +1,7 @@
+# rapbase 1.20.0
+
+* Navbar user information widget provided as a shiny module
+
 # rapbase 1.19.4
 
 * Export available to team members only
