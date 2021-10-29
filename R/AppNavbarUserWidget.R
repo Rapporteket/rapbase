@@ -36,6 +36,8 @@
 #' @param organization String providing the organization of the user
 #' @param addUserInfo Logical defining wether a user data pop-up is to be part
 #' of the widget (TRUE) or not (FALSE, default)
+#' @param namespace Character string providing the namespace to use, if any.
+#' Defaults is \code{NULL} in which case no namespace will be applied.
 #'
 #' @return Ready made html script
 #' @export
@@ -44,10 +46,11 @@
 #' appNavbarUserWidget()
 appNavbarUserWidget <- function(user = "Undefined person",
                                 organization = "Undefined organization",
-                                addUserInfo = FALSE) {
+                                addUserInfo = FALSE,
+                                namespace = NULL) {
   if (addUserInfo) {
     userInfo <- shiny::tags$a(
-      id = "userInfo",
+      id = shiny::NS(namespace, "userInfo"),
       href = "#",
       class = "action-button",
       "Om:"

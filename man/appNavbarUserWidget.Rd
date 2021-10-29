@@ -7,7 +7,8 @@
 appNavbarUserWidget(
   user = "Undefined person",
   organization = "Undefined organization",
-  addUserInfo = FALSE
+  addUserInfo = FALSE,
+  namespace = NULL
 )
 }
 \arguments{
@@ -17,6 +18,9 @@ appNavbarUserWidget(
 
 \item{addUserInfo}{Logical defining wether a user data pop-up is to be part
 of the widget (TRUE) or not (FALSE, default)}
+
+\item{namespace}{Character string providing the namespace to use, if any.
+Defaults is \code{NULL} in which case no namespace will be applied.}
 }
 \value{
 Ready made html script
