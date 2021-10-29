@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Append a log record — appendLog • rapbase</title>
+<title>Shiny modules providing GUI and server logic for user info widget — navbarWidget • rapbase</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,9 +46,10 @@
 
 
 
-<meta property="og:title" content="Append a log record — appendLog" />
-<meta property="og:description" content="Append a record to the log. Normally, this function will not be called from
-outside this package" />
+<meta property="og:title" content="Shiny modules providing GUI and server logic for user info widget — navbarWidget" />
+<meta property="og:description" content="Shiny modules for making a user information widget in registry shiny apps at
+Rapporteket. One benefit using these modules will be reduced complexity and
+number of code lines for each registry." />
 <meta property="og:image" content="/logo.svg" />
 
 
@@ -130,47 +131,83 @@ outside this package" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Append a log record</h1>
-    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/log.R'><code>R/log.R</code></a></small>
-    <div class="hidden name"><code>appendLog.Rd</code></div>
+    <h1>Shiny modules providing GUI and server logic for user info widget</h1>
+    <small class="dont-index">Source: <a href='http://github.com/Rapporteket/rapbase/blob/master/R/navbarWidget.R'><code>R/navbarWidget.R</code></a></small>
+    <div class="hidden name"><code>navbarWidget.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Append a record to the log. Normally, this function will not be called from
-outside this package</p>
+    <p>Shiny modules for making a user information widget in registry shiny apps at
+Rapporteket. One benefit using these modules will be reduced complexity and
+number of code lines for each registry.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>appendLog</span><span class='op'>(</span><span class='va'>event</span>, <span class='va'>name</span>, <span class='va'>target</span>, <span class='va'>format</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>navbarWidgetInput</span><span class='op'>(</span><span class='va'>id</span>, addUserInfo <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+
+<span class='fu'>navbarWidgetServer</span><span class='op'>(</span><span class='va'>id</span>, <span class='va'>orgName</span>, caller <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/environment.html'>environmentName</a></span><span class='op'>(</span><span class='fu'>rlang</span><span class='fu'>::</span><span class='fu'><a href='https://rlang.r-lib.org/reference/caller_env.html'>caller_env</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>
+
+<span class='fu'>navbarWidgetApp</span><span class='op'>(</span>orgName <span class='op'>=</span> <span class='st'>"Org Name"</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>event</th>
-      <td><p>data.frame of one record holding the fields of whatever that
-is to be logged</p></td>
+      <th>id</th>
+      <td><p>Character string providing module namespace</p></td>
     </tr>
     <tr>
-      <th>name</th>
-      <td><p>String defining the name of the log</p></td>
+      <th>addUserInfo</th>
+      <td><p>Logical defing if an "about" hyperlink is to be added</p></td>
     </tr>
     <tr>
-      <th>target</th>
-      <td><p>String defining where the log should go. Currently, 'file' is
-the only option</p></td>
+      <th>orgName</th>
+      <td><p>Character string naming the organization</p></td>
     </tr>
     <tr>
-      <th>format</th>
-      <td><p>String defining the whatever format available given 'taget'.
-Currently, the only option here is 'csv'</p></td>
+      <th>caller</th>
+      <td><p>Character string naming the environment this function was
+called from. Default value is <code><a href='https://rdrr.io/r/base/environment.html'>environmentName(rlang::caller_env())</a></code>.
+The value is used to display the current version of the R package
+representing the registry at Rapporteket. If this module is called from
+exported functions in the registry R package use the default value. If the
+module is called from outside the registry environment <code>caller</code> must be
+set to the actual name of the R package.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Provides a new record in the log. If the log does not exist a new
-one is created before appending the new record</p>
+    <p>Shiny objects, mostly. Helper functions may return other stuff too.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
+    <p>These modules take use of the shiny session object to obtain data for the
+widget. Hence, a Rapporteket like context will be needed for these modules to
+function properly.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='co'>## client user interface function</span>
+<span class='va'>ui</span> <span class='op'>&lt;-</span> <span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/htmltools/man/tagList.html'>tagList</a></span><span class='op'>(</span>
+  <span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/navbarPage.html'>navbarPage</a></span><span class='op'>(</span>
+    <span class='st'>"Testpage"</span>,
+    <span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/tabPanel.html'>tabPanel</a></span><span class='op'>(</span>
+      <span class='st'>"Testpanel"</span>,
+      <span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/sidebarLayout.html'>mainPanel</a></span><span class='op'>(</span>
+        <span class='fu'>navbarWidgetInput</span><span class='op'>(</span><span class='st'>"testWidget"</span><span class='op'>)</span>
+      <span class='op'>)</span>
+    <span class='op'>)</span>
+  <span class='op'>)</span>
+<span class='op'>)</span>
+
+<span class='co'>## server function</span>
+<span class='va'>server</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>input</span>, <span class='va'>output</span>, <span class='va'>session</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='fu'>navbarWidgetServer</span><span class='op'>(</span><span class='st'>"testWidget"</span>, orgName <span class='op'>=</span> <span class='st'>"Test org"</span>, caller <span class='op'>=</span> <span class='st'>"Rpkg"</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+<span class='co'>## run the app in an interactive session and a Rapporteket like environment</span>
+<span class='kw'>if</span> <span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>&amp;&amp;</span> <span class='fu'><a href='isRapContext.html'>isRapContext</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
+  <span class='fu'>shiny</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/shiny/man/shinyApp.html'>shinyApp</a></span><span class='op'>(</span><span class='va'>ui</span>, <span class='va'>server</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
