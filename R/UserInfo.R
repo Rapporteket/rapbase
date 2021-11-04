@@ -80,7 +80,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
       stop("Session information is empty! Eventually, that will come bite you")
     }
 
-    if (!any(c("ShinySession", "session_proxy") %in%
+    if (!any(c("ShinySession", "session_proxy", "MockShinySession") %in%
              attributes(shinySession)$class)) {
       stop(paste(
         "Got no object of class 'ShinySession' or 'session_proxy'!",
