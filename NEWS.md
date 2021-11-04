@@ -1,3 +1,7 @@
+# rapbase 1.20.1
+
+* Fix unit testing issue by also allowing "MockShinySession" as an attribute of the shiny session object
+
 # rapbase 1.20.0
 
 * Navbar user information widget provided as a shiny module
