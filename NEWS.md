@@ -1,3 +1,7 @@
+# rapbase 1.20.2
+
+* Fix short-term error in function finding next run date in auto reports
+
 # rapbase 1.20.1
 
 * Fix unit testing issue by also allowing "MockShinySession" as an attribute of the shiny session object
