@@ -666,8 +666,27 @@ findNextRunDate <- function(runDayOfYear,
     nextDayNum <- min(runDayOfYear)
     year <- year + 1
   } else {
-    # next run will be next run day this year
-    nextDayNum <- min(runDayOfYear[runDayOfYear > baseDayNum])
+    # next run will be next run day of current year
+    ## find year transition, if any
+    nDay <- length(runDayOfYear)
+    deltaDay <- runDayOfYear[2:nDay] - runDayOfYear[1:(nDay - 1)]
+    trans <- deltaDay < 0
+    if (any(trans)) {
+      indTrans <- match(TRUE, trans)
+      d0 <- runDayOfYear[1:indTrans]
+      d1 <- runDayOfYear[(indTrans + 1):nDay]
+      if (baseDayNum >= max(d0)) {
+        ## use vector TAIL to find next run day
+        runDayOfCurrentYear <- d1
+      } else {
+        ## use vector HEAD to find next run day
+        runDayOfCurrentYear <- d0
+      }
+    } else {
+      runDayOfCurrentYear <- runDayOfYear
+    }
+
+    nextDayNum <- min(runDayOfCurrentYear[runDayOfCurrentYear > baseDayNum])
   }
 
   format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
