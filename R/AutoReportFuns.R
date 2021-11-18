@@ -159,6 +159,7 @@ upgradeAutoReportData <- function(config) {
   upgradeType <- FALSE
   upgradeOwnerName <- FALSE
   upgradeParams <- FALSE
+  upgradeStartDate <- FALSE
 
   for (i in seq_len(length(config))) {
     rep <- config[[i]]
@@ -179,6 +180,10 @@ upgradeAutoReportData <- function(config) {
         paramValue[j] <- rep$params[[j]]
       }
       config[[i]]$params <- as.list(stats::setNames(paramValue, paramName))
+    }
+    if (!"startDate" %in% names(rep)) {
+      upgradeStartDate <- TRUE
+      config[[i]]$startDate <- Sys.Date()
     }
   }
 
@@ -201,6 +206,12 @@ upgradeAutoReportData <- function(config) {
       "Auto report data were upgraded:",
       "function params list un-nested. Please check that autor reports for",
       "registries are still working as expected."
+    ))
+  }
+  if (upgradeStartDate) {
+    message(paste(
+      "Auto report data were upgraded:",
+      "auto reports with no start date defined now set to the current date."
     ))
   }
 
