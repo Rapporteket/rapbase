@@ -657,8 +657,17 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 
 findNextRunDate <- function(runDayOfYear,
                             baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
+                            startDate = NULL,
                             returnFormat = "%A %e. %B %Y") {
+
   year <- as.POSIXlt(Sys.Date())$year + 1900
+
+  if (!is.null(startDate)) {
+    if (as.Date(startDate) > as.Date(strptime(paste(year, baseDayNum),
+                                              "%Y %j"))) {
+      baseDayNum <- as.POSIXlt(startDate)$yday + 1
+    }
+  }
 
   if (baseDayNum >= max(runDayOfYear) | length(runDayOfYear) == 1 &
     baseDayNum >= max(runDayOfYear)) {
@@ -677,7 +686,7 @@ findNextRunDate <- function(runDayOfYear,
       dHead <- runDayOfYear[1:indTrans]
       # vector tail
       dTail <- runDayOfYear[(indTrans + 1):nDay]
-      # by day number, which vector is first (and last)
+      # by day number, which vector is first (and last)?
       if (max(dHead) > max(dTail)) {
         dFirst <- dTail
         dLast <-dHead
