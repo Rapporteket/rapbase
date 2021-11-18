@@ -45,6 +45,7 @@
 createAutoReport <- function(synopsis, package, type = "subscription", fun,
                              paramNames, paramValues, owner, ownerName = "",
                              email, organization, runDayOfYear,
+                             startDate = as.character(Sys.Date()),
                              terminateDate = NULL, interval = "",
                              intervalName = "", dryRun = FALSE) {
 
@@ -75,6 +76,7 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   l$ownerName <- ownerName
   l$email <- email
   l$organization <- organization
+  l$startDate <- startDate
   l$terminateDate <- as.character(terminateDate)
   l$interval <- interval
   l$intervalName <- intervalName
