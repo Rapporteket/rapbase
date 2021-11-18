@@ -106,7 +106,7 @@ test_that("A year-day sequence can be mande", {
   expect_true(is.numeric(rdoy))
 })
 
-test_that("The next run day in sequence can be identified", {
+test_that("The next run day in simple sequence can be identified", {
   expect_equal(as.numeric(
     findNextRunDate(
       runDayOfYear = c(10, 20, 30), baseDayNum = 11,
@@ -122,6 +122,24 @@ test_that("The next run day in sequence can be identified when next year", {
       returnFormat = "%j"
     )
   ), 10)
+})
+
+test_that("for within year-break sequence, next is found among earlier days", {
+  expect_equal(as.numeric(
+    findNextRunDate(
+      runDayOfYear = c(200, 300, 1, 100), baseDayNum = 10,
+      returnFormat = "%j"
+    )
+  ), 100)
+})
+
+test_that("for within year-break sequence, next is found among later days", {
+  expect_equal(as.numeric(
+    findNextRunDate(
+      runDayOfYear = c(200, 300, 1, 100), baseDayNum = 110,
+      returnFormat = "%j"
+    )
+  ), 200)
 })
 
 shinySession <- list(user = "tester")

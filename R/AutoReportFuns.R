@@ -673,14 +673,24 @@ findNextRunDate <- function(runDayOfYear,
     trans <- deltaDay < 0
     if (any(trans)) {
       indTrans <- match(TRUE, trans)
-      d0 <- runDayOfYear[1:indTrans]
-      d1 <- runDayOfYear[(indTrans + 1):nDay]
-      if (baseDayNum >= max(d0)) {
-        ## use vector TAIL to find next run day
-        runDayOfCurrentYear <- d1
+      # vector head
+      dHead <- runDayOfYear[1:indTrans]
+      # vector tail
+      dTail <- runDayOfYear[(indTrans + 1):nDay]
+      # by day number, which vector is first (and last)
+      if (max(dHead) > max(dTail)) {
+        dFirst <- dTail
+        dLast <-dHead
       } else {
-        ## use vector HEAD to find next run day
-        runDayOfCurrentYear <- d0
+        dFirst <- dHead
+        dLast <- dTail
+      }
+      if (baseDayNum >= max(dFirst)) {
+        ## next run day to be found among later days
+        runDayOfCurrentYear <- dLast
+      } else {
+        ## next run day to be found among the early days
+        runDayOfCurrentYear <- dFirst
       }
     } else {
       runDayOfCurrentYear <- runDayOfYear
