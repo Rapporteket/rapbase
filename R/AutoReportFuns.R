@@ -678,7 +678,8 @@ findNextRunDate <- function(runDayOfYear,
   if (!is.null(startDate)) {
     if (as.Date(startDate) > as.Date(strptime(paste(year, baseDayNum),
                                               "%Y %j"))) {
-      baseDayNum <- as.POSIXlt(startDate)$yday + 1
+      # since we pull the NEXT run day set new base day on day BEFORE star date
+      baseDayNum <- as.POSIXlt(startDate)$yday
     }
   }
 
