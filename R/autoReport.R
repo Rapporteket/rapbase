@@ -287,6 +287,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
           interval = interval,
           startDay = input$start
         ),
+        startDate = input$start,
         interval = interval,
         intervalName = strsplit(input$freq, "-")[[1]][1]
       )
