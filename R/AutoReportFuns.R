@@ -188,7 +188,7 @@ upgradeAutoReportData <- function(config) {
     }
     if (!"startDate" %in% names(rep)) {
       upgradeStartDate <- TRUE
-      config[[i]]$startDate <- Sys.Date()
+      config[[i]]$startDate <- as.character(Sys.Date())
     }
     if ("startDate" %in% names(rep)) {
       if (is.numeric(config[[i]]$startDate)) {
