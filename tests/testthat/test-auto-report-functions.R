@@ -24,6 +24,12 @@ test_that("auto report config can be upgraded", {
   expect_message(upgradeAutoReportData(list(list(synopsis = "test"))))
 })
 
+test_that("auto report start date format bug can be fixed", {
+  expect_message(upgradeAutoReportData(
+    list(list(synopsis = "test", startDate = 1.1))
+  ))
+})
+
 test_that("already upgraded auto report config is left as is", {
   c <- list(list(type = "subscription", ownerName = "Tore Tester",
                  startDate = "2021-11-19"))
