@@ -692,8 +692,7 @@ findNextRunDate <- function(runDayOfYear,
     nextDayNum <- min(runDayOfYear)
     year <- year + 1
   } else {
-    # next run will be next run day of current year
-    ## find year transition, if any
+    # find year transition, if any
     nDay <- length(runDayOfYear)
     deltaDay <- runDayOfYear[2:nDay] - runDayOfYear[1:(nDay - 1)]
     trans <- deltaDay < 0
@@ -703,28 +702,29 @@ findNextRunDate <- function(runDayOfYear,
       dHead <- runDayOfYear[1:indTrans]
       # vector tail
       dTail <- runDayOfYear[(indTrans + 1):nDay]
-      # by day number, which vector is first (and last)?
-      if (max(dHead) > max(dTail)) {
-        dFirst <- dTail
-        dLast <-dHead
-      } else {
-        dFirst <- dHead
-        dLast <- dTail
+
+      # if current date part of head and base day num part of tail next run will
+      # be next year
+      if (as.numeric(format(Sys.Date(), "%j")) > max(dTail) &
+          baseDayNum < max(dTail)) {
+        year <- year + 1
+        print("Next run date will be next year")
       }
-      if (baseDayNum >= max(dFirst)) {
-        ## next run day to be found among later days
-        runDayOfCurrentYear <- dLast
-        print("Next run day picked from later days")
+
+      if (baseDayNum >= max(dTail)) {
+        ## next run day to be found in vector head
+        runDayOfYearSubset <- dHead
+        print("Next run day picked from head")
       } else {
-        ## next run day to be found among the early days
-        runDayOfCurrentYear <- dFirst
-        print("Next run day picked from earlier days")
+        ## next run day to be found in vector tail
+        runDayOfYearSubset <- dTail
+        print("Next run day picked from tail")
       }
     } else {
-      runDayOfCurrentYear <- runDayOfYear
+      runDayOfYearSubset <- runDayOfYear
     }
 
-    nextDayNum <- min(runDayOfCurrentYear[runDayOfCurrentYear > baseDayNum])
+    nextDayNum <- min(runDayOfYearSubset[runDayOfYearSubset > baseDayNum])
   }
 
   format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
