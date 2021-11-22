@@ -686,11 +686,10 @@ findNextRunDate <- function(runDayOfYear,
     }
   }
 
-  if (baseDayNum >= max(runDayOfYear) | length(runDayOfYear) == 1 &
-    baseDayNum >= max(runDayOfYear)) {
-    # next run will be first run of next year
+  # special case if out of max range and only one run day defined (yearly)
+  if (baseDayNum >= max(runDayOfYear) | length(runDayOfYear) == 1) {
+    # next run will be first run in day num vector
     nextDayNum <- min(runDayOfYear)
-    year <- year + 1
   } else {
     # find year transition, if any
     nDay <- length(runDayOfYear)
@@ -702,14 +701,6 @@ findNextRunDate <- function(runDayOfYear,
       dHead <- runDayOfYear[1:indTrans]
       # vector tail
       dTail <- runDayOfYear[(indTrans + 1):nDay]
-
-      # if current date part of head and base day num part of tail next run will
-      # be next year
-      if (as.numeric(format(Sys.Date(), "%j")) > max(dTail) &
-          baseDayNum < max(dTail)) {
-        year <- year + 1
-        print("Next run date will be next year")
-      }
 
       if (baseDayNum >= max(dTail)) {
         ## next run day to be found in vector head
@@ -725,6 +716,12 @@ findNextRunDate <- function(runDayOfYear,
     }
 
     nextDayNum <- min(runDayOfYearSubset[runDayOfYearSubset > baseDayNum])
+  }
+
+  # if current day num larger than nextDayNum report will be run next year
+  if (as.numeric(format(Sys.Date(), "%j")) > nextDayNum) {
+    year <- year + 1
+    print("Next run date will be next year")
   }
 
   format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
