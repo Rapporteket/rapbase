@@ -25,6 +25,8 @@
 #' @param organization String identifying the organization the owner belongs to
 #' @param runDayOfYear Integer vector with day numbers of the year when the
 #' report is to be run
+#' @param startDate Date-class date when report will be run first time. Default
+#' value is set to \code{Sys.Date() + 1} \emph{i.e.} tomorrow.
 #' @param terminateDate Date-class date after which report is no longer run.
 #' Default value set to \code{NULL} in which case the function will provide an
 #' expiry date adding 3 years to the current date if in a PRODUCTION context
@@ -76,7 +78,7 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   l$ownerName <- ownerName
   l$email <- email
   l$organization <- organization
-  l$startDate <- startDate
+  l$startDate <- as.character(startDate)
   l$terminateDate <- as.character(terminateDate)
   l$interval <- interval
   l$intervalName <- intervalName
@@ -680,6 +682,7 @@ findNextRunDate <- function(runDayOfYear,
                                               "%Y %j"))) {
       # since we pull the NEXT run day set new base day on day BEFORE star date
       baseDayNum <- as.POSIXlt(startDate)$yday
+      print(paste("Start date is ahead of base day:", startDate, baseDayNum))
     }
   }
 
@@ -711,9 +714,11 @@ findNextRunDate <- function(runDayOfYear,
       if (baseDayNum >= max(dFirst)) {
         ## next run day to be found among later days
         runDayOfCurrentYear <- dLast
+        print("Next run day picked from later days")
       } else {
         ## next run day to be found among the early days
         runDayOfCurrentYear <- dFirst
+        print("Next run day picked from earlier days")
       }
     } else {
       runDayOfCurrentYear <- runDayOfYear
@@ -794,7 +799,9 @@ makeAutoReportTab <- function(session, namespace = character(),
   dateFormat <- "%A %e. %B %Y"
 
   for (n in names(autoRep)) {
-    nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
+    nextDate <- findNextRunDate(
+      runDayOfYear = autoRep[[n]]$runDayOfYear,
+      startDate = autoRep[[n]]$startDate,
       returnFormat = dateFormat
     )
     if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
