@@ -25,6 +25,8 @@
 #' @param organization String identifying the organization the owner belongs to
 #' @param runDayOfYear Integer vector with day numbers of the year when the
 #' report is to be run
+#' @param startDate Date-class date when report will be run first time. Default
+#' value is set to \code{Sys.Date() + 1} \emph{i.e.} tomorrow.
 #' @param terminateDate Date-class date after which report is no longer run.
 #' Default value set to \code{NULL} in which case the function will provide an
 #' expiry date adding 3 years to the current date if in a PRODUCTION context
@@ -45,6 +47,7 @@
 createAutoReport <- function(synopsis, package, type = "subscription", fun,
                              paramNames, paramValues, owner, ownerName = "",
                              email, organization, runDayOfYear,
+                             startDate = as.character(Sys.Date()),
                              terminateDate = NULL, interval = "",
                              intervalName = "", dryRun = FALSE) {
 
@@ -75,6 +78,7 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   l$ownerName <- ownerName
   l$email <- email
   l$organization <- organization
+  l$startDate <- as.character(startDate)
   l$terminateDate <- as.character(terminateDate)
   l$interval <- interval
   l$intervalName <- intervalName
@@ -159,6 +163,7 @@ upgradeAutoReportData <- function(config) {
   upgradeType <- FALSE
   upgradeOwnerName <- FALSE
   upgradeParams <- FALSE
+  upgradeStartDate <- FALSE
 
   for (i in seq_len(length(config))) {
     rep <- config[[i]]
@@ -179,6 +184,10 @@ upgradeAutoReportData <- function(config) {
         paramValue[j] <- rep$params[[j]]
       }
       config[[i]]$params <- as.list(stats::setNames(paramValue, paramName))
+    }
+    if (!"startDate" %in% names(rep)) {
+      upgradeStartDate <- TRUE
+      config[[i]]$startDate <- Sys.Date()
     }
   }
 
@@ -201,6 +210,12 @@ upgradeAutoReportData <- function(config) {
       "Auto report data were upgraded:",
       "function params list un-nested. Please check that autor reports for",
       "registries are still working as expected."
+    ))
+  }
+  if (upgradeStartDate) {
+    message(paste(
+      "Auto report data were upgraded:",
+      "auto reports with no start date defined now set to the current date."
     ))
   }
 
@@ -645,6 +660,10 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 #'
 #' @param runDayOfYear Numeric vector providing year-day numbers
 #' @param baseDayNum Numeric defining base year-day. Default is today
+#' @param startDate Character string of format "YYYY-MM-DD" defining the date of
+#' the very first run. If set to NULL (default) or a none future date (compared
+#' to the date represented by \code{baseDayNum} for the current year) it will be
+#' disregarded.
 #' @param returnFormat String providing return format as described in
 #' \code{\link[base]{strptime}} in the current locale. Defaults to
 #' "\%A \%d. \%B \%Y" that will provide something like
@@ -657,17 +676,52 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 
 findNextRunDate <- function(runDayOfYear,
                             baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
+                            startDate = NULL,
                             returnFormat = "%A %e. %B %Y") {
+
   year <- as.POSIXlt(Sys.Date())$year + 1900
 
-  if (baseDayNum >= max(runDayOfYear) | length(runDayOfYear) == 1 &
-    baseDayNum >= max(runDayOfYear)) {
-    # next run will be first run of next year
+  if (!is.null(startDate)) {
+    if (as.Date(startDate) > as.Date(strptime(paste(year, baseDayNum),
+                                              "%Y %j"))) {
+      # since we pull the NEXT run day set new base day on day BEFORE star date
+      baseDayNum <- as.POSIXlt(startDate)$yday
+    }
+  }
+
+  # special case if out of max range and only one run day defined (yearly)
+  if (baseDayNum >= max(runDayOfYear) | length(runDayOfYear) == 1) {
+    # next run will be first run in day num vector
     nextDayNum <- min(runDayOfYear)
-    year <- year + 1
   } else {
-    # next run will be next run day this year
-    nextDayNum <- min(runDayOfYear[runDayOfYear > baseDayNum])
+    # find year transition, if any
+    nDay <- length(runDayOfYear)
+    deltaDay <- runDayOfYear[2:nDay] - runDayOfYear[1:(nDay - 1)]
+    trans <- deltaDay < 0
+    if (any(trans)) {
+      indTrans <- match(TRUE, trans)
+      # vector head
+      dHead <- runDayOfYear[1:indTrans]
+      # vector tail
+      dTail <- runDayOfYear[(indTrans + 1):nDay]
+
+      if (baseDayNum >= max(dTail)) {
+        ## next run day to be found in vector head
+        runDayOfYearSubset <- dHead
+      } else {
+        ## next run day to be found in vector tail
+        runDayOfYearSubset <- dTail
+      }
+    } else {
+      runDayOfYearSubset <- runDayOfYear
+    }
+
+    nextDayNum <- min(runDayOfYearSubset[runDayOfYearSubset > baseDayNum])
+  }
+
+  # if current day num larger than nextDayNum report will be run next year
+  if (as.numeric(format(Sys.Date(), "%j")) > nextDayNum) {
+    year <- year + 1
   }
 
   format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
@@ -742,7 +796,9 @@ makeAutoReportTab <- function(session, namespace = character(),
   dateFormat <- "%A %e. %B %Y"
 
   for (n in names(autoRep)) {
-    nextDate <- findNextRunDate(autoRep[[n]]$runDayOfYear,
+    nextDate <- findNextRunDate(
+      runDayOfYear = autoRep[[n]]$runDayOfYear,
+      startDate = autoRep[[n]]$startDate,
       returnFormat = dateFormat
     )
     if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {

@@ -25,7 +25,8 @@ test_that("auto report config can be upgraded", {
 })
 
 test_that("already upgraded auto report config is left as is", {
-  c <- list(list(type = "subscription", ownerName = "Tore Tester"))
+  c <- list(list(type = "subscription", ownerName = "Tore Tester",
+                 startDate = "2021-11-19"))
   expect_equal(c, upgradeAutoReportData(c))
 })
 
@@ -106,7 +107,7 @@ test_that("A year-day sequence can be mande", {
   expect_true(is.numeric(rdoy))
 })
 
-test_that("The next run day in sequence can be identified", {
+test_that("The next run day in simple sequence can be identified", {
   expect_equal(as.numeric(
     findNextRunDate(
       runDayOfYear = c(10, 20, 30), baseDayNum = 11,
@@ -122,6 +123,44 @@ test_that("The next run day in sequence can be identified when next year", {
       returnFormat = "%j"
     )
   ), 10)
+})
+
+test_that("for within year-break sequence, next is found among earlier days", {
+  expect_equal(as.numeric(
+    findNextRunDate(
+      runDayOfYear = c(200, 300, 1, 100), baseDayNum = 10,
+      returnFormat = "%j"
+    )
+  ), 100)
+})
+
+test_that("for within year-break sequence, next is found among later days", {
+  expect_equal(as.numeric(
+    findNextRunDate(
+      runDayOfYear = c(200, 300, 1, 100), baseDayNum = 110,
+      returnFormat = "%j"
+    )
+  ), 200)
+})
+
+test_that("a start date is enforced when given", {
+  todayNum <- as.POSIXlt(Sys.Date())$yday + 1
+  # sequence of 4 consecutive days from, but not including, today
+  days <-
+    as.POSIXlt(seq.Date(Sys.Date(), (Sys.Date() + 3), by = "day"))$yday + 2
+  expect_equal(as.numeric(
+    findNextRunDate(
+      runDayOfYear = days, baseDayNum = todayNum,
+      returnFormat = "%j"
+    )
+  ), days[1])
+  startDate <- Sys.Date() + 4
+  expect_equal(as.numeric(
+    findNextRunDate(
+      runDayOfYear = days, baseDayNum = todayNum, startDate = startDate,
+      returnFormat = "%j"
+    )
+  ), days[4])
 })
 
 shinySession <- list(user = "tester")

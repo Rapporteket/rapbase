@@ -287,6 +287,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
           interval = interval,
           startDay = input$start
         ),
+        startDate = input$start,
         interval = interval,
         intervalName = strsplit(input$freq, "-")[[1]][1]
       )
@@ -386,7 +387,9 @@ autoReportServer <- function(id, registryName, type, org = NULL,
         ),
         value = seq.Date(Sys.Date(),
                          by = strsplit(input$freq, "-")[[1]][2],
-                         length.out = 2)[2]
+                         length.out = 2)[2],
+        min = Sys.Date() + 1,
+        max = seq.Date(Sys.Date(), length.out = 2, by = "1 years")[2] - 1
       )
     })
 
