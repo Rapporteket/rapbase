@@ -16,6 +16,7 @@ createAutoReport(
   email,
   organization,
   runDayOfYear,
+  startDate = as.character(Sys.Date()),
   terminateDate = NULL,
   interval = "",
   intervalName = "",
@@ -51,6 +52,9 @@ report}
 
 \item{runDayOfYear}{Integer vector with day numbers of the year when the
 report is to be run}
+
+\item{startDate}{Date-class date when report will be run first time. Default
+value is set to \code{Sys.Date() + 1} \emph{i.e.} tomorrow.}
 
 \item{terminateDate}{Date-class date after which report is no longer run.
 Default value set to \code{NULL} in which case the function will provide an

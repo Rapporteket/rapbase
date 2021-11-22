@@ -7,6 +7,7 @@
 findNextRunDate(
   runDayOfYear,
   baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
+  startDate = NULL,
   returnFormat = "\%A \%e. \%B \%Y"
 )
 }
@@ -14,6 +15,11 @@ findNextRunDate(
 \item{runDayOfYear}{Numeric vector providing year-day numbers}
 
 \item{baseDayNum}{Numeric defining base year-day. Default is today}
+
+\item{startDate}{Character string of format "YYYY-MM-DD" defining the date of
+the very first run. If set to NULL (default) or a none future date (compared
+to the date represented by \code{baseDayNum} for the current year) it will be
+disregarded.}
 
 \item{returnFormat}{String providing return format as described in
 \code{\link[base]{strptime}} in the current locale. Defaults to

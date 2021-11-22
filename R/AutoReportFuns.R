@@ -660,6 +660,10 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 #'
 #' @param runDayOfYear Numeric vector providing year-day numbers
 #' @param baseDayNum Numeric defining base year-day. Default is today
+#' @param startDate Character string of format "YYYY-MM-DD" defining the date of
+#' the very first run. If set to NULL (default) or a none future date (compared
+#' to the date represented by \code{baseDayNum} for the current year) it will be
+#' disregarded.
 #' @param returnFormat String providing return format as described in
 #' \code{\link[base]{strptime}} in the current locale. Defaults to
 #' "\%A \%d. \%B \%Y" that will provide something like
@@ -682,7 +686,6 @@ findNextRunDate <- function(runDayOfYear,
                                               "%Y %j"))) {
       # since we pull the NEXT run day set new base day on day BEFORE star date
       baseDayNum <- as.POSIXlt(startDate)$yday
-      print(paste("Start date is ahead of base day:", startDate, baseDayNum))
     }
   }
 
@@ -705,11 +708,9 @@ findNextRunDate <- function(runDayOfYear,
       if (baseDayNum >= max(dTail)) {
         ## next run day to be found in vector head
         runDayOfYearSubset <- dHead
-        print("Next run day picked from head")
       } else {
         ## next run day to be found in vector tail
         runDayOfYearSubset <- dTail
-        print("Next run day picked from tail")
       }
     } else {
       runDayOfYearSubset <- runDayOfYear
@@ -721,7 +722,6 @@ findNextRunDate <- function(runDayOfYear,
   # if current day num larger than nextDayNum report will be run next year
   if (as.numeric(format(Sys.Date(), "%j")) > nextDayNum) {
     year <- year + 1
-    print("Next run date will be next year")
   }
 
   format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
