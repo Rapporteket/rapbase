@@ -93,7 +93,7 @@ entry and saves the updated system configuration." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.2</span>
       </span>
     </div>
 
@@ -156,6 +156,7 @@ entry and saves the updated system configuration.</p>
   <span class='va'>email</span>,
   <span class='va'>organization</span>,
   <span class='va'>runDayOfYear</span>,
+  startDate <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>,
   terminateDate <span class='op'>=</span> <span class='cn'>NULL</span>,
   interval <span class='op'>=</span> <span class='st'>""</span>,
   intervalName <span class='op'>=</span> <span class='st'>""</span>,
@@ -215,6 +216,11 @@ report</p></td>
       <th>runDayOfYear</th>
       <td><p>Integer vector with day numbers of the year when the
 report is to be run</p></td>
+    </tr>
+    <tr>
+      <th>startDate</th>
+      <td><p>Date-class date when report will be run first time. Default
+value is set to <code>Sys.Date() + 1</code> <em>i.e.</em> tomorrow.</p></td>
     </tr>
     <tr>
       <th>terminateDate</th>

@@ -90,7 +90,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.2</span>
       </span>
     </div>
 
@@ -160,7 +160,7 @@
     <tr>
       <th>col_names</th>
       <td><p>Character vector with column names. Defaults
-<code><a href='https://rdrr.io/r/base/colnames.html'>colnames(tab)</a></code>.</p></td>
+<code>colnames(tab)</code>.</p></td>
     </tr>
     <tr>
       <th>type</th>
@@ -190,7 +190,7 @@ current R chunk will be used as label.</p></td>
     <tr>
       <th>align</th>
       <td><p>Character vector specifying column alignment in the LaTeX way,
-<em>e.g.</em> <code><a href='https://rdrr.io/r/base/c.html'>c("l", "c", "r")</a></code> will align the first column to the left,
+<em>e.g.</em> <code>c("l", "c", "r")</code> will align the first column to the left,
 center the second and right-aling the last one. Default is NULL in which
 case numeric columns are right-aligned and all other columns are
 left-aligned.</p></td>
@@ -215,30 +215,31 @@ output. FALSE by default.</p></td>
     <p><code>mst()</code> creates RMarkdown code for creating standard tables.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>mst</span><span class='op'>(</span>tab <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, <span class='op'>]</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; \begin{table}[H]
-#&gt; 
-#&gt; \caption{}
-#&gt; \centering
-#&gt; \fontsize{8}{10}\selectfont
-#&gt; \begin{tabular}[t]{lrrrrrrrrrrr}
-#&gt; \toprule
-#&gt;   &amp; mpg &amp; cyl &amp; disp &amp; hp &amp; drat &amp; wt &amp; qsec &amp; vs &amp; am &amp; gear &amp; carb\\
-#&gt; \midrule
-#&gt; Mazda RX4 &amp; 21 &amp; 6 &amp; 160 &amp; 110 &amp; 4 &amp; 3 &amp; 16 &amp; 0 &amp; 1 &amp; 4 &amp; 4\\
-#&gt; Mazda RX4 Wag &amp; 21 &amp; 6 &amp; 160 &amp; 110 &amp; 4 &amp; 3 &amp; 17 &amp; 0 &amp; 1 &amp; 4 &amp; 4\\
-#&gt; Datsun 710 &amp; 23 &amp; 4 &amp; 108 &amp; 93 &amp; 4 &amp; 2 &amp; 19 &amp; 1 &amp; 1 &amp; 4 &amp; 1\\
-#&gt; Hornet 4 Drive &amp; 21 &amp; 6 &amp; 258 &amp; 110 &amp; 3 &amp; 3 &amp; 19 &amp; 1 &amp; 0 &amp; 3 &amp; 1\\
-#&gt; Hornet Sportabout &amp; 19 &amp; 8 &amp; 360 &amp; 175 &amp; 3 &amp; 3 &amp; 17 &amp; 0 &amp; 0 &amp; 3 &amp; 2\\
-#&gt; \addlinespace
-#&gt; Valiant &amp; 18 &amp; 6 &amp; 225 &amp; 105 &amp; 3 &amp; 3 &amp; 20 &amp; 1 &amp; 0 &amp; 3 &amp; 1\\
-#&gt; Duster 360 &amp; 14 &amp; 8 &amp; 360 &amp; 245 &amp; 3 &amp; 4 &amp; 16 &amp; 0 &amp; 0 &amp; 3 &amp; 4\\
-#&gt; Merc 240D &amp; 24 &amp; 4 &amp; 147 &amp; 62 &amp; 4 &amp; 3 &amp; 20 &amp; 1 &amp; 0 &amp; 4 &amp; 2\\
-#&gt; Merc 230 &amp; 23 &amp; 4 &amp; 141 &amp; 95 &amp; 4 &amp; 3 &amp; 23 &amp; 1 &amp; 0 &amp; 4 &amp; 2\\
-#&gt; Merc 280 &amp; 19 &amp; 6 &amp; 168 &amp; 123 &amp; 4 &amp; 3 &amp; 18 &amp; 1 &amp; 0 &amp; 4 &amp; 4\\
-#&gt; \bottomrule
-#&gt; \end{tabular}
-#&gt; \end{table}</div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'>mst</span><span class='op'>(</span>tab <span class='op'>=</span> <span class='va'>mtcars</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, <span class='op'>]</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> \begin{table}[H]</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> \caption{}</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> \centering</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> \fontsize{8}{10}\selectfont</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> \begin{tabular}[t]{lrrrrrrrrrrr}</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> \toprule</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   &amp; mpg &amp; cyl &amp; disp &amp; hp &amp; drat &amp; wt &amp; qsec &amp; vs &amp; am &amp; gear &amp; carb\\</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> \midrule</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Mazda RX4 &amp; 21 &amp; 6 &amp; 160 &amp; 110 &amp; 4 &amp; 3 &amp; 16 &amp; 0 &amp; 1 &amp; 4 &amp; 4\\</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Mazda RX4 Wag &amp; 21 &amp; 6 &amp; 160 &amp; 110 &amp; 4 &amp; 3 &amp; 17 &amp; 0 &amp; 1 &amp; 4 &amp; 4\\</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Datsun 710 &amp; 23 &amp; 4 &amp; 108 &amp; 93 &amp; 4 &amp; 2 &amp; 19 &amp; 1 &amp; 1 &amp; 4 &amp; 1\\</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hornet 4 Drive &amp; 21 &amp; 6 &amp; 258 &amp; 110 &amp; 3 &amp; 3 &amp; 19 &amp; 1 &amp; 0 &amp; 3 &amp; 1\\</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Hornet Sportabout &amp; 19 &amp; 8 &amp; 360 &amp; 175 &amp; 3 &amp; 3 &amp; 17 &amp; 0 &amp; 0 &amp; 3 &amp; 2\\</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> \addlinespace</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Valiant &amp; 18 &amp; 6 &amp; 225 &amp; 105 &amp; 3 &amp; 3 &amp; 20 &amp; 1 &amp; 0 &amp; 3 &amp; 1\\</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Duster 360 &amp; 14 &amp; 8 &amp; 360 &amp; 245 &amp; 3 &amp; 4 &amp; 16 &amp; 0 &amp; 0 &amp; 3 &amp; 4\\</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Merc 240D &amp; 24 &amp; 4 &amp; 147 &amp; 62 &amp; 4 &amp; 3 &amp; 20 &amp; 1 &amp; 0 &amp; 4 &amp; 2\\</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Merc 230 &amp; 23 &amp; 4 &amp; 141 &amp; 95 &amp; 4 &amp; 3 &amp; 23 &amp; 1 &amp; 0 &amp; 4 &amp; 2\\</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> Merc 280 &amp; 19 &amp; 6 &amp; 168 &amp; 123 &amp; 4 &amp; 3 &amp; 18 &amp; 1 &amp; 0 &amp; 4 &amp; 4\\</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> \bottomrule</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> \end{tabular}</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> \end{table}</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -92,7 +92,7 @@ be printed" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.2</span>
       </span>
     </div>
 
@@ -145,6 +145,7 @@ be printed</p>
     <pre class="usage"><span class='fu'>findNextRunDate</span><span class='op'>(</span>
   <span class='va'>runDayOfYear</span>,
   baseDayNum <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/as.POSIXlt.html'>as.POSIXlt</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span><span class='op'>$</span><span class='va'>yday</span> <span class='op'>+</span> <span class='fl'>1</span>,
+  startDate <span class='op'>=</span> <span class='cn'>NULL</span>,
   returnFormat <span class='op'>=</span> <span class='st'>"%A %e. %B %Y"</span>
 <span class='op'>)</span></pre>
 
@@ -160,6 +161,13 @@ be printed</p>
       <td><p>Numeric defining base year-day. Default is today</p></td>
     </tr>
     <tr>
+      <th>startDate</th>
+      <td><p>Character string of format "YYYY-MM-DD" defining the date of
+the very first run. If set to NULL (default) or a none future date (compared
+to the date represented by <code>baseDayNum</code> for the current year) it will be
+disregarded.</p></td>
+    </tr>
+    <tr>
       <th>returnFormat</th>
       <td><p>String providing return format as described in
 <code><a href='https://rdrr.io/r/base/strptime.html'>strptime</a></code> in the current locale. Defaults to
@@ -173,9 +181,10 @@ be printed</p>
     <p>String date for printing</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Will return Jan 30 in the current year and locale with default formatting</span>
-<span class='fu'>findNextRunDate</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>30</span><span class='op'>)</span>, <span class='fl'>20</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "Saturday 30. January 2021"</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># Will return Jan 30 in the current year and locale with default formatting</span></span>
+<span class='r-in'><span class='fu'>findNextRunDate</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>20</span>, <span class='fl'>30</span><span class='op'>)</span>, <span class='fl'>20</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "Sunday 30. January 2022"</span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

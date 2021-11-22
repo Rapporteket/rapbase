@@ -92,7 +92,7 @@ redefining contexts is needed, please use userInfo instead." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.2</span>
       </span>
     </div>
 
@@ -167,15 +167,19 @@ object must be provided.</p></td>
 <code><a href='getUserEmail.html'>getUserEmail</a></code>, <code><a href='getUserPhone.html'>getUserPhone</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='co'># Requires a valid shiny session object</span>
-<span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='fu'>getUserFullName</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>System has no defined instance. Configuration as provided by</span>
-#&gt; <span class='message'>            'rapbaseConfig.yml' will be used as source for user data.</span></div><div class='output co'>#&gt; [1] "Tore Tester"</div><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='fu'>getUserFullName</span><span class='op'>(</span><span class='va'>shinySessionObject</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>System has no defined instance. Configuration as provided by</span>
-#&gt; <span class='message'>            'rapbaseConfig.yml' will be used as source for user data.</span></div><div class='output co'>#&gt; [1] "Tore Tester"</div><div class='input'><span class='co'># }</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='co'># Requires a valid shiny session object</span></span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='fu'>getUserFullName</span><span class='op'>(</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> System has no defined instance. Configuration as provided by</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "Tore Tester"</span>
+<span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/try.html'>try</a></span><span class='op'>(</span><span class='fu'>getUserFullName</span><span class='op'>(</span><span class='va'>shinySessionObject</span><span class='op'>)</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> System has no defined instance. Configuration as provided by</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "Tore Tester"</span>
+<span class='r-in'><span class='co'># }</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

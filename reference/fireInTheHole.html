@@ -92,7 +92,7 @@ file, e.g. &quot;rapbaseConfig.yml&quot;." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.2</span>
       </span>
     </div>
 
@@ -161,12 +161,15 @@ Monday throug Friday and with emails supressed:</p><pre>0  1 * * 1-5 Rscript -e 
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-<span class='co'># Depends on the env var R_RAP_CONFIG_PATH being properly set</span>
-<span class='fu'>fireInTheHole</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: auto reports with no type defined now set to 'subscription'.</span></div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: auto reports with no owner name defined now set to an empty string.</span></div><div class='output co'>#&gt; <span class='message'>Auto report data were upgraded: function params list un-nested. Please check that autor reports for registries are still working as expected.</span></div><div class='input'><span class='co'># }</span>
-
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># \donttest{</span></span>
+<span class='r-in'><span class='co'># Depends on the env var R_RAP_CONFIG_PATH being properly set</span></span>
+<span class='r-in'><span class='fu'>fireInTheHole</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Auto report data were upgraded: auto reports with no type defined now set to 'subscription'.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Auto report data were upgraded: auto reports with no owner name defined now set to an empty string.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Auto report data were upgraded: function params list un-nested. Please check that autor reports for registries are still working as expected.</span>
+<span class='r-in'><span class='co'># }</span></span>
+<span class='r-in'></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -92,7 +92,7 @@ object provided." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.2</span>
       </span>
     </div>
 
@@ -198,7 +198,7 @@ action buttons for editing and deleting are provided with the static input
 ids <em>edit_button</em> and <em>del_button</em> and upon clicking the
 <em>button</em> part of their ids will change to the uniqe id of the
 report. Hence, a GUI call for editing a report can be catched by
-<code><a href='https://rdrr.io/pkg/shiny/man/observeEvent.html'>shiny::observeEvent("edit_button")</a></code> and within this event the
+<code>shiny::observeEvent("edit_button")</code> and within this event the
 report id is obtained by collecting the string after the underscore,
 <em>e.g.</em> <code>strsplit(input$edit_button, "_")[[1]][2]</code>.</p>
 <p>Optionally, report id may be provided as the last column in the table to

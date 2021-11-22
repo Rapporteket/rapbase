@@ -92,7 +92,7 @@ both collected from the shiny session object provided" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.2</span>
       </span>
     </div>
 
@@ -174,7 +174,7 @@ subscriptions by GUI. The action button for deleting is provided with the
 static input id <em>del_button</em> and upon clicking the
 <em>button</em> part of its id will change to the uniqe id of the
 dispatchment. Hence, a GUI call for deleting a subscription can be catched by
-<code><a href='https://rdrr.io/pkg/shiny/man/observeEvent.html'>shiny::observeEvent("del_button")</a></code> and within this event the
+<code>shiny::observeEvent("del_button")</code> and within this event the
 subscription id is obtained by collecting the string after the underscore,
 <em>e.g.</em> <code>strsplit(input$del_button, "_")[[1]][2]</code>.</p>
 <p>Take a look at the example shiny server function in

@@ -92,7 +92,7 @@ If none can be found the function exits with an error" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.2</span>
       </span>
     </div>
 
@@ -162,58 +162,59 @@ If none can be found the function exits with an error</p>
     <p>A list of (yaml) configuration</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>getConfig</span><span class='op'>(</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; $nordummy
-#&gt; $nordummy$host
-#&gt; [1] "dummy_db_hostname.no"
-#&gt; 
-#&gt; $nordummy$name
-#&gt; [1] "dummy_db_name"
-#&gt; 
-#&gt; $nordummy$user
-#&gt; [1] "dummy_db_username"
-#&gt; 
-#&gt; $nordummy$pass
-#&gt; [1] "dummy_db_password"
-#&gt; 
-#&gt; $nordummy$disp
-#&gt; [1] "dummy_display_name"
-#&gt; 
-#&gt; 
-#&gt; $rapbase
-#&gt; $rapbase$host
-#&gt; [1] "127.0.0.1"
-#&gt; 
-#&gt; $rapbase$name
-#&gt; [1] "rapbase"
-#&gt; 
-#&gt; $rapbase$user
-#&gt; [1] "root"
-#&gt; 
-#&gt; $rapbase$pass
-#&gt; [1] "root"
-#&gt; 
-#&gt; $rapbase$disp
-#&gt; [1] "ForTestingOnly"
-#&gt; 
-#&gt; 
-#&gt; $dev
-#&gt; $dev$host
-#&gt; [1] "db"
-#&gt; 
-#&gt; $dev$name
-#&gt; [1] "rapbase"
-#&gt; 
-#&gt; $dev$user
-#&gt; [1] "root"
-#&gt; 
-#&gt; $dev$pass
-#&gt; [1] "root"
-#&gt; 
-#&gt; $dev$disp
-#&gt; [1] "ForDevOnly"
-#&gt; 
-#&gt; </div></pre>
+    <pre class="examples"><span class='r-in'><span class='fu'>getConfig</span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nordummy</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nordummy$host</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "dummy_db_hostname.no"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nordummy$name</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "dummy_db_name"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nordummy$user</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "dummy_db_username"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nordummy$pass</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "dummy_db_password"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $nordummy$disp</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "dummy_display_name"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $rapbase</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $rapbase$host</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "127.0.0.1"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $rapbase$name</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "rapbase"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $rapbase$user</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "root"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $rapbase$pass</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "root"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $rapbase$disp</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "ForTestingOnly"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $dev</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $dev$host</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "db"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $dev$name</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "rapbase"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $dev$user</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "root"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $dev$pass</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "root"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> $dev$disp</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "ForDevOnly"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> </span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

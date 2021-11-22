@@ -95,7 +95,7 @@ below)." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.2</span>
       </span>
     </div>
 
@@ -178,7 +178,7 @@ object must be provided.</p></td>
 regarded as a development context. In this context user attributes will be
 read from configuration as provided by 'rapbaseConfig.yml'. The instances
 provided cannot overlap instances provided in any other contexts. By default
-set to <code><a href='https://rdrr.io/r/base/c.html'>c("DEV")</a></code>.</p></td>
+set to <code>c("DEV")</code>.</p></td>
     </tr>
     <tr>
       <th>testContexts</th>
@@ -187,7 +187,7 @@ regarded as a test context. In this context user attributes will be read
 from the url call to a shiny application. Hence, for this context the
 corresponding shiny session object must also be provided. The instances
 provided cannot overlap instances provided in any other contexts. By default
-set to <code><a href='https://rdrr.io/r/base/c.html'>c("TEST")</a></code>.</p></td>
+set to <code>c("TEST")</code>.</p></td>
     </tr>
     <tr>
       <th>prodContexts</th>
@@ -197,7 +197,7 @@ read from the shiny session object (as shiny server interacts with an
 external log-in service). Hence, for this context the corresponding shiny
 session object must also be provided. The instances provided cannot overlap
 instances provided in any other contexts. By default set to
-<code><a href='https://rdrr.io/r/base/c.html'>c("QA", "PRODUCTION")</a></code>.</p></td>
+<code>c("QA", "PRODUCTION")</code>.</p></td>
     </tr>
     </table>
 
