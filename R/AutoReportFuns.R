@@ -188,12 +188,12 @@ upgradeAutoReportData <- function(config) {
     }
     if (!"startDate" %in% names(rep)) {
       upgradeStartDate <- TRUE
-      config[[i]]$startDate <- as.character(Sys.Date())
+      config[[i]]$startDate <- "1900-01-01"
     }
     if ("startDate" %in% names(rep)) {
       if (is.numeric(config[[i]]$startDate)) {
         upgradeStartDateFormat <- TRUE
-        config[[i]]$startDate <- as.character(Sys.Date())
+        config[[i]]$startDate <- "1900-01-01"
       }
     }
   }
@@ -222,14 +222,14 @@ upgradeAutoReportData <- function(config) {
   if (upgradeStartDate) {
     message(paste(
       "Auto report data were upgraded:",
-      "auto reports with no start date defined now set to the current date."
+      "auto reports with no start date defined now set to 1900-01-01."
     ))
   }
   if (upgradeStartDateFormat) {
     message(paste(
       "Auto report data were fixed:",
-      "auto reports with messed up (integer) start date now reset to the",
-      "current date."
+      "auto reports with messed up (integer) start date now reset to",
+      "1900-01-01."
     ))
   }
 
