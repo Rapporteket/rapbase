@@ -12,6 +12,7 @@ testAutoReportFirst:
   - Some One <someone@nowhere.com>
   - Jesus <jesus@sky.com>
   organization: '999999'
+  startDate: '1900-01-01'
   terminateDate: '9999-12-31'
   interval:
   intervalName:
@@ -30,6 +31,7 @@ testAutoReportSecond:
   owner: ttester
   email: <someone@nowhere.com>
   organization: '999999'
+  startDate: '1900-01-01'
   terminateDate: '9999-12-31'
   interval:
   intervalName:
@@ -53,6 +55,7 @@ testAutoReportThird:
   - <someone@nowhere.com>
   - jesus@sky.com
   organization: '999999'
+  startDate: '1900-01-01'
   terminateDate: '9999-12-31'
   interval:
   intervalName:
@@ -71,6 +74,7 @@ testAutoReportThird:
   owner: ttester
   email: tester@skde.no
   organization: '999999'
+  startDate: '1900-01-01'
   terminateDate: '9999-12-31'
   interval:
   intervalName:
@@ -86,6 +90,7 @@ cd467ac14dd848b8798a384a3e51512c:
   owner: ttester
   email: tester@skde.no
   organization: '999999'
+  startDate: '1900-01-01'
   terminateDate: '0000-01-01'
   interval:
   intervalName:
