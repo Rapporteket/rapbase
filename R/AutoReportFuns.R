@@ -187,7 +187,7 @@ upgradeAutoReportData <- function(config) {
     }
     if (!"startDate" %in% names(rep)) {
       upgradeStartDate <- TRUE
-      config[[i]]$startDate <- Sys.Date()
+      config[[i]]$startDate <- "1900-01-01"
     }
   }
 
@@ -215,7 +215,7 @@ upgradeAutoReportData <- function(config) {
   if (upgradeStartDate) {
     message(paste(
       "Auto report data were upgraded:",
-      "auto reports with no start date defined now set to the current date."
+      "auto reports with no start date defined now set to 1900-01-01."
     ))
   }
 
