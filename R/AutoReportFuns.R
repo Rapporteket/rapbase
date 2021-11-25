@@ -561,8 +561,9 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
   for (i in seq_len(length(reps))) {
     tryCatch({
         rep <- reps[[i]]
-        if (dayNumber %in% rep$runDayOfYear &&
-          as.Date(rep$terminateDate) > Sys.Date()) {
+        if (dayNumber %in% rep$runDayOfYear &
+          as.Date(rep$terminateDate) > Sys.Date() &
+          as.Date(rep$startDate) <= Sys.Date()) {
           # get explicit referenced function and call it
           f <- .getFun(paste0(rep$package, "::", rep$fun))
           content <- do.call(what = f, args = rep$params)
