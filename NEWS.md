@@ -1,6 +1,7 @@
 # rapbase 1.20.2
 
 * Fix short-term error in function finding next run date in auto reports
+* As result of the above a new field "startDate" was added to auto report data with functions for upgrading existing data missing this field ([#99](https://github.com/Rapporteket/rapbase/pull/99)) and the start date is checked before reports are run ([#100](https://github.com/Rapporteket/rapbase/pull/100))
 
 # rapbase 1.20.1
 
