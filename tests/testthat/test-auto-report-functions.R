@@ -234,6 +234,19 @@ test_that("Auto reports can be processed (shipment by email not tested)", {
   )
 })
 
+test_that("a report sceduled for today with startDate in future is not run", {
+  # make corresponding auto report
+  createAutoReport(synopsis, package, type, fun, paramNames,
+                   paramValues, owner, ownerName, email, organization,
+                   runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
+                   startDate = as.character(Sys.Date() + 1))
+  ## update rd to be used later
+  rd <- readAutoReportData()
+  expect_silent(
+    runAutoReport(dryRun = TRUE)
+  )
+})
+
 # Try to send an email, but expect error since there is no viable smtp set-up
 test_that("Auto reports can be processed and emailed (but failing send)", {
   expect_warning(
@@ -244,7 +257,7 @@ test_that("Auto reports can be processed and emailed (but failing send)", {
 reportId <- names(rd)[length(rd)]
 
 test_that("Auto report can be deleted", {
-  expect_message(deleteAutoReport(reportId))
+  expect_silent(deleteAutoReport(reportId))
   expect_true(is.na(names(readAutoReportData())[reportId]))
 })
 
