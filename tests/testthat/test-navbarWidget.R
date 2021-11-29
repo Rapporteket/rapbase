@@ -20,7 +20,7 @@ test_that("navbar widget input returns a shiny tag list", {
 test_that("module navbar widget server returns output", {
   shiny::testServer(navbarWidgetServer, args = list(
     orgName = registryName,
-    caller ="rapbase"
+    caller = "rapbase"
   ), {
     expect_equal(output$name, "Tore Tester")
     expect_equal(class(output$affiliation), "character")
