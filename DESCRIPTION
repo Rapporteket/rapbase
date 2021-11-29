@@ -54,8 +54,6 @@ Imports:
     utils,
     withr,
     yaml
-Remotes:
-    Rapporteket/sship@*release
 RoxygenNote: 7.1.2
 URL: http://github.com/Rapporteket/rapbase
 BugReports: http://github.com/Rapporteket/rapbase/issues
