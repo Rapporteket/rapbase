@@ -178,7 +178,7 @@ test_that("new subscription can be written to and removed from file", {
     args = list(registryName = registryName, type = "subscription",
                 reports = reports, orgs = orgs), {
                   session$setInputs(report = "FirstReport")
-                  session$setInputs(freq = "Maanedlig-month")
+                  session$setInputs(freq = "\u00C5rlig-year")
                   session$setInputs(start = as.character(Sys.Date()))
                   session$setInputs(makeAutoReport = 1)
                   expect_true(origFileSize < file.size(

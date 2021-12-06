@@ -56,6 +56,10 @@
 #' @param eligible Logical defining if the module should be allowed to work at
 #' full capacity. This might be useful when access to module products should be
 #' restricted. Default is TRUE, \emph{i.e.} no restrictions.
+#' @param freq Character string defining default frequency set in the auto
+#' report GUI. Must be one of
+#' \code{c("day", "week", "month", "quarter", "year")}. Default value is
+#' "month".
 #'
 #'
 #' @return In general, shiny objects. In particular, \code{autoreportOrgServer}
@@ -224,13 +228,24 @@ autoReportInput <- function(id) {
 autoReportServer <- function(id, registryName, type, org = NULL,
                              paramNames = shiny::reactiveVal(c("")),
                              paramValues = shiny::reactiveVal(c("")),
-                             reports = NULL, orgs = NULL, eligible = TRUE) {
+                             reports = NULL, orgs = NULL, eligible = TRUE,
+                             freq = "month") {
 
   if (!type %in% c("subscription")) {
     stopifnot(shiny::is.reactive(org))
     stopifnot(shiny::is.reactive(paramNames))
     stopifnot(shiny::is.reactive(paramValues))
   }
+
+  stopifnot(freq %in% c("day", "week", "month", "quarter", "year"))
+
+  defaultFreq <- switch (freq,
+                         day = "Daglig-day",
+                         week = "Ukentlig-week",
+                         month = "M\u00E5nedlig-month",
+                         quarter = "Kvartalsvis-quarter",
+                         year = "\u00C5rlig-year"
+  )
 
   shiny::moduleServer(id, function(input, output, session) {
 
@@ -240,7 +255,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
                                        mapOrgId = orgList2df(orgs)),
       report = names(reports)[1],
       org = unlist(orgs, use.names = FALSE)[1],
-      freq = "M\u00E5nedlig-month",
+      freq = defaultFreq,
       email = vector()
     )
 
@@ -385,9 +400,14 @@ autoReportServer <- function(id, registryName, type, org = NULL,
           shiny::HTML(as.character(shiny::icon("calendar")),
                       "F\u00F8rste utsending:")
         ),
-        value = seq.Date(Sys.Date(),
-                         by = strsplit(input$freq, "-")[[1]][2],
-                         length.out = 2)[2],
+        # if freq is year make first issue tomorrow, otherwise postpone by freq
+        value = if (strsplit(input$freq, "-")[[1]][2] == "year") {
+          Sys.Date() + 1
+        } else {
+          seq.Date(Sys.Date(),
+                   by = strsplit(input$freq, "-")[[1]][2],
+                   length.out = 2)[2]
+        },
         min = Sys.Date() + 1,
         max = seq.Date(Sys.Date(), length.out = 2, by = "1 years")[2] - 1
       )
