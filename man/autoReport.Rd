@@ -35,7 +35,8 @@ autoReportServer(
   paramValues = shiny::reactiveVal(c("")),
   reports = NULL,
   orgs = NULL,
-  eligible = TRUE
+  eligible = TRUE,
+  freq = "month"
 )
 
 autoReportApp(
@@ -89,6 +90,11 @@ description.}
 \item{eligible}{Logical defining if the module should be allowed to work at
 full capacity. This might be useful when access to module products should be
 restricted. Default is TRUE, \emph{i.e.} no restrictions.}
+
+\item{freq}{Character string defining default frequency set in the auto
+report GUI. Must be one of
+\code{c("day", "week", "month", "quarter", "year")}. Default value is
+"month".}
 }
 \value{
 In general, shiny objects. In particular, \code{autoreportOrgServer}

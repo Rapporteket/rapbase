@@ -115,9 +115,9 @@ test_that("new dispatchment can be written to and removed from file", {
     autoReportServer,
     args = list(registryName = registryName, type = type,
                 org = shiny::reactive(111111),
-                reports = reports, orgs = orgs), {
+                reports = reports, orgs = orgs, freq = "year"), {
                   session$setInputs(report = "FirstReport")
-                  session$setInputs(freq = "Maanedlig-month")
+                  session$setInputs(freq = "Aarlig-year")
                   session$setInputs(start = as.character(Sys.Date()))
                   session$setInputs(email = "true@email.no")
                   session$setInputs(addEmail = 1)

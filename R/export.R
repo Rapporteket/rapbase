@@ -117,7 +117,7 @@ exportUCServer <- function(id, registryName, repoName = registryName,
       }
     })
     output$exportDownloadUI <- shiny::renderUI({
-      if (!eligible) {
+      if (!eligible | length(pubkey()) == 0) {
         shiny::tagList(
           shiny::hr(),
           shiny::h4("Funksjon utilgjengelig"),

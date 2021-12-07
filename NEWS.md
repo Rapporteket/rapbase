@@ -1,3 +1,9 @@
+# rapbase 1.21.0
+
+* Pre-set frequency of auto reports may now be set upon calling the auto report module server function
+* Fixed bug for default first issue date when frequency set to year
+* Fixed visual flaw in export GUI: download button does now show when no keys are found
+
 # rapbase 1.20.2
 
 * Fix short-term error in function finding next run date in auto reports
