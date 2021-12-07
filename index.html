@@ -36,6 +36,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -48,18 +50,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.20.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -69,7 +65,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="http://github.com/Rapporteket/rapbase/">
+  <a href="http://github.com/Rapporteket/rapbase/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -86,109 +82,118 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="rapbase-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#rapbase-" class="anchor"></a>rapbase <img src="reference/figures/logo.svg" align="right" height="150">
+<div class="section level1">
+<div class="page-header"><h1 id="rapbase-">rapbase <img src="reference/figures/logo.svg" align="right" height="150"><a class="anchor" aria-label="anchor" href="#rapbase-"></a>
 </h1></div>
 <!-- badges: start -->
 
-<p><em>rapbase</em> is an R package holding common R functions for <em>Rapporteket</em> which is a reporting service for Norwegian medical quality registries. Each registry at <em>Rapporteket</em> will have their content structured as R packages that are all found under the <a href="https://github.com/Rapporteket">Rapporteket organization at GitHub</a>. Such packages are likely to depend on the <em>rapbase</em> package.</p>
-<p>Top-level information regarding <em>Rapporteket</em> is <a href="https://rapporteket.github.io/rapporteket">provided on a dedicated site (in Norwegian)</a>.</p>
-<div id="install" class="section level2">
-<h2 class="hasAnchor">
-<a href="#install" class="anchor"></a>Install</h2>
+<p><em>rapbase</em> is an R package holding common R functions for <em>Rapporteket</em> which is a reporting service for Norwegian medical quality registries. Each registry at <em>Rapporteket</em> will have their content structured as R packages that are all found under the <a href="https://github.com/Rapporteket" class="external-link">Rapporteket organization at GitHub</a>. Such packages are likely to depend on the <em>rapbase</em> package.</p>
+<p>Top-level information regarding <em>Rapporteket</em> is <a href="https://rapporteket.github.io/rapporteket" class="external-link">provided on a dedicated site (in Norwegian)</a>.</p>
+<div class="section level2">
+<h2 id="install">Install<a class="anchor" aria-label="anchor" href="#install"></a>
+</h2>
 <p>Install <em>rapbase</em> from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"rapbase"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"rapbase"</span><span class="op">)</span></code></pre></div>
 <p>The latest realease of the package can be installed from GitHub:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"Rapporteket/rapbase@*release"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Rapporteket/rapbase@*release"</span><span class="op">)</span></code></pre></div>
 <p>Or install the development version from GitHub with:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"Rapporteket/rapbase"</span><span class="op">)</span></code></pre></div>
-<p>Alternatively, the package source code can be <a href="https://github.com/Rapporteket/rapbase">cloned from GitHub</a> and built locally.</p>
+<p>Alternatively, the package source code can be <a href="https://github.com/Rapporteket/rapbase" class="external-link">cloned from GitHub</a> and built locally.</p>
 </div>
-<div id="usage" class="section level2">
-<h2 class="hasAnchor">
-<a href="#usage" class="anchor"></a>Usage</h2>
+<div class="section level2">
+<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
+</h2>
 <p>Once the package is installed functions can be called from within R, <em>e.g.</em>:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">rapbase</span><span class="fu">::</span><span class="fu"><a href="reference/halloRapporteket.html">halloRapporteket</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p>For a complete and updated view of the package documentation please consult the <a href="https://rapporteket.github.io/rapbase/index.html"><em>rapbase</em>-site</a>. Looking into <a href="https://github.com/Rapporteket">how others have implemented <em>rapbase</em> for various registries</a> is also an excellent way of learning the use of <em>rapbase</em>. In the <a href="https://github.com/Rapporteket/rapRegTemplate">rapRegTemplate package (in Norwegian)</a> that provides a Shiny application template to be used for making registries there is some boiler plate code to aid start up. Please feel free to also contact the maintainers and authors directly.</p>
+<p>For a complete and updated view of the package documentation please consult the <a href="https://rapporteket.github.io/rapbase/index.html" class="external-link"><em>rapbase</em>-site</a>. Looking into <a href="https://github.com/Rapporteket" class="external-link">how others have implemented <em>rapbase</em> for various registries</a> is also an excellent way of learning the use of <em>rapbase</em>. In the <a href="https://github.com/Rapporteket/rapRegTemplate" class="external-link">rapRegTemplate package (in Norwegian)</a> that provides a Shiny application template to be used for making registries there is some boiler plate code to aid start up. Please feel free to also contact the maintainers and authors directly.</p>
 </div>
-<div id="issues" class="section level2">
-<h2 class="hasAnchor">
-<a href="#issues" class="anchor"></a>Issues</h2>
-<p>Please provide any comments (<em>e.g.</em> on proposed enhancements, shortcomings, errors) through the <a href="https://github.com/Rapporteket/rapbase/issues">issue tracker</a>.</p>
+<div class="section level2">
+<h2 id="issues">Issues<a class="anchor" aria-label="anchor" href="#issues"></a>
+</h2>
+<p>Please provide any comments (<em>e.g.</em> on proposed enhancements, shortcomings, errors) through the <a href="https://github.com/Rapporteket/rapbase/issues" class="external-link">issue tracker</a>.</p>
 </div>
-<div id="contributing" class="section level2">
-<h2 class="hasAnchor">
-<a href="#contributing" class="anchor"></a>Contributing</h2>
-<p>If you want to make changes to this project please follow the <a href="https://rapporteket.github.io/rapbase/CONTRIBUTING.html">Contributing guide</a>. Proposed changes will be processed based on manual code reviews. Code that is accepted will be merged into the main branch and used for full scale TESTING and QA prior to making a release for PRODUCTION deployment.</p>
+<div class="section level2">
+<h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
+</h2>
+<p>If you want to make changes to this project please follow the <a href="https://rapporteket.github.io/rapbase/CONTRIBUTING.html" class="external-link">Contributing guide</a>. Proposed changes will be processed based on manual code reviews. Code that is accepted will be merged into the main branch and used for full scale TESTING and QA prior to making a release for PRODUCTION deployment.</p>
 </div>
-<div id="ethics" class="section level2">
-<h2 class="hasAnchor">
-<a href="#ethics" class="anchor"></a>Ethics</h2>
-<p>Please note that the ‘rapbase’ project is released with a <a href="http://rapporteket.github.io/rapbase/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
+<div class="section level2">
+<h2 id="ethics">Ethics<a class="anchor" aria-label="anchor" href="#ethics"></a>
+</h2>
+<p>Please note that the ‘rapbase’ project is released with a <a href="http://rapporteket.github.io/rapbase/CODE_OF_CONDUCT.html" class="external-link">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=rapbase">https://​cloud.r-project.org/​package=rapbase</a>
-</li>
-<li>Browse source code at <br><a href="http://github.com/Rapporteket/rapbase/">http://​github.com/​Rapporteket/​rapbase/​</a>
-</li>
-<li>Report a bug at <br><a href="http://github.com/Rapporteket/rapbase/issues">http://​github.com/​Rapporteket/​rapbase/​issues</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=rapbase" class="external-link">View on CRAN</a></li>
+<li><a href="http://github.com/Rapporteket/rapbase/" class="external-link">Browse source code</a></li>
+<li><a href="http://github.com/Rapporteket/rapbase/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></small></li>
+<li><small><a href="https://www.r-project.org/Licenses/GPL-3" class="external-link">GPL-3</a></small></li>
 </ul>
 </div>
+
 <div class="community">
-<h2>Community</h2>
+<h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
 <li><a href="CONTRIBUTING.html">Contributing guide</a></li>
 <li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Are Edvardsen <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-5210-3656" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html#citation">Citing rapbase</a></li>
+</ul>
+</div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>Are Edvardsen <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-5210-3656" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>Kevin Otto Thon <br><small class="roles"> Author </small>  </li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/rapporteket/rapbase/releases"><img src="https://img.shields.io/github/v/release/rapporteket/rapbase?sort=semver" alt="Version"></a></li>
-<li><a href="https://github.com/Rapporteket/rapbase/actions"><img src="https://github.com/Rapporteket/rapbase/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://codecov.io/github/Rapporteket/rapbase?branch=master"><img src="https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=master" alt="codecov.io"></a></li>
-<li><a href="https://CRAN.R-project.org/package=rapbase"><img src="https://www.r-pkg.org/badges/version/rapbase" alt="CRAN status"></a></li>
-<li><a href="https://www.tidyverse.org/lifecycle/#stable"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg" alt="Lifecycle: stable"></a></li>
-<li><a href="https://rapporteket.github.io/rapbase/"><img src="https://img.shields.io/badge/Doc--grey.svg" alt="Doc"></a></li>
+<li><a href="https://github.com/rapporteket/rapbase/releases" class="external-link"><img src="https://img.shields.io/github/v/release/rapporteket/rapbase?sort=semver" alt="Version"></a></li>
+<li><a href="https://github.com/Rapporteket/rapbase/actions" class="external-link"><img src="https://github.com/Rapporteket/rapbase/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://codecov.io/github/Rapporteket/rapbase?branch=master" class="external-link"><img src="https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=master" alt="codecov.io"></a></li>
+<li><a href="https://CRAN.R-project.org/package=rapbase" class="external-link"><img src="https://www.r-pkg.org/badges/version/rapbase" alt="CRAN status"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#stable" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg" alt="Lifecycle: stable"></a></li>
+<li><a href="https://rapporteket.github.io/rapbase/" class="external-link"><img src="https://img.shields.io/badge/Doc--grey.svg" alt="Doc"></a></li>
 </ul>
 </div>
-</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by Are Edvardsen, Kevin Otto Thon.</p>
+  <p></p>
+<p>Developed by Are Edvardsen, Kevin Otto Thon.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -196,6 +201,8 @@
 
   
 
+
+  
 
   </body>
 </html>
