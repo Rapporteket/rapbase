@@ -38,23 +38,6 @@ test_that("auto reports can be filterd by valid entity on empty input", {
   expect_true(is.list(filterAutoRep(list(), "package", c("test"))))
 })
 
-test_that("Config data can be filterd by registry on empty input", {
-  expect_true(is.list(selectByReg(list(), "test")))
-})
-
-test_that("config data can be filterd by type on empty input", {
-  expect_true(is.list(selectByType(list(), "test")))
-})
-
-test_that("Config data can be filterd by owner on empty input", {
-  expect_true(is.list(selectByOwner(list(), "test")))
-})
-
-test_that("Config data can be filtered by organization on empty input", {
-  expect_true(is.list(selectByOrganization(list(), "test")))
-})
-
-
 test_that("Auto report can be created as dry run (stout)", {
   res <- createAutoReport(synopsis, package, type, fun, paramNames,
     paramValues, owner, ownerName, email, organization,
@@ -76,22 +59,6 @@ test_that("auto report can be created as dry run (stout) in an PROD context", {
 Sys.setenv(R_RAP_INSTANCE = "")
 
 rd <- readAutoReportData()
-
-test_that("Auto reports can be filtered by registry/package", {
-  expect_true(is.list(selectByReg(rd, package)))
-})
-
-test_that("Auto reports can be filtered by type", {
-  expect_true(is.list(selectByType(rd, type)))
-})
-
-test_that("Auto reports can be filtered by owner", {
-  expect_true(is.list(selectByOwner(rd, owner)))
-})
-
-test_that("Auto reports can be filtered by organization", {
-  expect_true(is.list(selectByOrganization(rd, organization)))
-})
 
 test_that("Registries/packages can be extracted from config", {
   expect_true(is.vector(getRegs(rd)))
@@ -188,18 +155,6 @@ test_that("a registry dispatchment table (for shiny) can be made", {
   expect_true(is.list(
     makeAutoReportTab(shinySession, type = "dispatchment", mapOrgId)
   ))
-})
-
-test_that("A per-user subscription table (for shiny) can be made", {
-  expect_true(is.list(makeUserSubscriptionTab(session = shinySession)))
-})
-
-test_that("per user subscription table provides warning for deprecated v2", {
-  expect_warning(makeUserSubscriptionTab_v2(session = shinySession))
-})
-
-test_that("per-user subscription table for v2 also provides dep warning", {
-  expect_warning(makeUserSubscriptionTabV2(session = shinySession))
 })
 
 test_that("Writing conf with undefined R_RAP_CONFIG_PATH provides an error", {

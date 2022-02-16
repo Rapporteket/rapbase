@@ -19,7 +19,7 @@ attr(shinySession, "class") <- "ShinySession"
 
 # now deprecated, main function
 test_that("shinySessionInfo() is deprecated", {
-  expect_warning(shinySessionInfo(
+  expect_error(shinySessionInfo(
     shinySession = shinySession,
     entity = "user"
   ))
@@ -27,54 +27,8 @@ test_that("shinySessionInfo() is deprecated", {
 
 # now deprecated, wrapper functions
 test_that("wrapper funs are deprecated", {
-  expect_warning(getShinyUserName(shinySession),
-    class = "lifecycle_warning_deprecated"
-  )
-  expect_warning(getShinyUserGroups(shinySession),
-    class = "lifecycle_warning_deprecated"
-  )
-  expect_warning(getShinyUserReshId(shinySession),
-    class = "lifecycle_warning_deprecated"
-  )
-  expect_warning(getShinyUserRole(shinySession),
-    class = "lifecycle_warning_deprecated"
-  )
-})
-
-# now deprecated, but should still work
-withr::local_options(list(lifecycle_verbosity = "quiet"))
-
-test_that("Default is to assume real data scenario", {
-  expect_equal(getShinyUserName(shinySession), "user1")
-  expect_equal(getShinyUserGroups(shinySession), "group1,group2")
-  expect_equal(getShinyUserReshId(shinySession), "789012")
-  expect_equal(getShinyUserRole(shinySession), "LC")
-})
-
-test_that("Also working for test cases", {
-  expect_equal(
-    getShinyUserName(shinySessionTest, testCase = TRUE),
-    "testUser1"
-  )
-  expect_equal(
-    getShinyUserGroups(shinySessionTest, testCase = TRUE),
-    "testGroup1,testGroup2"
-  )
-  expect_equal(
-    getShinyUserReshId(shinySessionTest, testCase = TRUE),
-    "123456"
-  )
-  expect_equal(getShinyUserRole(shinySessionTest, testCase = TRUE), "LU")
-})
-
-test_that("Function handle errors", {
-  expect_error(shinySessionInfo(shinySession = NULL, entity = "user"))
-  expect_error(shinySessionInfo(
-    shinySession = shinySessionWrongClass,
-    entity = "user"
-  ))
-  expect_error(shinySessionInfo(
-    shinySession = shinySession,
-    entity = ""
-  ))
+  expect_error(getShinyUserName(shinySession))
+  expect_error(getShinyUserGroups(shinySession))
+  expect_error(getShinyUserReshId(shinySession))
+  expect_error(getShinyUserRole(shinySession))
 })
