@@ -328,7 +328,7 @@ filterAutoRep <- function(data, by, pass) {
 #' @export
 
 selectByReg <- function(config, reg) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "1.12.0", "selectByReg()", "filterAutoRep()"
   )
   if (length(config) == 0) {
@@ -356,7 +356,7 @@ selectByReg <- function(config, reg) {
 #' @export
 
 selectByType <- function(config, type) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "1.12.0", "selectByType()", "filterAutoRep()"
   )
   if (length(config) == 0) {
@@ -384,7 +384,7 @@ selectByType <- function(config, type) {
 #' @export
 
 selectByOwner <- function(config, owner) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "1.12.0", "selectByOwner()", "filterAutoRep()"
   )
   if (length(config) == 0) {
@@ -412,7 +412,7 @@ selectByOwner <- function(config, owner) {
 #' @export
 
 selectByOrganization <- function(config, organization) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "1.12.0", "selectByOrganization()", "filterAutoRep()"
   )
   if (length(config) == 0) {
@@ -885,7 +885,7 @@ makeAutoReportTab <- function(session, namespace = character(),
 #' @export
 
 makeUserSubscriptionTab <- function(session, mapOrgId = NULL) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "1.12.0", "rapbase::makeUserSubscriptionTab()",
     "rapbase::makeAutoReportTab()"
   )
@@ -956,7 +956,7 @@ NULL
 #' @rdname makeUserSubscriptionTabV2
 #' @export
 makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "1.12.0", "rapbase::makeUserSubscriptionTab_v2()",
     "rapbase::makeUserDispatchmentTab()",
     details = paste(
@@ -1032,7 +1032,7 @@ makeUserSubscriptionTab_v2 <- function(session, map_resh_name = NULL) {
 #' @rdname makeUserSubscriptionTabV2
 #' @export
 makeUserSubscriptionTabV2 <- function(session, map_resh_name = NULL) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "1.12.0", "rapbase::makeUserSubscriptionTabV2()",
     "rapbase::makeUserDispatchmentTab()",
     details = paste(

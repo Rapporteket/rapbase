@@ -17,7 +17,7 @@ NULL
 #' @export
 MakeMessage <- function(story, message, newLine = TRUE, newPara = FALSE,
                         timeStamp = TRUE) {
-  lifecycle::deprecate_warn("1.12.0", "rapbase::MakeMessage()",
+  lifecycle::deprecate_stop("1.12.0", "rapbase::MakeMessage()",
     "rapbase::makeMessage()",
     details = "Purely camelCase conformity :-)"
   )
