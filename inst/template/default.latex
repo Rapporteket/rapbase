@@ -6,10 +6,10 @@
 \usepackage{booktabs}
 \usepackage[24hr]{datetime}
 \usepackage{xcolor}
-\usepackage[immediate]{silence}
-\WarningFilter[temp]{latex}{Command} % silence the warning
+%\usepackage[immediate]{silence}
+%\WarningFilter[temp]{latex}{Command} % silence the warning
 \usepackage{sectsty}
-\DeactivateWarningFilters[temp] % So nothing unrelated gets silenced
+%\DeactivateWarningFilters[temp] % So nothing unrelated gets silenced
 \usepackage{marginnote}
 \usepackage[utf8]{inputenc}
 \usepackage[norsk]{babel}
