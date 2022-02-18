@@ -2,13 +2,13 @@
 % Please edit documentation in R/stagingData.R
 \name{stagingData}
 \alias{stagingData}
-\alias{pathStagingData}
 \alias{saveStagingData}
 \alias{loadStagingData}
+\alias{deleteStagingData}
+\alias{cleanStagingData}
+\alias{pathStagingData}
 \title{Staging data functions}
 \usage{
-pathStagingData(registryName, dir)
-
 saveStagingData(
   registryName,
   dataName,
@@ -17,34 +17,59 @@ saveStagingData(
 )
 
 loadStagingData(registryName, dataName, dir = Sys.getenv("R_RAP_CONFIG_PATH"))
+
+deleteStagingData(
+  registryName,
+  dataName,
+  dir = Sys.getenv("R_RAP_CONFIG_PATH")
+)
+
+cleanStagingData(eolAge, dryRun = TRUE)
+
+pathStagingData(registryName, dir)
 }
 \arguments{
 \item{registryName}{Character string providing the registry name}
-
-\item{dir}{Character string providing the path to where the staging data
-directory resides. Default value is \code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
 
 \item{dataName}{Character string providing the data set name.}
 
 \item{data}{A data object such as a data.frame to be stored as
 \code{dataName}.}
+
+\item{dir}{Character string providing the path to where the staging data
+directory resides. Default value is \code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
+
+\item{eolAge}{Numeric providing the age in seconds which after staging files
+are to be removed}
+
+\item{dryRun}{Logical defining if function is to be run in dry (none
+destructive) mode}
 }
 \value{
-\code{pathStagingData()} returns a character string with the path to
-the staging directory of \code{registryName}. If its parent directory
-(\code{dir}) does not exists an error is returned. \code{saveStagingData()}
-returns the data object (\code{data}), invisibly. \code{loadStagingData()}
-returns the data object corresponding to the name given upon saving
-(\code{dataName}). If the requested data set does not exist FALSE is
-returned.
+\itemize{
+  \item \code{saveStagingData()} returns the data object (\code{data}),
+    invisibly.
+  \item \code{loadStagingData()} returns the data object corresponding to
+    the name given upon saving (\code{dataName}). If the requested data set
+    for loading does not exist the function returns FALSE.
+  \item \code{deleteStagingData()} returns TRUE if the file was deleted and
+    FALSE if not.
+  \item \code{cleanStagingData()} returns a list of files (to be) removed.
+  \item \code{rapbase:::pathStagingData()} is an internal helper function and
+    returns a character string with the path to the staging directory of
+    \code{registryName}. If its parent directory (\code{dir}) does not exists
+    an error is returned.
+}
 }
 \description{
 These functions are used to handle staging data at Rapporteket.
 }
+\details{
+\code{cleanStagingData()} globally removes all staging data files older than
+the end-of-life age provided. This is potentially a vastly destructive
+function that should be used with great care.
+}
 \examples{
-## Check and make the path to staging data
-path <- pathStagingData(registryName = "myReg", dir = tempdir())
-
 ## Prep test data
 registryName <- "myReg"
 dataName <- "testData"
@@ -52,7 +77,7 @@ data <- mtcars
 dir <- tempdir()
 
 ## Save data for staging
-sageStagingData(registryName, dataName, data, dir)
+saveStagingData(registryName, dataName, data, dir)
 
 ## Retrieve data set from staging
 loadStagingData(registryName, dataName, dir)
