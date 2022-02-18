@@ -9,13 +9,13 @@
 #' @param dir Character string providing the path to where the staging data
 #' directory resides. Default value is \code{Sys.getenv("R_RAP_CONFIG_PATH")}.
 #'
-#' @return \code{pathStagingData()} returns a character string with the path to
-#' the staging directory of \code{registryName}. If its parent directory
-#' (\code{dir}) does not exists an error is returned. \code{saveStagingData()}
-#' returns the data object (\code{data}), invisibly. \code{loadStagingData()}
-#' returns the data object corresponding to the name given upon saving
-#' (\code{dataName}). If the requested data set does not exist FALSE is
-#' returned.
+#' @return \code{saveStagingData()} returns the data object (\code{data}),
+#' invisibly. \code{loadStagingData()} returns the data object corresponding to
+#' the name given upon saving (\code{dataName}). If the requested data set for
+#' loading does not exist the function returns FALSE. \code{pathStagingData()}
+#' is primarily an internal helper function and returns a character string with
+#' the path to the staging directory of \code{registryName}. If its parent
+#' directory (\code{dir}) does not exists an error is returned.
 #' @name stagingData
 #' @aliases pathStagingData saveStagingData loadStagingData
 #'
