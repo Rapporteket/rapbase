@@ -49,7 +49,7 @@
 #' saveStagingData(registryName, dataName, data, dir)
 #'
 #' ## List files currently in staging
-#' listStagingData(registryName)
+#' listStagingData(registryName, dir)
 #'
 #' ## Retrieve data set from staging
 #' loadStagingData(registryName, dataName, dir)
