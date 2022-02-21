@@ -19,7 +19,9 @@
 #'
 #' @return \itemize{
 #'   \item \code{listStagingData()} returns a character vector of staging data
-#'   files for the given registry (\code{registryName}).
+#'     files for the given registry (\code{registryName}).
+#'   \item \code{mtimeStagingData()} returns a staging file-named POSIXct vector
+#'     of modification times for the given registry (\code{registryName}).
 #'   \item \code{saveStagingData()} returns the data object (\code{data}),
 #'     invisibly.
 #'   \item \code{loadStagingData()} returns the data object corresponding to
@@ -35,8 +37,8 @@
 #' }
 #'
 #' @name stagingData
-#' @aliases listStagingData saveStagingData loadStagingData deleteStagingData
-#' cleanStagingData pathStagingData
+#' @aliases listStagingData mtimeStagingData saveStagingData loadStagingData
+#' deleteStagingData cleanStagingData pathStagingData
 #'
 #' @examples
 #' ## Prep test data
@@ -53,6 +55,9 @@
 #'
 #' ## Retrieve data set from staging
 #' loadStagingData(registryName, dataName, dir)
+#'
+#' ## Get modification time for staging file(s)
+#' mtimeStagingData(registryName, dir)
 NULL
 
 #' @rdname stagingData
@@ -63,6 +68,21 @@ listStagingData <- function(registryName,
   path <- pathStagingData(registryName, dir)
 
   list.files(path)
+}
+
+#' @rdname stagingData
+#' @export
+mtimeStagingData <- function(registryName,
+                             dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
+
+  parentPath <- "stagingData"
+  path <- file.path(dir, parentPath, registryName)
+  f <- normalizePath(list.files(path, recursive = TRUE, full.names = TRUE))
+  mtime <- file.mtime(f)
+
+  names(mtime) <- basename(f)
+
+  mtime
 }
 
 #' @rdname stagingData

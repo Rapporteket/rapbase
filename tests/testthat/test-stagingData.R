@@ -34,6 +34,10 @@ test_that("staging files can be listed", {
   expect_equal(class(listStagingData(registryName)), "character")
 })
 
+test_that("modification time of stagin files can be obtained", {
+  expect_true("POSIXct" %in% class(mtimeStagingData(registryName)))
+})
+
 test_that("data can be retrieved from staging", {
   expect_equal(loadStagingData(registryName, dataName), d)
 })

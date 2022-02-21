@@ -3,6 +3,7 @@
 \name{stagingData}
 \alias{stagingData}
 \alias{listStagingData}
+\alias{mtimeStagingData}
 \alias{saveStagingData}
 \alias{loadStagingData}
 \alias{deleteStagingData}
@@ -11,6 +12,8 @@
 \title{Staging data functions}
 \usage{
 listStagingData(registryName, dir = Sys.getenv("R_RAP_CONFIG_PATH"))
+
+mtimeStagingData(registryName, dir = Sys.getenv("R_RAP_CONFIG_PATH"))
 
 saveStagingData(
   registryName,
@@ -51,7 +54,9 @@ destructive) mode}
 \value{
 \itemize{
   \item \code{listStagingData()} returns a character vector of staging data
-  files for the given registry (\code{registryName}).
+    files for the given registry (\code{registryName}).
+  \item \code{mtimeStagingData()} returns a staging file-named POSIXct vector
+    of modification times for the given registry (\code{registryName}).
   \item \code{saveStagingData()} returns the data object (\code{data}),
     invisibly.
   \item \code{loadStagingData()} returns the data object corresponding to
@@ -89,4 +94,7 @@ listStagingData(registryName, dir)
 
 ## Retrieve data set from staging
 loadStagingData(registryName, dataName, dir)
+
+## Get modification time for staging file(s)
+mtimeStagingData(registryName, dir)
 }
