@@ -18,6 +18,8 @@
 #' destructive) mode
 #'
 #' @return \itemize{
+#'   \item \code{listStagingData()} returns a character vector of staging data
+#'   files for the given registry (\code{registryName}).
 #'   \item \code{saveStagingData()} returns the data object (\code{data}),
 #'     invisibly.
 #'   \item \code{loadStagingData()} returns the data object corresponding to
@@ -33,8 +35,8 @@
 #' }
 #'
 #' @name stagingData
-#' @aliases saveStagingData loadStagingData deleteStagingData cleanStagingData
-#' pathStagingData
+#' @aliases listStagingData saveStagingData loadStagingData deleteStagingData
+#' cleanStagingData pathStagingData
 #'
 #' @examples
 #' ## Prep test data
@@ -46,10 +48,22 @@
 #' ## Save data for staging
 #' saveStagingData(registryName, dataName, data, dir)
 #'
+#' ## List files currently in staging
+#' listStagingData(registryName)
+#'
 #' ## Retrieve data set from staging
 #' loadStagingData(registryName, dataName, dir)
 NULL
 
+#' @rdname stagingData
+#' @export
+listStagingData <- function(registryName,
+                            dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
+
+  path <- pathStagingData(registryName, dir)
+
+  list.files(path)
+}
 
 #' @rdname stagingData
 #' @export

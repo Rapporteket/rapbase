@@ -30,6 +30,10 @@ test_that("data can be stored for staging", {
   expect_true(file.exists(testFile))
 })
 
+test_that("staging files can be listed", {
+  expect_equal(class(listStagingData(registryName)), "character")
+})
+
 test_that("data can be retrieved from staging", {
   expect_equal(loadStagingData(registryName, dataName), d)
 })

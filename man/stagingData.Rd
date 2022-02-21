@@ -2,6 +2,7 @@
 % Please edit documentation in R/stagingData.R
 \name{stagingData}
 \alias{stagingData}
+\alias{listStagingData}
 \alias{saveStagingData}
 \alias{loadStagingData}
 \alias{deleteStagingData}
@@ -9,6 +10,8 @@
 \alias{pathStagingData}
 \title{Staging data functions}
 \usage{
+listStagingData(registryName, dir = Sys.getenv("R_RAP_CONFIG_PATH"))
+
 saveStagingData(
   registryName,
   dataName,
@@ -31,13 +34,13 @@ pathStagingData(registryName, dir)
 \arguments{
 \item{registryName}{Character string providing the registry name}
 
+\item{dir}{Character string providing the path to where the staging data
+directory resides. Default value is \code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
+
 \item{dataName}{Character string providing the data set name.}
 
 \item{data}{A data object such as a data.frame to be stored as
 \code{dataName}.}
-
-\item{dir}{Character string providing the path to where the staging data
-directory resides. Default value is \code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
 
 \item{eolAge}{Numeric providing the age in seconds which after staging files
 are to be removed}
@@ -47,6 +50,8 @@ destructive) mode}
 }
 \value{
 \itemize{
+  \item \code{listStagingData()} returns a character vector of staging data
+  files for the given registry (\code{registryName}).
   \item \code{saveStagingData()} returns the data object (\code{data}),
     invisibly.
   \item \code{loadStagingData()} returns the data object corresponding to
@@ -78,6 +83,9 @@ dir <- tempdir()
 
 ## Save data for staging
 saveStagingData(registryName, dataName, data, dir)
+
+## List files currently in staging
+listStagingData(registryName)
 
 ## Retrieve data set from staging
 loadStagingData(registryName, dataName, dir)
