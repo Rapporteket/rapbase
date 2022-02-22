@@ -1,3 +1,7 @@
+# rapbase 1.21.0.9000
+
+* Added functions to handle staging of data used by registry apps ([#106](https://github.com/Rapporteket/rapbase/pull/106))
+
 # rapbase 1.21.0
 
 * Pre-set frequency of auto reports may now be set upon calling the auto report module server function
