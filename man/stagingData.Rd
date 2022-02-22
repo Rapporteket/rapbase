@@ -35,7 +35,7 @@ cleanStagingData(eolAge, dryRun = TRUE)
 pathStagingData(registryName, dir)
 }
 \arguments{
-\item{registryName}{Character string providing the registry name}
+\item{registryName}{Character string providing the registry name.}
 
 \item{dir}{Character string providing the path to where the staging data
 directory resides. Default value is \code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
@@ -45,11 +45,12 @@ directory resides. Default value is \code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
 \item{data}{A data object such as a data.frame to be stored as
 \code{dataName}.}
 
-\item{eolAge}{Numeric providing the age in seconds which after staging files
-are to be removed}
+\item{eolAge}{Numeric providing the staging file end-of-life age in seconds.
+Based on the current time and the file modification time stamp staging files
+older than \code{eolAge} will be identified as subject for removal.}
 
 \item{dryRun}{Logical defining if function is to be run in dry (none
-destructive) mode}
+destructive) mode.}
 }
 \value{
 \itemize{
@@ -72,7 +73,11 @@ destructive) mode}
 }
 }
 \description{
-These functions are used to handle staging data at Rapporteket.
+Low level functions for handling registry staging data at Rapporteket. As
+such, these functions does not provide staging data management \emph{per se}.
+Proper management, \emph{e.g.} staging data updates and fallback logic
+must therefore be established within each registry that take staging data
+into use.
 }
 \details{
 \code{cleanStagingData()} globally removes all staging data files older than

@@ -1,21 +1,26 @@
 #' Staging data functions
 #'
-#' These functions are used to handle staging data at Rapporteket.
+#' Low level functions for handling registry staging data at Rapporteket. As
+#' such, these functions does not provide staging data management \emph{per se}.
+#' Proper management, \emph{e.g.} staging data updates and fallback logic
+#' must therefore be established within each registry that take staging data
+#' into use.
 #'
 #' \code{cleanStagingData()} globally removes all staging data files older than
 #' the end-of-life age provided. This is potentially a vastly destructive
 #' function that should be used with great care.
 #'
-#' @param registryName Character string providing the registry name
+#' @param registryName Character string providing the registry name.
 #' @param dataName Character string providing the data set name.
 #' @param data A data object such as a data.frame to be stored as
 #' \code{dataName}.
 #' @param dir Character string providing the path to where the staging data
 #' directory resides. Default value is \code{Sys.getenv("R_RAP_CONFIG_PATH")}.
-#' @param eolAge Numeric providing the age in seconds which after staging files
-#' are to be removed
+#' @param eolAge Numeric providing the staging file end-of-life age in seconds.
+#' Based on the current time and the file modification time stamp staging files
+#' older than \code{eolAge} will be identified as subject for removal.
 #' @param dryRun Logical defining if function is to be run in dry (none
-#' destructive) mode
+#' destructive) mode.
 #'
 #' @return \itemize{
 #'   \item \code{listStagingData()} returns a character vector of staging data
