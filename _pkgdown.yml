@@ -108,7 +108,6 @@ reference:
     - sendEmail
     - howWeDealWithPersonalData
     - makeMessage
-    - pushGist
     - runNoweb
     - getRapPackages
     - installGithubPackage
