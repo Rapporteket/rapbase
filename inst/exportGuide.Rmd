@@ -14,19 +14,33 @@ Her kan statistikere som jobber med Rapporteket laste ned hele databasen. Format
 ## Veiledning
 Under følger en kort veiledning for trygg og riktig bruk av eksportfunksjonen.
 
-### Last ned og lagre fila
-Velg mottaker fra lista til venstre og deretter den nøkkelen som skal benyttes i krypteringen av innholdet. Det er en forutsetning at mottakeren har brukerkonto på GitHub og at vedkommende har lagt ut minst én offentlig nøkkel der. Videre må brukeren også ha tilgang til registerets prosjekt i organisasjonen [Rapporteket på GitHub](https://github.com/Rapporteket). Ved spørsmål eller behov for hjelp, [ta kontakt med SKDE](mailto:rapporteket@helse-nord.no).
+### Last ned fila
+Velg mottaker fra lista til venstre og deretter den nøkkelen som skal benyttes i krypteringen av innholdet. Det er en forutsetning at mottakeren har brukerkonto på GitHub og har lagt ut minst én offentlig nøkkel der. Det er bare personer med utvidet tilgang til registerets prosjekt i organisasjonen [Rapporteket på GitHub](https://github.com/Rapporteket) som vil stå på lista av mottakere. Det mulig å angi at fila skal komprimeres før eksport noe som ofte er lurt, særlig hvis registeret inneholder mye data. Trykk deretter Last ned!
 
 ### Dekryptering av innholdet i fila
-Fila slik den er lastet ned er sikret mot innsyn fra andre enn definert mottaker. Etter dekryptering finnes det ingen slik sikringen og det er derfor viktig at dekryptering kun skjer i et område som har en tilstrekkelig ytre sikring, eksempelvis en datamaskin og et filområde på et registerkontor der helse- og personopplysninger kan håndteres med tilstrekkelig lav risiko.
-[R-pakken _sship_](https://github.com/Rapporteket/sship/) kan enkelt benyttes til dekryptering, eksempelvis:
+Fila slik den er lastet ned er sikret mot innsyn fra andre enn definert mottaker. Etter dekryptering finnes det ingen slik sikring og det er derfor viktig at dekryptering kun skjer i et område som har en tilstrekkelig ytre sikring, eksempelvis en datamaskin og et filområde på et registerkontor der helse- og personopplysninger kan håndteres med tilstrekkelig lav risiko.
+[R-pakken _sship_](https://cran.r-project.org/web/packages/sship/index.html) kan benyttes til dekryptering, eksempelvis:
 
-`sship::dec("export.tar.gz")`
+`sship::dec("noreg0123456789ab.sql.gz__YYYYMMDD_TTMMSS.tar.gz")`
 
-Det finnes også andre måter å dekryptere fila på. Mer om dette og øvrige detaljer finnes i [dokumentasjonen av _sship_](https://rapporteket.github.io/sship/articles/extract.html).
+Det finnes andre måter å dekryptere fila på, også utenfor R. Mer om dette og øvrige detaljer finnes i [dokumentasjonen av _sship_](https://rapporteket.github.io/sship/articles/extract.html).
+
+### Dekomprimering av fila (valgfritt)
+Hvis man i forbindelse med nedlasting spesifiserte at fila skulle komprimeres så må fila dekomprimeres etter at dekryptering er foretatt. Det finnes mange verktøy for slikt, eksempelvis [7-Zip](https://www.7-zip.org/). Hvis man bruker RStudio kan dette gjøres med en enkel kommando i "Terminal":
+
+`gunzip noreg0123456789ab.sql.gz`
+
+I eksempelet som er brukt her vil man da ende opp med filen _noreg0123456789ab.sql_ som da kan importeres.
 
 ### Import av databasen
-Eksportfila er etablert ved bruk av `mysqldump` og kan enkelt [importeres i MySQL](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#mysqldump-option-examples). Hvis man benytter SKDE sitt utviklingsmiljø for Rapporteket kan eksportfila også importeres gjennom [importfunksjonen som finnes i verktøyet _adminer_](`r paste0("http://localhost:8888/?server=db&username=root&db=", dbName, "&import=")`).
+Eksportfila er etablert ved bruk av `mysqldump` og kan [importeres til en MySQL database](https://dev.mysql.com/doc/refman/8.0/en/mysqldump.html#mysqldump-option-examples). SKDE sitt utviklingsmiljø for Rapporteket er på forhånd satt opp med MySQL og importen kan kjøres med en enkel kommando fra RStudio sin "Terminal":
+
+`mysql -h X -u Y -p < noreg0123456789ab.sql`
+
+der _X_ og _Y_ er MySQL serverens adressen og brukernavn, henholdsvis. Når denne kommandoen kjøres vil man også bli spurt om passordet til MySQL serveren. Verdier for passord, _X_ og _Y_ er definert i oppsettet av utviklingsmiljøet.
 
 ## Sikkerhet
 Sikringen av data slik de lastes ned her er ivaretatt av [R-pakken _sship_](https://github.com/Rapporteket/sship/) i kombinasjon med samhandlingsverktøyet [Rapporteket på GitHub](https://github.com/Rapporteket). Ytterligere detaljer finnes i [dokumentasjonen av _sship_](https://rapporteket.github.io/sship/articles/overview.html).
+
+## Hjelp
+Ved spørsmål eller behov for hjelp, [ta gjerne kontakt med SKDE](mailto:rapporteket@helse-nord.no).
