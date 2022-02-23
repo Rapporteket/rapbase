@@ -18,7 +18,7 @@ Under følger en kort veiledning for trygg og riktig bruk av eksportfunksjonen.
 Velg mottaker fra lista til venstre og deretter den nøkkelen som skal benyttes i krypteringen av innholdet. Det er en forutsetning at mottakeren har brukerkonto på GitHub og har lagt ut minst én offentlig nøkkel der. Det er bare personer med utvidet tilgang til registerets prosjekt i organisasjonen [Rapporteket på GitHub](https://github.com/Rapporteket) som vil stå på lista av mottakere. Det mulig å angi at fila skal komprimeres før eksport noe som ofte er lurt, særlig hvis registeret inneholder mye data. Trykk deretter Last ned!
 
 ### Dekryptering av innholdet i fila
-Fila slik den er lastet ned er sikret mot innsyn fra andre enn definert mottaker. Etter dekryptering finnes det ingen slik sikringen og det er derfor viktig at dekryptering kun skjer i et område som har en tilstrekkelig ytre sikring, eksempelvis en datamaskin og et filområde på et registerkontor der helse- og personopplysninger kan håndteres med tilstrekkelig lav risiko.
+Fila slik den er lastet ned er sikret mot innsyn fra andre enn definert mottaker. Etter dekryptering finnes det ingen slik sikring og det er derfor viktig at dekryptering kun skjer i et område som har en tilstrekkelig ytre sikring, eksempelvis en datamaskin og et filområde på et registerkontor der helse- og personopplysninger kan håndteres med tilstrekkelig lav risiko.
 [R-pakken _sship_](https://cran.r-project.org/web/packages/sship/index.html) kan benyttes til dekryptering, eksempelvis:
 
 `sship::dec("noreg0123456789ab.sql.gz__YYYYMMDD_TTMMSS.tar.gz")`
