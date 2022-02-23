@@ -1,6 +1,6 @@
 #' Render documents from rmarkdown files at Rapporteket
 #'
-#' Function that renders documents at Rapporteket from rmarkdown sorce files.
+#' Function that renders documents at Rapporteket from rmarkdown source files.
 #' Output formats may be (vanilla) HTML or PDF based on our own pandoc latex
 #' template or fragments of html when the result is to be embedded in existing
 #' web pages. Rmarkdown allow parameters to be part of report processing. Thus,
@@ -19,14 +19,14 @@
 #' corresponding entries under \emph{params} in the rmarkdown document yaml
 #' header. Default is \code{NULL} in which case no parameters as defined in the
 #' rmarkdown document will be overridden.
-#' @param template Character string defing which template to use for making pdf
-#' documents. Must be one of "default" or "document" where the first is assumed
-#' if this argument is not set.
+#' @param template Character string defining which template to use for making
+#' pdf documents. Must be one of "default" or "document" where the first is
+#' assumed if this argument is not set.
 #'
 #' @return Character string with path to the rendered file or, if
 #' \code{outputType} is set to "html_fragment", a character string providing an
 #' html fragment. Files are named according to \code{tempfile()} with an empty
-#' pattern and with the extention according to \code{outputType}
+#' pattern and with the extension according to \code{outputType}
 #' ("pdf" or "html").
 #' @export
 
@@ -65,8 +65,7 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
           pandoc_args = c(paste0("--template=", template, ".latex"))),
         html = bookdown::html_document2(),
         html_fragment = bookdown::html_fragment2(),
-        beamer = rmarkdown::beamer_presentation(theme = "Hannover"),
-        reveal = revealjs::revealjs_presentation(theme = "sky")
+        beamer = rmarkdown::beamer_presentation(theme = "Hannover")
       ),
     output_file = tempfile(pattern = ""),
     clean = TRUE,

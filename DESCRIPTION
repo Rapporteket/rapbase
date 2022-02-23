@@ -40,7 +40,6 @@ Imports:
     purrr,
     readr,
     remotes,
-    revealjs,
     rlang,
     RMariaDB,
     rmarkdown,
