@@ -31,7 +31,6 @@ Imports:
     dplyr,
     DT,
     gh,
-    gistr,
     httr,
     kableExtra,
     knitr,
