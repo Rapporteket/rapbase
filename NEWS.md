@@ -1,6 +1,8 @@
 # rapbase 1.21.0.9000
 
+* Improved first page graphics and hyperlinking in default latex template ([#104](https://github.com/Rapporteket/rapbase/pull/104))
 * Added functions to handle staging of data used by registry apps ([#106](https://github.com/Rapporteket/rapbase/pull/106))
+* Improved guide for export of data ([#108](https://github.com/Rapporteket/rapbase/pull/108))
 
 # rapbase 1.21.0
 
