@@ -1,7 +1,7 @@
 context("Generate messages")
 
-test_that("deprecated function provides warning", {
-  expect_warning(MakeMessage("test", "test"))
+test_that("deprecated defunct function provides warning", {
+  expect_error(MakeMessage("test", "test"))
 })
 
 test_that("Function return one element atomic char vector", {

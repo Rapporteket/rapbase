@@ -18,7 +18,7 @@ NULL
 #' @rdname loadRegData
 #' @export
 LoadRegData <- function(registryName, query, dbType = "mysql") {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "1.12.0", "rapbase::LoadRegData()",
     "rapbase::loadRegData()"
   )

@@ -18,7 +18,7 @@
 #' @export
 
 shinySessionInfo <- function(shinySession, entity, testCase = FALSE) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "1.10.0", "rapbase::shinySessionInfo()",
     "rapbase::userInfo()"
   )

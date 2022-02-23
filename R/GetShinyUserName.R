@@ -11,7 +11,7 @@
 
 
 getShinyUserName <- function(shinySession, testCase = FALSE) {
-  lifecycle::deprecate_warn(
+  lifecycle::deprecate_stop(
     "1.10.0", "rapbase::GetShinyUserName()",
     "rapbase::getUserName()"
   )

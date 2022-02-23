@@ -67,10 +67,10 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
   expect_false(RMariaDB::dbIsValid(l$con))
 })
 
-test_that("Deprecated interface provides a warning", {
+test_that("Deprecated defunct interface provides an error", {
   checkDb()
   query <- "SELECT * FROM testTable"
-  expect_warning(LoadRegData(regName, query, dbType = "mysql"))
+  expect_error(LoadRegData(regName, query, dbType = "mysql"))
 })
 
 test_that("Data can be queried from (MySQL) db", {
