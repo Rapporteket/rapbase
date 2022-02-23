@@ -35,7 +35,6 @@ Imports:
     kableExtra,
     knitr,
     magrittr,
-    markdown,
     purrr,
     readr,
     remotes,
