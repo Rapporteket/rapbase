@@ -4,6 +4,7 @@
 * Moved from soft to hard deprecation for outdated functions which will now fail ([#105](https://github.com/Rapporteket/rapbase/pull/105))
 * Added functions to handle staging of data used by registry apps ([#106](https://github.com/Rapporteket/rapbase/pull/106))
 * Improved guide for export of data ([#108](https://github.com/Rapporteket/rapbase/pull/108))
+* Reduced the number of R package imports, also by removing seldom or never used functionality ([#109](https://github.com/Rapporteket/rapbase/pull/109))
 
 # rapbase 1.21.0
 
