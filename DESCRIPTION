@@ -34,7 +34,6 @@ Imports:
     httr,
     kableExtra,
     knitr,
-    lubridate,
     magrittr,
     markdown,
     purrr,
