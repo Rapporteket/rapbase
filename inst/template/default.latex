@@ -68,13 +68,7 @@
       \includegraphics[width=\hsize]{$reglogo$}%
       $endif$
       \raggedleft\footnotesize%
-      {$if(reglogo)$\\ $endif$$if(regtext)$$regtext$$endif$\par}
-      \includegraphics[width=\hsize]{logo.png}%
-      {\\ RAPPORTEKET er en analysetjenste som tilbyr interaktiv undersøkelse
-      av rådata, rutinemessig utsending av rapporter og visualisering av
-      resultater for medisinske kvalitetsregistre. Tjenesten utvikles og
-      vedlikeholdes av SKDE og arbeidet finansieres av Helse- og
-      omsorgsdepartementet.}%
+      {$if(reglogo)$\\ $endif$$if(regtext)$$regtext$$endif$\par}%
     \end{textblock*}
     %
     \begin{textblock*}{\marginparwidth}[1,1]%
@@ -86,6 +80,15 @@
       {\textbf{Produsert av}\\ Rapporteket\par}%
       {\textbf{Dato}\\ \today\par}%
       {\textbf{Tid}\\ \currenttime\par}%
+      {\vspace{2em}}%
+      \includegraphics[width=\hsize]{logo.png}%
+      {\\ \href{https://rapporteket.github.io/rapporteket}{Rapporteket} er en
+      analysetjenste som tilbyr interaktiv undersøkelse
+      av rådata, rutinemessig utsending av rapporter og visualisering av
+      resultater for medisinske kvalitetsregistre. Tjenesten utvikles og
+      vedlikeholdes av \href{https://www.skde.no}{SKDE} og arbeidet finansieres
+      av \href{https://www.regjeringen.no/no/dep/hod/id421}{Helse- og
+      omsorgsdepartementet}.}%
     \end{textblock*}
 
     {\raggedright\sffamily\bfseries\fontsize{20}{25}\selectfont $title$\par}%
