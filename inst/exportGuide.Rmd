@@ -37,7 +37,7 @@ Eksportfila er etablert ved bruk av `mysqldump` og kan [importeres til en MySQL 
 
 `mysql -h X -u Y -p < noreg0123456789ab.sql`
 
-der _X_ og _Y_ er MySQL serverens adressen og brukernavn, henholdsvis. Når denne kommandoen kjøres vil man også bli spurt om passordet til MySQL serveren. Verdier for passord, _X_ og _Y_ er definert i oppsettet av utviklingsmiljøet.
+der _X_ og _Y_ er MySQL serverens adresse og et brukernavn for pålogging, henholdsvis. Når denne kommandoen kjøres vil man også bli spurt om passordet til angitt bruker. Verdier for passord, _X_ og _Y_ er definert i oppsettet av utviklingsmiljøet.
 
 ## Sikkerhet
 Sikringen av data slik de lastes ned her er ivaretatt av [R-pakken _sship_](https://github.com/Rapporteket/sship/) i kombinasjon med samhandlingsverktøyet [Rapporteket på GitHub](https://github.com/Rapporteket). Ytterligere detaljer finnes i [dokumentasjonen av _sship_](https://rapporteket.github.io/sship/articles/overview.html).
