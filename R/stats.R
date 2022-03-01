@@ -216,13 +216,11 @@ logFormat <- function(log) {
       datetime = as.POSIXct(.data$time),
       date = as.Date(.data$datetime),
       time = format(.data$datetime, "%H:%M:%S"),
-      year = lubridate::year(.data$datetime),
-      month = lubridate::month(.data$datetime),
-      day = lubridate::day(.data$datetime),
-      weekday = lubridate::wday(
-        .data$datetime,
-        week_start = 1,
-        abbr = FALSE)
+      year = as.POSIXlt(.data$datetime)$year + 1900,
+      month = as.POSIXlt(.data$datetime)$mon + 1,
+      day = as.POSIXlt(.data$datetime)$mday,
+      weekday = ifelse(as.POSIXlt(.data$datetime)$wday == 0, 7,
+                       as.POSIXlt(.data$datetime)$wday)
     )
 
   invisible(log)

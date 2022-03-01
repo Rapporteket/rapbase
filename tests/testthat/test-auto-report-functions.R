@@ -190,13 +190,16 @@ test_that("Auto reports can be processed (shipment by email not tested)", {
 })
 
 test_that("a report sceduled for today with startDate in future is not run", {
-  # make corresponding auto report
+  # skip if today is one of built in report test days
+  skip_if((as.POSIXlt(Sys.Date())$yday + 1) %in% c(30, 60, 90),
+          message = "Today is one of three predefined test days.")
   createAutoReport(synopsis, package, type, fun, paramNames,
                    paramValues, owner, ownerName, email, organization,
                    runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
                    startDate = as.character(Sys.Date() + 1))
   ## update rd to be used later
   rd <- readAutoReportData()
+  print(rd)
   expect_silent(
     runAutoReport(dryRun = TRUE)
   )
@@ -208,7 +211,10 @@ test_that("Auto reports can be processed and emailed (but failing send)", {
     runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = FALSE))
 })
 
-
+createAutoReport(synopsis, package, type, fun, paramNames,
+                 paramValues, owner, ownerName, email, organization,
+                 runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
+                 startDate = as.character(Sys.Date() + 1))
 reportId <- names(rd)[length(rd)]
 
 test_that("Auto report can be deleted", {

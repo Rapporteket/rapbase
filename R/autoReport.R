@@ -239,12 +239,12 @@ autoReportServer <- function(id, registryName, type, org = NULL,
 
   stopifnot(freq %in% c("day", "week", "month", "quarter", "year"))
 
-  defaultFreq <- switch (freq,
-                         day = "Daglig-day",
-                         week = "Ukentlig-week",
-                         month = "M\u00E5nedlig-month",
-                         quarter = "Kvartalsvis-quarter",
-                         year = "\u00C5rlig-year"
+  defaultFreq <- switch(freq,
+                        day = "Daglig-day",
+                        week = "Ukentlig-week",
+                        month = "M\u00E5nedlig-month",
+                        quarter = "Kvartalsvis-quarter",
+                        year = "\u00C5rlig-year"
   )
 
   shiny::moduleServer(id, function(input, output, session) {
