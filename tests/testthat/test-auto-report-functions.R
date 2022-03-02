@@ -199,7 +199,6 @@ test_that("a report sceduled for today with startDate in future is not run", {
                    startDate = as.character(Sys.Date() + 1))
   ## update rd to be used later
   rd <- readAutoReportData()
-  print(rd)
   expect_silent(
     runAutoReport(dryRun = TRUE)
   )
