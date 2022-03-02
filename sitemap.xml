@@ -169,9 +169,6 @@
     <loc>/reference/pronoun.html</loc>
   </url>
   <url>
-    <loc>/reference/pushGist.html</loc>
-  </url>
-  <url>
     <loc>/reference/rapCloseDbConnection.html</loc>
   </url>
   <url>
@@ -218,6 +215,9 @@
   </url>
   <url>
     <loc>/reference/shinySessionInfo.html</loc>
+  </url>
+  <url>
+    <loc>/reference/stagingData.html</loc>
   </url>
   <url>
     <loc>/reference/stats.html</loc>

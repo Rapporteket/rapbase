@@ -25,7 +25,7 @@ number of code lines for each registry."><meta property="og:image" content="/log
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.21.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.22.0</span>
       </span>
     </div>
 
@@ -65,7 +65,7 @@ number of code lines for each registry.</p>
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">navbarWidgetInput</span><span class="op">(</span><span class="va">id</span>, addUserInfo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 
-<span class="fu">navbarWidgetServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">orgName</span>, caller <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environmentName</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/caller_env.html" class="external-link">caller_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+<span class="fu">navbarWidgetServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">orgName</span>, caller <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environmentName</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
 <span class="fu">navbarWidgetApp</span><span class="op">(</span>orgName <span class="op">=</span> <span class="st">"Org Name"</span><span class="op">)</span></code></pre></div>
     </div>
@@ -112,6 +112,10 @@ function properly.</p>
 <span class="r-in">    <span class="op">)</span></span>
 <span class="r-in">  <span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>Good news!</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> You don't need to call `useShinyalert()` anymore. Please remove this line from your code.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> If you really want to pre-load {shinyalert} to the UI for any reason, use:</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> 	`useShinyalert(force = TRUE)`</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## server function</span></span>
 <span class="r-in"><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
@@ -136,7 +140,7 @@ function properly.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer></div>
