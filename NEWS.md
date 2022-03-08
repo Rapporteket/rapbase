@@ -1,4 +1,4 @@
-# rapbase 1.21.0.9000
+# rapbase 1.22.0
 
 * Improved first page graphics and hyperlinking in default latex template ([#104](https://github.com/Rapporteket/rapbase/pull/104))
 * Moved from soft to hard deprecation for outdated functions which will now fail ([#105](https://github.com/Rapporteket/rapbase/pull/105))
