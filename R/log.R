@@ -4,12 +4,17 @@
 #' outside this package
 #'
 #' @param event data.frame of one record holding the fields of whatever that
-#' is to be logged
-#' @param name String defining the name of the log
-#' @param target String defining where the log should go. Currently, 'file' is
-#' the only option
-#' @param format String defining the whatever format available given 'taget'.
-#' Currently, the only option here is 'csv'
+#' is to be logged.
+#' @param name String defining the name of the log, currently one of "appLog" or
+#' "reportLog".
+#' @param target String defining where the log should go. Currently, "file" and
+#' "db" (database) are the only options.
+#' @param format String defining the format to use for the given "target".
+#' Currently, the only option here is 'csv'. This value is disregarded if
+#' \code{target} is set to "db".
+#' @param dbName String defining the database name where a log event is to be
+#' recorded. If \code{target} is set to "file" the value of \code{dbName} will
+#' be disregarded. Default value is set to a blank string.
 #'
 #' @return Provides a new record in the log. If the log does not exist a new
 #' one is created before appending the new record
@@ -17,7 +22,11 @@
 #'
 #' @importFrom utils write.table
 
-appendLog <- function(event, name, target, format) {
+appendLog <- function(event, name, target, format, dbName = "") {
+
+  config <- getConfig(fileName = "rapbaseConfig.yml")
+  target <- config$r$raplog$target
+
   if (target == "file") {
     path <- Sys.getenv("R_RAP_CONFIG_PATH")
     if (path == "") {
@@ -41,10 +50,14 @@ appendLog <- function(event, name, target, format) {
         col.names = doColNames, row.names = FALSE, sep = ","
       )
     }
+  } else if (target == "db") {
+    con <- rapOpenDbConnection(config$r$raplog$name)$con
+    DBI::dbAppendTable(con, name, event, row.names = NULL)
+    rapCloseDbConnection(con)
   } else {
     stop(paste0(
       "Target ", target, " is not supported. ",
-      "Event was not appended!"
+      "Log event was not appended!"
     ))
   }
 }

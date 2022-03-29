@@ -14,7 +14,15 @@ rapbase:
   pass : root
   disp : ForTestingOnly
 
-# for testing, in rap-dev-data container
+# for logging test with database target
+raplog:
+  host : db-ltmv
+  name : raplog
+  user : root
+  pass : root
+  disp : ForLogDevOnly
+
+# for testing, in dev container
 dev:
   host : db
   name : rapbase
