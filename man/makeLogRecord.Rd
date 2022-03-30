@@ -4,7 +4,7 @@
 \alias{makeLogRecord}
 \title{Make a log record}
 \usage{
-makeLogRecord(content, format = "csv")
+makeLogRecord(content)
 }
 \arguments{
 \item{content}{A named list of values to be logged}

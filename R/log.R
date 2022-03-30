@@ -7,25 +7,20 @@
 #' is to be logged.
 #' @param name String defining the name of the log, currently one of "appLog" or
 #' "reportLog".
-#' @param target String defining where the log should go. Currently, "file" and
-#' "db" (database) are the only options.
-#' @param format String defining the format to use for the given "target".
-#' Currently, the only option here is 'csv'. This value is disregarded if
-#' \code{target} is set to "db".
-#' @param dbName String defining the database name where a log event is to be
-#' recorded. If \code{target} is set to "file" the value of \code{dbName} will
-#' be disregarded. Default value is set to a blank string.
 #'
 #' @return Provides a new record in the log. If the log does not exist a new
-#' one is created before appending the new record
+#' one is created before appending the new record when the log target is
+#' configured to be files. When logging to a database this have to be set up in
+#' advance.
 #' @export
 #'
 #' @importFrom utils write.table
 
-appendLog <- function(event, name, target, format, dbName = "") {
+appendLog <- function(event, name) {
 
   config <- getConfig(fileName = "rapbaseConfig.yml")
   target <- config$r$raplog$target
+  stopifnot(target %in% c("file", "db"))
 
   if (target == "file") {
     path <- Sys.getenv("R_RAP_CONFIG_PATH")
@@ -36,20 +31,18 @@ appendLog <- function(event, name, target, format, dbName = "") {
         "defined!"
       ))
     }
-    name <- paste0(name, ".", format)
-    if (format == "csv") {
-      doAppend <- TRUE
-      doColNames <- FALSE
-      if (!file.exists(file.path(path, name)) ||
+    name <- paste0(name, ".csv")
+    doAppend <- TRUE
+    doColNames <- FALSE
+    if (!file.exists(file.path(path, name)) ||
         file.size(file.path(path, name)) == 0) {
-        doAppend <- FALSE
-        doColNames <- TRUE
-      }
-      write.table(event,
-        file = file.path(path, name), append = doAppend,
-        col.names = doColNames, row.names = FALSE, sep = ","
-      )
+      doAppend <- FALSE
+      doColNames <- TRUE
     }
+    write.table(event,
+                file = file.path(path, name), append = doAppend,
+                col.names = doColNames, row.names = FALSE, sep = ","
+    )
   } else if (target == "db") {
     con <- rapOpenDbConnection(config$r$raplog$name)$con
     DBI::dbAppendTable(con, name, event, row.names = NULL)
@@ -76,18 +69,14 @@ appendLog <- function(event, name, target, format, dbName = "") {
 #'
 #' @examples
 #' makeLogRecord(list(msg = "This is a test"))
-makeLogRecord <- function(content, format = "csv") {
+makeLogRecord <- function(content) {
   defaultEntries <- list(
     time = format(Sys.time(), "%Y-%m-%d %H:%M:%S")
   )
 
   content <- c(defaultEntries, content)
 
-  if (format == "csv") {
-    as.data.frame(content)
-  } else {
-    stop(paste0("Format ", format, " is not supported. Event not logged!"))
-  }
+  as.data.frame(content)
 }
 
 getSessionData <- function(session) {
@@ -98,11 +87,6 @@ getSessionData <- function(session) {
     role = rapbase::getUserRole(session),
     resh_id = rapbase::getUserReshId(session)
   )
-}
-
-getSessionDataRep <- function(session) {
-
-  # Currently not used
 }
 
 
@@ -233,8 +217,8 @@ NULL
 appLogger <- function(session, msg = "No message provided") {
   name <- "appLog"
   content <- c(getSessionData(session), list(message = msg))
-  event <- makeLogRecord(content, format = "csv")
-  appendLog(event, name, target = "file", format = "csv")
+  event <- makeLogRecord(content)
+  appendLog(event, name)
 }
 
 
@@ -259,8 +243,8 @@ repLogger <- function(session, msg = "No message provided",
       message = msg
     )
   )
-  event <- makeLogRecord(content, format = "csv")
-  appendLog(event, name, target = "file", format = "csv")
+  event <- makeLogRecord(content)
+  appendLog(event, name)
 }
 
 
@@ -292,6 +276,6 @@ autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
       message = paste(type, msg)
     )
   )
-  event <- makeLogRecord(content, format = "csv")
-  appendLog(event, name = "reportLog", target = "file", format = "csv")
+  event <- makeLogRecord(content)
+  appendLog(event, name = "reportLog")
 }

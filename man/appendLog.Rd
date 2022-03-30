@@ -4,7 +4,7 @@
 \alias{appendLog}
 \title{Append a log record}
 \usage{
-appendLog(event, name, target, format, dbName = "")
+appendLog(event, name)
 }
 \arguments{
 \item{event}{data.frame of one record holding the fields of whatever that
@@ -12,21 +12,12 @@ is to be logged.}
 
 \item{name}{String defining the name of the log, currently one of "appLog" or
 "reportLog".}
-
-\item{target}{String defining where the log should go. Currently, "file" and
-"db" (database) are the only options.}
-
-\item{format}{String defining the format to use for the given "target".
-Currently, the only option here is 'csv'. This value is disregarded if
-\code{target} is set to "db".}
-
-\item{dbName}{String defining the database name where a log event is to be
-recorded. If \code{target} is set to "file" the value of \code{dbName} will
-be disregarded. Default value is set to a blank string.}
 }
 \value{
 Provides a new record in the log. If the log does not exist a new
-one is created before appending the new record
+one is created before appending the new record when the log target is
+configured to be files. When logging to a database this have to be set up in
+advance.
 }
 \description{
 Append a record to the log. Normally, this function will not be called from

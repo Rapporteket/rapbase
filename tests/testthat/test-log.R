@@ -164,12 +164,7 @@ appEvent <- data.frame(
 )
 
 test_that("app event can be appended to db", {
-  expect_silent(appendLog(
-    event = appEvent,
-    name = "appLog",
-    target = "get from config",
-    format = NA
-  ))
+  expect_silent(appendLog(event = appEvent,name = "appLog"))
 })
 
 # remove test db
