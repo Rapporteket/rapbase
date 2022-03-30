@@ -20,13 +20,13 @@ appendLog <- function(event, name) {
 
   config <- getConfig(fileName = "rapbaseConfig.yml")
   target <- config$r$raplog$target
-  stopifnot(target %in% c("file", "db"))
+  #stopifnot(target %in% c("file", "db"))
 
   if (target == "file") {
     path <- Sys.getenv("R_RAP_CONFIG_PATH")
     if (path == "") {
       stop(paste0(
-        "There is nowhere to append the logging event. ",
+        "There is nowhere to append the logfiles. ",
         "The environment variable R_RAP_CONFIG_PATH should be ",
         "defined!"
       ))

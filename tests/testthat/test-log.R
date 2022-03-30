@@ -59,8 +59,7 @@ Sys.setenv(R_RAP_CONFIG_PATH = "")
 
 test_that("nothing will be appended if path is not defined", {
   expect_error(appendLog(
-    event = data.frame(foo = "bar"), name = "",
-    target = "file", format = "csv"
+    event = data.frame(foo = "bar"), name = ""
   ))
 })
 
@@ -164,7 +163,14 @@ appEvent <- data.frame(
 )
 
 test_that("app event can be appended to db", {
-  expect_silent(appendLog(event = appEvent,name = "appLog"))
+  expect_silent(appendLog(event = appEvent, name = "appLog"))
+})
+
+test_that("append errors when target is not known", {
+  conf <- yaml::read_yaml(file.path(tempdir, "rapbaseConfig.yml"))
+  conf$r$raplog$target <- "unknown"
+  yaml::write_yaml(conf, file.path(tempdir, "rapbaseConfig.yml"))
+  expect_error(appendLog(event = appEvent, name = "appLog"))
 })
 
 # remove test db
