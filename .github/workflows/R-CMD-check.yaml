@@ -48,7 +48,6 @@ jobs:
           if [[ ${{ runner.os }} == Linux ]]; then
             echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=true" >> $GITHUB_ENV
             echo "DB_HOST=localhost" >> $GITHUB_ENV
-            echo "DB_NAME=testDb" >> $GITHUB_ENV
             echo "DB_USER=root" >> $GITHUB_ENV
             echo "DB_PASS=root" >> $GITHUB_ENV
           else
@@ -59,7 +58,6 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo /etc/init.d/mysql start
-          mysql -e 'CREATE DATABASE IF NOT EXISTS rapbase; USE rapbase; CREATE TABLE testTable (id INT, someText VARCHAR(50), someInt INT, someFloat DOUBLE, someTime DATETIME);' -uroot -proot
 
       - name: Set up system fonts, macOS only
         if: runner.os == 'macOS'
