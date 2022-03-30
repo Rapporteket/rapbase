@@ -2,6 +2,22 @@
 currentInstance <- Sys.getenv("R_RAP_INSTANCE")
 currentConfig <- Sys.getenv("R_RAP_CONFIG_PATH")
 
+# Database infrastructure is only guaranteed at Github Actions and our own
+# dev env.
+# Tests running on other environments should be skipped:
+check_db <- function(is_test_that = TRUE) {
+  if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
+    NULL
+  } else if (Sys.getenv("GITHUB_ACTIONS_RUN_DB_UNIT_TESTS") == "true") {
+    NULL
+  } else {
+    if (is_test_that) {
+      testthat::skip("Possible lack of database infrastructure")
+    } else {
+      1
+    }
+  }
+}
 
 tempdir <- tempdir()
 
@@ -80,22 +96,6 @@ test_that("error is provided when target is not supported", {
 
 # logging with database target
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
-# Database infrastructure is only guaranteed at Github Actions and our own
-# dev env.
-# Tests running on other environments should be skipped:
-check_db <- function(is_test_that = TRUE) {
-  if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
-    NULL
-  } else if (Sys.getenv("GITHUB_ACTIONS_RUN_DB_UNIT_TESTS") == "true") {
-    NULL
-  } else {
-    if (is_test_that) {
-      testthat::skip("Possible lack of database infrastructure")
-    } else {
-      1
-    }
-  }
-}
 
 test_that("env vars needed for testing is present", {
   check_db()
