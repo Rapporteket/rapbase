@@ -8,9 +8,6 @@ makeLogRecord(content)
 }
 \arguments{
 \item{content}{A named list of values to be logged}
-
-\item{format}{String defining the format of the log record. Supported
-values: 'csv' (default)}
 }
 \value{
 A formatted log entry

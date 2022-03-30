@@ -61,8 +61,6 @@ appendLog <- function(event, name) {
 #' Add default values and make a formatted log record
 #'
 #' @param content A named list of values to be logged
-#' @param format String defining the format of the log record. Supported
-#' values: 'csv' (default)
 #'
 #' @return A formatted log entry
 #' @export
