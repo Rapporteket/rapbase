@@ -12,7 +12,7 @@ r :
   raplog:
     archiveDir: logArchive
     eolDays: 730
-    target: db
+    target: file
     name: raplog
 
   # User data for testing purposes
