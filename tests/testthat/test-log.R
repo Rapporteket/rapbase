@@ -164,7 +164,7 @@ appEvent <- data.frame(
 
 test_that("app event can be appended to db", {
   check_db()
-  expect_silent(appendLog(event = appEvent, name = "appLog"))
+  expect_warning(appendLog(event = appEvent, name = "appLog"))
 })
 
 test_that("append errors when target is not known", {
