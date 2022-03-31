@@ -29,7 +29,6 @@ config <- yaml::read_yaml(configFile)
 config$r$raplog$target <- "file"
 yaml::write_yaml(config, configFile)
 
-Sys.setenv(R_RAP_INSTANCE = "DEV")
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 
 session <- list()
