@@ -31,7 +31,8 @@ yaml::write_yaml(config, configFile)
 
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 
-session <- list()
+Sys.setenv(R_RAP_INSTANCE = "DEV")
+
 attr(session, "class") <- "ShinySession"
 
 # Log events to files
@@ -93,6 +94,8 @@ test_that("error is provided when target is not supported", {
 })
 
 
+Sys.setenv(R_RAP_INSTANCE = "")
+
 # logging with database target
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 
@@ -129,6 +132,8 @@ test_config <- paste0(
 cf <- file(file.path(tempdir, "dbConfig.yml"))
 writeLines(test_config, cf)
 close(cf)
+
+print(getConfig())
 
 # make queries for creating tables
 fc <- file(system.file("createRaplogTabs.sql", package = "rapbase"), "r")
