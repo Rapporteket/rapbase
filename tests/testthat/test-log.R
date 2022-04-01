@@ -33,6 +33,7 @@ Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 
 Sys.setenv(R_RAP_INSTANCE = "DEV")
 
+session <- list()
 attr(session, "class") <- "ShinySession"
 
 # Log events to files
@@ -132,8 +133,6 @@ test_config <- paste0(
 cf <- file(file.path(tempdir, "dbConfig.yml"))
 writeLines(test_config, cf)
 close(cf)
-
-print(getConfig())
 
 # make queries for creating tables
 fc <- file(system.file("createRaplogTabs.sql", package = "rapbase"), "r")
