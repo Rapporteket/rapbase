@@ -14,9 +14,9 @@ rapbase:
   pass : root
   disp : ForTestingOnly
 
-# for logging test with database target
+# for logging tests with database as target
 raplog:
-  host : db-ltmv
+  host : db
   name : raplog
   user : root
   pass : root
