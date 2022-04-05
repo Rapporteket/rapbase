@@ -44,7 +44,7 @@ appendLog <- function(event, name) {
                 col.names = doColNames, row.names = FALSE, sep = ","
     )
   } else if (target == "db") {
-    con <- rapOpenDbConnection(config$r$raplog$name)$con
+    con <- rapOpenDbConnection(config$r$raplog$key)$con
     DBI::dbAppendTable(con, name, event, row.names = NULL)
     rapCloseDbConnection(con)
   } else {

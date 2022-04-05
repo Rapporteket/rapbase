@@ -31,6 +31,7 @@ yaml::write_yaml(config, configFile)
 
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 
+# mocking when run as part of ci
 Sys.setenv(R_RAP_INSTANCE = "DEV")
 
 session <- list()
@@ -95,10 +96,15 @@ test_that("error is provided when target is not supported", {
 })
 
 
-Sys.setenv(R_RAP_INSTANCE = "")
+# --- logging with database target ---
+Sys.setenv(R_RAP_INSTANCE = currentInstance)
 
-# logging with database target
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
+
+# adjust config and get whatever name of logging database define there
+config$r$raplog$target <- "db"
+yaml::write_yaml(config, configFile)
+nameLogDb <- "raplogTest"
 
 test_that("env vars needed for testing is present", {
   check_db()
@@ -115,15 +121,15 @@ if (is.null(check_db(is_test_that = FALSE))) {
                              password = Sys.getenv("DB_PASS"),
                              bigint = "integer"
   )
-  RMariaDB::dbExecute(con, "CREATE DATABASE testRaplog;")
+  RMariaDB::dbExecute(con, paste("CREATE DATABASE", nameLogDb))
   RMariaDB::dbDisconnect(con)
 }
 
 # make temporary config
 test_config <- paste0(
-  "raplog:",
+  config$r$raplog$key, ":",
   "\n  host : ", Sys.getenv("DB_HOST"),
-  "\n  name : testRaplog",
+  "\n  name : ", nameLogDb,
   "\n  user : ", Sys.getenv("DB_USER"),
   "\n  pass : ", Sys.getenv("DB_PASS"),
   "\n  disp : ephemaralUnitTesting\n"
@@ -141,11 +147,9 @@ close(fc)
 sql <- paste0(t, collapse = "\n")
 queries <- strsplit(sql, ";")[[1]]
 
-registry_name <- "raplog"
-
 test_that("relevant test database and tables can be made", {
   check_db()
-  con <- rapbase::rapOpenDbConnection(registry_name)$con
+  con <- rapbase::rapOpenDbConnection(config$r$raplog$key)$con
   for (i in seq_len(length(queries))) {
     expect_equal(class(RMariaDB::dbExecute(con, queries[i])), "integer")
 
@@ -153,8 +157,6 @@ test_that("relevant test database and tables can be made", {
   rapbase::rapCloseDbConnection(con)
 })
 
-config$r$raplog$target <- "db"
-yaml::write_yaml(config, configFile)
 appEvent <- data.frame(
   time = "2022-03-24 11:16:29",
   user = "ttester",
@@ -167,7 +169,7 @@ appEvent <- data.frame(
 
 test_that("app event can be appended to db", {
   check_db()
-  expect_warning(appendLog(event = appEvent, name = "appLog"))
+  expect_silent(appendLog(event = appEvent, name = "appLog"))
 })
 
 test_that("append errors when target is not known", {
@@ -180,8 +182,13 @@ test_that("append errors when target is not known", {
 
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
-  con <- rapbase::rapOpenDbConnection(registry_name)$con
-  RMariaDB::dbExecute(con, "DROP DATABASE testRaplog;")
+  con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
+                             host = Sys.getenv("DB_HOST"),
+                             user = Sys.getenv("DB_USER"),
+                             password = Sys.getenv("DB_PASS"),
+                             bigint = "integer"
+  )
+  RMariaDB::dbExecute(con, paste("DROP DATABASE", nameLogDb))
   rapbase::rapCloseDbConnection(con)
 }
 

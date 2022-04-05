@@ -13,7 +13,7 @@ r :
     archiveDir: logArchive
     eolDays: 730
     target: file
-    name: raplog
+    key: raplogTest
 
   # User data for testing purposes
   testUser :
