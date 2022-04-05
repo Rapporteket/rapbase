@@ -171,7 +171,7 @@ test_that("app event can be appended to db", {
   check_db()
   print("************ TEST ***************")
   appendLog(event = appEvent, name = "appLog")
-  expect_silent(appendLog(event = appEvent, name = "appLog"))
+  expect_equal(appendLog(event = appEvent, name = "appLog"), "knott")
   appendLog(event = appEvent, name = "appLog")
 })
 
