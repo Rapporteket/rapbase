@@ -164,15 +164,13 @@ appEvent <- data.frame(
   group = "rapbase",
   role = "accessLevel",
   resh_id = "999999",
-  message = "unit test logging to db"
+  message = "unit test logging to db",
+  stringsAsFactors = FALSE
 )
 
 test_that("app event can be appended to db", {
   check_db()
-  print("************ TEST ***************")
-  appendLog(event = appEvent, name = "appLog")
-  expect_equal(appendLog(event = appEvent, name = "appLog"), "knott")
-  appendLog(event = appEvent, name = "appLog")
+  expect_silent(appendLog(event = appEvent, name = "appLog"))
 })
 
 test_that("append errors when target is not known", {
