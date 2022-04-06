@@ -1,7 +1,6 @@
 #' Append a log record
 #'
-#' Append a record to the log. Normally, this function will not be called from
-#' outside this package
+#' Internal function adding a record to the log.
 #'
 #' @param event data.frame of one record holding the fields of whatever that
 #' is to be logged.
@@ -12,7 +11,8 @@
 #' one is created before appending the new record when the log target is
 #' configured to be files. When logging to a database this have to be set up in
 #' advance.
-#' @export
+#'
+#' @keywords internal
 #'
 #' @importFrom utils write.table
 
@@ -20,7 +20,6 @@ appendLog <- function(event, name) {
 
   config <- getConfig(fileName = "rapbaseConfig.yml")
   target <- config$r$raplog$target
-  #stopifnot(target %in% c("file", "db"))
 
   if (target == "file") {
     path <- Sys.getenv("R_RAP_CONFIG_PATH")
@@ -58,15 +57,12 @@ appendLog <- function(event, name) {
 
 #' Make a log record
 #'
-#' Add default values and make a formatted log record
+#' Internal function adding default values and make a formatted log record.
 #'
 #' @param content A named list of values to be logged
 #'
 #' @return A formatted log entry
-#' @export
-#'
-#' @examples
-#' makeLogRecord(list(msg = "This is a test"))
+#' @keywords internal
 makeLogRecord <- function(content) {
   defaultEntries <- list(
     time = format(Sys.time(), "%Y-%m-%d %H:%M:%S")
@@ -77,6 +73,14 @@ makeLogRecord <- function(content) {
   as.data.frame(content)
 }
 
+#' Get session data
+#'
+#' Internal function providing session data relevant to logging.
+#'
+#' @param session A shiny session object
+#'
+#' @return A list of relevant log fields
+#' @keywords internal
 getSessionData <- function(session) {
   list(
     user = rapbase::getUserName(session),

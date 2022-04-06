@@ -20,6 +20,6 @@ configured to be files. When logging to a database this have to be set up in
 advance.
 }
 \description{
-Append a record to the log. Normally, this function will not be called from
-outside this package
+Internal function adding a record to the log.
 }
+\keyword{internal}

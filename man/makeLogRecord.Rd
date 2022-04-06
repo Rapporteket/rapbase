@@ -13,8 +13,6 @@ makeLogRecord(content)
 A formatted log entry
 }
 \description{
-Add default values and make a formatted log record
+Internal function adding default values and make a formatted log record.
 }
-\examples{
-makeLogRecord(list(msg = "This is a test"))
-}
+\keyword{internal}

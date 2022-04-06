@@ -4,7 +4,6 @@
 \alias{logger}
 \alias{appLogger}
 \alias{repLogger}
-\alias{subLogger}
 \alias{autLogger}
 \title{Log user events in shiny applications at Rapporteket}
 \usage{
@@ -91,7 +90,7 @@ The below fields will be appended to the log, in the following order:
   \item \code{time}: date-time as event is logged as
     \code{format(time, "\%Y-\%m-\%d \%H:\%M:\%S")}
   \item \code{user}: username as found in the shiny session object or as
-  provided by function argument (\code{subLogger()})
+  provided by function argument
   \item \code{name}: full name of user as found in the shiny session object
   \item \code{group}: users group membership as provided by the shiny
     session object. Normally, this will correspond to the registry the user
