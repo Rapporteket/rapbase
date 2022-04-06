@@ -128,10 +128,12 @@ writeLines(test_config, cf)
 close(cf)
 
 test_that("a db for logging can be created", {
+  check_db()
   expect_true(rapbase:::createLogDb(nameLogDb))
 })
 
 test_that("tables can be created in logging db", {
+  check_db()
   expect_null(rapbase:::createLogDbTabs())
 })
 
