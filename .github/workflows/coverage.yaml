@@ -17,21 +17,26 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install unmet sys deps
-        run: |
-          sudo apt update
-          sudo apt install -y --no-install-recommends libcurl4-openssl-dev libgit2-dev
-
-      - name: Set up MySQL for unit testing
-        run: |
-          sudo /etc/init.d/mysql start
-          mysql -e 'CREATE DATABASE IF NOT EXISTS rapbase; USE rapbase; CREATE TABLE testTable (id INT, someText VARCHAR(50), someInt INT, someFloat DOUBLE, someTime DATETIME);' -uroot -proot
-
-      - uses: r-lib/actions/setup-r@v1
-
       - uses: r-lib/actions/setup-pandoc@v1
 
       - uses: r-lib/actions/setup-tinytex@v1
+
+      - name: Db unit tests in ubuntu/linux only
+        if: runner.os != 'Windows'
+        run: |
+          if [[ ${{ runner.os }} == Linux ]]; then
+            echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=true" >> $GITHUB_ENV
+            echo "DB_HOST=localhost" >> $GITHUB_ENV
+            echo "DB_USER=root" >> $GITHUB_ENV
+            echo "DB_PASS=root" >> $GITHUB_ENV
+          else
+            echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=false" >> $GITHUB_ENV
+          fi
+
+      - name: Set up MySQL, ubuntu only
+        if: runner.os == 'Linux'
+        run: |
+          sudo /etc/init.d/mysql start
 
       - name: Query dependencies
         run: |
