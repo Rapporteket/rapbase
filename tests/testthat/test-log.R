@@ -113,18 +113,6 @@ test_that("env vars needed for testing is present", {
   expect_true("DB_PASS" %in% names(Sys.getenv()))
 })
 
-# prep db for testing
-if (is.null(check_db(is_test_that = FALSE))) {
-  con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
-                             host = Sys.getenv("DB_HOST"),
-                             user = Sys.getenv("DB_USER"),
-                             password = Sys.getenv("DB_PASS"),
-                             bigint = "integer"
-  )
-  RMariaDB::dbExecute(con, paste("CREATE DATABASE", nameLogDb))
-  RMariaDB::dbDisconnect(con)
-}
-
 # make temporary config
 test_config <- paste0(
   config$r$raplog$key, ":",
@@ -135,26 +123,16 @@ test_config <- paste0(
   "\n  disp : ephemaralUnitTesting\n"
 )
 
-#file.copy(system.file("dbConfig.yml", package = "rapbase"), tempdir)
 cf <- file(file.path(tempdir, "dbConfig.yml"))
 writeLines(test_config, cf)
 close(cf)
 
-# make queries for creating tables
-fc <- file(system.file("createRaplogTabs.sql", package = "rapbase"), "r")
-t <- readLines(fc)
-close(fc)
-sql <- paste0(t, collapse = "\n")
-queries <- strsplit(sql, ";")[[1]]
+test_that("a db for logging can be created", {
+  expect_true(rapbase:::createLogDb(nameLogDb))
+})
 
-test_that("relevant test database and tables can be made", {
-  check_db()
-  con <- rapbase::rapOpenDbConnection(config$r$raplog$key)$con
-  for (i in seq_len(length(queries))) {
-    expect_equal(class(RMariaDB::dbExecute(con, queries[i])), "integer")
-
-  }
-  rapbase::rapCloseDbConnection(con)
+test_that("tables can be created in logging db", {
+  expect_null(rapbase:::createLogDbTabs())
 })
 
 appEvent <- data.frame(

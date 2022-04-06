@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS `appLog`;
 CREATE TABLE `appLog` (
   `id` int(9) unsigned NOT NULL AUTO_INCREMENT,
   `time` datetime DEFAULT NULL,
@@ -12,7 +11,6 @@ CREATE TABLE `appLog` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_danish_ci;
 
 
-DROP TABLE IF EXISTS `reportLog`;
 CREATE TABLE `reportLog` (
   `id` int(9) unsigned NOT NULL AUTO_INCREMENT,
   `time` datetime DEFAULT NULL,

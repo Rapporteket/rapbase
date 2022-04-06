@@ -92,6 +92,61 @@ getSessionData <- function(session) {
 }
 
 
+#' Create a logging database
+#'
+#' Internal function that crates a database to be used for logging. Will return
+#' an error if the database already exists.
+#'
+#' @param dbKey Character string with the key to a corresponding entry for the
+#' database in dbConfig.yml. Please also make sure that the r.raplog.key
+#' property in rapbaseConfig.yml is given the exact same value.
+#'
+#' @return Invisibly TRUE
+#'
+#' @keywords internal
+createLogDb <- function(dbKey) {
+
+  conf <- rapbase::getConfig()
+  conf <- conf[[dbKey]]
+
+  query <- paste0("CREATE DATABASE ", conf$name, ";")
+
+  con <- RMariaDB::dbConnect(
+    RMariaDB::MariaDB(),
+    host = conf$host,
+    user = conf$user,
+    password = conf$pass
+  )
+  RMariaDB::dbExecute(con, query)
+  RMariaDB::dbDisconnect(con)
+}
+
+#' Create tables for log entries in a database
+#'
+#' Internal function that crates a database tables to be used for logging. Will
+#' return an error if the table(s) already exists.
+#'
+#' @return Invisibly TRUE
+#'
+#' @keywords internal
+createLogDbTabs <- function() {
+
+  conf <- getConfig(fileName = "rapbaseConfig.yml")
+
+  fc <- file(system.file("createRaplogTabs.sql", package = "rapbase"), "r")
+  t <- readLines(fc)
+  close(fc)
+  sql <- paste0(t, collapse = "\n")
+  queries <- strsplit(sql, ";")[[1]]
+
+  con <- rapOpenDbConnection(conf$r$raplog$key)$con
+  for (i in seq_len(length(queries))) {
+    RMariaDB::dbExecute(con, queries[i])
+  }
+  rapbase::rapCloseDbConnection(con)
+
+}
+
 #' Log user events in shiny applications at Rapporteket
 #'
 #' To be used for logging at application level (\emph{i.e.} when a shiny
