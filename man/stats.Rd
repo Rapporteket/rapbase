@@ -6,7 +6,6 @@
 \alias{statsUI}
 \alias{statsServer}
 \alias{statsApp}
-\alias{getRegistryLog}
 \alias{logFormat}
 \alias{logTimeFrame}
 \title{Shiny modules and helper functions for registry usage reports}
@@ -18,8 +17,6 @@ statsUI(id)
 statsServer(id, registryName, eligible = TRUE)
 
 statsApp()
-
-getRegistryLog(registryName, type = "app")
 
 logFormat(log)
 
@@ -34,9 +31,6 @@ logTimeFrame(log, startDate, endDate)
 full capacity. This might be useful when access to module products should be
 restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 
-\item{type}{Character string defining data level. One of
-\code{c("app", "report")}.}
-
 \item{log}{Data frame containing log data (in Rapporteket format)}
 
 \item{startDate}{Date object defining start of interval (character
@@ -44,6 +38,9 @@ representation "YYYY-MM-DD")}
 
 \item{endDate}{Date object defining end of interval (character representation
 "YYYY-MM-DD")}
+
+\item{type}{Character string defining data level. One of
+\code{c("app", "report")}.}
 }
 \value{
 Shiny objects, mostly. Helper functions may return other stuff too.

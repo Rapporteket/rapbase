@@ -23,8 +23,7 @@
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name stats
-#' @aliases statsInput statsUI statsServer statsApp getRegistryLog logFormat
-#' logTimeFrame
+#' @aliases statsInput statsUI statsServer statsApp logFormat logTimeFrame
 #'
 #' @examples
 #' # client user interface function
@@ -88,7 +87,7 @@ statsServer <- function(id, registryName, eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
 
     log <- shiny::reactive({
-      getRegistryLog(registryName, input$type) %>%
+      rapbase:::readLog(input$type, registryName) %>%
         logFormat()
     })
 
@@ -176,36 +175,6 @@ statsApp <- function() {
   shiny::shinyApp(ui, server)
 }
 
-
-#' @rdname stats
-#' @export
-getRegistryLog <- function(registryName, type = "app") {
-
-  stopifnot(type == "report" | type == "app")
-  path <- Sys.getenv("R_RAP_CONFIG_PATH")
-
-  if (path == "") {
-    stop(paste("No path to log-files provided. Make sure the environment",
-               "varaible R_RAP_CONFIG_PATH is set!"))
-  }
-
-  logFile <- switch(type,
-                    "report" = file.path(path, "reportLog.csv"),
-                    "app" = file.path(path, "appLog.csv")
-  )
-  if (!file.exists(logFile)) {
-    stop(paste("Cannot find the log!", logFile, "does not exist."))
-  }
-
-  log <- utils::read.csv(logFile,
-                         header = TRUE,
-                         stringsAsFactors = FALSE)
-  log <- log %>%
-    dplyr::filter(.data$group == registryName)
-
-  invisible(log)
-
-}
 
 #' @rdname stats
 #' @export
