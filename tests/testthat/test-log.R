@@ -177,6 +177,7 @@ test_that("log entries can be read from db", {
 })
 
 test_that("log can be sanitized in db", {
+  check_db()
   expect_null(rapbase:::sanitizeLog())
   expect_equal(dim(rapbase:::readLog(type = "app"))[1], 0)
   expect_equal(dim(rapbase:::readLog(type = "report"))[1], 0)
