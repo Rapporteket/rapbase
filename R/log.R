@@ -1,152 +1,3 @@
-#' Append a log record
-#'
-#' Internal function adding a record to the log.
-#'
-#' @param event data.frame of one record holding the fields of whatever that
-#' is to be logged.
-#' @param name String defining the name of the log, currently one of "appLog" or
-#' "reportLog".
-#'
-#' @return Provides a new record in the log. If the log does not exist a new
-#' one is created before appending the new record when the log target is
-#' configured to be files. When logging to a database this have to be set up in
-#' advance.
-#'
-#' @keywords internal
-#'
-#' @importFrom utils write.table
-
-appendLog <- function(event, name) {
-
-  config <- getConfig(fileName = "rapbaseConfig.yml")
-  target <- config$r$raplog$target
-
-  if (target == "file") {
-    path <- Sys.getenv("R_RAP_CONFIG_PATH")
-    if (path == "") {
-      stop(paste0(
-        "There is nowhere to append the logfiles. ",
-        "The environment variable R_RAP_CONFIG_PATH should be ",
-        "defined!"
-      ))
-    }
-    name <- paste0(name, ".csv")
-    doAppend <- TRUE
-    doColNames <- FALSE
-    if (!file.exists(file.path(path, name)) ||
-        file.size(file.path(path, name)) == 0) {
-      doAppend <- FALSE
-      doColNames <- TRUE
-    }
-    write.table(event,
-                file = file.path(path, name), append = doAppend,
-                col.names = doColNames, row.names = FALSE, sep = ","
-    )
-  } else if (target == "db") {
-    con <- rapOpenDbConnection(config$r$raplog$key)$con
-    DBI::dbAppendTable(con, name, event, row.names = NULL)
-    rapCloseDbConnection(con)
-  } else {
-    stop(paste0(
-      "Target ", target, " is not supported. ",
-      "Log event was not appended!"
-    ))
-  }
-}
-
-
-#' Make a log record
-#'
-#' Internal function adding default values and make a formatted log record.
-#'
-#' @param content A named list of values to be logged
-#'
-#' @return A formatted log entry
-#' @keywords internal
-makeLogRecord <- function(content) {
-  defaultEntries <- list(
-    time = format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-  )
-
-  content <- c(defaultEntries, content)
-
-  as.data.frame(content)
-}
-
-#' Get session data
-#'
-#' Internal function providing session data relevant to logging.
-#'
-#' @param session A shiny session object
-#'
-#' @return A list of relevant log fields
-#' @keywords internal
-getSessionData <- function(session) {
-  list(
-    user = rapbase::getUserName(session),
-    name = rapbase::getUserFullName(session),
-    group = rapbase::getUserGroups(session),
-    role = rapbase::getUserRole(session),
-    resh_id = rapbase::getUserReshId(session)
-  )
-}
-
-
-#' Create a logging database
-#'
-#' Internal function that crates a database to be used for logging. Will return
-#' an error if the database already exists.
-#'
-#' @param dbKey Character string with the key to a corresponding entry for the
-#' database in dbConfig.yml. Please also make sure that the r.raplog.key
-#' property in rapbaseConfig.yml is given the exact same value.
-#'
-#' @return Invisibly TRUE
-#'
-#' @keywords internal
-createLogDb <- function(dbKey) {
-
-  conf <- rapbase::getConfig()
-  conf <- conf[[dbKey]]
-
-  query <- paste0("CREATE DATABASE ", conf$name, ";")
-
-  con <- RMariaDB::dbConnect(
-    RMariaDB::MariaDB(),
-    host = conf$host,
-    user = conf$user,
-    password = conf$pass
-  )
-  RMariaDB::dbExecute(con, query)
-  RMariaDB::dbDisconnect(con)
-}
-
-#' Create tables for log entries in a database
-#'
-#' Internal function that crates a database tables to be used for logging. Will
-#' return an error if the table(s) already exists.
-#'
-#' @return Invisibly TRUE
-#'
-#' @keywords internal
-createLogDbTabs <- function() {
-
-  conf <- getConfig(fileName = "rapbaseConfig.yml")
-
-  fc <- file(system.file("createRaplogTabs.sql", package = "rapbase"), "r")
-  t <- readLines(fc)
-  close(fc)
-  sql <- paste0(t, collapse = "\n")
-  queries <- strsplit(sql, ";")[[1]]
-
-  con <- rapOpenDbConnection(conf$r$raplog$key)$con
-  for (i in seq_len(length(queries))) {
-    RMariaDB::dbExecute(con, queries[i])
-  }
-  rapbase::rapCloseDbConnection(con)
-
-}
-
 #' Log user events in shiny applications at Rapporteket
 #'
 #' To be used for logging at application level (\emph{i.e.} when a shiny
@@ -335,4 +186,154 @@ autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
   )
   event <- makeLogRecord(content)
   appendLog(event, name = "reportLog")
+}
+
+
+#' Append a log record
+#'
+#' Internal function adding a record to the log.
+#'
+#' @param event data.frame of one record holding the fields of whatever that
+#' is to be logged.
+#' @param name String defining the name of the log, currently one of "appLog" or
+#' "reportLog".
+#'
+#' @return Provides a new record in the log. If the log does not exist a new
+#' one is created before appending the new record when the log target is
+#' configured to be files. When logging to a database this have to be set up in
+#' advance.
+#'
+#' @keywords internal
+#'
+#' @importFrom utils write.table
+
+appendLog <- function(event, name) {
+
+  config <- getConfig(fileName = "rapbaseConfig.yml")
+  target <- config$r$raplog$target
+
+  if (target == "file") {
+    path <- Sys.getenv("R_RAP_CONFIG_PATH")
+    if (path == "") {
+      stop(paste0(
+        "There is nowhere to append the logfiles. ",
+        "The environment variable R_RAP_CONFIG_PATH should be ",
+        "defined!"
+      ))
+    }
+    name <- paste0(name, ".csv")
+    doAppend <- TRUE
+    doColNames <- FALSE
+    if (!file.exists(file.path(path, name)) ||
+        file.size(file.path(path, name)) == 0) {
+      doAppend <- FALSE
+      doColNames <- TRUE
+    }
+    write.table(event,
+                file = file.path(path, name), append = doAppend,
+                col.names = doColNames, row.names = FALSE, sep = ","
+    )
+  } else if (target == "db") {
+    con <- rapOpenDbConnection(config$r$raplog$key)$con
+    DBI::dbAppendTable(con, name, event, row.names = NULL)
+    rapCloseDbConnection(con)
+  } else {
+    stop(paste0(
+      "Target ", target, " is not supported. ",
+      "Log event was not appended!"
+    ))
+  }
+}
+
+
+#' Make a log record
+#'
+#' Internal function adding default values and make a formatted log record.
+#'
+#' @param content A named list of values to be logged
+#'
+#' @return A formatted log entry
+#' @keywords internal
+makeLogRecord <- function(content) {
+  defaultEntries <- list(
+    time = format(Sys.time(), "%Y-%m-%d %H:%M:%S")
+  )
+
+  content <- c(defaultEntries, content)
+
+  as.data.frame(content)
+}
+
+#' Get session data
+#'
+#' Internal function providing session data relevant to logging.
+#'
+#' @param session A shiny session object
+#'
+#' @return A list of relevant log fields
+#' @keywords internal
+getSessionData <- function(session) {
+  list(
+    user = rapbase::getUserName(session),
+    name = rapbase::getUserFullName(session),
+    group = rapbase::getUserGroups(session),
+    role = rapbase::getUserRole(session),
+    resh_id = rapbase::getUserReshId(session)
+  )
+}
+
+
+#' Create a logging database
+#'
+#' Internal function that crates a database to be used for logging. Will return
+#' an error if the database already exists.
+#'
+#' @param dbKey Character string with the key to a corresponding entry for the
+#' database in dbConfig.yml. Please also make sure that the r.raplog.key
+#' property in rapbaseConfig.yml is given the exact same value.
+#'
+#' @return Invisibly TRUE
+#'
+#' @keywords internal
+createLogDb <- function(dbKey) {
+
+  conf <- rapbase::getConfig()
+  conf <- conf[[dbKey]]
+
+  query <- paste0("CREATE DATABASE ", conf$name, ";")
+
+  con <- RMariaDB::dbConnect(
+    RMariaDB::MariaDB(),
+    host = conf$host,
+    user = conf$user,
+    password = conf$pass
+  )
+  RMariaDB::dbExecute(con, query)
+  RMariaDB::dbDisconnect(con)
+}
+
+#' Create tables for log entries in a database
+#'
+#' Internal function that crates a database tables to be used for logging. Will
+#' return an error if the table(s) already exists.
+#'
+#' @return Invisibly TRUE
+#'
+#' @keywords internal
+createLogDbTabs <- function() {
+
+  conf <- getConfig(fileName = "rapbaseConfig.yml")
+
+  fc <- file(system.file("createRaplogTabs.sql", package = "rapbase"), "r")
+  t <- readLines(fc)
+  close(fc)
+  sql <- paste0(t, collapse = "\n")
+  queries <- strsplit(sql, ";")[[1]]
+
+  con <- rapOpenDbConnection(conf$r$raplog$key)$con
+  for (i in seq_len(length(queries))) {
+    RMariaDB::dbExecute(con, queries[i])
+  }
+  rapbase::rapCloseDbConnection(con)
+
 }
