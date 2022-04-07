@@ -400,3 +400,41 @@ readLog <- function(type, name = "") {
 
   invisible(log)
 }
+
+#' Sanitize log entries that have reached end of life
+#'
+#' @return NULL on success
+#' @keywords internal
+sanitizeLog <- function() {
+
+  conf <- getConfig(fileName = "rapbaseConfig.yml")
+
+  eolDate <- Sys.Date() - conf$r$raplog$eolDays
+
+  if (conf$r$raplog$target == "file") {
+    fileName <- c("appLog.csv", "reportLog.csv")
+    logFile <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), fileName)
+    backupDir <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
+                           conf$r$raplog$archiveDir)
+    backupFile <- file.path(backupDir, fileName)
+
+    if (!dir.exists(backupDir)) {
+      dir.create(backupDir)
+    }
+
+    for (i in seq_len(length(fileName))) {
+      file.copy(logFile[i], backupFile[i])
+      lf <- utils::read.csv(logFile[i])
+      bf <- utils::read.csv(backupFile[i])
+      backupOk <- digest::digest(lf) == digest::digest(bf)
+      if (backupOk) {
+        lf <- lf %>%
+          dplyr::filter(as.Date(.data$time) > eolDate)
+        write.table(lf, logFile[i], append = FALSE, col.names = TRUE, sep = ",")
+      }
+    }
+  }
+
+  NULL
+
+}

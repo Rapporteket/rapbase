@@ -79,6 +79,15 @@ test_that("log entries can be read from file", {
                "ttest")
 })
 
+config$r$raplog$eolDays <- -1L
+yaml::write_yaml(config, configFile)
+test_that("log can be sanitized in files", {
+  expect_null(rapbase:::sanitizeLog())
+  expect_equal(dim(rapbase:::readLog(type = "app"))[1], 0)
+  expect_equal(dim(rapbase:::readLog(type = "report"))[1], 0)
+})
+
+
 # must be last...
 Sys.setenv(R_RAP_CONFIG_PATH = "")
 
