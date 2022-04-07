@@ -435,6 +435,25 @@ sanitizeLog <- function() {
     }
   }
 
+  if (conf$r$raplog$target == "db") {
+
+    con <- rapOpenDbConnection(conf$r$raplog$key)$con
+    query <- paste0("DELETE FROM appLog WHERE time < '",
+                    as.character(eolDate), "';")
+    DBI::dbExecute(con, query)
+    query <- paste0("DELETE FROM reportLog WHERE time < '",
+                    as.character(eolDate), "';")
+    DBI::dbExecute(con, query)
+    # DBI::dbSendQuery(con, query)
+    # params <- list("appLog", eolDate)
+    # DBI::dbBind(rs, params)
+    # DBI::dbClearResult(rs)
+    # params <- list("reportLog", eolDate)
+    # DBI::dbBind(rs, params)
+    # DBI::dbClearResult(rs)
+    rapCloseDbConnection(con)
+  }
+
   NULL
 
 }

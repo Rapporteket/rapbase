@@ -176,6 +176,12 @@ test_that("log entries can be read from db", {
                "ttester")
 })
 
+test_that("log can be sanitized in db", {
+  expect_null(rapbase:::sanitizeLog())
+  expect_equal(dim(rapbase:::readLog(type = "app"))[1], 0)
+  expect_equal(dim(rapbase:::readLog(type = "report"))[1], 0)
+})
+
 test_that("append and read errors when target is not known", {
   check_db()
   conf <- yaml::read_yaml(file.path(tempdir, "rapbaseConfig.yml"))
