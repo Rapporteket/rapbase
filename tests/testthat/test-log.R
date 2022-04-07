@@ -52,7 +52,7 @@ test_that("logging is performed at report level", {
 test_that("logging can be made by (automated) reports outside session", {
   expect_silent(autLogger(
     user = "ttest", name = "Tore Tester",
-    registryName = "rapbase", reshId = "999999",
+    registryName = "stats", reshId = "999999",
     type = "bulletin",
     pkg = "testpkg",
     fun = "testfun",
@@ -70,6 +70,13 @@ test_that("formatter returns a data.frame-class object", {
 
 test_that("formatter returns as expected", {
   expect_equal(makeLogRecord(list(val = 0))$val, 0)
+})
+
+test_that("log entries can be read from file", {
+  expect_error(rapbase:::readLog(type = "noneExistingLogType"))
+  expect_equal(class(rapbase:::readLog(type = "report")), "data.frame")
+  expect_equal(rapbase:::readLog(type = "report", name = "stats")$user,
+               "ttest")
 })
 
 # must be last...
@@ -153,12 +160,20 @@ test_that("app event can be appended to db", {
   expect_silent(appendLog(event = appEvent, name = "appLog"))
 })
 
-test_that("append errors when target is not known", {
+test_that("log entries can be read from db", {
+  check_db()
+  expect_equal(class(rapbase:::readLog(type = "app")), "data.frame")
+  expect_equal(rapbase:::readLog(type = "app", name = "rapbase")$user,
+               "ttester")
+})
+
+test_that("append and read errors when target is not known", {
   check_db()
   conf <- yaml::read_yaml(file.path(tempdir, "rapbaseConfig.yml"))
   conf$r$raplog$target <- "unknown"
   yaml::write_yaml(conf, file.path(tempdir, "rapbaseConfig.yml"))
   expect_error(appendLog(event = appEvent, name = "appLog"))
+  expect_error(rapbase:::readLog(type = "app"))
 })
 
 # remove test db

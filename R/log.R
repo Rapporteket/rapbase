@@ -337,3 +337,66 @@ createLogDbTabs <- function() {
   rapbase::rapCloseDbConnection(con)
 
 }
+
+
+#' Read log entries
+#'
+#' Internal function that provide log entries
+#'
+#' @param type Character string defining which log to request data from. Must be
+#' one of \code{c("app", "report")}.
+#' @param name Character string with registry filter. Default value is an empty
+#' string that will return all log entries. If not empty its value must
+#' correspond to an existing registry (\emph{i.e.} R package) name.
+#'
+#' @return A data frame of log entries
+#' @keywords internal
+readLog <- function(type, name = "") {
+
+  stopifnot(type == "report" | type == "app")
+
+  config <- getConfig(fileName = "rapbaseConfig.yml")
+  target <- config$r$raplog$target
+
+  if (target == "file") {
+    path <- Sys.getenv("R_RAP_CONFIG_PATH")
+
+    if (path == "") {
+      stop(paste("No path to log-files provided. Make sure the environment",
+                 "varaible R_RAP_CONFIG_PATH is set!"))
+    }
+
+    logFile <- switch(type,
+                      "report" = file.path(path, "reportLog.csv"),
+                      "app" = file.path(path, "appLog.csv")
+    )
+    if (!file.exists(logFile)) {
+      stop(paste("Cannot find the log!", logFile, "does not exist."))
+    }
+
+    log <- utils::read.csv(logFile,
+                           header = TRUE,
+                           stringsAsFactors = FALSE)
+    if (name != "") {
+      log <- log %>%
+        dplyr::filter(.data$group == !!name)
+    }
+  } else if (target == "db") {
+    query <- paste0("SELECT * FROM ", type, "Log")
+    if (name != "") {
+      paste0(query, " WHERE group = ", name)
+    }
+    query <- paste0(query, ";")
+    log <- loadRegData(config$r$raplog$key, query)
+    log <- log %>%
+      dplyr::select(-.data$id)
+  } else {
+    stop(paste0(
+      "Log target '", target, "' is not supported. ",
+      "Log could not be read! To remedy, please check that configuration is ",
+      "set up properly."
+    ))
+  }
+
+  invisible(log)
+}
