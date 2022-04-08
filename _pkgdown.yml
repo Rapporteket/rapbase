@@ -55,8 +55,6 @@ reference:
       Handle logging
     contents:
     - logger
-    - raplogManager
-    - archive
 
   - title: Automated reports
     desc: >
