@@ -4,20 +4,15 @@
 \alias{makeLogRecord}
 \title{Make a log record}
 \usage{
-makeLogRecord(content, format = "csv")
+makeLogRecord(content)
 }
 \arguments{
 \item{content}{A named list of values to be logged}
-
-\item{format}{String defining the format of the log record. Supported
-values: 'csv' (default)}
 }
 \value{
 A formatted log entry
 }
 \description{
-Add default values and make a formatted log record
+Internal function adding default values and make a formatted log record.
 }
-\examples{
-makeLogRecord(list(msg = "This is a test"))
-}
+\keyword{internal}

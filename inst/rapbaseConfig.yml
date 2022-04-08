@@ -9,9 +9,11 @@ r :
   libpath :
 
   # Activity logging
-  raplog :
-    archiveDir : logArchive
-    eolDays : 730
+  raplog:
+    archiveDir: logArchive
+    eolDays: 730
+    target: file
+    key: raplogTest
 
   # User data for testing purposes
   testUser :

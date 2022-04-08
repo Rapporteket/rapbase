@@ -55,10 +55,6 @@ reference:
       Handle logging
     contents:
     - logger
-    - makeLogRecord
-    - appendLog
-    - raplogManager
-    - archive
 
   - title: Automated reports
     desc: >

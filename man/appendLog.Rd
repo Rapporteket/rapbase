@@ -4,25 +4,22 @@
 \alias{appendLog}
 \title{Append a log record}
 \usage{
-appendLog(event, name, target, format)
+appendLog(event, name)
 }
 \arguments{
 \item{event}{data.frame of one record holding the fields of whatever that
-is to be logged}
+is to be logged.}
 
-\item{name}{String defining the name of the log}
-
-\item{target}{String defining where the log should go. Currently, 'file' is
-the only option}
-
-\item{format}{String defining the whatever format available given 'taget'.
-Currently, the only option here is 'csv'}
+\item{name}{String defining the name of the log, currently one of "appLog" or
+"reportLog".}
 }
 \value{
 Provides a new record in the log. If the log does not exist a new
-one is created before appending the new record
+one is created before appending the new record when the log target is
+configured to be files. When logging to a database this have to be set up in
+advance.
 }
 \description{
-Append a record to the log. Normally, this function will not be called from
-outside this package
+Internal function adding a record to the log.
 }
+\keyword{internal}

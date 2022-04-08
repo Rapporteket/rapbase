@@ -29,7 +29,7 @@ jobs:
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
-      GITHUB_PAT: ${{ secrets.GT }}
+      GITHUB_PAT: ${{ secrets.GH_TOKEN }}
 
     steps:
       - uses: actions/checkout@v2
@@ -47,6 +47,9 @@ jobs:
         run: |
           if [[ ${{ runner.os }} == Linux ]]; then
             echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=true" >> $GITHUB_ENV
+            echo "DB_HOST=localhost" >> $GITHUB_ENV
+            echo "DB_USER=root" >> $GITHUB_ENV
+            echo "DB_PASS=root" >> $GITHUB_ENV
           else
             echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=false" >> $GITHUB_ENV
           fi
@@ -55,7 +58,6 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo /etc/init.d/mysql start
-          mysql -e 'CREATE DATABASE IF NOT EXISTS rapbase; USE rapbase; CREATE TABLE testTable (id INT, someText VARCHAR(50), someInt INT, someFloat DOUBLE, someTime DATETIME);' -uroot -proot
 
       - name: Set up system fonts, macOS only
         if: runner.os == 'macOS'
