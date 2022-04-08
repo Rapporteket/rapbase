@@ -38,9 +38,6 @@ representation "YYYY-MM-DD")}
 
 \item{endDate}{Date object defining end of interval (character representation
 "YYYY-MM-DD")}
-
-\item{type}{Character string defining data level. One of
-\code{c("app", "report")}.}
 }
 \value{
 Shiny objects, mostly. Helper functions may return other stuff too.

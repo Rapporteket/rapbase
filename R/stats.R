@@ -13,8 +13,6 @@
 #' @param eligible Logical defining if the module should be allowed to work at
 #' full capacity. This might be useful when access to module products should be
 #' restricted. Default is TRUE, \emph{i.e.} no restrictions.
-#' @param type Character string defining data level. One of
-#' \code{c("app", "report")}.
 #' @param log Data frame containing log data (in Rapporteket format)
 #' @param startDate Date object defining start of interval (character
 #' representation "YYYY-MM-DD")
