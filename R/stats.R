@@ -85,7 +85,7 @@ statsServer <- function(id, registryName, eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
 
     log <- shiny::reactive({
-      rapbase:::readLog(input$type, registryName) %>%
+      readLog(input$type, registryName) %>%
         logFormat()
     })
 
