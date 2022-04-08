@@ -29,7 +29,7 @@ functions that make up the registry application at Rapporteket."><meta property=
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.21.0.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.22.0.9000</span>
       </span>
     </div>
 
@@ -79,8 +79,6 @@ functions that make up the registry application at Rapporteket.</p>
 
 <span class="fu">statsApp</span><span class="op">(</span><span class="op">)</span>
 
-<span class="fu">getRegistryLog</span><span class="op">(</span><span class="va">registryName</span>, type <span class="op">=</span> <span class="st">"app"</span><span class="op">)</span>
-
 <span class="fu">logFormat</span><span class="op">(</span><span class="va">log</span><span class="op">)</span>
 
 <span class="fu">logTimeFrame</span><span class="op">(</span><span class="va">log</span>, <span class="va">startDate</span>, <span class="va">endDate</span><span class="op">)</span></code></pre></div>
@@ -96,9 +94,6 @@ functions that make up the registry application at Rapporteket.</p>
 <dd><p>Logical defining if the module should be allowed to work at
 full capacity. This might be useful when access to module products should be
 restricted. Default is TRUE, <em>i.e.</em> no restrictions.</p></dd>
-<dt>type</dt>
-<dd><p>Character string defining data level. One of
-<code>c("app", "report")</code>.</p></dd>
 <dt>log</dt>
 <dd><p>Data frame containing log data (in Rapporteket format)</p></dd>
 <dt>startDate</dt>

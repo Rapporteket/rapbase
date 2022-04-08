@@ -31,13 +31,16 @@
     <loc>/reference/appendLog.html</loc>
   </url>
   <url>
-    <loc>/reference/archive.html</loc>
-  </url>
-  <url>
     <loc>/reference/autoReport.html</loc>
   </url>
   <url>
     <loc>/reference/createAutoReport.html</loc>
+  </url>
+  <url>
+    <loc>/reference/createLogDb.html</loc>
+  </url>
+  <url>
+    <loc>/reference/createLogDbTabs.html</loc>
   </url>
   <url>
     <loc>/reference/deleteAutoReport.html</loc>
@@ -74,6 +77,9 @@
   </url>
   <url>
     <loc>/reference/getRegs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/getSessionData.html</loc>
   </url>
   <url>
     <loc>/reference/getShinyUserGroups.html</loc>
@@ -175,10 +181,10 @@
     <loc>/reference/rapbase.html</loc>
   </url>
   <url>
-    <loc>/reference/raplogManager.html</loc>
+    <loc>/reference/readAutoReportData.html</loc>
   </url>
   <url>
-    <loc>/reference/readAutoReportData.html</loc>
+    <loc>/reference/readLog.html</loc>
   </url>
   <url>
     <loc>/reference/renderRmd.html</loc>
@@ -194,6 +200,9 @@
   </url>
   <url>
     <loc>/reference/runShinyApp.html</loc>
+  </url>
+  <url>
+    <loc>/reference/sanitizeLog.html</loc>
   </url>
   <url>
     <loc>/reference/selectByOrganization.html</loc>

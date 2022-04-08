@@ -27,7 +27,7 @@ functions used by the same reactive environments."><meta property="og:image" con
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">rapbase</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.21.0.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">1.22.0.9000</span>
       </span>
     </div>
 
@@ -146,7 +146,7 @@ reports that are run outside a shiny session.</p></dd>
     <p>The below fields will be appended to the log, in the following order:</p><ol><li><p><code>time</code>: date-time as event is logged as
     <code>format(time, "%Y-%m-%d %H:%M:%S")</code></p></li>
 <li><p><code>user</code>: username as found in the shiny session object or as
-  provided by function argument (<code>subLogger()</code>)</p></li>
+  provided by function argument</p></li>
 <li><p><code>name</code>: full name of user as found in the shiny session object</p></li>
 <li><p><code>group</code>: users group membership as provided by the shiny
     session object. Normally, this will correspond to the registry the user
@@ -216,8 +216,8 @@ calling a function that provides a histogram:</p><div class="sourceCode"><pre><c
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> System has no defined instance. Configuration as provided by</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in appendLog(event, name, target = "file", format = "csv") : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   There is nowhere to append the logging event. The environment variable R_RAP_CONFIG_PATH should be defined!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in appendLog(event, name) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   There is nowhere to append the logfiles. The environment variable R_RAP_CONFIG_PATH should be defined!</span>
 <span class="r-in"><span class="co"># }</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># \donttest{</span></span>
@@ -233,8 +233,8 @@ calling a function that provides a histogram:</p><div class="sourceCode"><pre><c
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> System has no defined instance. Configuration as provided by</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in appendLog(event, name, target = "file", format = "csv") : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   There is nowhere to append the logging event. The environment variable R_RAP_CONFIG_PATH should be defined!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in appendLog(event, name) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   There is nowhere to append the logfiles. The environment variable R_RAP_CONFIG_PATH should be defined!</span>
 <span class="r-in"><span class="co"># }</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># \donttest{</span></span>
