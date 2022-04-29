@@ -22,6 +22,14 @@ raplog:
   pass : root
   disp : ForLogDevOnly
 
+# for auto report tests with database as target
+autoreport:
+  host : db
+  name : autoreport
+  user : root
+  pass : root
+  disp : ForAutoReportDevOnly
+
 # for testing, in dev container
 dev:
   host : db
