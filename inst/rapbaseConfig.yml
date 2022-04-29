@@ -18,7 +18,7 @@ r :
   # Automated report data
   autoReport:
     target: file
-    key: autoReportTest
+    key: autoreport
 
   # User data for testing purposes
   testUser :

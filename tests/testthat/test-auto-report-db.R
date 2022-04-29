@@ -28,6 +28,9 @@ configFile <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
 
 nameAutoReportDb <- "autoreportTest"
 
+# get some auto report data to work on, i.e. default rapbase
+arSample <- yaml::read_yaml(system.file("autoReport.yml", package = "rapbase"))
+
 # make sure we test with database as target
 config <- yaml::read_yaml(configFile)
 config$r$autoReport$target <- "db"
@@ -103,7 +106,15 @@ test_that("table can be created in auto report db", {
   expect_null(createAutoReportTab())
 })
 
+test_that("a sample of auto report data can be written to db", {
+  check_db()
+  expect_null(writeAutoReportData(config = arSample))
+})
 
+test_that("sample auto report data can be read from db", {
+  check_db()
+  expect_equal(class(readAutoReportData()), "list")
+})
 
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
