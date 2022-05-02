@@ -133,9 +133,10 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   target <- config$r$autoReport$target
 
   if (target == "db") {
-    query <- "SELECT j FROM autoreport;"
+    # RMariaDB does not seem to handle json well, so cast to string serverside
+    query <- "SELECT CAST(j AS CHAR) AS j FROM autoreport;"
     res <- rapbase::loadRegData(config$r$autoReport$key, query)
-    conf <- jsonlite::fromJSON(res$j)
+    conf <- jsonlite::parse_json(res$j)
   } else if (target == "file") {
     path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
@@ -157,6 +158,7 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   }
 
   upgradeAutoReportData(conf)
+  #conf
 }
 
 #' Upgrade auto reports
@@ -255,7 +257,7 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
   conf <- getConfig(fileName = "rapbaseConfig.yml")
 
   if (conf$r$autoReport$target == "db") {
-    config <- jsonlite::toJSON(config)
+    config <- jsonlite::toJSON(config, auto_unbox = TRUE)
     query <- paste0("UPDATE autoreport SET j = '", config, "';")
     con <- rapOpenDbConnection(conf$r$autoReport$key)$con
     DBI::dbExecute(con, query)
