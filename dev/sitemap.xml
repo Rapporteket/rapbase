@@ -124,9 +124,6 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/installGithubPackage.html</loc>
-  </url>
-  <url>
     <loc>/reference/isPkgRapReg.html</loc>
   </url>
   <url>
@@ -143,9 +140,6 @@
   </url>
   <url>
     <loc>/reference/makeLogRecord.html</loc>
-  </url>
-  <url>
-    <loc>/reference/makeMessage.html</loc>
   </url>
   <url>
     <loc>/reference/makeRunDayOfYearSequence.html</loc>
