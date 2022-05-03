@@ -254,16 +254,18 @@ upgradeAutoReportData <- function(config) {
 writeAutoReportData <- function(fileName = "autoReport.yml", config,
                                 packageName = "rapbase") {
 
-  conf <- getConfig(fileName = "rapbaseConfig.yml")
+  rc <- getConfig(fileName = "rapbaseConfig.yml")
+  target <- rc$r$autoReport$target
+  key <- rc$r$autoReport$key
 
-  if (conf$r$autoReport$target == "db") {
+  if (target == "db") {
     #config <- jsonlite::toJSON(config, auto_unbox = TRUE, null = "null")
     config <- jsonlite::serializeJSON(config)
     query <- paste0("UPDATE autoreport SET j = '", config, "';")
-    con <- rapOpenDbConnection(conf$r$autoReport$key)$con
+    con <- rapOpenDbConnection(key)$con
     DBI::dbExecute(con, query)
     rapCloseDbConnection(con)
-  } else if (conf$r$autoReport$target == "file") {
+  } else if (target == "file") {
     path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
     if (path == "") {
@@ -300,8 +302,7 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
     close(con)
   } else {
     stop(paste0(
-      "Target ", conf$r$autoReport$target, " is not supported. ",
-      "Auto report data not written!"
+      "Target ", target, " is not supported. Auto report data not written!"
     ))
   }
 }
