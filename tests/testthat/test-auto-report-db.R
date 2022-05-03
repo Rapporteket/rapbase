@@ -114,7 +114,9 @@ test_that("a sample of auto report data can be written to db", {
 test_that("sample auto report data can be read from db", {
   check_db()
   expect_equal(class(readAutoReportData()), "list")
+  expect_identical(readAutoReportData(), upgradeAutoReportData(arSample))
 })
+
 
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
