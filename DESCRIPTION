@@ -32,6 +32,7 @@ Imports:
     DT,
     gh,
     httr,
+    jsonlite,
     kableExtra,
     knitr,
     magrittr,
