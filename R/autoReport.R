@@ -313,7 +313,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
     })
 
     shiny::observeEvent(input$edit_button, {
-      repId <- strsplit(input$edit_button, "_")[[1]][2]
+      repId <- strsplit(input$edit_button, "__")[[1]][2]
       rep <- rapbase::readAutoReportData()[[repId]]
 
       # try matching report by synopsis, fallback to currently selected
@@ -343,7 +343,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
     })
 
     shiny::observeEvent(input$del_button, {
-      repId <- strsplit(input$del_button, "_")[[1]][2]
+      repId <- strsplit(input$del_button, "__")[[1]][2]
       rapbase::deleteAutoReport(repId)
       autoReport$tab <-
         rapbase::makeAutoReportTab(session, namespace = id, type = type,

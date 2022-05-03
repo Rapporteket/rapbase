@@ -136,7 +136,7 @@ readAutoReportData <- function(fileName = "autoReport.yml",
     # RMariaDB does not seem to handle json well, so cast to string serverside
     query <- "SELECT CAST(j AS CHAR) AS j FROM autoreport;"
     res <- rapbase::loadRegData(config$r$autoReport$key, query)
-    conf <- jsonlite::parse_json(res$j)
+    conf <- jsonlite::unserializeJSON(res$j)
   } else if (target == "file") {
     path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
@@ -257,7 +257,8 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
   conf <- getConfig(fileName = "rapbaseConfig.yml")
 
   if (conf$r$autoReport$target == "db") {
-    config <- jsonlite::toJSON(config, auto_unbox = TRUE)
+    #config <- jsonlite::toJSON(config, auto_unbox = TRUE, null = "null")
+    config <- jsonlite::serializeJSON(config)
     query <- paste0("UPDATE autoreport SET j = '", config, "';")
     con <- rapOpenDbConnection(conf$r$autoReport$key)$con
     DBI::dbExecute(con, query)
@@ -851,7 +852,7 @@ makeAutoReportTab <- function(session, namespace = character(),
       "Neste" = nextDate,
       "Endre" = as.character(
         shiny::actionButton(
-          inputId = shiny::NS(namespace, paste0("edit_", n)),
+          inputId = shiny::NS(namespace, paste0("edit__", n)),
           label = "",
           icon = shiny::icon("edit"),
           onclick = sprintf("Shiny.onInputChange('%s', this.id)",
@@ -860,7 +861,7 @@ makeAutoReportTab <- function(session, namespace = character(),
       ),
       "Slett" = as.character(
         shiny::actionButton(
-          inputId = shiny::NS(namespace, paste0("del_", n)),
+          inputId = shiny::NS(namespace, paste0("del__", n)),
           label = "",
           icon = shiny::icon("trash"),
           onclick = sprintf("Shiny.onInputChange('%s', this.id)",
