@@ -103,15 +103,12 @@ reference:
     - fireInTheHole
     - sendEmail
     - howWeDealWithPersonalData
-    - makeMessage
     - runNoweb
     - getRapPackages
-    - installGithubPackage
     - isRapContext
     - noOptOutOk
     - renderRmd
     - makeStandardTable
-    - exportDb
     - getGithub
 
   - title: Data

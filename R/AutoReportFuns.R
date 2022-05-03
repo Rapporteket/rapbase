@@ -127,25 +127,38 @@ deleteAutoReport <- function(autoReportId) {
 #' readAutoReportData()
 readAutoReportData <- function(fileName = "autoReport.yml",
                                packageName = "rapbase") {
-  path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
-  if (path == "") {
-    stopifnot(file.exists(system.file(fileName, package = packageName)))
-    config_file <- system.file(fileName, package = packageName)
-  } else {
-    if (!file.exists(file.path(path, fileName))) {
-      warning(paste(
-        "No configuration file found in", path,
-        ". A new file will be made from the package default"
-      ))
-      file.copy(system.file(fileName, package = packageName), path)
+  config <- getConfig(fileName = "rapbaseConfig.yml")
+
+  target <- config$r$autoReport$target
+
+  if (target == "db") {
+    # RMariaDB does not seem to handle json well, so cast to string serverside
+    query <- "SELECT CAST(j AS CHAR) AS j FROM autoreport;"
+    res <- rapbase::loadRegData(config$r$autoReport$key, query)
+    conf <- jsonlite::unserializeJSON(res$j)
+  } else if (target == "file") {
+    path <- Sys.getenv("R_RAP_CONFIG_PATH")
+
+    if (path == "") {
+      stopifnot(file.exists(system.file(fileName, package = packageName)))
+      config_file <- system.file(fileName, package = packageName)
+    } else {
+      if (!file.exists(file.path(path, fileName))) {
+        warning(paste(
+          "No configuration file found in", path,
+          ". A new file will be made from the package default"
+        ))
+        file.copy(system.file(fileName, package = packageName), path)
+      }
+      config_file <- file.path(path, fileName)
     }
-    config_file <- file.path(path, fileName)
+
+    conf <- yaml::yaml.load_file(config_file)
   }
 
-  conf <- yaml::yaml.load_file(config_file)
-
   upgradeAutoReportData(conf)
+  #conf
 }
 
 #' Upgrade auto reports
@@ -240,40 +253,58 @@ upgradeAutoReportData <- function(config) {
 #'
 writeAutoReportData <- function(fileName = "autoReport.yml", config,
                                 packageName = "rapbase") {
-  path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
-  if (path == "") {
-    # cannot proceed if there is nowhere to store config
-    stop(paste(
-      "There is nowhere to store config data.",
-      "The environment variable R_RAP_CONFIG_PATH must be defined",
-      "providing av path to a directory where configuration can",
-      "be written. Stopping"
-    ))
-  } else {
-    oriFile <- file.path(path, fileName)
-    # in case we screw-up, make a backup
-    tmpTag <- as.character(as.integer(as.POSIXct(Sys.time())))
-    nameParts <- strsplit(fileName, "[.]")[[1]]
-    bckFileName <- paste0(nameParts[1], tmpTag, ".", nameParts[-1])
-    bckFilePath <- file.path(path, "autoReportBackup")
-    if (!dir.exists(bckFilePath)) {
-      dir.create(bckFilePath)
+  rc <- getConfig(fileName = "rapbaseConfig.yml")
+  target <- rc$r$autoReport$target
+  key <- rc$r$autoReport$key
+
+  if (target == "db") {
+    #config <- jsonlite::toJSON(config, auto_unbox = TRUE, null = "null")
+    config <- jsonlite::serializeJSON(config)
+    query <- paste0("UPDATE autoreport SET j = '", config, "';")
+    con <- rapOpenDbConnection(key)$con
+    DBI::dbExecute(con, query)
+    rapCloseDbConnection(con)
+  } else if (target == "file") {
+    path <- Sys.getenv("R_RAP_CONFIG_PATH")
+
+    if (path == "") {
+      # cannot proceed if there is nowhere to store config
+      stop(paste(
+        "There is nowhere to store config data.",
+        "The environment variable R_RAP_CONFIG_PATH must be defined",
+        "providing av path to a directory where configuration can",
+        "be written. Stopping"
+      ))
+    } else {
+      oriFile <- file.path(path, fileName)
+      # in case we screw-up, make a backup
+      tmpTag <- as.character(as.integer(as.POSIXct(Sys.time())))
+      nameParts <- strsplit(fileName, "[.]")[[1]]
+      bckFileName <- paste0(nameParts[1], tmpTag, ".", nameParts[-1])
+      bckFilePath <- file.path(path, "autoReportBackup")
+      if (!dir.exists(bckFilePath)) {
+        dir.create(bckFilePath)
+      }
+      file.copy(
+        from = oriFile, to = file.path(bckFilePath, bckFileName),
+        overwrite = TRUE
+      )
+      # to maintain some order, remove files older than 30 days
+      files <- file.info(list.files(bckFilePath, full.names = TRUE))
+      rmFiles <- rownames(files[difftime(Sys.time(), files[, "mtime"],
+                                         units = "days"
+      ) > 30, ])
+      file.remove(rmFiles)
+      con <- file(oriFile, "w")
     }
-    file.copy(
-      from = oriFile, to = file.path(bckFilePath, bckFileName),
-      overwrite = TRUE
-    )
-    # to maintain some order, remove files older than 30 days
-    files <- file.info(list.files(bckFilePath, full.names = TRUE))
-    rmFiles <- rownames(files[difftime(Sys.time(), files[, "mtime"],
-      units = "days"
-    ) > 30, ])
-    file.remove(rmFiles)
-    con <- file(oriFile, "w")
+    yaml::write_yaml(config, con)
+    close(con)
+  } else {
+    stop(paste0(
+      "Target ", target, " is not supported. Auto report data not written!"
+    ))
   }
-  yaml::write_yaml(config, con)
-  close(con)
 }
 
 
@@ -822,7 +853,7 @@ makeAutoReportTab <- function(session, namespace = character(),
       "Neste" = nextDate,
       "Endre" = as.character(
         shiny::actionButton(
-          inputId = shiny::NS(namespace, paste0("edit_", n)),
+          inputId = shiny::NS(namespace, paste0("edit__", n)),
           label = "",
           icon = shiny::icon("edit"),
           onclick = sprintf("Shiny.onInputChange('%s', this.id)",
@@ -831,7 +862,7 @@ makeAutoReportTab <- function(session, namespace = character(),
       ),
       "Slett" = as.character(
         shiny::actionButton(
-          inputId = shiny::NS(namespace, paste0("del_", n)),
+          inputId = shiny::NS(namespace, paste0("del__", n)),
           label = "",
           icon = shiny::icon("trash"),
           onclick = sprintf("Shiny.onInputChange('%s', this.id)",

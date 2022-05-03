@@ -15,6 +15,11 @@ r :
     target: file
     key: raplogTest
 
+  # Automated report data
+  autoReport:
+    target: file
+    key: autoreport
+
   # User data for testing purposes
   testUser :
     user : ttester
