@@ -164,7 +164,8 @@ test_that("Writing conf with undefined R_RAP_CONFIG_PATH provides an error", {
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 file.copy(
   system.file("rapbaseConfig.yml", package = "rapbase"),
-  Sys.getenv("R_RAP_CONFIG_PATH")
+  Sys.getenv("R_RAP_CONFIG_PATH"),
+  overwrite = TRUE
 )
 
 test_that("Auto report config can be created from package default", {
