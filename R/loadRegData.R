@@ -12,33 +12,9 @@
 #' @return data frame containing registry data or a list with table names and
 #' corresponding fields with attributes
 #' @name loadRegData
-#' @aliases LoadRegData loadRegData describeRegistryDb
+#' @aliases loadRegData describeRegistryDb
 NULL
 
-#' @rdname loadRegData
-#' @export
-LoadRegData <- function(registryName, query, dbType = "mysql") {
-  lifecycle::deprecate_stop(
-    "1.12.0", "rapbase::LoadRegData()",
-    "rapbase::loadRegData()"
-  )
-
-  dbList <- rapOpenDbConnection(registryName, dbType)
-  if (registryName == "nkr") { # nocov start
-    # ugly hack to get past 'out of heap mem' for nkr
-    res <- DBI::dbSendQuery(dbList$con, query)
-    regData <- DBI::dbFetch(res, n = 20000)
-    regData <- rbind(regData, DBI::dbFetch(res, n = -1))
-    invisible(DBI::dbClearResult(res))
-    # nocov end
-  } else {
-    regData <- DBI::dbGetQuery(dbList$con, query)
-  }
-  rapCloseDbConnection(dbList$con)
-  dbList <- NULL
-
-  return(regData)
-}
 
 #' @rdname loadRegData
 #' @export

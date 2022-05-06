@@ -2,12 +2,9 @@
 % Please edit documentation in R/loadRegData.R
 \name{loadRegData}
 \alias{loadRegData}
-\alias{LoadRegData}
 \alias{describeRegistryDb}
 \title{Provider of data for registries at Rapporteket}
 \usage{
-LoadRegData(registryName, query, dbType = "mysql")
-
 loadRegData(registryName, query, dbType = "mysql")
 
 describeRegistryDb(registryName, tabs = c())
