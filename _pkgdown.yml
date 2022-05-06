@@ -44,11 +44,6 @@ reference:
     - getUserPhone
     - getUserEmail
     - userInfo
-    - getShinyUserName
-    - getShinyUserGroups
-    - getShinyUserRole
-    - getShinyUserReshId
-    - shinySessionInfo
 
   - title: Logging
     desc: >
@@ -67,13 +62,7 @@ reference:
     - runBulletin
     - createAutoReport
     - deleteAutoReport
-    - selectByType
-    - selectByOwner
-    - selectByOrganization
-    - selectByReg
     - makeAutoReportTab
-    - makeUserSubscriptionTab
-    - makeUserSubscriptionTabV2
     - makeRunDayOfYearSequence
     - isPkgRapReg
     - getRegs
