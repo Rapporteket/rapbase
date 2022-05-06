@@ -68,7 +68,7 @@ Sys.setenv(R_RAP_INSTANCE = "QA")
 shinySession <- list(user = "user1")
 shinySession$groups <- "group1,group2"
 shinySession$request <- list(HTTP_RESHID = "789012")
-shinySession$request$HTTP_ROLE <- "LC"
+shinySession$request["HTTP_ROLE"] <- "LC"
 # make a copy for testing wrong class
 shinySessionWrongClass <- shinySession
 # simulate ShinySession class for above list
@@ -88,13 +88,13 @@ test_that("Function provides entities in a QA/PRODUCTION context", {
 })
 
 test_that("unicode chars are properly parsed in QA and PROD contexts", {
-  shinySession$request$HTTP_FULLNAME <- "åse"
+  shinySession$request["HTTP_FULLNAME"] <- "åse"
   expect_equal(userInfo(entity = "full_name", shinySession = shinySession),
                "åse")
-  shinySession$request$HTTP_FULLNAME <- "\u00e5se"
+  shinySession$request["HTTP_FULLNAME"] <- "\u00e5se"
   expect_equal(userInfo(entity = "full_name", shinySession = shinySession),
                "åse")
-  shinySession$request$HTTP_FULLNAME <- "\\u00e5se"
+  shinySession$request["HTTP_FULLNAME"] <- "\\u00e5se"
   expect_equal(userInfo(entity = "full_name", shinySession = shinySession),
                "åse")
 })

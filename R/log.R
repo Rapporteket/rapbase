@@ -444,13 +444,6 @@ sanitizeLog <- function() {
     query <- paste0("DELETE FROM reportLog WHERE time < '",
                     as.character(eolDate), "';")
     DBI::dbExecute(con, query)
-    # DBI::dbSendQuery(con, query)
-    # params <- list("appLog", eolDate)
-    # DBI::dbBind(rs, params)
-    # DBI::dbClearResult(rs)
-    # params <- list("reportLog", eolDate)
-    # DBI::dbBind(rs, params)
-    # DBI::dbClearResult(rs)
     rapCloseDbConnection(con)
   }
 

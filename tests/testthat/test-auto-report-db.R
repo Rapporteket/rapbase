@@ -68,7 +68,7 @@ createAutoReportDb <- function(key) {
   conf <- rapbase::getConfig()
   conf <- conf[[key]]
 
-  query <- paste0("CREATE DATABASE ", conf$name, ";")
+  query <- paste0("CREATE DATABASE ", conf[["name"]], ";")
 
   con <- RMariaDB::dbConnect(
     RMariaDB::MariaDB(),
@@ -89,7 +89,7 @@ createAutoReportTab <- function() {
   sql <- paste0(t, collapse = "\n")
   queries <- strsplit(sql, ";")[[1]]
 
-  con <- rapOpenDbConnection(conf$r$autoReport$key)$con
+  con <- rapOpenDbConnection(conf[["r"]][["autoReport"]][["key"]])[["con"]]
   for (i in seq_len(length(queries))) {
     RMariaDB::dbExecute(con, queries[i])
   }

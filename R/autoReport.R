@@ -259,7 +259,6 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
   key <- rc$r$autoReport$key
 
   if (target == "db") {
-    #config <- jsonlite::toJSON(config, auto_unbox = TRUE, null = "null")
     config <- jsonlite::serializeJSON(config)
     query <- paste0("UPDATE autoreport SET j = '", config, "';")
     con <- rapOpenDbConnection(key)$con
@@ -645,7 +644,7 @@ findNextRunDate <- function(runDayOfYear,
   format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
 }
 
-
+# nolint start
 #' Make table of automated reports
 #'
 #' Make a table to be rendered in a shiny app providing automated reports
@@ -691,7 +690,7 @@ findNextRunDate <- function(runDayOfYear,
 #' @return Matrix providing a table to be rendered in a shiny app
 #' @importFrom magrittr "%>%"
 #' @export
-
+# nolint end
 
 makeAutoReportTab <- function(session, namespace = character(),
                               type = "subscription", mapOrgId = NULL,
