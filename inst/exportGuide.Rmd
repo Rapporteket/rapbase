@@ -9,16 +9,23 @@ dbName <- rapbase::getConfig()[[params$registryName]]$name
 ```
 
 ## Eksport av `r params$registryName`-databasen
-Her kan statistikere som jobber med Rapporteket laste ned hele databasen. Formatet som benyttes gjør det enkelt å sette opp en egen database for analyse- og utviklingsformål. Nedlastet fil er kryptert og innholdet er utilgjenglig for alle andre enn definert mottaker. Filen slik den lastes ned kan derfor trygt transporteres og eksponeres offentlig uten fare for at innholdet (registerdata) blir tilgjenglig for andre.
+Her kan statistikere som jobber med Rapporteket laste ned hele databasen. Formatet som benyttes gjør det enkelt å sette opp en egen database for analyse- og utviklingsformål. Nedlastet fil er kryptert og innholdet er utilgjengelig for alle andre enn definert mottaker. Filen slik den lastes ned kan derfor trygt transporteres og eksponeres offentlig uten fare for at innholdet (registerdata) blir tilgjengelig for andre.
 
 ## Veiledning
 Under følger en kort veiledning for trygg og riktig bruk av eksportfunksjonen.
 
+### Nøkkelpar
+Mottaker av eksporterte data må være eier av et [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem))-type nøkkelpar der den offentlige delen av nøkkelparet er lagt ut på mottakeren sin github-konto. For å ivareta tilstrekkelig sikkerhet bør nøkkellengden være lik eller større enn 2048 bits. Ved behov kan et nytt nøkkelpar lages i R ved bruk av [R-pakken _sship_](https://cran.r-project.org/web/packages/sship/index.html):
+
+`sship::keygen()`
+
+Det er viktig at den private delen av nøkkelparet aldri deles med andre og at den kun er tilgjengelig for eieren av nøkkelparet.
+
 ### Last ned fila
-Velg mottaker fra lista til venstre og deretter den nøkkelen som skal benyttes i krypteringen av innholdet. Det er en forutsetning at mottakeren har brukerkonto på GitHub og har lagt ut minst én offentlig nøkkel der. Det er bare personer med utvidet tilgang til registerets prosjekt i organisasjonen [Rapporteket på GitHub](https://github.com/Rapporteket) som vil stå på lista av mottakere. Det mulig å angi at fila skal komprimeres før eksport noe som ofte er lurt, særlig hvis registeret inneholder mye data. Trykk deretter Last ned!
+Velg mottaker fra lista til venstre og deretter den nøkkelen som skal benyttes i krypteringen av innholdet. Det er en forutsetning at mottakeren har brukerkonto på GitHub og har lagt ut minst én offentlig [RSA](https://en.wikipedia.org/wiki/RSA_(cryptosystem))-nøkkel der. Valgbare mottakere er bare personer med utvidet tilgang til registerets prosjekt i organisasjonen [Rapporteket på GitHub](https://github.com/Rapporteket). Det mulig å angi at fila skal komprimeres før eksport noe som ofte er lurt, særlig hvis registeret inneholder mye data. Trykk deretter Last ned!
 
 ### Dekryptering av innholdet i fila
-Fila slik den er lastet ned er sikret mot innsyn fra andre enn definert mottaker. Etter dekryptering finnes det ingen slik sikring og det er derfor viktig at dekryptering kun skjer i et område som har en tilstrekkelig ytre sikring, eksempelvis en datamaskin og et filområde på et registerkontor der helse- og personopplysninger kan håndteres med tilstrekkelig lav risiko.
+Fila slik den er lastet ned er sikret mot innsyn fra andre enn valgt mottaker. Etter dekryptering finnes det ingen slik sikring og det er derfor viktig at dekryptering kun skjer i et område som har en tilstrekkelig ytre sikring, eksempelvis en datamaskin og et filområde på et registerkontor der helse- og personopplysninger kan håndteres med tilstrekkelig lav risiko.
 [R-pakken _sship_](https://cran.r-project.org/web/packages/sship/index.html) kan benyttes til dekryptering, eksempelvis:
 
 `sship::dec("noreg0123456789ab.sql.gz__YYYYMMDD_TTMMSS.tar.gz")`
@@ -40,7 +47,7 @@ Eksportfila er etablert ved bruk av `mysqldump` og kan [importeres til en MySQL 
 der _X_ og _Y_ er MySQL serverens adresse og et brukernavn for pålogging, henholdsvis. Når denne kommandoen kjøres vil man også bli spurt om passordet til angitt bruker. Verdier for passord, _X_ og _Y_ er definert i oppsettet av utviklingsmiljøet.
 
 ## Sikkerhet
-Sikringen av data slik de lastes ned her er ivaretatt av [R-pakken _sship_](https://github.com/Rapporteket/sship/) i kombinasjon med samhandlingsverktøyet [Rapporteket på GitHub](https://github.com/Rapporteket). Ytterligere detaljer finnes i [dokumentasjonen av _sship_](https://rapporteket.github.io/sship/articles/overview.html).
+Sikringen av data slik de lastes ned her er ivaretatt av [R-pakken _sship_](https://github.com/Rapporteket/sship/) i kombinasjon med mottakers egne nøkler og samhandlingsverktøyet [Rapporteket på GitHub](https://github.com/Rapporteket). Ytterligere detaljer finnes i [dokumentasjonen av _sship_](https://rapporteket.github.io/sship/articles/overview.html).
 
 ## Hjelp
 Ved spørsmål eller behov for hjelp, [ta gjerne kontakt med SKDE](mailto:rapporteket@helse-nord.no).

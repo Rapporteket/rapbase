@@ -66,7 +66,8 @@ exportUCServer <- function(id, registryName, repoName = registryName,
 
     pubkey <- shiny::reactive({
       shiny::req(input$exportPid)
-      rapbase::getGithub("keys", input$exportPid)
+      keys <- rapbase::getGithub("keys", input$exportPid)
+      sship::pubkey_filter(keys, "rsa")
     })
 
     encFile <- shiny::reactive({
