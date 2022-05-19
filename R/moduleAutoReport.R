@@ -250,9 +250,12 @@ autoReportServer <- function(id, registryName, type, org = NULL,
   shiny::moduleServer(id, function(input, output, session) {
 
     autoReport <- shiny::reactiveValues(
-      tab = rapbase::makeAutoReportTab(session = session, namespace = id,
-                                       type = type,
-                                       mapOrgId = orgList2df(orgs)),
+      tab = makeAutoReportTab(
+        session = session,
+        namespace = id,
+        type = type,
+        mapOrgId = orgList2df(orgs)
+      ),
       report = names(reports)[1],
       org = unlist(orgs, use.names = FALSE)[1],
       freq = defaultFreq,
@@ -274,8 +277,8 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       paramNames <- report$paramNames
 
       if (type %in% c("subscription") | is.null(orgs)) {
-        email <- rapbase::getUserEmail(session)
-        organization <- rapbase::getUserReshId(session)
+        email <- getUserEmail(session)
+        organization <- getUserReshId(session)
       } else {
         organization <- org()
         if (!paramValues()[1] == "") {
@@ -287,7 +290,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
         email <- autoReport$email
       }
 
-      rapbase::createAutoReport(
+      createAutoReport(
         synopsis = report$synopsis,
         package = registryName,
         type = type,
@@ -298,7 +301,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
         ownerName = rapbase::getUserFullName(session),
         email = email,
         organization = organization,
-        runDayOfYear = rapbase::makeRunDayOfYearSequence(
+        runDayOfYear = makeRunDayOfYearSequence(
           interval = interval,
           startDay = input$start
         ),
@@ -307,14 +310,18 @@ autoReportServer <- function(id, registryName, type, org = NULL,
         intervalName = strsplit(input$freq, "-")[[1]][1]
       )
       autoReport$tab <-
-        rapbase::makeAutoReportTab(session, namespace = id, type = type,
-                                   mapOrgId = orgList2df(orgs))
+        makeAutoReportTab(
+          session,
+          namespace = id,
+          type = type,
+          mapOrgId = orgList2df(orgs)
+        )
       autoReport$email <- vector()
     })
 
     shiny::observeEvent(input$edit_button, {
       repId <- strsplit(input$edit_button, "__")[[1]][2]
-      rep <- rapbase::readAutoReportData()[[repId]]
+      rep <- readAutoReportData()[[repId]]
 
       # try matching report by synopsis, fallback to currently selected
       for (i in names(reports)) {
@@ -325,11 +332,13 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       autoReport$org <- rep$organization
       autoReport$freq <- paste0(rep$intervalName, "-", rep$interval)
       autoReport$email <- rep$email
-      rapbase::deleteAutoReport(repId)
-      autoReport$tab <-
-        rapbase::makeAutoReportTab(session, namespace = id, type = type,
-                                   mapOrgId = orgList2df(orgs))
-
+      deleteAutoReport(repId)
+      autoReport$tab <- makeAutoReportTab(
+        session,
+        namespace = id,
+        type = type,
+        mapOrgId = orgList2df(orgs)
+      )
 
       if (rep$type == "subscription") {
 
@@ -344,10 +353,13 @@ autoReportServer <- function(id, registryName, type, org = NULL,
 
     shiny::observeEvent(input$del_button, {
       repId <- strsplit(input$del_button, "__")[[1]][2]
-      rapbase::deleteAutoReport(repId)
-      autoReport$tab <-
-        rapbase::makeAutoReportTab(session, namespace = id, type = type,
-                                   mapOrgId = orgList2df(orgs))
+      deleteAutoReport(repId)
+      autoReport$tab <- makeAutoReportTab(
+        session,
+        namespace = id,
+        type = type,
+        mapOrgId = orgList2df(orgs)
+      )
     })
 
     # outputs
@@ -358,8 +370,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
         shiny::selectInput(
           shiny::NS(id, "report"),
           label = shiny::tags$div(
-            shiny::HTML(as.character(shiny::icon("file")),
-                        "Velg rapport:")
+            shiny::HTML(as.character(shiny::icon("file")), "Velg rapport:")
           ),
           choices = names(reports),
           selected = autoReport$report)
@@ -383,11 +394,13 @@ autoReportServer <- function(id, registryName, type, org = NULL,
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("clock")), "Frekvens:")
         ),
-        choices = list("\u00C5rlig" = "\u00C5rlig-year",
-                        "Kvartalsvis" = "Kvartalsvis-quarter",
-                        "M\u00E5nedlig" = "M\u00E5nedlig-month",
-                        "Ukentlig" = "Ukentlig-week",
-                        "Daglig" = "Daglig-day"),
+        choices = list(
+          "\u00C5rlig" = "\u00C5rlig-year",
+          "Kvartalsvis" = "Kvartalsvis-quarter",
+          "M\u00E5nedlig" = "M\u00E5nedlig-month",
+          "Ukentlig" = "Ukentlig-week",
+          "Daglig" = "Daglig-day"
+        ),
         selected = autoReport$freq
       )
     })
@@ -397,8 +410,9 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       shiny::dateInput(
         shiny::NS(id, "start"),
         label = shiny::tags$div(
-          shiny::HTML(as.character(shiny::icon("calendar")),
-                      "F\u00F8rste utsending:")
+          shiny::HTML(
+            as.character(shiny::icon("calendar")), "F\u00F8rste utsending:"
+          )
         ),
         # if freq is year make first issue tomorrow, otherwise postpone by freq
         value = if (strsplit(input$freq, "-")[[1]][2] == "year") {
@@ -460,21 +474,25 @@ autoReportServer <- function(id, registryName, type, org = NULL,
     })
 
     output$makeAutoReport <- shiny::renderUI({
-      if (is.null(autoReport$report) | !eligible) {
+      if (is.null(autoReport$report) || !eligible) {
         NULL
       } else {
         if (type %in% c("subscription")) {
-          shiny::actionButton(shiny::NS(id, "makeAutoReport"),
-                              "Lag oppf\u00F8ring",
-                              icon = shiny::icon("save"))
+          shiny::actionButton(
+            shiny::NS(id, "makeAutoReport"),
+            "Lag oppf\u00F8ring",
+            icon = shiny::icon("save")
+          )
         } else {
           shiny::req(input$email)
           if (length(autoReport$email) == 0) {
             NULL
           } else {
-            shiny::actionButton(shiny::NS(id, "makeAutoReport"),
-                                "Lag oppf\u00F8ring",
-                                icon = shiny::icon("save"))
+            shiny::actionButton(
+              shiny::NS(id, "makeAutoReport"),
+              "Lag oppf\u00F8ring",
+              icon = shiny::icon("save")
+            )
           }
         }
       }
@@ -518,7 +536,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
     })
 
     output$autoReportGuide <- shiny::renderUI({
-      rapbase::renderRmd(
+      renderRmd(
         sourceFile = system.file("autoReportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
         params = list(registryName = registryName, type = type))

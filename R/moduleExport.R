@@ -62,18 +62,20 @@ exportUCServer <- function(id, registryName, repoName = registryName,
   shiny::moduleServer(id, function(input, output, session) {
 
 
-    conf <- rapbase::getConfig("rapbaseConfig.yml")
+    conf <- getConfig("rapbaseConfig.yml")
 
     pubkey <- shiny::reactive({
       shiny::req(input$exportPid)
-      keys <- rapbase::getGithub("keys", input$exportPid)
+      keys <- getGithub("keys", input$exportPid)
       pubkey_filter(keys, "rsa")
     })
 
     encFile <- shiny::reactive({
-      f <- rapbase::exportDb(registryName,
-                             compress = input$exportCompress,
-                             session = session)
+      f <- exportDb(
+        registryName,
+        compress = input$exportCompress,
+        session = session
+      )
       message(paste("Dump file size:", file.size(f)))
       ef <- sship::enc(f, pid = NULL, pubkey_holder = NULL,
                        pubkey = input$exportKey)
@@ -87,9 +89,10 @@ exportUCServer <- function(id, registryName, repoName = registryName,
         },
         content = function(file) {
           file.copy(encFile(), file)
-          rapbase::repLogger(
+          repLogger(
             session,
-            msg = paste("Db export file", basename(encFile()), "downloaded."))
+            msg = paste("Db export file",basename(encFile()), "downloaded.")
+          )
         }
       )
     }
@@ -101,9 +104,12 @@ exportUCServer <- function(id, registryName, repoName = registryName,
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("user")), "Velg mottaker:")
         ),
-        choices =  rapbase::getGithub(
-          "members", repoName, .token = conf$github$PAT$rapmaskin)
+        choices = getGithub(
+          "members",
+          repoName,
+          .token = conf$github$PAT$rapmaskin
         )
+      )
     })
     output$exportKeyUI <- shiny::renderUI({
       if (length(pubkey()) == 0) {
@@ -114,7 +120,7 @@ exportUCServer <- function(id, registryName, repoName = registryName,
           label = shiny::tags$div(
             shiny::HTML(as.character(shiny::icon("key")), "Velg \u00f8kkel:")
           ),
-          choices = rapbase::selectListPubkey(pubkey()))
+          choices = selectListPubkey(pubkey()))
       }
     })
     output$exportDownloadUI <- shiny::renderUI({
@@ -187,10 +193,11 @@ exportGuideServer <- function(id, registryName) {
   shiny::moduleServer(id, function(input, output, session) {
 
     output$exportGuide <- shiny::renderUI({
-      rapbase::renderRmd(
+      renderRmd(
         sourceFile = system.file("exportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
-        params = list(registryName = registryName))
+        params = list(registryName = registryName)
+      )
     })
   })
 }
@@ -247,7 +254,7 @@ exportDb <- function(registryName, compress = FALSE, session) {
     invisible(system(cmd))
   }
 
-  rapbase::repLogger(session, msg = paste(registryName, "Db dump created."))
+  repLogger(session, msg = paste(registryName, "Db dump created."))
 
   invisible(f)
 }

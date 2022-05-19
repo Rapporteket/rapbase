@@ -55,7 +55,7 @@ navbarWidgetInput <- function(id, addUserInfo = TRUE) {
   shiny::addResourcePath("rap", system.file("www", package = "rapbase"))
 
   shiny::tagList(
-    rapbase::appNavbarUserWidget(
+    appNavbarUserWidget(
       user = shiny::uiOutput(shiny::NS(id, "name")),
       organization = shiny::uiOutput(shiny::NS(id, "affiliation")),
       addUserInfo = addUserInfo,
@@ -76,11 +76,11 @@ navbarWidgetServer <- function(id, orgName,
 
     output$name <- shiny::renderText(rapbase::getUserFullName(session))
     output$affiliation <- shiny::renderText(
-      paste(orgName, rapbase::getUserRole(session), sep = ", ")
+      paste(orgName, getUserRole(session), sep = ", ")
     )
 
     # User info in widget
-    userInfo <- rapbase::howWeDealWithPersonalData(session, callerPkg = caller)
+    userInfo <- howWeDealWithPersonalData(session, callerPkg = caller)
     shiny::observeEvent(input$userInfo, {
       shinyalert::shinyalert(
         "Dette vet Rapporteket om deg:",
@@ -237,7 +237,9 @@ howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
   sourceFile <- system.file(
     "howWeDealWithPersonalData.Rmd", package = "rapbase")
 
-  rapbase::renderRmd(sourceFile = sourceFile, outputType = "html_fragment",
-                     params = list(session = session,
-                                   pkgInfo = pkgInfo))
+  renderRmd(
+    sourceFile = sourceFile, outputType = "html_fragment", params = list(
+      session = session,
+      pkgInfo = pkgInfo)
+  )
 }

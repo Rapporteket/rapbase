@@ -210,7 +210,7 @@ statsGuideServer <- function(id, registryName) {
   shiny::moduleServer(id, function(input, output, session) {
 
     output$statsGuide <- shiny::renderUI({
-      rapbase::renderRmd(
+      renderRmd(
         sourceFile = system.file("statsGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
         params = list(registryName = registryName))
