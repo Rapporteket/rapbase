@@ -651,21 +651,21 @@ findNextRunDate <- function(runDayOfYear,
 #' from a given user or registry as obtained from the shiny session
 #' object provided.
 #'
-#' Each table record (line) represents a uniqely defined automated report.
+#' Each table record (line) represents a uniquely defined automated report.
 #' For each line two shiny action buttons are provided to allow
 #' for editing and deleting of each entry. For applications
 #' implementing this table observing events on these action buttons may be used
 #' to allow users to manage automated reports by GUI. The
 #' action buttons for editing and deleting are provided with the static input
 #' ids \emph{edit_button} and \emph{del_button} and upon clicking the
-#' \emph{button} part of their ids will change to the uniqe id of the
-#' report. Hence, a GUI call for editing a report can be catched by
+#' \emph{button} part of their ids will change to the unique id of the
+#' report. Hence, a GUI call for editing a report can be caught by
 #' \code{shiny::observeEvent("edit_button")} and within this event the
-#' report id is obtained by collecting the string after the underscore,
-#' \emph{e.g.} \code{strsplit(input$edit_button, "_")[[1]][2]}.
+#' report id is obtained by collecting the string after the double underscore,
+#' \emph{e.g.} \code{strsplit(input$edit_button, "__")[[1]][2]}.
 #'
 #' Optionally, report id may be provided as the last column in the table to
-#' allow further development for registry speciffic purposes. Regardless, this
+#' allow further development for registry specific purposes. Regardless, this
 #' column should normally be hidden in the GUI.
 #'
 #' Take a look at the
