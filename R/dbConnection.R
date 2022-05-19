@@ -4,11 +4,11 @@
 #' usernames and passwords needed to open these connections
 #'
 #' @param registryName String id used for the registry in global configuration
-#'  file from which information on the database connection is provided
+#'   file from which information on the database connection is provided
 #' @param dbType String providing type of data source, one of
-#'  "mysql" and "mssql". Defaults to "mysql"
-#' @return con Data source connection object
-#' @return drv DBIDriver object
+#'   "mysql" and "mssql". Defaults to "mysql"
+#' @return A named list of con and drv representing the db connection handle and
+#'   driver, respectively.
 #' @export
 
 rapOpenDbConnection <- function(registryName, dbType = "mysql") {
