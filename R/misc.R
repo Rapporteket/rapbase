@@ -187,3 +187,18 @@ runNoweb <- function(nowebFileName, packageName, weaveMethod = "knitr") {
     cat("\nweaveMethod specified is none of knitr or Sweave. Nothing to do\n")
   }
 }
+
+
+#' Plain testing tool
+#'
+#' To be used for testing purposes
+#'
+#' @return message A test message
+#' @export
+
+halloRapporteket <- function() { # nocov start
+
+  testMessage <- "Hallaisen Rapporteket"
+  message(testMessage)
+  # nocov end
+}

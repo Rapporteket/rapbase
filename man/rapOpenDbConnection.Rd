@@ -14,9 +14,8 @@ file from which information on the database connection is provided}
 "mysql" and "mssql". Defaults to "mysql"}
 }
 \value{
-con Data source connection object
-
-drv DBIDriver object
+A named list of con and drv representing the db connection handle and
+  driver, respectively.
 }
 \description{
 Generic to registries, handle the data source connections, including
