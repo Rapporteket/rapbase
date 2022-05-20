@@ -4,6 +4,7 @@ development:
   mode: auto
 
 template:
+  bootstrap: 5
   params:
     bootswatch: flatly
     ganalytics: UA-145582048-1
