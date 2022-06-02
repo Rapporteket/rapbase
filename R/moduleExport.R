@@ -91,7 +91,7 @@ exportUCServer <- function(id, registryName, repoName = registryName,
           file.copy(encFile(), file)
           repLogger(
             session,
-            msg = paste("Db export file",basename(encFile()), "downloaded.")
+            msg = paste("Db export file", basename(encFile()), "downloaded.")
           )
         }
       )
