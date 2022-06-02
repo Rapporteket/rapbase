@@ -87,6 +87,20 @@ test_that("log can be sanitized in files", {
   expect_equal(dim(rapbase:::readLog(type = "report"))[1], 0)
 })
 
+test_that("existing backup files can be overwritten", {
+  expect_silent(autLogger(
+    user = "ttest", name = "Tore Tester",
+    registryName = "stats", reshId = "999999",
+    type = "bulletin",
+    pkg = "testpkg",
+    fun = "testfun",
+    param = list(testparam = "test")
+  ))
+  expect_equal(dim(rapbase:::readLog(type = "report"))[1], 1)
+  expect_null(rapbase:::sanitizeLog())
+  expect_equal(dim(rapbase:::readLog(type = "report"))[1], 0)
+})
+
 
 # must be last...
 Sys.setenv(R_RAP_CONFIG_PATH = "")

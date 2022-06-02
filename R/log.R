@@ -423,7 +423,7 @@ sanitizeLog <- function() {
     }
 
     for (i in seq_len(length(fileName))) {
-      file.copy(logFile[i], backupFile[i])
+      file.copy(logFile[i], backupFile[i], overwrite = TRUE)
       lf <- utils::read.csv(logFile[i])
       bf <- utils::read.csv(backupFile[i])
       backupOk <- digest::digest(lf) == digest::digest(bf)
