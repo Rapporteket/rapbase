@@ -423,7 +423,7 @@ sanitizeLog <- function() {
     }
 
     for (i in seq_len(length(fileName))) {
-      file.copy(logFile[i], backupFile[i])
+      file.copy(logFile[i], backupFile[i], overwrite = TRUE)
       lf <- utils::read.csv(logFile[i])
       bf <- utils::read.csv(backupFile[i])
       backupOk <- digest::digest(lf) == digest::digest(bf)
@@ -444,13 +444,6 @@ sanitizeLog <- function() {
     query <- paste0("DELETE FROM reportLog WHERE time < '",
                     as.character(eolDate), "';")
     DBI::dbExecute(con, query)
-    # DBI::dbSendQuery(con, query)
-    # params <- list("appLog", eolDate)
-    # DBI::dbBind(rs, params)
-    # DBI::dbClearResult(rs)
-    # params <- list("reportLog", eolDate)
-    # DBI::dbBind(rs, params)
-    # DBI::dbClearResult(rs)
     rapCloseDbConnection(con)
   }
 

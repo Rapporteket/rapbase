@@ -4,6 +4,7 @@ development:
   mode: auto
 
 template:
+  bootstrap: 5
   params:
     bootswatch: flatly
     ganalytics: UA-145582048-1
@@ -44,11 +45,6 @@ reference:
     - getUserPhone
     - getUserEmail
     - userInfo
-    - getShinyUserName
-    - getShinyUserGroups
-    - getShinyUserRole
-    - getShinyUserReshId
-    - shinySessionInfo
 
   - title: Logging
     desc: >
@@ -67,13 +63,7 @@ reference:
     - runBulletin
     - createAutoReport
     - deleteAutoReport
-    - selectByType
-    - selectByOwner
-    - selectByOrganization
-    - selectByReg
     - makeAutoReportTab
-    - makeUserSubscriptionTab
-    - makeUserSubscriptionTabV2
     - makeRunDayOfYearSequence
     - isPkgRapReg
     - getRegs
@@ -94,6 +84,7 @@ reference:
     - statsGuide
     - export
     - stats
+    - pubkey_filter
 
   - title: Miscellaneous
     desc: >

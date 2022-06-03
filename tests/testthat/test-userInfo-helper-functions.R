@@ -41,10 +41,10 @@ test_that(paste(
 shinySession <- list(user = "user1")
 shinySession$groups <- "group1,group2"
 shinySession$request <- list(HTTP_RESHID = "789012")
-shinySession$request$HTTP_ROLE <- "LC"
-shinySession$request$HTTP_EMAIL <- "user1@nowhere.no"
-shinySession$request$HTTP_FULLNAME <- "T Test"
-shinySession$request$HTTP_PHONE <- "04050607"
+shinySession$request["HTTP_ROLE"] <- "LC"
+shinySession$request["HTTP_EMAIL"] <- "user1@nowhere.no"
+shinySession$request["HTTP_FULLNAME"] <- "T Test"
+shinySession$request["HTTP_PHONE"] <- "04050607"
 # simulate ShinySession class for above list
 attr(shinySession, "class") <- "ShinySession"
 

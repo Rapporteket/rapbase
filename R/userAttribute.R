@@ -145,3 +145,202 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     phone = phone
   )
 }
+
+
+#' Get user email from config or session object
+#'
+#' This is a helper function for \code{\link{userInfo}}. When used without a
+#' shiny session object calls to this function is made without any arguments. If
+#' redefining contexts is needed, please use \code{\link{userInfo}} instead.
+#'
+#' @inheritParams userInfo
+#'
+#' @return String email address
+#'
+#' @seealso \code{\link{getUserName}},
+#' \code{\link{getUserGroups}}, \code{\link{getUserReshId}},
+#' \code{\link{getUserEmail}}
+#'
+#' @examples
+#' \donttest{
+#' # Requires a valid shiny session object
+#' try(getUserEmail())
+#' try(getUserEmail(shinySessionObject))
+#' }
+#'
+#' @export
+
+
+getUserEmail <- function(shinySession = NULL) {
+  userInfo(shinySession, entity = "email")
+}
+
+
+#' Get user full name from config or session object
+#'
+#' This is a helper function for \code{\link{userInfo}}. When used without a
+#' shiny session object calls to this function is made without any arguments. If
+#' redefining contexts is needed, please use \code{\link{userInfo}} instead.
+#'
+#' @inheritParams userInfo
+#'
+#' @return String full name
+#'
+#' @seealso \code{\link{getUserName}},
+#' \code{\link{getUserGroups}}, \code{\link{getUserReshId}},
+#' \code{\link{getUserEmail}}, \code{\link{getUserPhone}}
+#'
+#' @examples
+#' \donttest{
+#' # Requires a valid shiny session object
+#' try(getUserFullName())
+#' try(getUserFullName(shinySessionObject))
+#' }
+#'
+#' @export
+
+
+getUserFullName <- function(shinySession = NULL) {
+  userInfo(shinySession, entity = "full_name")
+}
+
+
+#' Get user groups from config or session object
+#'
+#' This is a helper function for \code{\link{userInfo}}. When used without a
+#' shiny session object calls to this function is made without any arguments. If
+#' redefining contexts is needed, please use \code{\link{userInfo}} instead.
+#'
+#' @inheritParams userInfo
+#'
+#' @return String user name
+#'
+#' @seealso \code{\link{getUserName}},
+#' \code{\link{getUserReshId}}, \code{\link{getUserRole}}
+#'
+#' @examples
+#' \donttest{
+#' # Requires a valid shiny session object
+#' try(getUserGroups())
+#' try(getUserGroups(shinySessionObject))
+#' }
+#'
+#' @export
+
+
+getUserGroups <- function(shinySession = NULL) {
+  userInfo(shinySession, entity = "groups")
+}
+
+
+#' Get user name from config or session object
+#'
+#' This is a helper function for \code{\link{userInfo}}. When used without a
+#' shiny session object calls to this function is made without any arguments. If
+#' redefining contexts is needed, please use \code{\link{userInfo}} instead.
+#'
+#' @inheritParams userInfo
+#'
+#' @return String user name
+#'
+#' @seealso \code{\link{getUserGroups}},
+#' \code{\link{getUserReshId}}, \code{\link{getUserRole}}
+#'
+#' @examples
+#' \donttest{
+#' # Requires a valid shiny session object
+#' try(getUserName())
+#' try(getUserName(shinySessionObject))
+#' }
+#'
+#' @export
+
+
+getUserName <- function(shinySession = NULL) {
+  userInfo(shinySession, entity = "user")
+}
+
+
+#' Get user phone (number) from config or session object
+#'
+#' This is a helper function for \code{\link{userInfo}}. When used without a
+#' shiny session object calls to this function is made without any arguments. If
+#' redefining contexts is needed, please use \code{\link{userInfo}} instead.
+#'
+#' @inheritParams userInfo
+#'
+#' @return String phone number
+#'
+#' @seealso \code{\link{getUserName}},
+#' \code{\link{getUserGroups}}, \code{\link{getUserReshId}},
+#' \code{\link{getUserEmail}}, \code{\link{getUserFullName}}
+#'
+#' @examples
+#' \donttest{
+#' # Requires a valid shiny session object
+#' try(getUserPhone())
+#' try(getUserPhone(shinySessionObject))
+#' }
+#'
+#' @export
+
+
+getUserPhone <- function(shinySession = NULL) {
+  userInfo(shinySession, entity = "phone")
+}
+
+
+#' Get user resh ID from config or session object
+#'
+#' This is a helper function for \code{\link{userInfo}}. When used without a
+#' shiny session object calls to this function is made without any arguments. If
+#' redefining contexts is needed, please use \code{\link{userInfo}} instead.
+#'
+#' @inheritParams userInfo
+#'
+#' @return String user name
+#'
+#' @seealso \code{\link{getUserName}},
+#' \code{\link{getUserGroups}}, \code{\link{getUserRole}}
+#'
+#' @examples
+#' \donttest{
+#' # Requires a valid shiny session object
+#' try(getUserReshId())
+#' try(getUserReshId(shinySessionObject))
+#' }
+#'
+#' @export
+
+
+getUserReshId <- function(shinySession = NULL) {
+  userInfo(shinySession, entity = "resh_id")
+}
+
+
+#' Get user role from config or session object
+#'
+#' This is a helper function for \code{\link{userInfo}}. When used without a
+#' shiny session object calls to this function is made without any arguments. If
+#' redefining contexts is needed, please use \code{\link{userInfo}} instead.
+#'
+#' @inheritParams userInfo
+#'
+#' @return String user name
+#'
+#' @seealso \code{\link{getUserName}},
+#' \code{\link{getUserGroups}}, \code{\link{getUserReshId}}
+#'
+#' @examples
+#' \donttest{
+#' # Requires a valid shiny session object
+#' try(getUserRole())
+#' try(getUserRole(shinySessionObject))
+#' }
+#'
+#' @export
+
+
+getUserRole <- function(shinySession = NULL) {
+  userInfo(shinySession, entity = "role")
+}

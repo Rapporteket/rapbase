@@ -62,17 +62,20 @@ exportUCServer <- function(id, registryName, repoName = registryName,
   shiny::moduleServer(id, function(input, output, session) {
 
 
-    conf <- rapbase::getConfig("rapbaseConfig.yml")
+    conf <- getConfig("rapbaseConfig.yml")
 
     pubkey <- shiny::reactive({
       shiny::req(input$exportPid)
-      rapbase::getGithub("keys", input$exportPid)
+      keys <- getGithub("keys", input$exportPid)
+      pubkey_filter(keys, "rsa")
     })
 
     encFile <- shiny::reactive({
-      f <- rapbase::exportDb(registryName,
-                             compress = input$exportCompress,
-                             session = session)
+      f <- exportDb(
+        registryName,
+        compress = input$exportCompress,
+        session = session
+      )
       message(paste("Dump file size:", file.size(f)))
       ef <- sship::enc(f, pid = NULL, pubkey_holder = NULL,
                        pubkey = input$exportKey)
@@ -86,9 +89,10 @@ exportUCServer <- function(id, registryName, repoName = registryName,
         },
         content = function(file) {
           file.copy(encFile(), file)
-          rapbase::repLogger(
+          repLogger(
             session,
-            msg = paste("Db export file", basename(encFile()), "downloaded."))
+            msg = paste("Db export file", basename(encFile()), "downloaded.")
+          )
         }
       )
     }
@@ -100,9 +104,12 @@ exportUCServer <- function(id, registryName, repoName = registryName,
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("user")), "Velg mottaker:")
         ),
-        choices =  rapbase::getGithub(
-          "members", repoName, .token = conf$github$PAT$rapmaskin)
+        choices = getGithub(
+          "members",
+          repoName,
+          .token = conf$github$PAT$rapmaskin
         )
+      )
     })
     output$exportKeyUI <- shiny::renderUI({
       if (length(pubkey()) == 0) {
@@ -113,7 +120,7 @@ exportUCServer <- function(id, registryName, repoName = registryName,
           label = shiny::tags$div(
             shiny::HTML(as.character(shiny::icon("key")), "Velg \u00f8kkel:")
           ),
-          choices = rapbase::selectListPubkey(pubkey()))
+          choices = selectListPubkey(pubkey()))
       }
     })
     output$exportDownloadUI <- shiny::renderUI({
@@ -144,6 +151,67 @@ exportUCApp <- function(registryName = "rapbase") {
   )
   server <- function(input, output, session) {
     exportUCServer("rapbaseExport", registryName)
+  }
+
+  shiny::shinyApp(ui, server)
+}
+
+
+#' Shiny modules providing the Export Guide
+#'
+#' @param id Character string module ID
+#' @param registryName Character string registry name key
+#'
+#' @return Functions ui and server representing the (module) app
+#' @name exportGuide
+#' @aliases exportGuideUI exportGuideServer exportGuideApp
+#' @examples
+#' ui <- shiny::fluidPage(
+#'   exportGuideUI("exportGuide")
+#' )
+#'
+#' server <- function(input, output, session) {
+#'   exportGuideServer("exportGuide", "test")
+#' }
+#'
+#' if (interactive()) {
+#'   shiny::shinyApp(ui, server)
+#' }
+NULL
+
+#' @rdname exportGuide
+#' @export
+exportGuideUI <- function(id) {
+
+  shiny::htmlOutput(shiny::NS(id, "exportGuide"))
+}
+
+#' @rdname exportGuide
+#' @export
+exportGuideServer <- function(id, registryName) {
+
+  shiny::moduleServer(id, function(input, output, session) {
+
+    output$exportGuide <- shiny::renderUI({
+      renderRmd(
+        sourceFile = system.file("exportGuide.Rmd", package = "rapbase"),
+        outputType = "html_fragment",
+        params = list(registryName = registryName)
+      )
+    })
+  })
+}
+
+#' @rdname exportGuide
+#' @export
+exportGuideApp <- function() {
+
+  ui <- shiny::fluidPage(
+    exportGuideUI("exportGuide")
+  )
+
+  server <- function(input, output, session) {
+    exportGuideServer("exportGuide", "test")
   }
 
   shiny::shinyApp(ui, server)
@@ -186,7 +254,38 @@ exportDb <- function(registryName, compress = FALSE, session) {
     invisible(system(cmd))
   }
 
-  rapbase::repLogger(session, msg = paste(registryName, "Db dump created."))
+  repLogger(session, msg = paste(registryName, "Db dump created."))
 
   invisible(f)
+}
+
+
+#' Filter ssh public keys by type
+#'
+#' From a vector of ssh public keys, return those that are of a given type.
+#'
+#' @param keys Vector of strings representing ssh public keys.
+#' @param type Character string defining the ssh public key type that will pass
+#' the filter. Relevant values are strings returned by
+#' \code{attributes(openssl::read_pubkey(pubkey))$class[2]}, \emph{e.g.} "rsa"
+#' and "dsa".
+#'
+#'
+#' @return A vector of strings representing (filtered) public keys.
+#' @export
+#'
+#' @examples
+#' ## make ssh public key strings
+#' rsa_pubkey <- openssl::write_ssh(openssl::rsa_keygen()$pubkey)
+#' dsa_pubkey <- openssl::write_ssh(openssl::dsa_keygen()$pubkey)
+#'
+#' ## filter keys by type
+#' pubkey <- pubkey_filter(c(rsa_pubkey, dsa_pubkey), "rsa")
+#' identical(pubkey, rsa_pubkey)
+
+pubkey_filter <- function(keys, type) {
+
+  pass <- function(x, y) attributes(openssl::read_pubkey(x))$class[2] == y
+
+  keys[vapply(keys, pass, logical(length = 1), y = type)]
 }

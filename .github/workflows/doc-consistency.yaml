@@ -44,4 +44,5 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          Rscript -e 'testthat::expect_warning(pkgdown::build_reference(preview = FALSE), regexp = NA)'
+          Rscript -e "pkgdown::init_site()"
+          Rscript -e "testthat::expect_warning(pkgdown::build_reference(preview = FALSE), regexp = NA)"
