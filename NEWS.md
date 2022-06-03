@@ -1,3 +1,9 @@
+# rapbase 1.23.0
+
+* Reorganized and consolidated R files
+* Deprecated and unused function removed from package
+* Applied some fixes to minor function errors
+
 # rapbase 1.22.0
 
 * Improved first page graphics and hyperlinking in default latex template ([#104](https://github.com/Rapporteket/rapbase/pull/104))
