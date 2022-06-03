@@ -1,237 +1,207 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>/CODE_OF_CONDUCT.html</loc>
+    <loc>/dev/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>/CONTRIBUTING.html</loc>
+    <loc>/dev/CONTRIBUTING.html</loc>
   </url>
   <url>
-    <loc>/LICENSE.html</loc>
+    <loc>/dev/LICENSE.html</loc>
   </url>
   <url>
-    <loc>/authors.html</loc>
+    <loc>/dev/authors.html</loc>
   </url>
   <url>
-    <loc>/index.html</loc>
+    <loc>/dev/index.html</loc>
   </url>
   <url>
-    <loc>/news/index.html</loc>
+    <loc>/dev/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/Helligdager2008til2022.html</loc>
+    <loc>/dev/reference/Helligdager2008til2022.html</loc>
   </url>
   <url>
-    <loc>/reference/appLog.html</loc>
+    <loc>/dev/reference/appLog.html</loc>
   </url>
   <url>
-    <loc>/reference/appNavbarUserWidget.html</loc>
+    <loc>/dev/reference/appNavbarUserWidget.html</loc>
   </url>
   <url>
-    <loc>/reference/appendLog.html</loc>
+    <loc>/dev/reference/appendLog.html</loc>
   </url>
   <url>
-    <loc>/reference/autoReport.html</loc>
+    <loc>/dev/reference/autoReport.html</loc>
   </url>
   <url>
-    <loc>/reference/createAutoReport.html</loc>
+    <loc>/dev/reference/createAutoReport.html</loc>
   </url>
   <url>
-    <loc>/reference/createLogDb.html</loc>
+    <loc>/dev/reference/createLogDb.html</loc>
   </url>
   <url>
-    <loc>/reference/createLogDbTabs.html</loc>
+    <loc>/dev/reference/createLogDbTabs.html</loc>
   </url>
   <url>
-    <loc>/reference/deleteAutoReport.html</loc>
+    <loc>/dev/reference/deleteAutoReport.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-getFun.html</loc>
+    <loc>/dev/reference/dot-getFun.html</loc>
   </url>
   <url>
-    <loc>/reference/dot-testAutoReport.html</loc>
+    <loc>/dev/reference/dot-testAutoReport.html</loc>
   </url>
   <url>
-    <loc>/reference/export.html</loc>
+    <loc>/dev/reference/export.html</loc>
   </url>
   <url>
-    <loc>/reference/exportGuide.html</loc>
+    <loc>/dev/reference/exportGuide.html</loc>
   </url>
   <url>
-    <loc>/reference/filterAutoRep.html</loc>
+    <loc>/dev/reference/filterAutoRep.html</loc>
   </url>
   <url>
-    <loc>/reference/findNextRunDate.html</loc>
+    <loc>/dev/reference/findNextRunDate.html</loc>
   </url>
   <url>
-    <loc>/reference/fireInTheHole.html</loc>
+    <loc>/dev/reference/fireInTheHole.html</loc>
   </url>
   <url>
-    <loc>/reference/getConfig.html</loc>
+    <loc>/dev/reference/getConfig.html</loc>
   </url>
   <url>
-    <loc>/reference/getGithub.html</loc>
+    <loc>/dev/reference/getGithub.html</loc>
   </url>
   <url>
-    <loc>/reference/getRapPackages.html</loc>
+    <loc>/dev/reference/getRapPackages.html</loc>
   </url>
   <url>
-    <loc>/reference/getRegs.html</loc>
+    <loc>/dev/reference/getRegs.html</loc>
   </url>
   <url>
-    <loc>/reference/getSessionData.html</loc>
+    <loc>/dev/reference/getSessionData.html</loc>
   </url>
   <url>
-    <loc>/reference/getShinyUserGroups.html</loc>
+    <loc>/dev/reference/getUserEmail.html</loc>
   </url>
   <url>
-    <loc>/reference/getShinyUserName.html</loc>
+    <loc>/dev/reference/getUserFullName.html</loc>
   </url>
   <url>
-    <loc>/reference/getShinyUserReshId.html</loc>
+    <loc>/dev/reference/getUserGroups.html</loc>
   </url>
   <url>
-    <loc>/reference/getShinyUserRole.html</loc>
+    <loc>/dev/reference/getUserName.html</loc>
   </url>
   <url>
-    <loc>/reference/getUserEmail.html</loc>
+    <loc>/dev/reference/getUserPhone.html</loc>
   </url>
   <url>
-    <loc>/reference/getUserFullName.html</loc>
+    <loc>/dev/reference/getUserReshId.html</loc>
   </url>
   <url>
-    <loc>/reference/getUserGroups.html</loc>
+    <loc>/dev/reference/getUserRole.html</loc>
   </url>
   <url>
-    <loc>/reference/getUserName.html</loc>
+    <loc>/dev/reference/halloRapporteket.html</loc>
   </url>
   <url>
-    <loc>/reference/getUserPhone.html</loc>
+    <loc>/dev/reference/howWeDealWithPersonalData.html</loc>
   </url>
   <url>
-    <loc>/reference/getUserReshId.html</loc>
+    <loc>/dev/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/getUserRole.html</loc>
+    <loc>/dev/reference/isPkgRapReg.html</loc>
   </url>
   <url>
-    <loc>/reference/halloRapporteket.html</loc>
+    <loc>/dev/reference/isRapContext.html</loc>
   </url>
   <url>
-    <loc>/reference/howWeDealWithPersonalData.html</loc>
+    <loc>/dev/reference/loadRegData.html</loc>
   </url>
   <url>
-    <loc>/reference/index.html</loc>
+    <loc>/dev/reference/logger.html</loc>
   </url>
   <url>
-    <loc>/reference/isPkgRapReg.html</loc>
+    <loc>/dev/reference/makeAutoReportTab.html</loc>
   </url>
   <url>
-    <loc>/reference/isRapContext.html</loc>
+    <loc>/dev/reference/makeLogRecord.html</loc>
   </url>
   <url>
-    <loc>/reference/loadRegData.html</loc>
+    <loc>/dev/reference/makeRunDayOfYearSequence.html</loc>
   </url>
   <url>
-    <loc>/reference/logger.html</loc>
+    <loc>/dev/reference/makeStandardTable.html</loc>
   </url>
   <url>
-    <loc>/reference/makeAutoReportTab.html</loc>
+    <loc>/dev/reference/navbarWidget.html</loc>
   </url>
   <url>
-    <loc>/reference/makeLogRecord.html</loc>
+    <loc>/dev/reference/noOptOutOk.html</loc>
   </url>
   <url>
-    <loc>/reference/makeRunDayOfYearSequence.html</loc>
+    <loc>/dev/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>/reference/makeStandardTable.html</loc>
+    <loc>/dev/reference/pronoun.html</loc>
   </url>
   <url>
-    <loc>/reference/makeUserSubscriptionTab.html</loc>
+    <loc>/dev/reference/pubkey_filter.html</loc>
   </url>
   <url>
-    <loc>/reference/makeUserSubscriptionTabV2.html</loc>
+    <loc>/dev/reference/rapCloseDbConnection.html</loc>
   </url>
   <url>
-    <loc>/reference/navbarWidget.html</loc>
+    <loc>/dev/reference/rapOpenDbConnection.html</loc>
   </url>
   <url>
-    <loc>/reference/noOptOutOk.html</loc>
+    <loc>/dev/reference/rapbase.html</loc>
   </url>
   <url>
-    <loc>/reference/pipe.html</loc>
+    <loc>/dev/reference/readAutoReportData.html</loc>
   </url>
   <url>
-    <loc>/reference/pronoun.html</loc>
+    <loc>/dev/reference/readLog.html</loc>
   </url>
   <url>
-    <loc>/reference/rapCloseDbConnection.html</loc>
+    <loc>/dev/reference/renderRmd.html</loc>
   </url>
   <url>
-    <loc>/reference/rapOpenDbConnection.html</loc>
+    <loc>/dev/reference/runAutoReport.html</loc>
   </url>
   <url>
-    <loc>/reference/rapbase.html</loc>
+    <loc>/dev/reference/runBulletin.html</loc>
   </url>
   <url>
-    <loc>/reference/readAutoReportData.html</loc>
+    <loc>/dev/reference/runNoweb.html</loc>
   </url>
   <url>
-    <loc>/reference/readLog.html</loc>
+    <loc>/dev/reference/runShinyApp.html</loc>
   </url>
   <url>
-    <loc>/reference/renderRmd.html</loc>
+    <loc>/dev/reference/sanitizeLog.html</loc>
   </url>
   <url>
-    <loc>/reference/runAutoReport.html</loc>
+    <loc>/dev/reference/sendEmail.html</loc>
   </url>
   <url>
-    <loc>/reference/runBulletin.html</loc>
+    <loc>/dev/reference/stagingData.html</loc>
   </url>
   <url>
-    <loc>/reference/runNoweb.html</loc>
+    <loc>/dev/reference/stats.html</loc>
   </url>
   <url>
-    <loc>/reference/runShinyApp.html</loc>
+    <loc>/dev/reference/statsGuide.html</loc>
   </url>
   <url>
-    <loc>/reference/sanitizeLog.html</loc>
+    <loc>/dev/reference/upgradeAutoReportData.html</loc>
   </url>
   <url>
-    <loc>/reference/selectByOrganization.html</loc>
+    <loc>/dev/reference/userInfo.html</loc>
   </url>
   <url>
-    <loc>/reference/selectByOwner.html</loc>
-  </url>
-  <url>
-    <loc>/reference/selectByReg.html</loc>
-  </url>
-  <url>
-    <loc>/reference/selectByType.html</loc>
-  </url>
-  <url>
-    <loc>/reference/sendEmail.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shinySessionInfo.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stagingData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/stats.html</loc>
-  </url>
-  <url>
-    <loc>/reference/statsGuide.html</loc>
-  </url>
-  <url>
-    <loc>/reference/upgradeAutoReportData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/userInfo.html</loc>
-  </url>
-  <url>
-    <loc>/reference/writeAutoReportData.html</loc>
+    <loc>/dev/reference/writeAutoReportData.html</loc>
   </url>
 </urlset>
