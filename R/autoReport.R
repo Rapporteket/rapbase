@@ -607,7 +607,7 @@ findNextRunDate <- function(runDayOfYear,
   }
 
   # special case if out of max range and only one run day defined (yearly)
-  if (baseDayNum >= max(runDayOfYear) | length(runDayOfYear) == 1) {
+  if (baseDayNum >= max(runDayOfYear) || length(runDayOfYear) == 1) {
     # next run will be first run in day num vector
     nextDayNum <- min(runDayOfYear)
   } else {

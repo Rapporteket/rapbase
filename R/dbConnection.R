@@ -33,8 +33,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
     )
     # ensure utf8 encoding
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
-  }
-  else if (dbType == "mssql") {
+  } else if (dbType == "mssql") {
     stop("Use of MSSQL is no longer supported. Exiting")
   }
 

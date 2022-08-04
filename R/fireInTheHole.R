@@ -25,7 +25,7 @@ fireInTheHole <- function(flipPeriod = FALSE) {
   hour <- as.POSIXlt(Sys.time())$hour
   conf <- getConfig(fileName = "rapbaseConfig.yml")
 
-  if (hour >= conf$r$schedule$nocturnal$startHour &
+  if (hour >= conf$r$schedule$nocturnal$startHour &&
       hour < conf$r$schedule$nocturnal$endHour) {
     night <- TRUE
   } else {
