@@ -43,7 +43,6 @@ Imports:
     sendmailR,
     shiny,
     shinyalert,
-    sship,
     utils,
     yaml
 RoxygenNote: 7.1.2
