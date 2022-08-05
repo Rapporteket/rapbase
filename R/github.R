@@ -36,10 +36,7 @@ getGithub <- function(what, value, .token = NULL) {
     vName <- "key"
   }
 
-  httr::set_config(httr::use_proxy(url = conf$network$proxy$http))
-
-  vapply(
-    gh::gh(endpoint, .token = .token),
-    "[[", "", vName
-  )
+  sship::gh(
+    path = endpoint, proxy_url = conf$network$proxy$http, token = .token
+  )$content[[vName]]
 }
