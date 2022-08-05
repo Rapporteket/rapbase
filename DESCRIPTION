@@ -53,3 +53,5 @@ Suggests:
     lifecycle,
     rvest,
     testthat
+Remotes:
+    Rapporteket/sship@main
