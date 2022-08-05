@@ -99,7 +99,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     phone <- d$phone
   }
 
-  if (context %in% testContexts | context %in% prodContexts) {
+  if (context %in% testContexts || context %in% prodContexts) {
     if (is.null(shinySession)) {
       stop("Session information is empty!. Cannot do anything")
     }
