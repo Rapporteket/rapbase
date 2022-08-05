@@ -84,7 +84,6 @@ reference:
     - statsGuide
     - export
     - stats
-    - pubkey_filter
 
   - title: Miscellaneous
     desc: >
