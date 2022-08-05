@@ -30,13 +30,10 @@ Imports:
     digest,
     dplyr,
     DT,
-    gh,
-    httr,
     jsonlite,
     kableExtra,
     knitr,
     magrittr,
-    openssl,
     readr,
     remotes,
     rlang,
@@ -48,7 +45,6 @@ Imports:
     shinyalert,
     sship,
     utils,
-    withr,
     yaml
 RoxygenNote: 7.1.2
 URL: http://github.com/Rapporteket/rapbase
