@@ -1,5 +1,6 @@
 # rapbase 1.23.0
 
+* Added latex package microtype to to report template to for better printing and less hyphenation in pdf reports ([#123](https://github.com/Rapporteket/rapbase/pull/123)) 
 * Added database as an optional log backend and function for (scheduled) clean of logs ([#112](https://github.com/Rapporteket/rapbase/pull/112))
 * For logging to a database backend format set to json ([#120](https://github.com/Rapporteket/rapbase/pull/120))
 * Reorganized and consolidated R files, removed deprecated and unused function and applied minor fixes to function flaws ([#121](https://github.com/Rapporteket/rapbase/pull/121))

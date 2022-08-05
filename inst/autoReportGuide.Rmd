@@ -11,7 +11,7 @@ date: '`r format(Sys.time(), "%d. %B %Y")`'
 
 ## Veiledning
 ```{r, echo=FALSE, results='asis'}
-if(params$type %in% c("dispatchment", "bulletin")) {
+if (params$type %in% c("dispatchment", "bulletin")) {
   cat(paste("Her kan det settes opp rutinemessig produksjon og utsending av",
             "resultater til én eller flere mottakere per epost."))
 } else {
@@ -25,7 +25,7 @@ Fra menyen til venstre
 
 1. hvis aktuelt, velg filformatet `r shiny::icon("file-pdf")` på rapporten,
 ```{r, echo=FALSE, results='asis'}
-if(params$type %in% c("dispatchment", "bulletin")) {
+if (params$type %in% c("dispatchment", "bulletin")) {
   t <- shiny::HTML("1. angi datakilden",
                    as.character(shiny::icon("database")),
                    "som skal benyttes,")
@@ -36,7 +36,7 @@ if(params$type %in% c("dispatchment", "bulletin")) {
 1. velg hvor hyppig `r shiny::icon("clock")` rapporten skal sendes ut,
 1. om nødvendig, endre dato for første utsending `r shiny::icon("calendar")`
 ```{r, echo=FALSE, results='asis'}
-if(params$type %in% c("dispatchment", "bulletin")) {
+if (params$type %in% c("dispatchment", "bulletin")) {
   t <- shiny::HTML("1. angi epostadresse",
                    as.character(shiny::icon("at")),
                    "til mottaker av rapporten og trykk",
@@ -49,7 +49,7 @@ if(params$type %in% c("dispatchment", "bulletin")) {
 
 Når alt er klart trykk `r shiny::icon("save")` for å aktivere utsendingen. Oppføringen vil da vises i tabellen. Trykk `r shiny::icon("trash")` til høyre i tabellen for å slette en utsending. Aktive utsendinger kan endres ved å trykke på `r shiny::icon("edit")` til høyre i tabellen. Utsendingen vil da slettes og flyttes over i menyen til venstre.
 ```{r, echo=FALSE, results='asis'}
-if(params$type %in% c("dispatchment", "bulletin")) {
+if (params$type %in% c("dispatchment", "bulletin")) {
   cat(paste("Ved etablering eller endring av en utsending kan mottakere",
             "slettes ved å angi aktuell epostadresse og trykke på",
             as.character(shiny::icon("minus-square"))))
@@ -58,7 +58,7 @@ if(params$type %in% c("dispatchment", "bulletin")) {
 
 
 ```{r, echo=FALSE, results='asis'}
-if(params$type %in% c("dispatchment", "bulletin")) {
+if (params$type %in% c("dispatchment", "bulletin")) {
   cat(paste("### Lurt å tenke over\n",
             "Alle utsendinger skjer per epost og det betyr at rapportene som",
             "sendes ut __ikke__ skal inneholde person- og helseopplysninger.",

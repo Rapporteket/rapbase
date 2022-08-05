@@ -26,6 +26,9 @@
             marginparsep=2em%
             ]{geometry}
 
+% Unngå ord-deling
+\usepackage{microtype}
+
 % Oppsett av fonter
 \usepackage[defaultsans]{lato}
 \renewcommand{\familydefault}{\sfdefault}
