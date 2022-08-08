@@ -90,7 +90,6 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
-          install.packages("https://cran.r-project.org/src/contrib/sship_0.8.0.tar.gz", repo = NULL, type = "source")
         shell: Rscript {0}
 
       - name: Check
