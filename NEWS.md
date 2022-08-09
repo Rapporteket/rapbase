@@ -1,5 +1,6 @@
 # rapbase 1.23.0
 
+* Reduced number of imports by replacing local function with functions from [sship](https://github.com/Rapporteket/sship) ([#127](https://github.com/Rapporteket/rapbase/pull/127))
 * Added latex package microtype to to report template to for better printing and less hyphenation in pdf reports ([#123](https://github.com/Rapporteket/rapbase/pull/123)) 
 * Added database as an optional log backend and function for (scheduled) clean of logs ([#112](https://github.com/Rapporteket/rapbase/pull/112))
 * For logging to a database backend format set to json ([#120](https://github.com/Rapporteket/rapbase/pull/120))
