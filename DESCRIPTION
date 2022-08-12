@@ -50,6 +50,7 @@ RoxygenNote: 7.1.2
 URL: http://github.com/Rapporteket/rapbase
 BugReports: http://github.com/Rapporteket/rapbase/issues
 Suggests:
+    httptest,
     lifecycle,
     rvest,
     testthat

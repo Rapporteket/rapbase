@@ -1,0 +1,22 @@
+[
+    {
+        "login": "areedv",
+        "id": 1522857,
+        "node_id": "MDQ6VXNlcjE1MjI4NTc=",
+        "avatar_url": "https://avatars.githubusercontent.com/u/1522857?u=21bfd4f5ea8f71dde2f0f130658af90335e3b029&v=4",
+        "gravatar_id": "",
+        "url": "https://api.github.com/users/areedv",
+        "html_url": "https://github.com/areedv",
+        "followers_url": "https://api.github.com/users/areedv/followers",
+        "following_url": "https://api.github.com/users/areedv/following{/other_user}",
+        "gists_url": "https://api.github.com/users/areedv/gists{/gist_id}",
+        "starred_url": "https://api.github.com/users/areedv/starred{/owner}{/repo}",
+        "subscriptions_url": "https://api.github.com/users/areedv/subscriptions",
+        "organizations_url": "https://api.github.com/users/areedv/orgs",
+        "repos_url": "https://api.github.com/users/areedv/repos",
+        "events_url": "https://api.github.com/users/areedv/events{/privacy}",
+        "received_events_url": "https://api.github.com/users/areedv/received_events",
+        "type": "User",
+        "site_admin": false
+    }
+]
