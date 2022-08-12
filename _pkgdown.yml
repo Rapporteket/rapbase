@@ -7,7 +7,6 @@ template:
   bootstrap: 5
   params:
     bootswatch: flatly
-    ganalytics: UA-145582048-1
 
 reference:
   - title: Configuration
@@ -77,7 +76,6 @@ reference:
     desc: >
       Helper functions to be used by shiny apps
     contents:
-    - runShinyApp
     - navbarWidget
     - appNavbarUserWidget
     - exportGuide
@@ -105,7 +103,6 @@ reference:
     desc: >
       Data contained by the package
     contents:
-    - Helligdager2008til2022
     - appLog
 
   - title: Meta
