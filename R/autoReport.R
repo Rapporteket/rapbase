@@ -31,10 +31,10 @@
 #' Default value set to \code{NULL} in which case the function will provide an
 #' expiry date adding 3 years to the current date if in a PRODUCTION context
 #' and 1 month if not
-#' @param interval String defining a time intervall as defined in
-#' \code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an emty string
-#' @param intervalName String providing a human uderstandable representation of
-#' \code{interval}. Default value is an emty string
+#' @param interval String defining a time interval as defined in
+#' \code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an empty string
+#' @param intervalName String providing a human understandable representation of
+#' \code{interval}. Default value is an empty string
 #' @param dryRun Logical defining if global auto report config actually is to
 #' be updated. If set to TRUE the actual config (all of it) will be returned by
 #' the function. FALSE by default
@@ -313,10 +313,10 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #'
 #' @param data List (nested) specifying auto reports to be filtered. May be
 #' obtained by \code{rapbase::getConfig(fileName = "autoReport.yml")}
-#' @param by Character string definig the filtering entity and must be one of
+#' @param by Character string defining the filtering entity and must be one of
 #' \code{c("package", "type", "owner", "organization")}. The term 'package'
 #' represents the registry name
-#' @param pass Character vector definig the values of the filtering entity that
+#' @param pass Character vector defining the values of the filtering entity that
 #' will allow reports to pass through the filter
 #'
 #' @return List of auto reports matching the filtering criteria
@@ -439,7 +439,7 @@ getRegs <- function(config) {
 #' @param dayNumber Integer day of year where January 1st is 1. Defaults to
 #' current day, \emph{i.e.} \code{as.POSIXlt(Sys.Date())$yday + 1} (POSIXlt
 #' yday is base 0)
-#' @param type Character vector defining the type of reports to be porcessed.
+#' @param type Character vector defining the type of reports to be processed.
 #' May contain one or more of
 #' \code{c("subscription", "dispatchment", "bulletin")}. Defaults value set to
 #' \code{c("subscription", "dispatchment")}.

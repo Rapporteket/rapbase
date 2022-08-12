@@ -16,7 +16,7 @@ navbarWidgetApp(orgName = "Org Name")
 \arguments{
 \item{id}{Character string providing module namespace}
 
-\item{addUserInfo}{Logical defing if an "about" hyperlink is to be added}
+\item{addUserInfo}{Logical defining if an "about" hyperlink is to be added}
 
 \item{orgName}{Character string naming the organization}
 

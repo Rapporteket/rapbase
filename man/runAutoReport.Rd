@@ -15,7 +15,7 @@ runAutoReport(
 current day, \emph{i.e.} \code{as.POSIXlt(Sys.Date())$yday + 1} (POSIXlt
 yday is base 0)}
 
-\item{type}{Character vector defining the type of reports to be porcessed.
+\item{type}{Character vector defining the type of reports to be processed.
 May contain one or more of
 \code{c("subscription", "dispatchment", "bulletin")}. Defaults value set to
 \code{c("subscription", "dispatchment")}.}

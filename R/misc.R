@@ -72,7 +72,7 @@ isRapContext <- function() {
 #'
 #' \code{mst()} creates RMarkdown code for creating standard tables.
 #'
-#' @param tab Data frame or matrix represetnting the table.
+#' @param tab Data frame or matrix representing the table.
 #' @param col_names Character vector with column names. Defaults
 #' \code{colnames(tab)}.
 #' @param type Character string defining output, either "html" or "pdf".
@@ -90,7 +90,7 @@ isRapContext <- function() {
 #' @param digs Integer number of digits to use. 0 by default.
 #' @param align Character vector specifying column alignment in the LaTeX way,
 #' \emph{e.g.} \code{c("l", "c", "r")} will align the first column to the left,
-#' center the second and right-aling the last one. Default is NULL in which
+#' center the second and right-align the last one. Default is NULL in which
 #' case numeric columns are right-aligned and all other columns are
 #' left-aligned.
 #' @param fs Integer providing the font size. Applies only for pdf output.

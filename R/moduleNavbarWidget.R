@@ -9,7 +9,7 @@
 #' function properly.
 #'
 #' @param id Character string providing module namespace
-#' @param addUserInfo Logical defing if an "about" hyperlink is to be added
+#' @param addUserInfo Logical defining if an "about" hyperlink is to be added
 #' @param orgName Character string naming the organization
 #' @param caller Character string naming the environment this function was
 #' called from. Default value is \code{environmentName(rlang::caller_env())}.
@@ -154,7 +154,7 @@ navbarWidgetApp <- function(orgName = "Org Name") {
 #'
 #' @param user String providing the name of the user
 #' @param organization String providing the organization of the user
-#' @param addUserInfo Logical defining wether a user data pop-up is to be part
+#' @param addUserInfo Logical defining whether a user data pop-up is to be part
 #' of the widget (TRUE) or not (FALSE, default)
 #' @param namespace Character string providing the namespace to use, if any.
 #' Defaults is \code{NULL} in which case no namespace will be applied.
@@ -197,7 +197,7 @@ appNavbarUserWidget <- function(user = "Undefined person",
 
 #' Render text in pop-up
 #'
-#' Render text on how Rapporteket deals witn personal data
+#' Render text on how Rapporteket deals with personal data
 #'
 #' @param session A shiny session object used to personalize the text
 #' @param callerPkg Character string naming the package that makes a call to

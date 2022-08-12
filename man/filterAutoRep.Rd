@@ -10,11 +10,11 @@ filterAutoRep(data, by, pass)
 \item{data}{List (nested) specifying auto reports to be filtered. May be
 obtained by \code{rapbase::getConfig(fileName = "autoReport.yml")}}
 
-\item{by}{Character string definig the filtering entity and must be one of
+\item{by}{Character string defining the filtering entity and must be one of
 \code{c("package", "type", "owner", "organization")}. The term 'package'
 represents the registry name}
 
-\item{pass}{Character vector definig the values of the filtering entity that
+\item{pass}{Character vector defining the values of the filtering entity that
 will allow reports to pass through the filter}
 }
 \value{

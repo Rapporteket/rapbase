@@ -96,8 +96,8 @@ The below fields will be appended to the log, in the following order:
     session object. Normally, this will correspond to the registry the user
     belongs to
   \item \code{role}: users role as provided by the shiny session object. Its
-    value will depend on whatever is delivered by the autorization provider,
-    but for OpenQReg registires 'LU' (local user) and 'SC' (system
+    value will depend on whatever is delivered by the authorization provider,
+    but for OpenQReg registries 'LU' (local user) and 'SC' (system
     coordinator) are typical values
   \item \code{resh_id}: the organization id of the current user as provided
     by the shiny session object, OR, when source of logging is auto reports,

@@ -18,5 +18,5 @@ number for the caller will be added to the info text}
 fragment html info text
 }
 \description{
-Render text on how Rapporteket deals witn personal data
+Render text on how Rapporteket deals with personal data
 }

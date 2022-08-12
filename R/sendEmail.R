@@ -1,7 +1,7 @@
 #' Send email from Rapporteket
 #'
 #' This function can be used to send email from within R at Rapporteket. It
-#' relies on (and must hence be provided) speciffic settings through local
+#' relies on (and must hence be provided) specific settings through local
 #' configuration to work properly.
 #'
 #' @param conf List containing (Rapporteket) config such as sender email
