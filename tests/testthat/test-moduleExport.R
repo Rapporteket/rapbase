@@ -112,7 +112,6 @@ test_that("export UC input returns a shiny tag list", {
 with_mock_dir("gh_api_response", {
 
   test_that("module server provides sensible output", {
-    #skip("Reqires API authentication")
     checkDb()
     shiny::testServer(exportUCServer, args = list(registryName = "rapbase"), {
       expect_equal(class(output$exportPidUI), "list")
@@ -128,7 +127,6 @@ with_mock_dir("gh_api_response", {
   })
 
   test_that("download is prevented when module is not eligible", {
-    #skip("Reqires API authentication")
     checkDb()
     shiny::testServer(
       exportUCServer,
