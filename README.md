@@ -19,7 +19,7 @@ Install *rapbase* from CRAN:
 install.packages("rapbase")
 ```
 
-The latest realease of the package can be installed from GitHub:
+The latest release of the package can be installed from GitHub:
 ```r
 remotes::install_github("Rapporteket/rapbase@*release")
 ```
