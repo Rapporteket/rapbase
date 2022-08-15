@@ -732,7 +732,7 @@ makeAutoReportTab <- function(session, namespace = character(),
       "Datakilde" = dataSource,
       "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
       "Periode" = autoRep[[n]]$intervalName,
-      "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
+      "Slutt" = strftime(as.Date(autoRep[[n]]$terminateDate),
                               format = "%b %Y"
       ),
       "Neste" = nextDate,
