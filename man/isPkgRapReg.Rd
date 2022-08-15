@@ -19,6 +19,7 @@ dependency to the package 'rapbase'
 \examples{
 # returns FALSE, rapbase has no explicit dependency to itself
 isPkgRapReg("rapbase")
+
 }
 \seealso{
 \code{\link{getRapPackages}} on how to list all packages that

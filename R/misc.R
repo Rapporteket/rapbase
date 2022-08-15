@@ -14,7 +14,7 @@
 #' @examples
 #' # returns FALSE, rapbase has no explicit dependency to itself
 #' isPkgRapReg("rapbase")
-
+#'
 isPkgRapReg <- function(pkg) {
   grepl("rapbase", utils::packageDescription(pkg)$Depends, fixed = TRUE)
 }
@@ -56,7 +56,7 @@ getRapPackages <- function() {
 #'
 #' @examples
 #' isRapContext()
-
+#'
 isRapContext <- function() {
   if (Sys.getenv("R_RAP_INSTANCE") %in% c("DEV", "TEST", "QA", "PRODUCTION")) {
     return(TRUE)

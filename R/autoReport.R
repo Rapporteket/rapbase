@@ -127,7 +127,6 @@ deleteAutoReport <- function(autoReportId) {
 #' readAutoReportData()
 readAutoReportData <- function(fileName = "autoReport.yml",
                                packageName = "rapbase") {
-
   config <- getConfig(fileName = "rapbaseConfig.yml")
 
   target <- config$r$autoReport$target
@@ -158,7 +157,7 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   }
 
   upgradeAutoReportData(conf)
-  #conf
+  # conf
 }
 
 #' Upgrade auto reports
@@ -253,7 +252,6 @@ upgradeAutoReportData <- function(config) {
 #'
 writeAutoReportData <- function(fileName = "autoReport.yml", config,
                                 packageName = "rapbase") {
-
   rc <- getConfig(fileName = "rapbaseConfig.yml")
   target <- rc$r$autoReport$target
   key <- rc$r$autoReport$key
@@ -292,7 +290,7 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
       # to maintain some order, remove files older than 30 days
       files <- file.info(list.files(bckFilePath, full.names = TRUE))
       rmFiles <- rownames(files[difftime(Sys.time(), files[, "mtime"],
-                                         units = "days"
+        units = "days"
       ) > 30, ])
       file.remove(rmFiles)
       con <- file(oriFile, "w")
@@ -325,9 +323,8 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #' @examples
 #' ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
 #' filterAutoRep(ar, "type", "B") # ar2
-
+#'
 filterAutoRep <- function(data, by, pass) {
-
   stopifnot(by %in% c("package", "type", "owner", "organization"))
 
   if (length(data) == 0) {
@@ -341,7 +338,6 @@ filterAutoRep <- function(data, by, pass) {
     }
     c(data[ind])
   }
-
 }
 
 
@@ -460,7 +456,6 @@ getRegs <- function(config) {
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                           type = c("subscription", "dispatchment"),
                           dryRun = FALSE) {
-
   . <- ""
 
   # get report candidates
@@ -469,56 +464,57 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
 
   # standard text for email body
   stdTxt <- readr::read_file(system.file("autoReportStandardEmailText.txt",
-                                         package = "rapbase"
+    package = "rapbase"
   ))
   # get sender from common config
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
   for (i in seq_len(length(reps))) {
-    tryCatch({
-      rep <- reps[[i]]
-      if (dayNumber %in% rep$runDayOfYear &
+    tryCatch(
+      {
+        rep <- reps[[i]]
+        if (dayNumber %in% rep$runDayOfYear &
           as.Date(rep$terminateDate) > Sys.Date() &
           as.Date(rep$startDate) <= Sys.Date()) {
-        # get explicit referenced function and call it
-        f <- .getFun(paste0(rep$package, "::", rep$fun))
-        content <- do.call(what = f, args = rep$params)
-        if (rep$type == "bulletin") {
-          text <- content
-          attFile <- NULL
-        } else {
-          text <- stdTxt
-          attFile <- content
+          # get explicit referenced function and call it
+          f <- .getFun(paste0(rep$package, "::", rep$fun))
+          content <- do.call(what = f, args = rep$params)
+          if (rep$type == "bulletin") {
+            text <- content
+            attFile <- NULL
+          } else {
+            text <- stdTxt
+            attFile <- content
+          }
+          if (dryRun) {
+            message(paste("No emails sent. Content is:", content))
+          } else {
+            autLogger(
+              user = rep$owner,
+              name = rep$ownerName,
+              registryName = rep$package,
+              reshId = rep$organization,
+              type = rep$type,
+              pkg = rep$package,
+              fun = rep$fun,
+              param = rep$params,
+              msg = paste("recipients:", paste(rep$email,
+                collapse = ", "
+              ))
+            )
+            sendEmail(
+              conf = conf, to = rep$email, subject = rep$synopsis,
+              text = text, attFile = attFile
+            )
+          }
         }
-        if (dryRun) {
-          message(paste("No emails sent. Content is:", content))
-        } else {
-          autLogger(
-            user = rep$owner,
-            name = rep$ownerName,
-            registryName = rep$package,
-            reshId = rep$organization,
-            type = rep$type,
-            pkg = rep$package,
-            fun = rep$fun,
-            param = rep$params,
-            msg = paste("recipients:", paste(rep$email,
-                                             collapse = ", "
-            ))
-          )
-          sendEmail(
-            conf = conf, to = rep$email, subject = rep$synopsis,
-            text = text, attFile = attFile
-          )
-        }
+      },
+      error = function(e) {
+        message(paste(
+          "Report could not be processed (moving on to the next):",
+          e
+        ))
       }
-    },
-    error = function(e) {
-      message(paste(
-        "Report could not be processed (moving on to the next):",
-        e
-      ))
-    }
     )
   }
 }
@@ -532,7 +528,6 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
 #' @export
 
 runBulletin <- function() {
-
   runAutoReport(type = c("bulletin"))
 }
 
@@ -595,12 +590,13 @@ findNextRunDate <- function(runDayOfYear,
                             baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
                             startDate = NULL,
                             returnFormat = "%A %e. %B %Y") {
-
   year <- as.POSIXlt(Sys.Date())$year + 1900
 
   if (!is.null(startDate)) {
-    if (as.Date(startDate) > as.Date(strptime(paste(year, baseDayNum),
-                                              "%Y %j"))) {
+    if (as.Date(startDate) > as.Date(strptime(
+      paste(year, baseDayNum),
+      "%Y %j"
+    ))) {
       # since we pull the NEXT run day set new base day on day BEFORE star date
       baseDayNum <- as.POSIXlt(startDate)$yday
     }
@@ -733,7 +729,7 @@ makeAutoReportTab <- function(session, namespace = character(),
       "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
       "Periode" = autoRep[[n]]$intervalName,
       "Slutt" = strftime(as.Date(autoRep[[n]]$terminateDate),
-                              format = "%b %Y"
+        format = "%b %Y"
       ),
       "Neste" = nextDate,
       "Endre" = as.character(
@@ -741,8 +737,10 @@ makeAutoReportTab <- function(session, namespace = character(),
           inputId = shiny::NS(namespace, paste0("edit__", n)),
           label = "",
           icon = shiny::icon("edit"),
-          onclick = sprintf("Shiny.onInputChange('%s', this.id)",
-                            shiny::NS(namespace, "edit_button"))
+          onclick = sprintf(
+            "Shiny.onInputChange('%s', this.id)",
+            shiny::NS(namespace, "edit_button")
+          )
         )
       ),
       "Slett" = as.character(
@@ -750,8 +748,10 @@ makeAutoReportTab <- function(session, namespace = character(),
           inputId = shiny::NS(namespace, paste0("del__", n)),
           label = "",
           icon = shiny::icon("trash"),
-          onclick = sprintf("Shiny.onInputChange('%s', this.id)",
-                            shiny::NS(namespace, "del_button"))
+          onclick = sprintf(
+            "Shiny.onInputChange('%s', this.id)",
+            shiny::NS(namespace, "del_button")
+          )
         )
       )
     )

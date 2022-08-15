@@ -46,7 +46,6 @@ NULL
 #' @rdname stats
 #' @export
 statsInput <- function(id) {
-
   shiny::tagList(
     shiny::radioButtons(
       shiny::NS(id, "type"),
@@ -71,7 +70,6 @@ statsInput <- function(id) {
 #' @rdname stats
 #' @export
 statsUI <- function(id) {
-
   shiny::tagList(
     rpivotTable::rpivotTableOutput(shiny::NS(id, "pivot"))
   )
@@ -81,9 +79,7 @@ statsUI <- function(id) {
 #' @rdname stats
 #' @export
 statsServer <- function(id, registryName, eligible = TRUE) {
-
   shiny::moduleServer(id, function(input, output, session) {
-
     log <- shiny::reactive({
       readLog(input$type, registryName) %>%
         logFormat()
@@ -145,9 +141,10 @@ statsServer <- function(id, registryName, eligible = TRUE) {
     output$pivot <- rpivotTable::renderRpivotTable(
       if (eligible) {
         rpivotTable::rpivotTable(logFrame(),
-                                 rows = c("name"),
-                                 cols = c("year", "month"),
-                                 rendererName = "Heatmap")
+          rows = c("name"),
+          cols = c("year", "month"),
+          rendererName = "Heatmap"
+        )
       } else {
         rpivotTable::rpivotTable(data.frame())
       }
@@ -158,7 +155,6 @@ statsServer <- function(id, registryName, eligible = TRUE) {
 #' @rdname stats
 #' @export
 statsApp <- function() {
-
   ui <- shiny::fluidPage(
     shiny::sidebarLayout(
       shiny::sidebarPanel(statsInput("test")),
@@ -199,21 +195,19 @@ NULL
 #' @rdname statsGuide
 #' @export
 statsGuideUI <- function(id) {
-
   shiny::htmlOutput(shiny::NS(id, "statsGuide"))
 }
 
 #' @rdname statsGuide
 #' @export
 statsGuideServer <- function(id, registryName) {
-
   shiny::moduleServer(id, function(input, output, session) {
-
     output$statsGuide <- shiny::renderUI({
       renderRmd(
         sourceFile = system.file("statsGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
-        params = list(registryName = registryName))
+        params = list(registryName = registryName)
+      )
     })
   })
 }
@@ -221,7 +215,6 @@ statsGuideServer <- function(id, registryName) {
 #' @rdname statsGuide
 #' @export
 statsGuideApp <- function() {
-
   ui <- shiny::fluidPage(
     statsGuideUI("statsGuide")
   )
@@ -237,7 +230,6 @@ statsGuideApp <- function() {
 #' @rdname stats
 #' @export
 logFormat <- function(log) {
-
   log <- log %>%
     dplyr::mutate(
       datetime = as.POSIXct(.data$time),
@@ -247,7 +239,8 @@ logFormat <- function(log) {
       month = as.POSIXlt(.data$datetime)$mon + 1,
       day = as.POSIXlt(.data$datetime)$mday,
       weekday = ifelse(as.POSIXlt(.data$datetime)$wday == 0, 7,
-                       as.POSIXlt(.data$datetime)$wday)
+        as.POSIXlt(.data$datetime)$wday
+      )
     )
 
   invisible(log)
@@ -256,7 +249,5 @@ logFormat <- function(log) {
 #' @rdname stats
 #' @export
 logTimeFrame <- function(log, startDate, endDate) {
-
   dplyr::filter(log, date >= startDate & date <= endDate)
-
 }

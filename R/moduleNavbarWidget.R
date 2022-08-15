@@ -51,7 +51,6 @@ NULL
 #' @rdname navbarWidget
 #' @export
 navbarWidgetInput <- function(id, addUserInfo = TRUE) {
-
   shiny::addResourcePath("rap", system.file("www", package = "rapbase"))
 
   shiny::tagList(
@@ -71,9 +70,7 @@ navbarWidgetInput <- function(id, addUserInfo = TRUE) {
 #' @export
 navbarWidgetServer <- function(id, orgName,
                                caller = environmentName(rlang::caller_env())) {
-
   shiny::moduleServer(id, function(input, output, session) {
-
     output$name <- shiny::renderText(rapbase::getUserFullName(session))
     output$affiliation <- shiny::renderText(
       paste(orgName, getUserRole(session), sep = ", ")
@@ -98,14 +95,13 @@ navbarWidgetServer <- function(id, orgName,
 #' @rdname navbarWidget
 #' @export
 navbarWidgetApp <- function(orgName = "Org Name") {
-
   ui <- shiny::tagList(
     shiny::navbarPage(
       "Testpage",
       shiny::tabPanel(
         "Testpanel",
         shiny::mainPanel(
-        navbarWidgetInput("testWidget")
+          navbarWidgetInput("testWidget")
         )
       )
     )
@@ -209,7 +205,6 @@ appNavbarUserWidget <- function(user = "Undefined person",
 #' @export
 
 howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
-
   pkg <- list()
   pkg$name <- as.vector(utils::installed.packages()[, 1])
   pkg$ver <- as.vector(utils::installed.packages()[, 3])
@@ -235,11 +230,14 @@ howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
   pkgInfo <- paste0(pkgs, vers, collapse = ", ")
 
   sourceFile <- system.file(
-    "howWeDealWithPersonalData.Rmd", package = "rapbase")
+    "howWeDealWithPersonalData.Rmd",
+    package = "rapbase"
+  )
 
   renderRmd(
     sourceFile = sourceFile, outputType = "html_fragment", params = list(
       session = session,
-      pkgInfo = pkgInfo)
+      pkgInfo = pkgInfo
+    )
   )
 }

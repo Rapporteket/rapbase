@@ -166,7 +166,6 @@ repLogger <- function(session, msg = "No message provided",
 #'
 autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
                       msg = "No message provided", .topenv = parent.frame()) {
-
   parent_environment <- environmentName(topenv(.topenv))
   content <- c(
     list(
@@ -178,9 +177,12 @@ autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
     ),
     list(
       environment = parent_environment,
-      call = paste0(pkg, "::",
-                    deparse(call(fun, unlist(param, recursive = FALSE)),
-                            width.cutoff = 500)),
+      call = paste0(
+        pkg, "::",
+        deparse(call(fun, unlist(param, recursive = FALSE)),
+          width.cutoff = 500
+        )
+      ),
       message = paste(type, msg)
     )
   )
@@ -208,7 +210,6 @@ autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
 #' @importFrom utils write.table
 
 appendLog <- function(event, name) {
-
   config <- getConfig(fileName = "rapbaseConfig.yml")
   target <- config$r$raplog$target
 
@@ -225,13 +226,13 @@ appendLog <- function(event, name) {
     doAppend <- TRUE
     doColNames <- FALSE
     if (!file.exists(file.path(path, name)) ||
-        file.size(file.path(path, name)) == 0) {
+      file.size(file.path(path, name)) == 0) {
       doAppend <- FALSE
       doColNames <- TRUE
     }
     write.table(event,
-                file = file.path(path, name), append = doAppend,
-                col.names = doColNames, row.names = FALSE, sep = ","
+      file = file.path(path, name), append = doAppend,
+      col.names = doColNames, row.names = FALSE, sep = ","
     )
   } else if (target == "db") {
     con <- rapOpenDbConnection(config$r$raplog$key)$con
@@ -296,7 +297,6 @@ getSessionData <- function(session) {
 #'
 #' @keywords internal
 createLogDb <- function(dbKey) {
-
   conf <- rapbase::getConfig()
   conf <- conf[[dbKey]]
 
@@ -321,7 +321,6 @@ createLogDb <- function(dbKey) {
 #'
 #' @keywords internal
 createLogDbTabs <- function() {
-
   conf <- getConfig(fileName = "rapbaseConfig.yml")
 
   fc <- file(system.file("createRaplogTabs.sql", package = "rapbase"), "r")
@@ -335,7 +334,6 @@ createLogDbTabs <- function() {
     RMariaDB::dbExecute(con, queries[i])
   }
   rapbase::rapCloseDbConnection(con)
-
 }
 
 
@@ -352,7 +350,6 @@ createLogDbTabs <- function() {
 #' @return A data frame of log entries
 #' @keywords internal
 readLog <- function(type, name = "") {
-
   stopifnot(type == "report" | type == "app")
 
   config <- getConfig(fileName = "rapbaseConfig.yml")
@@ -362,21 +359,24 @@ readLog <- function(type, name = "") {
     path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
     if (path == "") {
-      stop(paste("No path to log-files provided. Make sure the environment",
-                 "varaible R_RAP_CONFIG_PATH is set!"))
+      stop(paste(
+        "No path to log-files provided. Make sure the environment",
+        "varaible R_RAP_CONFIG_PATH is set!"
+      ))
     }
 
     logFile <- switch(type,
-                      "report" = file.path(path, "reportLog.csv"),
-                      "app" = file.path(path, "appLog.csv")
+      "report" = file.path(path, "reportLog.csv"),
+      "app" = file.path(path, "appLog.csv")
     )
     if (!file.exists(logFile)) {
       stop(paste("Cannot find the log!", logFile, "does not exist."))
     }
 
     log <- utils::read.csv(logFile,
-                           header = TRUE,
-                           stringsAsFactors = FALSE)
+      header = TRUE,
+      stringsAsFactors = FALSE
+    )
     if (name != "") {
       log <- log %>%
         dplyr::filter(.data$group == !!name)
@@ -406,7 +406,6 @@ readLog <- function(type, name = "") {
 #' @return NULL on success
 #' @keywords internal
 sanitizeLog <- function() {
-
   conf <- getConfig(fileName = "rapbaseConfig.yml")
 
   eolDate <- Sys.Date() - conf$r$raplog$eolDays
@@ -414,8 +413,10 @@ sanitizeLog <- function() {
   if (conf$r$raplog$target == "file") {
     fileName <- c("appLog.csv", "reportLog.csv")
     logFile <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), fileName)
-    backupDir <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
-                           conf$r$raplog$archiveDir)
+    backupDir <- file.path(
+      Sys.getenv("R_RAP_CONFIG_PATH"),
+      conf$r$raplog$archiveDir
+    )
     backupFile <- file.path(backupDir, fileName)
 
     if (!dir.exists(backupDir)) {
@@ -436,17 +437,19 @@ sanitizeLog <- function() {
   }
 
   if (conf$r$raplog$target == "db") {
-
     con <- rapOpenDbConnection(conf$r$raplog$key)$con
-    query <- paste0("DELETE FROM appLog WHERE time < '",
-                    as.character(eolDate), "';")
+    query <- paste0(
+      "DELETE FROM appLog WHERE time < '",
+      as.character(eolDate), "';"
+    )
     DBI::dbExecute(con, query)
-    query <- paste0("DELETE FROM reportLog WHERE time < '",
-                    as.character(eolDate), "';")
+    query <- paste0(
+      "DELETE FROM reportLog WHERE time < '",
+      as.character(eolDate), "';"
+    )
     DBI::dbExecute(con, query)
     rapCloseDbConnection(con)
   }
 
   NULL
-
 }

@@ -60,8 +60,6 @@ exportUCInput <- function(id) {
 exportUCServer <- function(id, registryName, repoName = registryName,
                            eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
-
-
     conf <- getConfig("rapbaseConfig.yml")
 
     pubkey <- shiny::reactive({
@@ -77,8 +75,10 @@ exportUCServer <- function(id, registryName, repoName = registryName,
         session = session
       )
       message(paste("Dump file size:", file.size(f)))
-      ef <- sship::enc(f, pid = NULL, pubkey_holder = NULL,
-                       pubkey = input$exportKey)
+      ef <- sship::enc(f,
+        pid = NULL, pubkey_holder = NULL,
+        pubkey = input$exportKey
+      )
       ef
     })
 
@@ -120,7 +120,8 @@ exportUCServer <- function(id, registryName, repoName = registryName,
           label = shiny::tags$div(
             shiny::HTML(as.character(shiny::icon("key")), "Velg \u00f8kkel:")
           ),
-          choices = selectListPubkey(pubkey()))
+          choices = selectListPubkey(pubkey())
+        )
       }
     })
     output$exportDownloadUI <- shiny::renderUI({
@@ -135,11 +136,11 @@ exportUCServer <- function(id, registryName, repoName = registryName,
           shiny::hr(),
           shiny::downloadButton(
             shiny::NS(id, "exportDownload"),
-            label = "Last ned!")
+            label = "Last ned!"
+          )
         )
       }
     })
-
   })
 }
 
@@ -182,16 +183,13 @@ NULL
 #' @rdname exportGuide
 #' @export
 exportGuideUI <- function(id) {
-
   shiny::htmlOutput(shiny::NS(id, "exportGuide"))
 }
 
 #' @rdname exportGuide
 #' @export
 exportGuideServer <- function(id, registryName) {
-
   shiny::moduleServer(id, function(input, output, session) {
-
     output$exportGuide <- shiny::renderUI({
       renderRmd(
         sourceFile = system.file("exportGuide.Rmd", package = "rapbase"),
@@ -205,7 +203,6 @@ exportGuideServer <- function(id, registryName) {
 #' @rdname exportGuide
 #' @export
 exportGuideApp <- function() {
-
   ui <- shiny::fluidPage(
     exportGuideUI("exportGuide")
   )
@@ -223,28 +220,29 @@ exportGuideApp <- function() {
 #' @rdname export
 #' @export
 selectListPubkey <- function(pubkey) {
-
   listName <- substr(pubkey, nchar(pubkey) - 7, nchar(pubkey))
   listName <- paste0(substr(pubkey, 1, 8), "...", listName)
   names(pubkey) <- listName
 
   as.list(pubkey)
-
 }
 
 #' @rdname export
 #' @export
 exportDb <- function(registryName, compress = FALSE, session) {
-
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
   f <- tempfile(pattern = registryName, fileext = ".sql")
   conf <- rapbase::getConfig()[[registryName]]
-  cmd <- paste0("mysqldump ",
-               "--no-tablespaces --single-transaction --add-drop-database ")
-  cmd <- paste0(cmd, "-B -u ", conf$user, " -p", conf$pass, " -h ", conf$host,
-                " ", conf$name, " > ", f)
+  cmd <- paste0(
+    "mysqldump ",
+    "--no-tablespaces --single-transaction --add-drop-database "
+  )
+  cmd <- paste0(
+    cmd, "-B -u ", conf$user, " -p", conf$pass, " -h ", conf$host,
+    " ", conf$name, " > ", f
+  )
   invisible(system(cmd))
 
   if (compress) {

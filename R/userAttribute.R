@@ -81,7 +81,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     }
 
     if (!any(c("ShinySession", "session_proxy", "MockShinySession") %in%
-             attributes(shinySession)$class)) {
+      attributes(shinySession)$class)) {
       stop(paste(
         "Got no object of class 'ShinySession' or 'session_proxy'!",
         "Your carma is way below threshold..."
@@ -105,7 +105,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     }
 
     if (!any(c("ShinySession", "session_proxy") %in%
-             attributes(shinySession)$class)) {
+      attributes(shinySession)$class)) {
       stop(paste(
         "Got no object of class 'ShinySession' or 'session_proxy'!",
         "Cannot do anything"

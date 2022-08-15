@@ -69,7 +69,6 @@ NULL
 #' @export
 listStagingData <- function(registryName,
                             dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
-
   path <- pathStagingData(registryName, dir)
 
   list.files(path)
@@ -79,7 +78,6 @@ listStagingData <- function(registryName,
 #' @export
 mtimeStagingData <- function(registryName,
                              dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
-
   parentPath <- "stagingData"
   path <- file.path(dir, parentPath, registryName)
   f <- normalizePath(list.files(path, recursive = TRUE, full.names = TRUE))
@@ -94,18 +92,15 @@ mtimeStagingData <- function(registryName,
 #' @export
 saveStagingData <- function(registryName, dataName, data,
                             dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
-
   path <- pathStagingData(registryName, dir)
 
   readr::write_rds(data, file.path(path, dataName))
-
 }
 
 #' @rdname stagingData
 #' @export
 loadStagingData <- function(registryName, dataName,
                             dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
-
   path <- pathStagingData(registryName, dir)
   filePath <- file.path(path, dataName)
 
@@ -120,7 +115,6 @@ loadStagingData <- function(registryName, dataName,
 #' @export
 deleteStagingData <- function(registryName, dataName,
                               dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
-
   path <- pathStagingData(registryName, dir)
   filePath <- file.path(path, dataName)
 
@@ -135,10 +129,11 @@ deleteStagingData <- function(registryName, dataName,
 #' @rdname stagingData
 #' @export
 cleanStagingData <- function(eolAge, dryRun = TRUE) {
-
   if (Sys.getenv("R_RAP_CONFIG_PATH") == "") {
-    stop(paste("Got no path to staging data. No data will be deleted.",
-               "Exiting."))
+    stop(paste(
+      "Got no path to staging data. No data will be deleted.",
+      "Exiting."
+    ))
   }
 
   dir <- Sys.getenv("R_RAP_CONFIG_PATH")
@@ -150,10 +145,12 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
 
   if (dryRun) {
     message(
-      paste("Function invoked in dry run mode and none of the returned files\n",
-            "will be deleted.\n",
-            "To delete the files please re-run this function with the dryRun\n",
-            "argument set to 'TRUE'. Godspeed!")
+      paste(
+        "Function invoked in dry run mode and none of the returned files\n",
+        "will be deleted.\n",
+        "To delete the files please re-run this function with the dryRun\n",
+        "argument set to 'TRUE'. Godspeed!"
+      )
     )
     fDelete
   } else {
@@ -164,7 +161,6 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
 
 #' @rdname stagingData
 pathStagingData <- function(registryName, dir) {
-
   stopifnot(dir.exists(dir))
 
   parentPath <- "stagingData"
