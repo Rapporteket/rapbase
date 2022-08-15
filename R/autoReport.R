@@ -469,56 +469,56 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
 
   # standard text for email body
   stdTxt <- readr::read_file(system.file("autoReportStandardEmailText.txt",
-    package = "rapbase"
+                                         package = "rapbase"
   ))
   # get sender from common config
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
   for (i in seq_len(length(reps))) {
     tryCatch({
-        rep <- reps[[i]]
-        if (dayNumber %in% rep$runDayOfYear &
+      rep <- reps[[i]]
+      if (dayNumber %in% rep$runDayOfYear &
           as.Date(rep$terminateDate) > Sys.Date() &
           as.Date(rep$startDate) <= Sys.Date()) {
-          # get explicit referenced function and call it
-          f <- .getFun(paste0(rep$package, "::", rep$fun))
-          content <- do.call(what = f, args = rep$params)
-          if (rep$type == "bulletin") {
-            text <- content
-            attFile <- NULL
-          } else {
-            text <- stdTxt
-            attFile <- content
-          }
-          if (dryRun) {
-            message(paste("No emails sent. Content is:", content))
-          } else {
-            autLogger(
-              user = rep$owner,
-              name = rep$ownerName,
-              registryName = rep$package,
-              reshId = rep$organization,
-              type = rep$type,
-              pkg = rep$package,
-              fun = rep$fun,
-              param = rep$params,
-              msg = paste("recipients:", paste(rep$email,
-                collapse = ", "
-              ))
-            )
-            sendEmail(
-              conf = conf, to = rep$email, subject = rep$synopsis,
-              text = text, attFile = attFile
-            )
-          }
+        # get explicit referenced function and call it
+        f <- .getFun(paste0(rep$package, "::", rep$fun))
+        content <- do.call(what = f, args = rep$params)
+        if (rep$type == "bulletin") {
+          text <- content
+          attFile <- NULL
+        } else {
+          text <- stdTxt
+          attFile <- content
         }
-      },
-      error = function(e) {
-        message(paste(
-          "Report could not be processed (moving on to the next):",
-          e
-        ))
+        if (dryRun) {
+          message(paste("No emails sent. Content is:", content))
+        } else {
+          autLogger(
+            user = rep$owner,
+            name = rep$ownerName,
+            registryName = rep$package,
+            reshId = rep$organization,
+            type = rep$type,
+            pkg = rep$package,
+            fun = rep$fun,
+            param = rep$params,
+            msg = paste("recipients:", paste(rep$email,
+                                             collapse = ", "
+            ))
+          )
+          sendEmail(
+            conf = conf, to = rep$email, subject = rep$synopsis,
+            text = text, attFile = attFile
+          )
+        }
       }
+    },
+    error = function(e) {
+      message(paste(
+        "Report could not be processed (moving on to the next):",
+        e
+      ))
+    }
     )
   }
 }
@@ -728,15 +728,15 @@ makeAutoReportTab <- function(session, namespace = character(),
       }
     }
     r <- list(
-      `Rapport` = autoRep[[n]]$synopsis,
-      `Datakilde` = dataSource,
-      `Mottaker` = paste0(autoRep[[n]]$email, collapse = "<br>"),
-      `Periode` = autoRep[[n]]$intervalName,
-      `Utl\u00F8p` = strftime(as.Date(autoRep[[n]]$terminateDate),
-        format = "%b %Y"
+      "Rapport" = autoRep[[n]]$synopsis,
+      "Datakilde" = dataSource,
+      "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
+      "Periode" = autoRep[[n]]$intervalName,
+      "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
+                              format = "%b %Y"
       ),
-      `Neste` = nextDate,
-      `Endre` = as.character(
+      "Neste" = nextDate,
+      "Endre" = as.character(
         shiny::actionButton(
           inputId = shiny::NS(namespace, paste0("edit__", n)),
           label = "",
@@ -745,7 +745,7 @@ makeAutoReportTab <- function(session, namespace = character(),
                             shiny::NS(namespace, "edit_button"))
         )
       ),
-      `Slett` = as.character(
+      "Slett" = as.character(
         shiny::actionButton(
           inputId = shiny::NS(namespace, paste0("del__", n)),
           label = "",
