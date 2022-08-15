@@ -40,7 +40,7 @@ if (params$type %in% c("dispatchment", "bulletin")) {
   t <- shiny::HTML("1. angi epostadresse",
                    as.character(shiny::icon("at")),
                    "til mottaker av rapporten og trykk",
-                   as.character(shiny::icon("plus-square")),
+                   as.character(shiny::icon("plus-square", verify_fa = FALSE)),
                    "for å legge til lista over mottakere.")
   cat(paste0(t, "\n"))
 }
@@ -52,7 +52,7 @@ Når alt er klart trykk `r shiny::icon("save")` for å aktivere utsendingen. Opp
 if (params$type %in% c("dispatchment", "bulletin")) {
   cat(paste("Ved etablering eller endring av en utsending kan mottakere",
             "slettes ved å angi aktuell epostadresse og trykke på",
-            as.character(shiny::icon("minus-square"))))
+            as.character(shiny::icon("minus-square", verify_fa = FALSE))))
 }
 ```
 
