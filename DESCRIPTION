@@ -35,7 +35,6 @@ Imports:
     knitr,
     magrittr,
     readr,
-    remotes,
     rlang,
     RMariaDB,
     rmarkdown,
