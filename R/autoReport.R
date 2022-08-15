@@ -188,7 +188,7 @@ upgradeAutoReportData <- function(config) {
       upgradeOwnerName <- TRUE
       config[[i]]$ownerName <- ""
     }
-    if ("params" %in% names(rep) && class(rep$params[[1]]) == "list") {
+    if ("params" %in% names(rep) && inherits(rep$params[[1]], "list")) {
       upgradeParams <- TRUE
       paramName <- vector()
       paramValue <- vector()
