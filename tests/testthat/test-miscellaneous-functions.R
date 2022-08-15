@@ -24,7 +24,7 @@ Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 Sys.setenv(R_RAP_INSTANCE = "")
 file.copy(
   system.file(c("rapbaseConfig.yml", "dbConfig.yml"),
-              package = "rapbase"
+    package = "rapbase"
   ),
   tempdir
 )

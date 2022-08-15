@@ -37,7 +37,8 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
   subject <- charToRaw(subject)
   subject <- base64enc::base64encode(subject, linewidth = 63)
   subject <- paste(paste0(charset, enc, subject, headPost),
-                   collapse = " ")
+    collapse = " "
+  )
 
   if (is.null(attFile)) {
     body <- list(text)

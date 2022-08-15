@@ -75,8 +75,10 @@ test_that("formatter returns as expected", {
 test_that("log entries can be read from file", {
   expect_error(rapbase:::readLog(type = "noneExistingLogType"))
   expect_equal(class(rapbase:::readLog(type = "report")), "data.frame")
-  expect_equal(rapbase:::readLog(type = "report", name = "stats")$user,
-               "ttest")
+  expect_equal(
+    rapbase:::readLog(type = "report", name = "stats")$user,
+    "ttest"
+  )
 })
 
 config$r$raplog$eolDays <- -1L
@@ -186,8 +188,10 @@ test_that("app event can be appended to db", {
 test_that("log entries can be read from db", {
   check_db()
   expect_equal(class(rapbase:::readLog(type = "app")), "data.frame")
-  expect_equal(rapbase:::readLog(type = "app", name = "rapbase")$user,
-               "ttester")
+  expect_equal(
+    rapbase:::readLog(type = "app", name = "rapbase")$user,
+    "ttester"
+  )
 })
 
 test_that("log can be sanitized in db", {
@@ -209,10 +213,10 @@ test_that("append and read errors when target is not known", {
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
-                             host = Sys.getenv("DB_HOST"),
-                             user = Sys.getenv("DB_USER"),
-                             password = Sys.getenv("DB_PASS"),
-                             bigint = "integer"
+    host = Sys.getenv("DB_HOST"),
+    user = Sys.getenv("DB_USER"),
+    password = Sys.getenv("DB_PASS"),
+    bigint = "integer"
   )
   RMariaDB::dbExecute(con, paste("DROP DATABASE", nameLogDb))
   rapbase::rapCloseDbConnection(con)

@@ -4,9 +4,12 @@ currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
 # make pristine and dedicated config to avoid interference with other tests
 Sys.setenv(R_RAP_CONFIG_PATH = file.path(tempdir(), "autoReportTesting"))
 dir.create(Sys.getenv("R_RAP_CONFIG_PATH"))
-file.copy(system.file(c("rapbaseConfig.yml", "dbConfig.yml", "autoReport.yml"),
-                      package = "rapbase"),
-          Sys.getenv("R_RAP_CONFIG_PATH"))
+file.copy(
+  system.file(c("rapbaseConfig.yml", "dbConfig.yml", "autoReport.yml"),
+    package = "rapbase"
+  ),
+  Sys.getenv("R_RAP_CONFIG_PATH")
+)
 
 registryName <- "rapbase"
 
@@ -72,164 +75,208 @@ type <- "subscription"
 
 test_that("module server provides sensible output", {
   shiny::testServer(autoReportServer,
-                    args = list(registryName = registryName, type = type,
-                                reports = reports, orgs = orgs), {
-    session$setInputs(report = "FirstReport")
-    expect_equal(class(output$reports), "list")
-
-  })
+    args = list(
+      registryName = registryName, type = type,
+      reports = reports, orgs = orgs
+    ),
+    {
+      session$setInputs(report = "FirstReport")
+      expect_equal(class(output$reports), "list")
+    }
+  )
 })
 
 test_that("no report select list created when no reports available", {
   shiny::testServer(
     autoReportServer,
-    args = list(registryName = registryName, type = type,
-                reports = NULL, orgs = orgs), {
-                  expect_true(is.null(output$reports))
-
-                })
+    args = list(
+      registryName = registryName, type = type,
+      reports = NULL, orgs = orgs
+    ),
+    {
+      expect_true(is.null(output$reports))
+    }
+  )
 })
 
 type <- "dispatchment"
 test_that("email can be added and deleted for dispatchment", {
   shiny::testServer(
     autoReportServer,
-    args = list(registryName = registryName, type = type,
-                org = shiny::reactive(111111),
-                reports = reports, orgs = orgs), {
-                  session$setInputs(email = "true@email.no")
-                  expect_equal(length(autoReport$email), 0)
-                  session$setInputs(addEmail = 1)
-                  expect_equal(autoReport$email[1], "true@email.no")
-                  session$setInputs(delEmail = 1)
-                  expect_equal(length(autoReport$email), 0)
-
-                })
+    args = list(
+      registryName = registryName, type = type,
+      org = shiny::reactive(111111),
+      reports = reports, orgs = orgs
+    ),
+    {
+      session$setInputs(email = "true@email.no")
+      expect_equal(length(autoReport$email), 0)
+      session$setInputs(addEmail = 1)
+      expect_equal(autoReport$email[1], "true@email.no")
+      session$setInputs(delEmail = 1)
+      expect_equal(length(autoReport$email), 0)
+    }
+  )
 })
 
 
 test_that("new dispatchment can be written to and removed from file", {
-  origFileSize <- file.size(file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
-                                      "autoReport.yml"))
+  origFileSize <- file.size(file.path(
+    Sys.getenv("R_RAP_CONFIG_PATH"),
+    "autoReport.yml"
+  ))
   shiny::testServer(
     autoReportServer,
-    args = list(registryName = registryName, type = type,
-                org = shiny::reactive(111111),
-                reports = reports, orgs = orgs, freq = "year"), {
-                  session$setInputs(report = "FirstReport")
-                  session$setInputs(freq = "Aarlig-year")
-                  session$setInputs(start = as.character(Sys.Date()))
-                  session$setInputs(email = "true@email.no")
-                  session$setInputs(addEmail = 1)
-                  session$setInputs(makeAutoReport = 1)
-                  expect_true(origFileSize < file.size(
-                    file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
-                              "autoReport.yml")))
-                  # get newly created edit button id (from last entry in table)
-                  # and test it by entry being removed from table
-                  btnRaw <- autoReport$tab[dim(autoReport$tab)[1], ]$Endre
-                  editButton <- rvest::read_html(btnRaw) %>%
-                    rvest::html_element("button") %>%
-                    rvest::html_attr("id")
-                  repsBefore <- dim(autoReport$tab)[1]
-                  session$setInputs(edit_button = editButton)
-                  repsAfter <- dim(autoReport$tab)[1]
-                  expect_true(repsAfter == (repsBefore - 1))
-                  # then, true deletion (after adding one more time)
-                  session$setInputs(makeAutoReport = 2)
-                  expect_true(repsBefore == dim(autoReport$tab)[1])
-                  btnRaw <- autoReport$tab[dim(autoReport$tab)[1], ]$Slett
-                  delButton <- rvest::read_html(btnRaw) %>%
-                    rvest::html_element("button") %>%
-                    rvest::html_attr("id")
-                  session$setInputs(del_button = delButton)
-                  repsAfter <- dim(autoReport$tab)[1]
-                  expect_true(repsAfter == (repsBefore - 1))
-                })
+    args = list(
+      registryName = registryName, type = type,
+      org = shiny::reactive(111111),
+      reports = reports, orgs = orgs, freq = "year"
+    ),
+    {
+      session$setInputs(report = "FirstReport")
+      session$setInputs(freq = "Aarlig-year")
+      session$setInputs(start = as.character(Sys.Date()))
+      session$setInputs(email = "true@email.no")
+      session$setInputs(addEmail = 1)
+      session$setInputs(makeAutoReport = 1)
+      expect_true(origFileSize < file.size(
+        file.path(
+          Sys.getenv("R_RAP_CONFIG_PATH"),
+          "autoReport.yml"
+        )
+      ))
+      # get newly created edit button id (from last entry in table)
+      # and test it by entry being removed from table
+      btnRaw <- autoReport$tab[dim(autoReport$tab)[1], ]$Endre
+      editButton <- rvest::read_html(btnRaw) %>%
+        rvest::html_element("button") %>%
+        rvest::html_attr("id")
+      repsBefore <- dim(autoReport$tab)[1]
+      session$setInputs(edit_button = editButton)
+      repsAfter <- dim(autoReport$tab)[1]
+      expect_true(repsAfter == (repsBefore - 1))
+      # then, true deletion (after adding one more time)
+      session$setInputs(makeAutoReport = 2)
+      expect_true(repsBefore == dim(autoReport$tab)[1])
+      btnRaw <- autoReport$tab[dim(autoReport$tab)[1], ]$Slett
+      delButton <- rvest::read_html(btnRaw) %>%
+        rvest::html_element("button") %>%
+        rvest::html_attr("id")
+      session$setInputs(del_button = delButton)
+      repsAfter <- dim(autoReport$tab)[1]
+      expect_true(repsAfter == (repsBefore - 1))
+    }
+  )
 })
 
 test_that("paramValues can be tweaked when provided", {
-  origFileSize <- file.size(file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
-                                      "autoReport.yml"))
+  origFileSize <- file.size(file.path(
+    Sys.getenv("R_RAP_CONFIG_PATH"),
+    "autoReport.yml"
+  ))
   shiny::testServer(
     autoReportServer,
-    args = list(registryName = registryName, type = type,
-                org = shiny::reactive(111111),
-                paramNames = shiny::reactive(c("organization", "outputFormat")),
-                paramValues = shiny::reactive(c(999999, "pdf")),
-                reports = reports, orgs = orgs), {
-                  session$setInputs(report = "FirstReport")
-                  session$setInputs(freq = "Maanedlig-month")
-                  session$setInputs(start = as.character(Sys.Date()))
-                  session$setInputs(email = "true@email.no")
-                  session$setInputs(addEmail = 1)
-                  session$setInputs(makeAutoReport = 1)
-                  expect_true(origFileSize < file.size(
-                    file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
-                              "autoReport.yml")))
-                })
+    args = list(
+      registryName = registryName, type = type,
+      org = shiny::reactive(111111),
+      paramNames = shiny::reactive(c("organization", "outputFormat")),
+      paramValues = shiny::reactive(c(999999, "pdf")),
+      reports = reports, orgs = orgs
+    ),
+    {
+      session$setInputs(report = "FirstReport")
+      session$setInputs(freq = "Maanedlig-month")
+      session$setInputs(start = as.character(Sys.Date()))
+      session$setInputs(email = "true@email.no")
+      session$setInputs(addEmail = 1)
+      session$setInputs(makeAutoReport = 1)
+      expect_true(origFileSize < file.size(
+        file.path(
+          Sys.getenv("R_RAP_CONFIG_PATH"),
+          "autoReport.yml"
+        )
+      ))
+    }
+  )
 })
 
 test_that("new subscription can be written to and removed from file", {
-  origFileSize <- file.size(file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
-                                      "autoReport.yml"))
+  origFileSize <- file.size(file.path(
+    Sys.getenv("R_RAP_CONFIG_PATH"),
+    "autoReport.yml"
+  ))
   shiny::testServer(
     autoReportServer,
-    args = list(registryName = registryName, type = "subscription",
-                reports = reports, orgs = orgs), {
-                  session$setInputs(report = "FirstReport")
-                  session$setInputs(freq = "Maanedlig-month")
-                  session$setInputs(start = as.character(Sys.Date()))
-                  session$setInputs(makeAutoReport = 1)
-                  expect_true(origFileSize < file.size(
-                    file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
-                              "autoReport.yml")))
-                  # get newly created edit button id (from last entry in table)
-                  # and test it by entry being removed from table
-                  btnRaw <- autoReport$tab[dim(autoReport$tab)[1], ]$Endre
-                  editButton <- rvest::read_html(btnRaw) %>%
-                    rvest::html_element("button") %>%
-                    rvest::html_attr("id")
-                  repsBefore <- dim(autoReport$tab)[1]
-                  session$setInputs(edit_button = editButton)
-                  repsAfter <- dim(autoReport$tab)[1]
-                  expect_true(repsAfter == (repsBefore - 1))
-                  # then, true deletion (after adding one more time)
-                  session$setInputs(makeAutoReport = 2)
-                  expect_true(repsBefore == dim(autoReport$tab)[1])
-                  btnRaw <- autoReport$tab[dim(autoReport$tab)[1], ]$Slett
-                  delButton <- rvest::read_html(btnRaw) %>%
-                    rvest::html_element("button") %>%
-                    rvest::html_attr("id")
-                  session$setInputs(del_button = delButton)
-                  repsAfter <- dim(autoReport$tab)[1]
-                  expect_true(repsAfter == (repsBefore - 1))
-                })
+    args = list(
+      registryName = registryName, type = "subscription",
+      reports = reports, orgs = orgs
+    ),
+    {
+      session$setInputs(report = "FirstReport")
+      session$setInputs(freq = "Maanedlig-month")
+      session$setInputs(start = as.character(Sys.Date()))
+      session$setInputs(makeAutoReport = 1)
+      expect_true(origFileSize < file.size(
+        file.path(
+          Sys.getenv("R_RAP_CONFIG_PATH"),
+          "autoReport.yml"
+        )
+      ))
+      # get newly created edit button id (from last entry in table)
+      # and test it by entry being removed from table
+      btnRaw <- autoReport$tab[dim(autoReport$tab)[1], ]$Endre
+      editButton <- rvest::read_html(btnRaw) %>%
+        rvest::html_element("button") %>%
+        rvest::html_attr("id")
+      repsBefore <- dim(autoReport$tab)[1]
+      session$setInputs(edit_button = editButton)
+      repsAfter <- dim(autoReport$tab)[1]
+      expect_true(repsAfter == (repsBefore - 1))
+      # then, true deletion (after adding one more time)
+      session$setInputs(makeAutoReport = 2)
+      expect_true(repsBefore == dim(autoReport$tab)[1])
+      btnRaw <- autoReport$tab[dim(autoReport$tab)[1], ]$Slett
+      delButton <- rvest::read_html(btnRaw) %>%
+        rvest::html_element("button") %>%
+        rvest::html_attr("id")
+      session$setInputs(del_button = delButton)
+      repsAfter <- dim(autoReport$tab)[1]
+      expect_true(repsAfter == (repsBefore - 1))
+    }
+  )
 })
 
 test_that("add email button is not created if email is not valid", {
   shiny::testServer(
     autoReportServer,
-    args = list(registryName = registryName, type = type,
-                org = shiny::reactive(111111),
-                reports = reports, orgs = orgs), {
-                  session$setInputs(email = "invalid@email-format")
-                  expect_true(is.null(output$editEmail))
-                  session$setInputs(email = "invalid@email-format.o")
-                  expect_true(is.null(output$editEmail))
-                  session$setInputs(email = "invalid.email-format.on")
-                  expect_true(is.null(output$editEmail))
-                })
+    args = list(
+      registryName = registryName, type = type,
+      org = shiny::reactive(111111),
+      reports = reports, orgs = orgs
+    ),
+    {
+      session$setInputs(email = "invalid@email-format")
+      expect_true(is.null(output$editEmail))
+      session$setInputs(email = "invalid@email-format.o")
+      expect_true(is.null(output$editEmail))
+      session$setInputs(email = "invalid.email-format.on")
+      expect_true(is.null(output$editEmail))
+    }
+  )
 })
 
 test_that("no submit button is provided when module is not eligible", {
   shiny::testServer(
     autoReportServer,
-    args = list(registryName = registryName, type = "subscription",
-                reports = reports, orgs = orgs, eligible = FALSE), {
-                  session$setInputs(email = "valid.email@format.no")
-                  expect_true(is.null(output$makeAutoReport))
-                })
+    args = list(
+      registryName = registryName, type = "subscription",
+      reports = reports, orgs = orgs, eligible = FALSE
+    ),
+    {
+      session$setInputs(email = "valid.email@format.no")
+      expect_true(is.null(output$makeAutoReport))
+    }
+  )
 })
 
 test_that("tabel is replaced by message when no reports listed", {
@@ -237,13 +284,16 @@ test_that("tabel is replaced by message when no reports listed", {
   file.create(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReport.yml"))
   shiny::testServer(
     autoReportServer,
-    args = list(registryName = registryName, type = type,
-                org = shiny::reactive(111111),
-                reports = reports, orgs = orgs), {
-                  session$flushReact()
-                  expect_true(dim(autoReport$tab)[1] == 0)
-
-                })
+    args = list(
+      registryName = registryName, type = type,
+      org = shiny::reactive(111111),
+      reports = reports, orgs = orgs
+    ),
+    {
+      session$flushReact()
+      expect_true(dim(autoReport$tab)[1] == 0)
+    }
+  )
 })
 
 test_that("test app returns an app object", {

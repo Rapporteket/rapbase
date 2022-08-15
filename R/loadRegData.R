@@ -30,15 +30,16 @@ loadRegData <- function(registryName, query, dbType = "mysql") {
 #' @rdname loadRegData
 #' @export
 describeRegistryDb <- function(registryName, tabs = c()) {
-
   qGetTabs <- "SHOW TABLES;"
   qGetDesc <- "DESCRIBE "
 
   desc <- list()
 
   if (length(tabs) == 0) {
-    tabs <- rapbase::loadRegData(registryName = registryName,
-                                 query = qGetTabs)[[1]]
+    tabs <- rapbase::loadRegData(
+      registryName = registryName,
+      query = qGetTabs
+    )[[1]]
   }
 
   for (tab in tabs) {

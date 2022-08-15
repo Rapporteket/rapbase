@@ -56,8 +56,10 @@ test_that("module server provides sensible output", {
   shiny::testServer(statsServer, args = list(registryName = registryName), {
     session$setInputs(type = "app")
     expect_equal(class(output$period), "list")
-    session$setInputs(period = rep(Sys.Date(), 2),
-                      downloadFormat = "csv")
+    session$setInputs(
+      period = rep(Sys.Date(), 2),
+      downloadFormat = "csv"
+    )
     expect_equal(class(output$download), "character")
     session$setInputs(downloadFormat = "xlsx-csv")
     expect_true(file.exists(output$download))
@@ -67,9 +69,11 @@ test_that("module server provides sensible output", {
 test_that("module server is restricted when not eligible", {
   shiny::testServer(
     statsServer,
-    args = list(registryName = registryName, eligible = FALSE), {
+    args = list(registryName = registryName, eligible = FALSE),
+    {
       expect_true(is.null(output$downloadButton))
-    })
+    }
+  )
 })
 
 test_that("test app returns an app object", {
