@@ -728,15 +728,15 @@ makeAutoReportTab <- function(session, namespace = character(),
       }
     }
     r <- list(
-      "Rapport" = autoRep[[n]]$synopsis,
-      "Datakilde" = dataSource,
-      "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
-      "Periode" = autoRep[[n]]$intervalName,
-      "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
+      `Rapport` = autoRep[[n]]$synopsis,
+      `Datakilde` = dataSource,
+      `Mottaker` = paste0(autoRep[[n]]$email, collapse = "<br>"),
+      `Periode` = autoRep[[n]]$intervalName,
+      `Utl\u00F8p` = strftime(as.Date(autoRep[[n]]$terminateDate),
         format = "%b %Y"
       ),
-      "Neste" = nextDate,
-      "Endre" = as.character(
+      `Neste` = nextDate,
+      `Endre` = as.character(
         shiny::actionButton(
           inputId = shiny::NS(namespace, paste0("edit__", n)),
           label = "",
@@ -745,7 +745,7 @@ makeAutoReportTab <- function(session, namespace = character(),
                             shiny::NS(namespace, "edit_button"))
         )
       ),
-      "Slett" = as.character(
+      `Slett` = as.character(
         shiny::actionButton(
           inputId = shiny::NS(namespace, paste0("del__", n)),
           label = "",

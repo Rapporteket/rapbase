@@ -395,11 +395,11 @@ autoReportServer <- function(id, registryName, type, org = NULL,
           shiny::HTML(as.character(shiny::icon("clock")), "Frekvens:")
         ),
         choices = list(
-          "\u00C5rlig" = "\u00C5rlig-year",
-          "Kvartalsvis" = "Kvartalsvis-quarter",
-          "M\u00E5nedlig" = "M\u00E5nedlig-month",
-          "Ukentlig" = "Ukentlig-week",
-          "Daglig" = "Daglig-day"
+          `\u00C5rlig` = "\u00C5rlig-year",
+          `Kvartalsvis` = "Kvartalsvis-quarter",
+          `M\u00E5nedlig` = "M\u00E5nedlig-month",
+          `Ukentlig` = "Ukentlig-week",
+          `Daglig` = "Daglig-day"
         ),
         selected = autoReport$freq
       )
