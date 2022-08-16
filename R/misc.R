@@ -29,7 +29,10 @@ isPkgRapReg <- function(pkg) {
 #' @export
 #'
 #' @examples
-#' getRapPackages()
+#' ## Relevant only in a Rapporteket-like context
+#' if (isRapContext()) {
+#'   getRapPackages()
+#' }
 getRapPackages <- function() {
   allPkg <- as.data.frame(library()$result, stringsAsFactors = FALSE)
   res <- sapply(allPkg$Package, isPkgRapReg)

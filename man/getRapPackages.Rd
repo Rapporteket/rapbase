@@ -14,5 +14,8 @@ Get all installed packages that depends on 'rapbase' which itself will not
 be reported
 }
 \examples{
-getRapPackages()
+## Relevant only in a Rapporteket-like context
+if (isRapContext()) {
+  getRapPackages()
+}
 }
