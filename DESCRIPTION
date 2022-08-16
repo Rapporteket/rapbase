@@ -46,8 +46,8 @@ Imports:
     utils,
     yaml
 RoxygenNote: 7.1.2
-URL: http://github.com/Rapporteket/rapbase
-BugReports: http://github.com/Rapporteket/rapbase/issues
+URL: https://github.com/Rapporteket/rapbase
+BugReports: https://github.com/Rapporteket/rapbase/issues
 Suggests:
     httptest,
     lifecycle,

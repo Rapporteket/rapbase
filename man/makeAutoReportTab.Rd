@@ -59,6 +59,6 @@ allow further development for registry specific purposes. Regardless, this
 column should normally be hidden in the GUI.
 
 Take a look at the
-\href{https://github.com/Rapporteket/rapRegTemplate/blob/rel/inst/shinyApps/app1/server.R}{example shiny server function in rapRegTemplate}
+\href{https://github.com/Rapporteket/rapRegTemplate/blob/main/inst/shinyApps/app1/server.R}{example shiny server function in rapRegTemplate}
 on how this function may be implemented.
 }
