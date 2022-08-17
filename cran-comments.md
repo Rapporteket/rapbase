@@ -9,6 +9,7 @@
 
 * Apple Silicon (M1), macOS 11.6 Big Sur: R version 4.1.3 (2022-03-10)
 * Fedora Linux (clang, gfortran) x86_64-pc-linux-gnu: R Under development (unstable) (2022-08-15 r82721)
+* Debian Linux, GCC (debian-gcc-devel): R Under development (unstable) (2022-07-31 r82648)
 
 ### GitHub Actions
 
