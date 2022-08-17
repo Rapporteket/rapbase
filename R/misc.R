@@ -1,6 +1,6 @@
 #' Test if a package is part of Rapporteket
 #'
-#' Test if an installed package is linked to Rapportekt based on
+#' Test if an installed package is linked to Rapporteket based on
 #' dependency to the package 'rapbase'
 #'
 #' @param pkg String providing the package name
