@@ -217,6 +217,7 @@ test_that("a report sceduled for today with startDate in future is not run", {
 
 # Try to send an email, but expect error since there is no viable smtp set-up
 test_that("Auto reports can be processed and emailed (but failing send)", {
+  skip("cran autocheck false positive on debian")
   expect_warning(
     runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = FALSE)
   )
