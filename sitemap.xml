@@ -22,9 +22,6 @@
     <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>/reference/Helligdager2008til2022.html</loc>
-  </url>
-  <url>
     <loc>/reference/appLog.html</loc>
   </url>
   <url>
@@ -34,13 +31,16 @@
     <loc>/reference/appendLog.html</loc>
   </url>
   <url>
-    <loc>/reference/archive.html</loc>
-  </url>
-  <url>
     <loc>/reference/autoReport.html</loc>
   </url>
   <url>
     <loc>/reference/createAutoReport.html</loc>
+  </url>
+  <url>
+    <loc>/reference/createLogDb.html</loc>
+  </url>
+  <url>
+    <loc>/reference/createLogDbTabs.html</loc>
   </url>
   <url>
     <loc>/reference/deleteAutoReport.html</loc>
@@ -79,16 +79,7 @@
     <loc>/reference/getRegs.html</loc>
   </url>
   <url>
-    <loc>/reference/getShinyUserGroups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getShinyUserName.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getShinyUserReshId.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getShinyUserRole.html</loc>
+    <loc>/reference/getSessionData.html</loc>
   </url>
   <url>
     <loc>/reference/getUserEmail.html</loc>
@@ -121,9 +112,6 @@
     <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>/reference/installGithubPackage.html</loc>
-  </url>
-  <url>
     <loc>/reference/isPkgRapReg.html</loc>
   </url>
   <url>
@@ -142,19 +130,10 @@
     <loc>/reference/makeLogRecord.html</loc>
   </url>
   <url>
-    <loc>/reference/makeMessage.html</loc>
-  </url>
-  <url>
     <loc>/reference/makeRunDayOfYearSequence.html</loc>
   </url>
   <url>
     <loc>/reference/makeStandardTable.html</loc>
-  </url>
-  <url>
-    <loc>/reference/makeUserSubscriptionTab.html</loc>
-  </url>
-  <url>
-    <loc>/reference/makeUserSubscriptionTabV2.html</loc>
   </url>
   <url>
     <loc>/reference/navbarWidget.html</loc>
@@ -178,10 +157,10 @@
     <loc>/reference/rapbase.html</loc>
   </url>
   <url>
-    <loc>/reference/raplogManager.html</loc>
+    <loc>/reference/readAutoReportData.html</loc>
   </url>
   <url>
-    <loc>/reference/readAutoReportData.html</loc>
+    <loc>/reference/readLog.html</loc>
   </url>
   <url>
     <loc>/reference/renderRmd.html</loc>
@@ -196,25 +175,10 @@
     <loc>/reference/runNoweb.html</loc>
   </url>
   <url>
-    <loc>/reference/runShinyApp.html</loc>
-  </url>
-  <url>
-    <loc>/reference/selectByOrganization.html</loc>
-  </url>
-  <url>
-    <loc>/reference/selectByOwner.html</loc>
-  </url>
-  <url>
-    <loc>/reference/selectByReg.html</loc>
-  </url>
-  <url>
-    <loc>/reference/selectByType.html</loc>
+    <loc>/reference/sanitizeLog.html</loc>
   </url>
   <url>
     <loc>/reference/sendEmail.html</loc>
-  </url>
-  <url>
-    <loc>/reference/shinySessionInfo.html</loc>
   </url>
   <url>
     <loc>/reference/stagingData.html</loc>
