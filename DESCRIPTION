@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 1.22.0.9000
+Version: 1.23.0
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -35,7 +35,6 @@ Imports:
     knitr,
     magrittr,
     readr,
-    remotes,
     rlang,
     RMariaDB,
     rmarkdown,
@@ -47,9 +46,10 @@ Imports:
     utils,
     yaml
 RoxygenNote: 7.1.2
-URL: http://github.com/Rapporteket/rapbase
-BugReports: http://github.com/Rapporteket/rapbase/issues
+URL: https://github.com/Rapporteket/rapbase
+BugReports: https://github.com/Rapporteket/rapbase/issues
 Suggests:
+    httptest,
     lifecycle,
     rvest,
     testthat

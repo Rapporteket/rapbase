@@ -50,7 +50,8 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
   # copy all files to temporary workdir
   file.copy(
     list.files(system.file("template", package = "rapbase"), full.names = TRUE),
-    ".", overwrite = TRUE
+    ".",
+    overwrite = TRUE
   )
   file.copy(sourceFile, ".", overwrite = TRUE)
   if (!is.null(logoFile)) {
@@ -62,7 +63,8 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
     output_format =
       switch(outputType,
         pdf = bookdown::pdf_document2(
-          pandoc_args = c(paste0("--template=", template, ".latex"))),
+          pandoc_args = c(paste0("--template=", template, ".latex"))
+        ),
         html = bookdown::html_document2(),
         html_fragment = bookdown::html_fragment2(),
         beamer = rmarkdown::beamer_presentation(theme = "Hannover")

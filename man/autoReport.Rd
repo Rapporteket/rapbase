@@ -113,8 +113,8 @@ The \emph{reports} argument must be a list where each entry
 represents one report and its name will be used in the auto report user
 interface for selecting reports, \emph{e.g.}
 \code{reports = list(MagicReport = ...)} will produce the entry "MagicReport"
-in the GUI selectable reports. The value of each entry must be another list
-with the following names and values:
+in the GUI list of reports to select from. The value of each entry must be
+another list with the following names and values:
 \describe{
   \item{synopsis}{character string describing the report}
   \item{fun}{report function base name (without"()")}

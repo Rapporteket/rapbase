@@ -89,14 +89,20 @@ test_that("Function provides entities in a QA/PRODUCTION context", {
 
 test_that("unicode chars are properly parsed in QA and PROD contexts", {
   shinySession$request["HTTP_FULLNAME"] <- "åse"
-  expect_equal(userInfo(entity = "full_name", shinySession = shinySession),
-               "åse")
+  expect_equal(
+    userInfo(entity = "full_name", shinySession = shinySession),
+    "åse"
+  )
   shinySession$request["HTTP_FULLNAME"] <- "\u00e5se"
-  expect_equal(userInfo(entity = "full_name", shinySession = shinySession),
-               "åse")
+  expect_equal(
+    userInfo(entity = "full_name", shinySession = shinySession),
+    "åse"
+  )
   shinySession$request["HTTP_FULLNAME"] <- "\\u00e5se"
-  expect_equal(userInfo(entity = "full_name", shinySession = shinySession),
-               "åse")
+  expect_equal(
+    userInfo(entity = "full_name", shinySession = shinySession),
+    "åse"
+  )
 })
 
 test_that("Function can handle redefined contexts", {

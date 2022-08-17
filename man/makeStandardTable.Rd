@@ -18,7 +18,7 @@ mst(
 )
 }
 \arguments{
-\item{tab}{Data frame or matrix represetnting the table.}
+\item{tab}{Data frame or matrix representing the table.}
 
 \item{col_names}{Character vector with column names. Defaults
 \code{colnames(tab)}.}
@@ -42,7 +42,7 @@ current R chunk will be used as label.}
 
 \item{align}{Character vector specifying column alignment in the LaTeX way,
 \emph{e.g.} \code{c("l", "c", "r")} will align the first column to the left,
-center the second and right-aling the last one. Default is NULL in which
+center the second and right-align the last one. Default is NULL in which
 case numeric columns are right-aligned and all other columns are
 left-aligned.}
 

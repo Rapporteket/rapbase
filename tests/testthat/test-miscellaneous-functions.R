@@ -24,7 +24,7 @@ Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 Sys.setenv(R_RAP_INSTANCE = "")
 file.copy(
   system.file(c("rapbaseConfig.yml", "dbConfig.yml"),
-              package = "rapbase"
+    package = "rapbase"
   ),
   tempdir
 )
@@ -50,11 +50,11 @@ test_that("pop-up html provide a warning for a non-existing pacakge", {
 })
 
 # a logical providing info if context is Rapporteket
-test_that("we currently do not reside within a Rapportekte context", {
+test_that("we currently do not reside within a Rapporteket context", {
   expect_false(isRapContext())
 })
 Sys.setenv(R_RAP_INSTANCE = "DEV")
-test_that("we are now within a Rapportekte context", {
+test_that("we are now within a Rapporteket context", {
   expect_true(isRapContext())
 })
 

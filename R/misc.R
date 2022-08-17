@@ -1,6 +1,6 @@
 #' Test if a package is part of Rapporteket
 #'
-#' Test if an installed package is linked to Rapportekt based on
+#' Test if an installed package is linked to Rapporteket based on
 #' dependency to the package 'rapbase'
 #'
 #' @param pkg String providing the package name
@@ -14,7 +14,7 @@
 #' @examples
 #' # returns FALSE, rapbase has no explicit dependency to itself
 #' isPkgRapReg("rapbase")
-
+#'
 isPkgRapReg <- function(pkg) {
   grepl("rapbase", utils::packageDescription(pkg)$Depends, fixed = TRUE)
 }
@@ -29,7 +29,10 @@ isPkgRapReg <- function(pkg) {
 #' @export
 #'
 #' @examples
-#' getRapPackages()
+#' ## Relevant only in a Rapporteket-like context
+#' if (isRapContext()) {
+#'   getRapPackages()
+#' }
 getRapPackages <- function() {
   allPkg <- as.data.frame(library()$result, stringsAsFactors = FALSE)
   res <- sapply(allPkg$Package, isPkgRapReg)
@@ -56,7 +59,7 @@ getRapPackages <- function() {
 #'
 #' @examples
 #' isRapContext()
-
+#'
 isRapContext <- function() {
   if (Sys.getenv("R_RAP_INSTANCE") %in% c("DEV", "TEST", "QA", "PRODUCTION")) {
     return(TRUE)
@@ -72,7 +75,7 @@ isRapContext <- function() {
 #'
 #' \code{mst()} creates RMarkdown code for creating standard tables.
 #'
-#' @param tab Data frame or matrix represetnting the table.
+#' @param tab Data frame or matrix representing the table.
 #' @param col_names Character vector with column names. Defaults
 #' \code{colnames(tab)}.
 #' @param type Character string defining output, either "html" or "pdf".
@@ -90,7 +93,7 @@ isRapContext <- function() {
 #' @param digs Integer number of digits to use. 0 by default.
 #' @param align Character vector specifying column alignment in the LaTeX way,
 #' \emph{e.g.} \code{c("l", "c", "r")} will align the first column to the left,
-#' center the second and right-aling the last one. Default is NULL in which
+#' center the second and right-align the last one. Default is NULL in which
 #' case numeric columns are right-aligned and all other columns are
 #' left-aligned.
 #' @param fs Integer providing the font size. Applies only for pdf output.

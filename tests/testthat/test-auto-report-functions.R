@@ -25,8 +25,10 @@ test_that("auto report config can be upgraded", {
 })
 
 test_that("already upgraded auto report config is left as is", {
-  c <- list(list(type = "subscription", ownerName = "Tore Tester",
-                 startDate = "2021-11-19"))
+  c <- list(list(
+    type = "subscription", ownerName = "Tore Tester",
+    startDate = "2021-11-19"
+  ))
   expect_equal(c, upgradeAutoReportData(c))
 })
 
@@ -138,16 +140,22 @@ mapOrgId <- data.frame(id = "999999", name = "HUS", stringsAsFactors = FALSE)
 
 test_that("auto report tables (for shiny) can be made", {
   expect_true(is.list(
-    makeAutoReportTab(shinySession, type = "subscription", mapOrgId = mapOrgId,
-                      includeReportId = TRUE)
+    makeAutoReportTab(shinySession,
+      type = "subscription", mapOrgId = mapOrgId,
+      includeReportId = TRUE
+    )
   ))
   expect_true(is.list(
-    makeAutoReportTab(shinySession, type = "dispatchment", mapOrgId = mapOrgId,
-                      includeReportId = TRUE)
+    makeAutoReportTab(shinySession,
+      type = "dispatchment", mapOrgId = mapOrgId,
+      includeReportId = TRUE
+    )
   ))
   expect_true(is.list(
-    makeAutoReportTab(shinySession, type = "bulletin", mapOrgId = mapOrgId,
-                      includeReportId = TRUE)
+    makeAutoReportTab(shinySession,
+      type = "bulletin", mapOrgId = mapOrgId,
+      includeReportId = TRUE
+    )
   ))
 })
 
@@ -193,11 +201,13 @@ test_that("Auto reports can be processed (shipment by email not tested)", {
 test_that("a report sceduled for today with startDate in future is not run", {
   # skip if today is one of built in report test days
   skip_if((as.POSIXlt(Sys.Date())$yday + 1) %in% c(30, 60, 90),
-          message = "Today is one of three predefined test days.")
+    message = "Today is one of three predefined test days."
+  )
   createAutoReport(synopsis, package, type, fun, paramNames,
-                   paramValues, owner, ownerName, email, organization,
-                   runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
-                   startDate = as.character(Sys.Date() + 1))
+    paramValues, owner, ownerName, email, organization,
+    runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
+    startDate = as.character(Sys.Date() + 1)
+  )
   ## update rd to be used later
   rd <- readAutoReportData()
   expect_silent(
@@ -208,13 +218,15 @@ test_that("a report sceduled for today with startDate in future is not run", {
 # Try to send an email, but expect error since there is no viable smtp set-up
 test_that("Auto reports can be processed and emailed (but failing send)", {
   expect_warning(
-    runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = FALSE))
+    runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = FALSE)
+  )
 })
 
 createAutoReport(synopsis, package, type, fun, paramNames,
-                 paramValues, owner, ownerName, email, organization,
-                 runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
-                 startDate = as.character(Sys.Date() + 1))
+  paramValues, owner, ownerName, email, organization,
+  runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
+  startDate = as.character(Sys.Date() + 1)
+)
 reportId <- names(rd)[length(rd)]
 
 test_that("Auto report can be deleted", {

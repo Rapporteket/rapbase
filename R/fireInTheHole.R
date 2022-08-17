@@ -5,7 +5,7 @@
 #' file, \emph{e.g.} "rapbaseConfig.yml".
 #'
 #' This is a crontab example running fireInTheHole() every night at 01 hours,
-#' Monday throug Friday and with emails supressed:
+#' Monday through Friday and with emails suppressed:
 #' \preformatted{0  1 * * 1-5 Rscript -e 'rapbase::fireInTheHole()' >/dev/null
 #' 2>&1}
 #'
@@ -21,12 +21,11 @@
 #' }
 #'
 fireInTheHole <- function(flipPeriod = FALSE) {
-
   hour <- as.POSIXlt(Sys.time())$hour
   conf <- getConfig(fileName = "rapbaseConfig.yml")
 
   if (hour >= conf$r$schedule$nocturnal$startHour &&
-      hour < conf$r$schedule$nocturnal$endHour) {
+    hour < conf$r$schedule$nocturnal$endHour) {
     night <- TRUE
   } else {
     night <- FALSE

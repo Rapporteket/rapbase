@@ -9,7 +9,7 @@
 #' function properly.
 #'
 #' @param id Character string providing module namespace
-#' @param addUserInfo Logical defing if an "about" hyperlink is to be added
+#' @param addUserInfo Logical defining if an "about" hyperlink is to be added
 #' @param orgName Character string naming the organization
 #' @param caller Character string naming the environment this function was
 #' called from. Default value is \code{environmentName(rlang::caller_env())}.
@@ -51,7 +51,6 @@ NULL
 #' @rdname navbarWidget
 #' @export
 navbarWidgetInput <- function(id, addUserInfo = TRUE) {
-
   shiny::addResourcePath("rap", system.file("www", package = "rapbase"))
 
   shiny::tagList(
@@ -71,9 +70,7 @@ navbarWidgetInput <- function(id, addUserInfo = TRUE) {
 #' @export
 navbarWidgetServer <- function(id, orgName,
                                caller = environmentName(rlang::caller_env())) {
-
   shiny::moduleServer(id, function(input, output, session) {
-
     output$name <- shiny::renderText(rapbase::getUserFullName(session))
     output$affiliation <- shiny::renderText(
       paste(orgName, getUserRole(session), sep = ", ")
@@ -98,14 +95,13 @@ navbarWidgetServer <- function(id, orgName,
 #' @rdname navbarWidget
 #' @export
 navbarWidgetApp <- function(orgName = "Org Name") {
-
   ui <- shiny::tagList(
     shiny::navbarPage(
       "Testpage",
       shiny::tabPanel(
         "Testpanel",
         shiny::mainPanel(
-        navbarWidgetInput("testWidget")
+          navbarWidgetInput("testWidget")
         )
       )
     )
@@ -154,7 +150,7 @@ navbarWidgetApp <- function(orgName = "Org Name") {
 #'
 #' @param user String providing the name of the user
 #' @param organization String providing the organization of the user
-#' @param addUserInfo Logical defining wether a user data pop-up is to be part
+#' @param addUserInfo Logical defining whether a user data pop-up is to be part
 #' of the widget (TRUE) or not (FALSE, default)
 #' @param namespace Character string providing the namespace to use, if any.
 #' Defaults is \code{NULL} in which case no namespace will be applied.
@@ -197,7 +193,7 @@ appNavbarUserWidget <- function(user = "Undefined person",
 
 #' Render text in pop-up
 #'
-#' Render text on how Rapporteket deals witn personal data
+#' Render text on how Rapporteket deals with personal data
 #'
 #' @param session A shiny session object used to personalize the text
 #' @param callerPkg Character string naming the package that makes a call to
@@ -209,7 +205,6 @@ appNavbarUserWidget <- function(user = "Undefined person",
 #' @export
 
 howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
-
   pkg <- list()
   pkg$name <- as.vector(utils::installed.packages()[, 1])
   pkg$ver <- as.vector(utils::installed.packages()[, 3])
@@ -235,11 +230,14 @@ howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
   pkgInfo <- paste0(pkgs, vers, collapse = ", ")
 
   sourceFile <- system.file(
-    "howWeDealWithPersonalData.Rmd", package = "rapbase")
+    "howWeDealWithPersonalData.Rmd",
+    package = "rapbase"
+  )
 
   renderRmd(
     sourceFile = sourceFile, outputType = "html_fragment", params = list(
       session = session,
-      pkgInfo = pkgInfo)
+      pkgInfo = pkgInfo
+    )
   )
 }

@@ -61,11 +61,11 @@ Default value set to \code{NULL} in which case the function will provide an
 expiry date adding 3 years to the current date if in a PRODUCTION context
 and 1 month if not}
 
-\item{interval}{String defining a time intervall as defined in
-\code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an emty string}
+\item{interval}{String defining a time interval as defined in
+\code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an empty string}
 
-\item{intervalName}{String providing a human uderstandable representation of
-\code{interval}. Default value is an emty string}
+\item{intervalName}{String providing a human understandable representation of
+\code{interval}. Default value is an empty string}
 
 \item{dryRun}{Logical defining if global auto report config actually is to
 be updated. If set to TRUE the actual config (all of it) will be returned by

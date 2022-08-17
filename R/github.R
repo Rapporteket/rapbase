@@ -14,7 +14,6 @@
 #' @export
 
 getGithub <- function(what, value, .token = NULL) {
-
   stopifnot(what %in% c("contributors", "members", "keys"))
 
   conf <- rapbase::getConfig("rapbaseConfig.yml")
@@ -24,12 +23,12 @@ getGithub <- function(what, value, .token = NULL) {
     vName <- "login"
   }
 
-  #nocov start
+  # nocov start
   if (what %in% c("members")) {
     endpoint <- paste0("/orgs/rapporteket/teams/", value, "/members")
     vName <- "login"
   }
-  #nocov end
+  # nocov end
 
   if (what %in% c("keys")) {
     endpoint <- paste0("/users/", value, "/keys")

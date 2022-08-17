@@ -2,7 +2,6 @@ test_that("a abbreviated named list can be provided from key(s)", {
   testKey <- "ssh-rsa averylongstring"
   testName <- "ssh-rsa ...ngstring"
   expect_equal(names(selectListPubkey(testKey)), testName)
-
 })
 
 # rest of test on db export will have to be performed where a db is present,
@@ -12,7 +11,9 @@ test_that("a abbreviated named list can be provided from key(s)", {
 currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 file.copy(system.file(c("rapbaseConfig.yml"), package = "rapbase"),
-          Sys.getenv("R_RAP_CONFIG_PATH"), overwrite = TRUE)
+  Sys.getenv("R_RAP_CONFIG_PATH"),
+  overwrite = TRUE
+)
 
 ## shiny session object
 session <- list()
@@ -106,34 +107,39 @@ test_that("export UC input returns a shiny tag list", {
   expect_true("shiny.tag.list" %in% class(exportUCInput("id")))
 })
 
-test_that("module server provides sensible output", {
-  skip("Reqires API authentication")
-  checkDb()
-  shiny::testServer(exportUCServer, args = list(registryName = "rapbase"), {
-    expect_equal(class(output$exportPidUI), "list")
-    session$setInputs(exportPid = "areedv")
-    expect_equal("character", class(pubkey()))
-    session$setInputs(exportKey = pubkey())
-    expect_equal(class(output$exportKeyUI), "list")
-    session$setInputs(exportCompress = FALSE)
-    expect_true(length(encFile()) == 1)
-    session$setInputs(exportDownload = 1)
-    expect_true(basename(output$exportDownload) == basename(encFile()))
-  })
-})
+# To recreate the stored responses delete the 'gh_api_response' directory
+# recursively and re-run these tests
 
-test_that("download is prevented when module is not eligible", {
-  skip("Reqires API authentication")
-  checkDb()
-  shiny::testServer(
-    exportUCServer,
-    args = list(registryName = regName, eligible = FALSE), {
+with_mock_dir("gh_api_response", {
+  test_that("module server provides sensible output", {
+    checkDb()
+    shiny::testServer(exportUCServer, args = list(registryName = "rapbase"), {
+      expect_equal(class(output$exportPidUI), "list")
       session$setInputs(exportPid = "areedv")
+      expect_equal("character", class(pubkey()))
       session$setInputs(exportKey = pubkey())
-      session$setInputs(exportCompress = TRUE)
-      session$setInputs(exportEncrypt = 1)
-      expect_false(exists("output$exportDownload"))
+      expect_equal(class(output$exportKeyUI), "list")
+      session$setInputs(exportCompress = FALSE)
+      expect_true(length(encFile()) == 1)
+      session$setInputs(exportDownload = 1)
+      expect_true(basename(output$exportDownload) == basename(encFile()))
     })
+  })
+
+  test_that("download is prevented when module is not eligible", {
+    checkDb()
+    shiny::testServer(
+      exportUCServer,
+      args = list(registryName = regName, eligible = FALSE),
+      {
+        session$setInputs(exportPid = "areedv")
+        session$setInputs(exportKey = pubkey())
+        session$setInputs(exportCompress = TRUE)
+        session$setInputs(exportEncrypt = 1)
+        expect_false(exists("output$exportDownload"))
+      }
+    )
+  })
 })
 
 test_that("guide test app returns an app object", {

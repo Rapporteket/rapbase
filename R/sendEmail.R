@@ -1,7 +1,7 @@
 #' Send email from Rapporteket
 #'
 #' This function can be used to send email from within R at Rapporteket. It
-#' relies on (and must hence be provided) speciffic settings through local
+#' relies on (and must hence be provided) specific settings through local
 #' configuration to work properly.
 #'
 #' @param conf List containing (Rapporteket) config such as sender email
@@ -37,7 +37,8 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
   subject <- charToRaw(subject)
   subject <- base64enc::base64encode(subject, linewidth = 63)
   subject <- paste(paste0(charset, enc, subject, headPost),
-                   collapse = " ")
+    collapse = " "
+  )
 
   if (is.null(attFile)) {
     body <- list(text)

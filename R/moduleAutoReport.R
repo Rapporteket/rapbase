@@ -7,8 +7,8 @@
 #' represents one report and its name will be used in the auto report user
 #' interface for selecting reports, \emph{e.g.}
 #' \code{reports = list(MagicReport = ...)} will produce the entry "MagicReport"
-#' in the GUI selectable reports. The value of each entry must be another list
-#' with the following names and values:
+#' in the GUI list of reports to select from. The value of each entry must be
+#' another list with the following names and values:
 #' \describe{
 #'   \item{synopsis}{character string describing the report}
 #'   \item{fun}{report function base name (without"()")}
@@ -134,7 +134,6 @@ NULL
 #' @rdname autoReport
 #' @export
 autoReportUI <- function(id) {
-
   shiny::tagList(
     shiny::uiOutput(shiny::NS(id, "autoReportTable"))
   )
@@ -143,7 +142,6 @@ autoReportUI <- function(id) {
 #' @rdname autoReport
 #' @export
 autoReportOrgInput <- function(id) {
-
   shiny::tagList(
     shiny::uiOutput(shiny::NS(id, "orgs"))
   )
@@ -153,13 +151,14 @@ autoReportOrgInput <- function(id) {
 #' @export
 autoReportOrgServer <- function(id, orgs) {
   shiny::moduleServer(id, function(input, output, session) {
-
     output$orgs <- shiny::renderUI({
       shiny::selectInput(
         shiny::NS(id, "org"),
         label = shiny::tags$div(
-          shiny::HTML(as.character(shiny::icon("database")),
-                      "Velg datakilde:")
+          shiny::HTML(
+            as.character(shiny::icon("database")),
+            "Velg datakilde:"
+          )
         ),
         choices = orgs,
         selected = unlist(orgs, use.names = FALSE)[1]
@@ -179,7 +178,6 @@ autoReportOrgServer <- function(id, orgs) {
 #' @rdname autoReport
 #' @export
 autoReportFormatInput <- function(id) {
-
   shiny::tagList(
     shiny::uiOutput(shiny::NS(id, "format"))
   )
@@ -189,7 +187,6 @@ autoReportFormatInput <- function(id) {
 #' @export
 autoReportFormatServer <- function(id) {
   shiny::moduleServer(id, function(input, output, session) {
-
     output$format <- shiny::renderUI({
       shiny::selectInput(
         shiny::NS(id, "format"),
@@ -208,7 +205,6 @@ autoReportFormatServer <- function(id) {
 #' @rdname autoReport
 #' @export
 autoReportInput <- function(id) {
-
   shiny::tagList(
     shiny::uiOutput(shiny::NS(id, "reports")),
     shiny::uiOutput(shiny::NS(id, "synopsis")),
@@ -230,7 +226,6 @@ autoReportServer <- function(id, registryName, type, org = NULL,
                              paramValues = shiny::reactiveVal(c("")),
                              reports = NULL, orgs = NULL, eligible = TRUE,
                              freq = "month") {
-
   if (!type %in% c("subscription")) {
     stopifnot(shiny::is.reactive(org))
     stopifnot(shiny::is.reactive(paramNames))
@@ -240,15 +235,14 @@ autoReportServer <- function(id, registryName, type, org = NULL,
   stopifnot(freq %in% c("day", "week", "month", "quarter", "year"))
 
   defaultFreq <- switch(freq,
-                        day = "Daglig-day",
-                        week = "Ukentlig-week",
-                        month = "M\u00E5nedlig-month",
-                        quarter = "Kvartalsvis-quarter",
-                        year = "\u00C5rlig-year"
+    day = "Daglig-day",
+    week = "Ukentlig-week",
+    month = "M\u00E5nedlig-month",
+    quarter = "Kvartalsvis-quarter",
+    year = "\u00C5rlig-year"
   )
 
   shiny::moduleServer(id, function(input, output, session) {
-
     autoReport <- shiny::reactiveValues(
       tab = makeAutoReportTab(
         session = session,
@@ -373,7 +367,8 @@ autoReportServer <- function(id, registryName, type, org = NULL,
             shiny::HTML(as.character(shiny::icon("file")), "Velg rapport:")
           ),
           choices = names(reports),
-          selected = autoReport$report)
+          selected = autoReport$report
+        )
       }
     })
 
@@ -395,9 +390,9 @@ autoReportServer <- function(id, registryName, type, org = NULL,
           shiny::HTML(as.character(shiny::icon("clock")), "Frekvens:")
         ),
         choices = list(
-          "\u00C5rlig" = "\u00C5rlig-year",
+          "Aarlig" = "\u00C5rlig-year",
           "Kvartalsvis" = "Kvartalsvis-quarter",
-          "M\u00E5nedlig" = "M\u00E5nedlig-month",
+          "Maanedlig" = "M\u00E5nedlig-month",
           "Ukentlig" = "Ukentlig-week",
           "Daglig" = "Daglig-day"
         ),
@@ -419,8 +414,9 @@ autoReportServer <- function(id, registryName, type, org = NULL,
           Sys.Date() + 1
         } else {
           seq.Date(Sys.Date(),
-                   by = strsplit(input$freq, "-")[[1]][2],
-                   length.out = 2)[2]
+            by = strsplit(input$freq, "-")[[1]][2],
+            length.out = 2
+          )[2]
         },
         min = Sys.Date() + 1,
         max = seq.Date(Sys.Date(), length.out = 2, by = "1 years")[2] - 1
@@ -434,7 +430,8 @@ autoReportServer <- function(id, registryName, type, org = NULL,
           label = shiny::tags$div(
             shiny::HTML(as.character(shiny::icon("at")), "E-post mottaker:")
           ),
-          value = "gyldig@epostadresse.no")
+          value = "gyldig@epostadresse.no"
+        )
       } else {
         NULL
       }
@@ -443,20 +440,24 @@ autoReportServer <- function(id, registryName, type, org = NULL,
     output$editEmail <- shiny::renderUI({
       if (type %in% c("dispatchment", "bulletin")) {
         shiny::req(input$email)
-        if (!grepl("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
-                   input$email)) {
+        if (!grepl(
+          "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$",
+          input$email
+        )) {
           NULL
         } else {
           if (input$email %in% autoReport$email) {
             shiny::actionButton(
               shiny::NS(id, "delEmail"),
               shiny::HTML(paste("Slett mottaker<br/>", input$email)),
-              icon = shiny::icon("minus-square"))
+              icon = shiny::icon("minus-square")
+            )
           } else {
             shiny::actionButton(
               shiny::NS(id, "addEmail"),
               shiny::HTML(paste("Legg til mottaker<br/>", input$email)),
-              icon = shiny::icon("plus-square"))
+              icon = shiny::icon("plus-square")
+            )
           }
         }
       } else {
@@ -499,7 +500,8 @@ autoReportServer <- function(id, registryName, type, org = NULL,
     })
 
     output$activeReports <- DT::renderDataTable(
-      autoReport$tab, server = FALSE, escape = FALSE, selection = "none",
+      autoReport$tab,
+      server = FALSE, escape = FALSE, selection = "none",
       rownames = FALSE,
       options = list(
         dom = "tp", ordering = FALSE,
@@ -522,8 +524,10 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       } else if (length(autoReport$tab) == 0) {
         shiny::tagList(
           shiny::h2("Det finnes ingen oppf\u00F8ringer"),
-          shiny::p(paste("Nye oppf\u00F8ringer kan lages fra menyen til",
-                         "venstre. Bruk gjerne veiledingen under.")),
+          shiny::p(paste(
+            "Nye oppf\u00F8ringer kan lages fra menyen til",
+            "venstre. Bruk gjerne veiledingen under."
+          )),
           shiny::htmlOutput(shiny::NS(id, "autoReportGuide"))
         )
       } else {
@@ -539,7 +543,8 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       renderRmd(
         sourceFile = system.file("autoReportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
-        params = list(registryName = registryName, type = type))
+        params = list(registryName = registryName, type = type)
+      )
     })
   })
 }
@@ -561,7 +566,6 @@ autoReportApp <- function(registryName = "rapbase", type = "subscription",
   )
 
   server <- function(input, output, session) {
-
     org <- autoReportOrgServer("test", orgs)
     format <- autoReportFormatServer("test")
 
@@ -581,7 +585,6 @@ autoReportApp <- function(registryName = "rapbase", type = "subscription",
 #' @rdname autoReport
 #' @export
 orgList2df <- function(orgs) {
-
   data.frame(
     name = names(orgs),
     id = as.vector(sapply(orgs, unname))

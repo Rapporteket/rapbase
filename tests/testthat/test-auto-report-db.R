@@ -22,8 +22,10 @@ check_db <- function(is_test_that = TRUE) {
 
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 
-file.copy(system.file(c("rapbaseConfig.yml"), package = "rapbase"),
-          Sys.getenv("R_RAP_CONFIG_PATH"))
+file.copy(
+  system.file(c("rapbaseConfig.yml"), package = "rapbase"),
+  Sys.getenv("R_RAP_CONFIG_PATH")
+)
 configFile <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
 
 nameAutoReportDb <- "autoreportTest"
@@ -121,10 +123,10 @@ test_that("sample auto report data can be read from db", {
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
-                             host = Sys.getenv("DB_HOST"),
-                             user = Sys.getenv("DB_USER"),
-                             password = Sys.getenv("DB_PASS"),
-                             bigint = "integer"
+    host = Sys.getenv("DB_HOST"),
+    user = Sys.getenv("DB_USER"),
+    password = Sys.getenv("DB_PASS"),
+    bigint = "integer"
   )
   RMariaDB::dbExecute(con, paste("DROP DATABASE", nameAutoReportDb))
   rapbase::rapCloseDbConnection(con)

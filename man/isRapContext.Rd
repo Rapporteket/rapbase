@@ -16,4 +16,5 @@ environment variable \code{R_RAP_INSTANCE} is set to either "DEV", "TEST",
 }
 \examples{
 isRapContext()
+
 }

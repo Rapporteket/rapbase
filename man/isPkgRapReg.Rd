@@ -13,12 +13,13 @@ isPkgRapReg(pkg)
 Logical TRUE if pkg depends on 'rapbase', FALSE if not
 }
 \description{
-Test if an installed package is linked to Rapportekt based on
+Test if an installed package is linked to Rapporteket based on
 dependency to the package 'rapbase'
 }
 \examples{
 # returns FALSE, rapbase has no explicit dependency to itself
 isPkgRapReg("rapbase")
+
 }
 \seealso{
 \code{\link{getRapPackages}} on how to list all packages that

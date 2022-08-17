@@ -16,7 +16,7 @@ appNavbarUserWidget(
 
 \item{organization}{String providing the organization of the user}
 
-\item{addUserInfo}{Logical defining wether a user data pop-up is to be part
+\item{addUserInfo}{Logical defining whether a user data pop-up is to be part
 of the widget (TRUE) or not (FALSE, default)}
 
 \item{namespace}{Character string providing the namespace to use, if any.

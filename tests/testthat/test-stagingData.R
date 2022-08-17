@@ -6,9 +6,11 @@ registryName <- "testReg"
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 dataName <- "testData"
 d <- mtcars
-testPath <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"),
-                      "stagingData",
-                      registryName)
+testPath <- file.path(
+  Sys.getenv("R_RAP_CONFIG_PATH"),
+  "stagingData",
+  registryName
+)
 testFile <- file.path(testPath, dataName)
 
 test_that("staging cannot commence if paret directory does not exist", {
@@ -21,8 +23,10 @@ test_that("staging cannot commence if paret directory does not exist", {
 test_that("relevant directories are created at first time use", {
   expect_equal(
     pathStagingData(registryName,
-                    dir = Sys.getenv("R_RAP_CONFIG_PATH")),
-    testPath)
+      dir = Sys.getenv("R_RAP_CONFIG_PATH")
+    ),
+    testPath
+  )
 })
 
 test_that("data can be stored for staging", {

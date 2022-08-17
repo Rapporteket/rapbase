@@ -31,10 +31,10 @@
 #' Default value set to \code{NULL} in which case the function will provide an
 #' expiry date adding 3 years to the current date if in a PRODUCTION context
 #' and 1 month if not
-#' @param interval String defining a time intervall as defined in
-#' \code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an emty string
-#' @param intervalName String providing a human uderstandable representation of
-#' \code{interval}. Default value is an emty string
+#' @param interval String defining a time interval as defined in
+#' \code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an empty string
+#' @param intervalName String providing a human understandable representation of
+#' \code{interval}. Default value is an empty string
 #' @param dryRun Logical defining if global auto report config actually is to
 #' be updated. If set to TRUE the actual config (all of it) will be returned by
 #' the function. FALSE by default
@@ -127,7 +127,6 @@ deleteAutoReport <- function(autoReportId) {
 #' readAutoReportData()
 readAutoReportData <- function(fileName = "autoReport.yml",
                                packageName = "rapbase") {
-
   config <- getConfig(fileName = "rapbaseConfig.yml")
 
   target <- config$r$autoReport$target
@@ -158,7 +157,7 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   }
 
   upgradeAutoReportData(conf)
-  #conf
+  # conf
 }
 
 #' Upgrade auto reports
@@ -188,7 +187,7 @@ upgradeAutoReportData <- function(config) {
       upgradeOwnerName <- TRUE
       config[[i]]$ownerName <- ""
     }
-    if ("params" %in% names(rep) && class(rep$params[[1]]) == "list") {
+    if ("params" %in% names(rep) && inherits(rep$params[[1]], "list")) {
       upgradeParams <- TRUE
       paramName <- vector()
       paramValue <- vector()
@@ -253,7 +252,6 @@ upgradeAutoReportData <- function(config) {
 #'
 writeAutoReportData <- function(fileName = "autoReport.yml", config,
                                 packageName = "rapbase") {
-
   rc <- getConfig(fileName = "rapbaseConfig.yml")
   target <- rc$r$autoReport$target
   key <- rc$r$autoReport$key
@@ -292,7 +290,7 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
       # to maintain some order, remove files older than 30 days
       files <- file.info(list.files(bckFilePath, full.names = TRUE))
       rmFiles <- rownames(files[difftime(Sys.time(), files[, "mtime"],
-                                         units = "days"
+        units = "days"
       ) > 30, ])
       file.remove(rmFiles)
       con <- file(oriFile, "w")
@@ -313,10 +311,10 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #'
 #' @param data List (nested) specifying auto reports to be filtered. May be
 #' obtained by \code{rapbase::getConfig(fileName = "autoReport.yml")}
-#' @param by Character string definig the filtering entity and must be one of
+#' @param by Character string defining the filtering entity and must be one of
 #' \code{c("package", "type", "owner", "organization")}. The term 'package'
 #' represents the registry name
-#' @param pass Character vector definig the values of the filtering entity that
+#' @param pass Character vector defining the values of the filtering entity that
 #' will allow reports to pass through the filter
 #'
 #' @return List of auto reports matching the filtering criteria
@@ -325,9 +323,8 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #' @examples
 #' ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
 #' filterAutoRep(ar, "type", "B") # ar2
-
+#'
 filterAutoRep <- function(data, by, pass) {
-
   stopifnot(by %in% c("package", "type", "owner", "organization"))
 
   if (length(data) == 0) {
@@ -341,7 +338,6 @@ filterAutoRep <- function(data, by, pass) {
     }
     c(data[ind])
   }
-
 }
 
 
@@ -439,7 +435,7 @@ getRegs <- function(config) {
 #' @param dayNumber Integer day of year where January 1st is 1. Defaults to
 #' current day, \emph{i.e.} \code{as.POSIXlt(Sys.Date())$yday + 1} (POSIXlt
 #' yday is base 0)
-#' @param type Character vector defining the type of reports to be porcessed.
+#' @param type Character vector defining the type of reports to be processed.
 #' May contain one or more of
 #' \code{c("subscription", "dispatchment", "bulletin")}. Defaults value set to
 #' \code{c("subscription", "dispatchment")}.
@@ -460,7 +456,6 @@ getRegs <- function(config) {
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                           type = c("subscription", "dispatchment"),
                           dryRun = FALSE) {
-
   . <- ""
 
   # get report candidates
@@ -475,7 +470,8 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
   for (i in seq_len(length(reps))) {
-    tryCatch({
+    tryCatch(
+      {
         rep <- reps[[i]]
         if (dayNumber %in% rep$runDayOfYear &
           as.Date(rep$terminateDate) > Sys.Date() &
@@ -532,7 +528,6 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
 #' @export
 
 runBulletin <- function() {
-
   runAutoReport(type = c("bulletin"))
 }
 
@@ -595,12 +590,13 @@ findNextRunDate <- function(runDayOfYear,
                             baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
                             startDate = NULL,
                             returnFormat = "%A %e. %B %Y") {
-
   year <- as.POSIXlt(Sys.Date())$year + 1900
 
   if (!is.null(startDate)) {
-    if (as.Date(startDate) > as.Date(strptime(paste(year, baseDayNum),
-                                              "%Y %j"))) {
+    if (as.Date(startDate) > as.Date(strptime(
+      paste(year, baseDayNum),
+      "%Y %j"
+    ))) {
       # since we pull the NEXT run day set new base day on day BEFORE star date
       baseDayNum <- as.POSIXlt(startDate)$yday
     }
@@ -669,7 +665,7 @@ findNextRunDate <- function(runDayOfYear,
 #' column should normally be hidden in the GUI.
 #'
 #' Take a look at the
-#' \href{https://github.com/Rapporteket/rapRegTemplate/blob/rel/inst/shinyApps/app1/server.R}{example shiny server function in rapRegTemplate}
+#' \href{https://github.com/Rapporteket/rapRegTemplate/blob/main/inst/shinyApps/app1/server.R}{example shiny server function in rapRegTemplate}
 #' on how this function may be implemented.
 #'
 #' @param session A shiny session object
@@ -732,7 +728,7 @@ makeAutoReportTab <- function(session, namespace = character(),
       "Datakilde" = dataSource,
       "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
       "Periode" = autoRep[[n]]$intervalName,
-      "Utl\u00F8p" = strftime(as.Date(autoRep[[n]]$terminateDate),
+      "Slutt" = strftime(as.Date(autoRep[[n]]$terminateDate),
         format = "%b %Y"
       ),
       "Neste" = nextDate,
@@ -741,8 +737,10 @@ makeAutoReportTab <- function(session, namespace = character(),
           inputId = shiny::NS(namespace, paste0("edit__", n)),
           label = "",
           icon = shiny::icon("edit"),
-          onclick = sprintf("Shiny.onInputChange('%s', this.id)",
-                            shiny::NS(namespace, "edit_button"))
+          onclick = sprintf(
+            "Shiny.onInputChange('%s', this.id)",
+            shiny::NS(namespace, "edit_button")
+          )
         )
       ),
       "Slett" = as.character(
@@ -750,8 +748,10 @@ makeAutoReportTab <- function(session, namespace = character(),
           inputId = shiny::NS(namespace, paste0("del__", n)),
           label = "",
           icon = shiny::icon("trash"),
-          onclick = sprintf("Shiny.onInputChange('%s', this.id)",
-                            shiny::NS(namespace, "del_button"))
+          onclick = sprintf(
+            "Shiny.onInputChange('%s', this.id)",
+            shiny::NS(namespace, "del_button")
+          )
         )
       )
     )

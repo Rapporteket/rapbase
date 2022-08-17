@@ -40,7 +40,7 @@
 
 # rapbase 1.19.3
 
-* Added T1 fontencoding to defult LaTeX template for proper printing of symbols (_e.g._ > and <) in pdfs ([#94](https://github.com/Rapporteket/rapbase/pull/94))
+* Added T1 fontencoding to default LaTeX template for proper printing of symbols (_e.g._ > and <) in pdfs ([#94](https://github.com/Rapporteket/rapbase/pull/94))
 * Replaced function none ascii with unicode characters
 
 # rapbase 1.19.2
