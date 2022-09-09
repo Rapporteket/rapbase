@@ -1,37 +1,39 @@
 #' Provide user attributes based on environment context
 #'
-#' Extracts elements from either config, url (shiny) or session (shiny)
-#' relevant for user data such as name, group, role and reshId. Source of info
-#' is based on environment context and can be controlled by altering the default
-#' settings for which contexts that will apply for the various sources of user
-#' data. This function will normally be used via its helper functions (see
-#' below).
+#' Extracts elements from either config, url (shiny), shiny session or
+#' environmental variables relevant for user data such as name, group, role and
+#' org id (\emph{e.g.} resh id). Source of info is based on environment context
+#' and can be controlled by altering the default settings for which contexts
+#' that will apply for the various sources of user data. This function will
+#' normally be used via its helper functions (see below).
 #'
 #' @param entity String defining the element to return. Currently, one of
-#' 'user', groups', 'resh_id', 'role', 'email', 'full_name' or 'phone'
+#'   'user', groups', 'resh_id', 'role', 'email', 'full_name' or 'phone'.
 #' @param shinySession Shiny session object (list, NULL by default). Must be
-#' provided when the source of user attributes is either the shiny app url or
-#' an external authentication provider. By default this will apply to the
-#' 'TEST', 'QA' and 'PRODUCTION' contexts in which case the shiny session
-#' object must be provided.
+#'   provided when the source of user attributes is either the shiny app url or
+#'   an external authentication provider. By default this will apply to the
+#'   'TEST', 'QA' and 'PRODUCTION' contexts in which case the shiny session
+#'   object must be provided.
 #' @param devContexts A character vector providing unique instances to be
-#' regarded as a development context. In this context user attributes will be
-#' read from configuration as provided by 'rapbaseConfig.yml'. The instances
-#' provided cannot overlap instances provided in any other contexts. By default
-#' set to \code{c("DEV")}.
+#'   regarded as a development context. In this context user attributes will be
+#'   read from configuration as provided by 'rapbaseConfig.yml'. The instances
+#'   provided cannot overlap instances provided in any other contexts. By
+#'   default set to \code{c("DEV")}.
 #' @param testContexts A character vector providing unique instances to be
-#' regarded as a test context. In this context user attributes will be read
-#' from the url call to a shiny application. Hence, for this context the
-#' corresponding shiny session object must also be provided. The instances
-#' provided cannot overlap instances provided in any other contexts. By default
-#' set to \code{c("TEST")}.
+#'   regarded as a test context. In this context user attributes will be read
+#'   from the url call to a shiny application. Hence, for this context the
+#'   corresponding shiny session object must also be provided. The instances
+#'   provided cannot overlap instances provided in any other contexts. By
+#'   default set to \code{c("TEST")}.
 #' @param prodContexts A character vector providing unique instances to be
-#' regarded as a production context. In this context user attributes will be
-#' read from the shiny session object (as shiny server interacts with an
-#' external log-in service). Hence, for this context the corresponding shiny
-#' session object must also be provided. The instances provided cannot overlap
-#' instances provided in any other contexts. By default set to
-#' \code{c("QA", "PRODUCTION")}.
+#'   regarded as a production context. In this context user attributes will be
+#'   read from the shiny session object (on deployment in shiny-server) or, from
+#'   environmental variables (on standalone container deployment). Hence, for
+#'   this context the corresponding shiny session object must also be provided.
+#'   Instances provided cannot overlap instances in any other contexts. By
+#'   default set to \code{c("QA", "QAC", "PRODUCTION", "PRODUCTIONC")}.
+#'   Duplication as seen by the "C" suffix will be needed as long as apps in
+#'   question are to be run on both shiny-server and as standalone containers.
 #'
 #' @return String of single user data element
 #'
@@ -40,9 +42,26 @@
 #'
 #' @export
 
-userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
-                     testContexts = c("TEST"),
-                     prodContexts = c("QA", "PRODUCTION")) {
+userInfo <- function(
+    entity,
+    shinySession = NULL,
+    devContexts = c("DEV"),
+    testContexts = c("TEST"),
+    prodContexts = c("QA", "QAC", "PRODUCTION", "PRODUCTIONC")
+) {
+
+  # stop helper function
+  stopifnotShinySession <- function(object) {
+    if (!inherits(
+      shinySession, c("ShinySession", "session_proxy", "MockShinySession")
+    )) {
+      stop(paste(
+        "'ShinySession' argument is not a shiny session object! Cannot go on."
+      ))
+    } else {
+      invisible()
+    }
+  }
 
   # check for valid entities
   if (!(entity %in% c(
@@ -50,7 +69,7 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
     "full_name", "phone"
   ))) {
     stop("Incorrect entity provided! Must be one of 'user', 'groups', 'resh_id'
-         'role' or 'email'")
+         'role', 'email', 'full_name' or 'phone'.")
   }
 
   # check if any contexts overlap, and stop if so
@@ -76,17 +95,8 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
   }
 
   if (context %in% devContexts) {
-    if (is.null(shinySession)) {
-      stop("Session information is empty! Eventually, that will come bite you")
-    }
 
-    if (!any(c("ShinySession", "session_proxy", "MockShinySession") %in%
-      attributes(shinySession)$class)) {
-      stop(paste(
-        "Got no object of class 'ShinySession' or 'session_proxy'!",
-        "Your carma is way below threshold..."
-      ))
-    }
+    stopifnotShinySession(shinySession)
 
     conf <- getConfig(fileName = "rapbaseConfig.yml")
     d <- conf$r$testUser
@@ -100,17 +110,8 @@ userInfo <- function(entity, shinySession = NULL, devContexts = c("DEV"),
   }
 
   if (context %in% testContexts || context %in% prodContexts) {
-    if (is.null(shinySession)) {
-      stop("Session information is empty!. Cannot do anything")
-    }
 
-    if (!any(c("ShinySession", "session_proxy") %in%
-      attributes(shinySession)$class)) {
-      stop(paste(
-        "Got no object of class 'ShinySession' or 'session_proxy'!",
-        "Cannot do anything"
-      ))
-    }
+    stopifnotShinySession(shinySession)
 
     if (context %in% testContexts) {
       us <- shiny::parseQueryString(shinySession$clientData$url_search)
