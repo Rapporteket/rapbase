@@ -58,5 +58,5 @@ normally be used via its helper functions (see below).
 }
 \seealso{
 \code{\link{getUserName}}, \code{\link{getUserGroups}},
-\code{\link{getUserReshId}}, \code{\link{getUserRole}}
+  \code{\link{getUserReshId}}, \code{\link{getUserRole}}
 }

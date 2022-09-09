@@ -128,6 +128,31 @@ test_that("Function can handle redefined contexts", {
   ), "999999")
 })
 
+# New: container instance for QA and PRODUCTION contexts
+with_envvar(
+  new = c(
+    "R_RAP_INSTANCE" = "QAC",
+    "SHINYPROXY_USERNAME" = "userc",
+    "SHINYPROXY_USERGROUPS" = "groupsc",
+    "USERORGID" = "13579",
+    "USERROLE" = "rolec",
+    "USEREMAIL" = "userc@container.no",
+    "USERFULLNAME" = "User Container",
+    "USERPHONE" = "+4787654321"
+  ),
+  code = {
+    test_that("User attribs can be fetched in container instance (QA, PROD)", {
+      expect_equal(getUserName(shinySession), "userc")
+      expect_equal(getUserGroups(shinySession), "groupsc")
+      expect_equal(getUserReshId(shinySession), "13579")
+      expect_equal(getUserRole(shinySession), "rolec")
+      expect_equal(getUserEmail(shinySession), "userc@container.no")
+      expect_equal(getUserFullName(shinySession), "User Container")
+      expect_equal(getUserPhone(shinySession), "+4787654321")
+    })
+  }
+)
+
 # Restore instance
 Sys.setenv(R_RAP_INSTANCE = currentInstance)
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)

@@ -38,7 +38,7 @@
 #' @return String of single user data element
 #'
 #' @seealso \code{\link{getUserName}}, \code{\link{getUserGroups}},
-#' \code{\link{getUserReshId}}, \code{\link{getUserRole}}
+#'   \code{\link{getUserReshId}}, \code{\link{getUserRole}}
 #'
 #' @export
 
@@ -109,22 +109,25 @@ userInfo <- function(
     phone <- d$phone
   }
 
-  if (context %in% testContexts || context %in% prodContexts) {
+  if (context %in% testContexts) {
 
     stopifnotShinySession(shinySession)
 
-    if (context %in% testContexts) {
-      us <- shiny::parseQueryString(shinySession$clientData$url_search)
-      user <- us$`X-USER`
-      groups <- us$`X-GROUPS`
-      resh_id <- us$resh_id
-      role <- us$role
-      email <- us$email
-      full_name <- us$full_name
-      phone <- us$phone
-    }
+    us <- shiny::parseQueryString(shinySession$clientData$url_search)
+    user <- us$`X-USER`
+    groups <- us$`X-GROUPS`
+    resh_id <- us$resh_id
+    role <- us$role
+    email <- us$email
+    full_name <- us$full_name
+    phone <- us$phone
+  }
 
-    if (context %in% prodContexts) {
+  if (context %in% prodContexts) {
+
+    stopifnotShinySession(shinySession)
+
+    if (context %in% c("QA", "PRODUCTION")) {
       user <- shinySession$user
       groups <- shinySession$groups
       resh_id <- shinySession$request$HTTP_RESHID
@@ -133,6 +136,17 @@ userInfo <- function(
       full_name <-
         parse(text = paste0("'", shinySession$request$HTTP_FULLNAME, "'"))[[1]]
       phone <- shinySession$request$HTTP_PHONE
+    }
+
+    if (context %in% c("QAC", "PRODUCTIONC")) {
+      user <- Sys.getenv("SHINYPROXY_USERNAME")
+      groups <- Sys.getenv("SHINYPROXY_USERGROUPS")
+      resh_id <- Sys.getenv("USERORGID")
+      role <- Sys.getenv("USERROLE")
+      email <- Sys.getenv("USEREMAIL")
+      full_name <-
+        parse(text = paste0("'", Sys.getenv("USERFULLNAME"), "'"))[[1]]
+      phone <- Sys.getenv("USERPHONE")
     }
   }
 

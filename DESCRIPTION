@@ -52,4 +52,5 @@ Suggests:
     httptest,
     lifecycle,
     rvest,
-    testthat
+    testthat,
+    withr
