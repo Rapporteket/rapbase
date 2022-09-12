@@ -431,7 +431,13 @@ sanitizeLog <- function() {
       if (backupOk) {
         lf <- lf %>%
           dplyr::filter(as.Date(.data$time) > eolDate)
-        write.table(lf, logFile[i], append = FALSE, col.names = TRUE, sep = ",")
+        write.table(
+          lf,
+          logFile[i],
+          append = FALSE,
+          sep = ",",
+          row.names = FALSE,
+          col.names = TRUE)
       }
     }
   }
