@@ -437,7 +437,8 @@ sanitizeLog <- function() {
           append = FALSE,
           sep = ",",
           row.names = FALSE,
-          col.names = TRUE)
+          col.names = TRUE,
+          qmethod = "double")
       }
     }
   }
