@@ -55,7 +55,7 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   if (is.null(terminateDate)) {
     context <- Sys.getenv("R_RAP_INSTANCE")
     terminateDate <- as.POSIXlt(Sys.Date())
-    if (context %in% c("PRODUCTION")) {
+    if (context %in% c("PRODUCTION", "PRODUCTIONC")) {
       terminateDate$year <- terminateDate$year + 3
     } else {
       terminateDate$mon <- terminateDate$mon + 1
