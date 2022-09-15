@@ -404,7 +404,7 @@ readLog <- function(type, name = "") {
 #' Sanitize log entries that have reached end of life
 #'
 #' @return NULL on success
-#' @keywords internal
+#' @export
 sanitizeLog <- function() {
   conf <- getConfig(fileName = "rapbaseConfig.yml")
 
