@@ -50,6 +50,7 @@ reference:
       Handle logging
     contents:
     - logger
+    - sanitizeLog
 
   - title: Automated reports
     desc: >
