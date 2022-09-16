@@ -129,6 +129,7 @@ test_that("Function can handle redefined contexts", {
 })
 
 # New: container instance for QA and PRODUCTION contexts
+shinySession$userData$defaultGroup <- "myDefaultGroup"
 with_envvar(
   new = c(
     "R_RAP_INSTANCE" = "QAC",
@@ -143,7 +144,7 @@ with_envvar(
   code = {
     test_that("User attribs can be fetched in container instance (QA, PROD)", {
       expect_equal(getUserName(shinySession), "userc")
-      expect_equal(getUserGroups(shinySession), "groupsc")
+      expect_equal(getUserGroups(shinySession), "myDefaultGroup")
       expect_equal(getUserReshId(shinySession), "13579")
       expect_equal(getUserRole(shinySession), "rolec")
       expect_equal(getUserEmail(shinySession), "userc@container.no")

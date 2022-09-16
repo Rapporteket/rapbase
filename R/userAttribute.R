@@ -140,7 +140,7 @@ userInfo <- function(
 
     if (context %in% c("QAC", "PRODUCTIONC")) {
       user <- Sys.getenv("SHINYPROXY_USERNAME")
-      groups <- Sys.getenv("SHINYPROXY_USERGROUPS")
+      groups <- shinySession$userData$defaultGroup
       resh_id <- Sys.getenv("USERORGID")
       role <- Sys.getenv("USERROLE")
       email <- Sys.getenv("USEREMAIL")
