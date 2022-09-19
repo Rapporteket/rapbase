@@ -1,3 +1,7 @@
+# rapbase 1.23.1
+
+* Fixed Fixed bug in log sanitizer function ([#130](https://github.com/Rapporteket/rapbase/pull/130))
+
 # rapbase 1.23.0
 
 * Reduced number of imports by replacing local function with functions from [sship](https://github.com/Rapporteket/sship) ([#127](https://github.com/Rapporteket/rapbase/pull/127))
