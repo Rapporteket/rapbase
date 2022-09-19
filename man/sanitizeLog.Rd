@@ -12,4 +12,3 @@ NULL on success
 \description{
 Sanitize log entries that have reached end of life
 }
-\keyword{internal}

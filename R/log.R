@@ -404,7 +404,7 @@ readLog <- function(type, name = "") {
 #' Sanitize log entries that have reached end of life
 #'
 #' @return NULL on success
-#' @keywords internal
+#' @export
 sanitizeLog <- function() {
   conf <- getConfig(fileName = "rapbaseConfig.yml")
 
@@ -431,7 +431,14 @@ sanitizeLog <- function() {
       if (backupOk) {
         lf <- lf %>%
           dplyr::filter(as.Date(.data$time) > eolDate)
-        write.table(lf, logFile[i], append = FALSE, col.names = TRUE, sep = ",")
+        write.table(
+          lf,
+          logFile[i],
+          append = FALSE,
+          sep = ",",
+          row.names = FALSE,
+          col.names = TRUE,
+          qmethod = "double")
       }
     }
   }
