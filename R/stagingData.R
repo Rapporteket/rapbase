@@ -148,8 +148,8 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
       paste(
         "Function invoked in dry run mode and none of the returned files\n",
         "will be deleted.\n",
-        "To delete the files please re-run this function with the dryRun\n",
-        "argument set to 'TRUE'. Godspeed!"
+        "To delete the files please contemplate and re-run this function\n",
+        "with the dryRun argument set to 'FALSE'. Godspeed!"
       )
     )
     fDelete
