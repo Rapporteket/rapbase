@@ -9,7 +9,11 @@
 \usage{
 navbarWidgetInput(id, addUserInfo = TRUE)
 
-navbarWidgetServer(id, orgName, caller = environmentName(rlang::caller_env()))
+navbarWidgetServer(
+  id,
+  orgName,
+  caller = environmentName(topenv(parent.frame()))
+)
 
 navbarWidgetApp(orgName = "Org Name")
 }
@@ -21,7 +25,7 @@ navbarWidgetApp(orgName = "Org Name")
 \item{orgName}{Character string naming the organization}
 
 \item{caller}{Character string naming the environment this function was
-called from. Default value is \code{environmentName(rlang::caller_env())}.
+called from. Default value is \code{environmentName(topenv(parent.frame()))}.
 The value is used to display the current version of the R package
 representing the registry at Rapporteket. If this module is called from
 exported functions in the registry R package use the default value. If the

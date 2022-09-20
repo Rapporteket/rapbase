@@ -12,7 +12,7 @@
 #' @param addUserInfo Logical defining if an "about" hyperlink is to be added
 #' @param orgName Character string naming the organization
 #' @param caller Character string naming the environment this function was
-#' called from. Default value is \code{environmentName(rlang::caller_env())}.
+#' called from. Default value is \code{environmentName(topenv(parent.frame()))}.
 #' The value is used to display the current version of the R package
 #' representing the registry at Rapporteket. If this module is called from
 #' exported functions in the registry R package use the default value. If the
@@ -68,8 +68,12 @@ navbarWidgetInput <- function(id, addUserInfo = TRUE) {
 
 #' @rdname navbarWidget
 #' @export
-navbarWidgetServer <- function(id, orgName,
-                               caller = environmentName(rlang::caller_env())) {
+navbarWidgetServer <- function(
+    id,
+    orgName,
+    caller = environmentName(topenv(parent.frame()))
+) {
+
   shiny::moduleServer(id, function(input, output, session) {
     output$name <- shiny::renderText(rapbase::getUserFullName(session))
     output$affiliation <- shiny::renderText(
