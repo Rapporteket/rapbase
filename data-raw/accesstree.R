@@ -2,100 +2,100 @@ j <- '
 {
     "AccessUnits": [
       {
-        "UnitId": 100082,
+        "UnitId": 1,
         "ParentUnitId": 0,
         "HasDatabase": true,
         "ExternalId": 100082,
-        "HealthUnitId": null,
-        "Title": "Helse Bergen HF",
+        "HealthUnitId": 100082,
+        "Title": "Helse Bergen HF - SC",
         "TitleWithPath": "Helse Bergen HF",
         "ValidFrom": null,
         "ValidTo": null,
-        "ExtraData": null
+        "ExtraData": "SC"
       },
       {
-        "UnitId": 102966,
-        "ParentUnitId": 100082,
+        "UnitId": 2,
+        "ParentUnitId": 1,
         "HasDatabase": true,
         "ExternalId": 102966,
-        "HealthUnitId": null,
-        "Title": "HB Hjerteavdelingen",
+        "HealthUnitId": 102966,
+        "Title": "HB Hjerteavdelingen - LU",
         "TitleWithPath": "Helse Bergen HF - HB Hjerteavdelingen",
         "ValidFrom": null,
         "ValidTo": null,
-        "ExtraData": null
+        "ExtraData": "LU"
       },
       {
-        "UnitId": 4001031,
+        "UnitId": 3,
         "ParentUnitId": 0,
         "HasDatabase": true,
         "ExternalId": 4001031,
-        "HealthUnitId": null,
-        "Title": "Oslo universitetssykehus HF",
+        "HealthUnitId": 4001031,
+        "Title": "Oslo universitetssykehus HF - SC",
         "TitleWithPath": "Oslo universitetssykehus HF",
         "ValidFrom": null,
         "ValidTo": null,
-        "ExtraData": null
+        "ExtraData": "SC"
       },
       {
-        "UnitId": 700328,
-        "ParentUnitId": 4001031,
+        "UnitId": 4,
+        "ParentUnitId": 3,
         "HasDatabase": true,
         "ExternalId": 700328,
-        "HealthUnitId": null,
-        "Title": "Hjerte-, lunge- og karklinikken",
+        "HealthUnitId": 700328,
+        "Title": "Hjerte-, lunge- og karklinikken - LU",
         "TitleWithPath": "Oslo universitetssykehus HF - Hjerte-, lunge- og karklinikken",
         "ValidFrom": null,
         "ValidTo": null,
-        "ExtraData": null
+        "ExtraData": "LU"
       },
       {
-        "UnitId": 100320,
+        "UnitId": 5,
         "ParentUnitId": 0,
         "HasDatabase": true,
         "ExternalId": 100320,
-        "HealthUnitId": null,
-        "Title": "St. Olavs Hospital HF",
+        "HealthUnitId": 100320,
+        "Title": "St. Olavs Hospital HF - SC",
         "TitleWithPath": "St. Olavs Hospital HF",
         "ValidFrom": null,
         "ValidTo": null,
-        "ExtraData": null
+        "ExtraData": "SC"
       },
       {
-        "UnitId": 104284,
-        "ParentUnitId": 100320,
+        "UnitId": 6,
+        "ParentUnitId": 5,
         "HasDatabase": true,
         "ExternalId": 104284,
-        "HealthUnitId": null,
-        "Title": "Klinikk for Hjertemedisin",
+        "HealthUnitId": 104284,
+        "Title": "Klinikk for Hjertemedisin - LU",
         "TitleWithPath": "St. Olavs Hospital HF - Klinikk for Hjertemedisin",
         "ValidFrom": null,
         "ValidTo": null,
-        "ExtraData": null
+        "ExtraData": "LU"
       },
       {
-        "UnitId": 106944,
+        "UnitId": 7,
         "ParentUnitId": 0,
         "HasDatabase": true,
         "ExternalId": 106944,
-        "HealthUnitId": null,
-        "Title": "AHUS Gardermoen",
+        "HealthUnitId": 106944,
+        "Title": "AHUS Gardermoen - SC",
         "TitleWithPath": "AHUS Gardermoen",
         "ValidFrom": null,
         "ValidTo": null,
-        "ExtraData": null
+        "ExtraData": "SC"
       },
       {
-        "UnitId": 4214492,
-        "ParentUnitId": 106944,
+        "UnitId": 8,
+        "ParentUnitId": 7,
         "HasDatabase": true,
         "ExternalId": 4214492,
-        "HealthUnitId": null,
-        "Title": "Hjertemedisinsk avdeling",
+        "HealthUnitId": 4214492,
+        "Title": "Hjertemedisinsk avdeling - LU",
         "TitleWithPath": "AHUS Gardermoen - Hjertemedisinsk avdeling",
         "ValidFrom": null,
         "ValidTo": null,
-        "ExtraData": null
+        "ExtraData": "LU"
       }
     ]
   }

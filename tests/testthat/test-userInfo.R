@@ -130,13 +130,37 @@ test_that("Function can handle redefined contexts", {
 
 # New: container instance for QA and PRODUCTION contexts
 shinySession$userData$defaultGroup <- "myDefaultGroup"
+
+Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
+file.copy(
+  system.file(
+    c("rapbaseConfig.yml", "extdata/accesstree.json"), package = "rapbase"
+  ),
+  Sys.getenv("R_RAP_CONFIG_PATH")
+)
+
+test_that("error is returned when attributes file does not exist", {
+  expect_error(unitAttribute(1, "role", file = "does_not_exist.json"))
+})
+
+test_that("error is returned when unknown attribute", {
+  expect_error(unitAttribute(1, "userRole"))
+})
+
+test_that("warning is given when unit does not exist", {
+  expect_warning(unitAttribute(100000, "role"))
+})
+
+test_that("unit attributes can be obtained", {
+  expect_equal(unitAttribute(2, "role"), "LU")
+})
+
 with_envvar(
   new = c(
     "R_RAP_INSTANCE" = "QAC",
     "SHINYPROXY_USERNAME" = "userc",
     "SHINYPROXY_USERGROUPS" = "groupsc",
-    "USERORGID" = "13579",
-    "USERROLE" = "rolec",
+    "USERORGID" = "2",
     "USEREMAIL" = "userc@container.no",
     "USERFULLNAME" = "User Container",
     "USERPHONE" = "+4787654321"
@@ -144,9 +168,9 @@ with_envvar(
   code = {
     test_that("User attribs can be fetched in container instance (QA, PROD)", {
       expect_equal(getUserName(shinySession), "userc")
-      expect_equal(getUserGroups(shinySession), "myDefaultGroup")
-      expect_equal(getUserReshId(shinySession), "13579")
-      expect_equal(getUserRole(shinySession), "rolec")
+      expect_equal(getUserGroups(shinySession), "groupsc")
+      expect_equal(getUserReshId(shinySession), "102966")
+      expect_equal(getUserRole(shinySession), "LU")
       expect_equal(getUserEmail(shinySession), "userc@container.no")
       expect_equal(getUserFullName(shinySession), "User Container")
       expect_equal(getUserPhone(shinySession), "+4787654321")
