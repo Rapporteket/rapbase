@@ -129,8 +129,6 @@ test_that("Function can handle redefined contexts", {
 })
 
 # New: container instance for QA and PRODUCTION contexts
-shinySession$userData$defaultGroup <- "myDefaultGroup"
-
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 file.copy(
   system.file(
@@ -139,6 +137,78 @@ file.copy(
   Sys.getenv("R_RAP_CONFIG_PATH")
 )
 
+## setContainerEnv
+test_that("errors are returned when insufficient shiny session environment", {
+  expect_error(setContainerEnv(NULL))
+  expect_error(
+    setContainerEnv(shinySession),
+    regexp = "Shiny session environment does not contain the package name")
+})
+
+shinySession$userData$packageName <- "app1"
+
+with_envvar(
+  new = c(
+    "SHINYPROXY_USERGROUPS" = "groupsc"
+  ),
+  code = {
+    test_that("errors are returned when insufficient system environment", {
+      expect_error(
+        setContainerEnv(shinySession),
+        regexp = "Environmental variables SHINYPROXY_USERGROUPS and USERORGID")
+    })
+  }
+)
+
+with_envvar(
+  new = c(
+    "USERORGID" = "1"
+  ),
+  code = {
+    test_that("errors are returned when insufficient system environment", {
+      expect_error(
+        setContainerEnv(shinySession),
+        regexp = "Environmental variables SHINYPROXY_USERGROUPS and USERORGID")
+    })
+  }
+)
+
+with_envvar(
+  new = c(
+    "SHINYPROXY_USERGROUPS" = "app1,app2",
+    "USERORGID" = "[1]"
+  ),
+  code = {
+    test_that("error is returned when environment elements are not equal", {
+      expect_error(
+        setContainerEnv(shinySession),
+        regexp = "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID")
+    })
+  }
+)
+
+with_envvar(
+  new = c(
+    "SHINYPROXY_USERGROUPS" = "app1,app1,app2,app2",
+    "USERORGID" = "[1, 2, 3, 4]"
+  ),
+  code = {
+    test_that("apps and orgs are returned correspondingly when unit = NULL", {
+      expect_true(class(setContainerEnv(shinySession)) == "list")
+      expect_true(
+        length(setContainerEnv(shinySession)$app) ==
+          length(setContainerEnv(shinySession)$org)
+      )
+      expect_true(setContainerEnv(shinySession)$app[1] == "app1")
+      expect_true(setContainerEnv(shinySession)$app[2] == "app1")
+      expect_true(setContainerEnv(shinySession)$org[1] == "1")
+      expect_true(setContainerEnv(shinySession)$org[2] == "2")
+    })
+  }
+)
+
+
+## unitAttribute
 test_that("error is returned when attributes file does not exist", {
   expect_error(unitAttribute(1, "role", file = "does_not_exist.json"))
 })

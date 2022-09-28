@@ -162,6 +162,83 @@ userInfo <- function(
 }
 
 
+#' IN CONSTRUCTION: Get environmental variables for for container apps.
+#'
+#' For apps running as containers particular environment variables must be
+#' defined for an orderly handling of dynamic user privileges. This function
+#' makes use of information stored in the shiny session environment and in
+#' environmental variables defined by shinyproxy to set (new) environment
+#' variables APP_ORG and APP_ROLE that defines the current role and organization
+#' for the app.
+#'
+#' @param shinySession A shiny session object
+#' @param unit Integer providing the look-up unit id. Default value is NULL in
+#'   which case the first viable option will be used
+#'
+#' @return Invisible NULL on success
+#' @export
+
+setContainerEnv <- function(shinySession, unit = NULL) {
+
+  stopifnot(!is.null(shinySession))
+
+  if (is.null(shinySession$userData$packageName) ||
+      shinySession$userData$packageName == "") {
+    stop(paste(
+      "Shiny session environment does not contain the package name. Until",
+      "furhter notice please add the following code in the server function:",
+      "'session$userData$packageName <- packageName()'."
+    ))
+  }
+
+  if (Sys.getenv("SHINYPROXY_USERGROUPS") == "" ||
+      Sys.getenv("USERORGID") == "") {
+    stop(paste(
+      "Environmental variables SHINYPROXY_USERGROUPS and USERORGID must both",
+      "be set!"
+    ))
+  }
+
+  # make vectors of vals
+  orgs <- unlist(
+    strsplit(
+      gsub("\\s|\\[|\\]", "", Sys.getenv("USERORGID")),
+      ","
+    )
+  )
+  apps <- unlist(
+    strsplit(
+      gsub("\\s|\\[|\\]", "", Sys.getenv("SHINYPROXY_USERGROUPS")),
+      ","
+    )
+  )
+
+  if(length(orgs) != length(apps)) {
+    stop(paste(
+      "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID are of",
+      "different lengths. Hence, correspondence cannot be anticipated."
+    ))
+  }
+
+  # NB Anticipate that element positions in vectors do correspond!
+  ## filter by this app
+  app <- apps[apps == shinySession$userData$packageName]
+  org <- orgs[apps == shinySession$userData$packageName]
+
+  ## return all or filter current unit when provided
+  if(is.null(unit)) {
+    list(
+      app = app,
+      org = org
+    )
+  } else {
+    list(
+      app = app[org == unit],
+      org = org[org == unit]
+    )
+  }
+}
+
 #' Get unit attributes from an access tree file
 #'
 #' Obtain organization unit attributes from an access tree JSON file
