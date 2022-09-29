@@ -10,14 +10,17 @@
 #'
 #' @param id Character string providing module namespace
 #' @param addUserInfo Logical defining if an "about" hyperlink is to be added
+#' @param selectOrganization Logical providing option for selecting among
+#'   available organizations.
 #' @param orgName Character string naming the organization
 #' @param caller Character string naming the environment this function was
-#' called from. Default value is \code{environmentName(topenv(parent.frame()))}.
-#' The value is used to display the current version of the R package
-#' representing the registry at Rapporteket. If this module is called from
-#' exported functions in the registry R package use the default value. If the
-#' module is called from outside the registry environment \code{caller} must be
-#' set to the actual name of the R package.
+#'   called from. Default value is
+#'   \code{environmentName(topenv(parent.frame()))}. The value is used to
+#'   display the current version of the R package representing the registry at
+#'   Rapporteket. If this module is called from exported functions in th
+#'   registry R package use the default value. If the module is called from
+#'   outside the registry environment \code{caller} must be set to the actual
+#'   name of the R package.
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name navbarWidget
@@ -50,7 +53,9 @@ NULL
 
 #' @rdname navbarWidget
 #' @export
-navbarWidgetInput <- function(id, addUserInfo = TRUE) {
+navbarWidgetInput <- function(id,
+                              addUserInfo = TRUE,
+                              selectOrganization = FALSE) {
   shiny::addResourcePath("rap", system.file("www", package = "rapbase"))
 
   shiny::tagList(
@@ -91,6 +96,24 @@ navbarWidgetServer <- function(
         closeOnClickOutside = TRUE,
         html = TRUE,
         confirmButtonText = rapbase::noOptOutOk()
+      )
+    })
+
+    # Select organization in widget
+    shiny::observeEvent(input$selectOrganization, {
+      shinyalert::shinyalert(
+        "Velg organisasjon",
+        paste(
+          "Velg avdeling og rolle du ønsker å representere for", orgName,
+          "i Rapporteket og trykk OK.",
+          "Dine valgmuligheter er basert på de tilganger som er satt.",
+          "Ta kontakt med registeret om du mener at lista over valg",
+          "ikke er riktg."
+        ),
+        type = "", imageUrl = "rap/logo.svg",
+        closeOnEsc = FALSE,
+        closeOnClickOutside = FALSE,
+        confirmButtonText = "OK"
       )
     })
   })
@@ -155,9 +178,10 @@ navbarWidgetApp <- function(orgName = "Org Name") {
 #' @param user String providing the name of the user
 #' @param organization String providing the organization of the user
 #' @param addUserInfo Logical defining whether a user data pop-up is to be part
-#' of the widget (TRUE) or not (FALSE, default)
+#'   of the widget (TRUE) or not (FALSE, default)
+#' @param selectOrganization Logical if organization can be selected.
 #' @param namespace Character string providing the namespace to use, if any.
-#' Defaults is \code{NULL} in which case no namespace will be applied.
+#'   Defaults is \code{NULL} in which case no namespace will be applied.
 #'
 #' @return Ready made html script
 #' @export
@@ -167,6 +191,7 @@ navbarWidgetApp <- function(orgName = "Org Name") {
 appNavbarUserWidget <- function(user = "Undefined person",
                                 organization = "Undefined organization",
                                 addUserInfo = FALSE,
+                                selectOrganization = FALSE,
                                 namespace = NULL) {
   if (addUserInfo) {
     userInfo <- shiny::tags$a(
@@ -179,6 +204,17 @@ appNavbarUserWidget <- function(user = "Undefined person",
     userInfo <- character()
   }
 
+  if (selectOrganization) {
+    org <- shiny::tags$a(
+      id = shiny::NS(namespace, "selectOrganization"),
+      href = "#",
+      class = "action-button",
+      shiny::HTML(gsub("\\n", "", organization))
+    )
+  } else {
+    org <- organization
+  }
+
   txtWidget <-
     paste0(
       "var header = $('.navbar> .container-fluid');\n",
@@ -186,7 +222,7 @@ appNavbarUserWidget <- function(user = "Undefined person",
       "style=\"float:right;vertical-align:super;font-size:65%\">",
       userInfo,
       user,
-      organization,
+      org,
       "</div>');\n",
       "console.log(header)"
     )
