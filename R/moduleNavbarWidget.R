@@ -63,6 +63,7 @@ navbarWidgetInput <- function(id,
       user = shiny::uiOutput(shiny::NS(id, "name")),
       organization = shiny::uiOutput(shiny::NS(id, "affiliation")),
       addUserInfo = addUserInfo,
+      selectOrganization = selectOrganization,
       namespace = id
     ),
     shiny::tags$head(
@@ -101,14 +102,27 @@ navbarWidgetServer <- function(
 
     # Select organization in widget
     shiny::observeEvent(input$selectOrganization, {
+      privs <- getContainerPrivileges(caller)
+      choices <- privs$unit
+      names(choices) <- paste0(privs$name, " (", privs$org, ") - ", privs$role)
       shinyalert::shinyalert(
-        "Velg organisasjon",
-        paste(
-          "Velg avdeling og rolle du ønsker å representere for", orgName,
-          "i Rapporteket og trykk OK.",
-          "Dine valgmuligheter er basert på de tilganger som er satt.",
-          "Ta kontakt med registeret om du mener at lista over valg",
-          "ikke er riktg."
+        html = TRUE,
+        title = "Velg organisasjon og rolle",
+        text = shiny::tagList(
+          shiny::p(
+            paste(
+              "Velg organisasjon og rolle du ønsker å representere for",
+              orgName, "i Rapporteket og trykk OK.",
+              "Dine valgmuligheter er basert på de tilganger som er satt.",
+              "Ta kontakt med registeret om du mener at lista over valg",
+              "ikke er riktg."
+            )
+          ),
+          shiny::selectInput(
+            session$ns("org"),
+            "",
+            choices
+          )
         ),
         type = "", imageUrl = "rap/logo.svg",
         closeOnEsc = FALSE,
@@ -128,7 +142,7 @@ navbarWidgetApp <- function(orgName = "Org Name") {
       shiny::tabPanel(
         "Testpanel",
         shiny::mainPanel(
-          navbarWidgetInput("testWidget")
+          navbarWidgetInput("testWidget", selectOrganization = TRUE)
         )
       )
     )
