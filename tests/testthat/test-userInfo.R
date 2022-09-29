@@ -137,24 +137,15 @@ file.copy(
   Sys.getenv("R_RAP_CONFIG_PATH")
 )
 
-## setContainerEnv
-test_that("errors are returned when insufficient shiny session environment", {
-  expect_error(setContainerEnv(NULL))
-  expect_error(
-    setContainerEnv(shinySession),
-    regexp = "Shiny session environment does not contain the package name")
-})
-
-shinySession$userData$packageName <- "app1"
 
 with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "groupsc"
+    "SHINYPROXY_USERGROUPS" = "rapbase"
   ),
   code = {
     test_that("errors are returned when insufficient system environment", {
       expect_error(
-        setContainerEnv(shinySession),
+        getContainerPrivileges("rapbase"),
         regexp = "Environmental variables SHINYPROXY_USERGROUPS and USERORGID")
     })
   }
@@ -167,7 +158,7 @@ with_envvar(
   code = {
     test_that("errors are returned when insufficient system environment", {
       expect_error(
-        setContainerEnv(shinySession),
+        getContainerPrivileges("rapbase"),
         regexp = "Environmental variables SHINYPROXY_USERGROUPS and USERORGID")
     })
   }
@@ -175,13 +166,13 @@ with_envvar(
 
 with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "app1,app2",
+    "SHINYPROXY_USERGROUPS" = "rapbase,utils",
     "USERORGID" = "[1]"
   ),
   code = {
     test_that("error is returned when environment elements are not equal", {
       expect_error(
-        setContainerEnv(shinySession),
+        getContainerPrivileges("rapbase"),
         regexp = "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID")
     })
   }
@@ -189,24 +180,63 @@ with_envvar(
 
 with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "app1,app1,app2,app2",
+    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
     "USERORGID" = "[1, 2, 3, 4]"
   ),
   code = {
-    test_that("apps and orgs are returned correspondingly when unit = NULL", {
-      expect_true(class(setContainerEnv(shinySession)) == "list")
+    test_that("group and unit are returned correspondingly when unit = NULL", {
+      expect_true(class(getContainerPrivileges("rapbase")) == "list")
       expect_true(
-        length(setContainerEnv(shinySession)$app) ==
-          length(setContainerEnv(shinySession)$org)
+        length(getContainerPrivileges("rapbase")$group) ==
+          length(getContainerPrivileges("rapbase")$unit)
       )
-      expect_true(setContainerEnv(shinySession)$app[1] == "app1")
-      expect_true(setContainerEnv(shinySession)$app[2] == "app1")
-      expect_true(setContainerEnv(shinySession)$org[1] == "1")
-      expect_true(setContainerEnv(shinySession)$org[2] == "2")
+      expect_true(length(getContainerPrivileges("rapbase")$group) == 2)
+      expect_true(getContainerPrivileges("rapbase")$group[1] == "rapbase")
+      expect_true(getContainerPrivileges("rapbase")$group[2] == "rapbase")
+      expect_true(getContainerPrivileges("rapbase")$unit[1] == "1")
+      expect_true(getContainerPrivileges("rapbase")$unit[2] == "2")
     })
   }
 )
 
+with_envvar(
+  new = c(
+    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
+    "USERORGID" = "[1, 2, 3, 4]"
+  ),
+  code = {
+    test_that("group and unit are returned correspondingly when unit is given", {
+      expect_true(class(getContainerPrivileges("rapbase")) == "list")
+      expect_true(
+        length(getContainerPrivileges("rapbase", unit = 2)$group) ==
+          length(getContainerPrivileges("rapbase", unit = 2)$unit)
+      )
+      expect_true(
+        getContainerPrivileges("rapbase", unit = 2)$unit == 2
+      )
+      expect_true(
+        getContainerPrivileges("utils", unit = 3)$unit == 3
+      )
+    })
+  }
+)
+
+with_envvar(
+  new = c(
+    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
+    "USERORGID" = "[1, 2, 3, 4]"
+  ),
+  code = {
+    test_that("correct lookup values are provided", {
+      expect_true(
+        getContainerPrivileges("rapbase", unit = 2)$org == 102966
+      )
+      expect_true(
+        getContainerPrivileges("utils", unit = 3)$role == "SC"
+      )
+    })
+  }
+)
 
 ## unitAttribute
 test_that("error is returned when attributes file does not exist", {

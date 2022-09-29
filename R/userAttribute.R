@@ -140,13 +140,18 @@ userInfo <- function(
 
     if (context %in% c("QAC", "PRODUCTIONC")) {
       user <- Sys.getenv("SHINYPROXY_USERNAME")
-      groups <- Sys.getenv("SHINYPROXY_USERGROUPS")
-      resh_id <- unitAttribute(Sys.getenv("USERORGID"), "resh")
-      role <- unitAttribute(Sys.getenv("USERORGID"), "role")
       email <- Sys.getenv("USEREMAIL")
       full_name <-
         parse(text = paste0("'", Sys.getenv("USERFULLNAME"), "'"))[[1]]
       phone <- Sys.getenv("USERPHONE")
+      # pick the first of available user privileges
+      privs <- getContainerPrivileges(
+        group = environmentName(topenv(parent.frame()))
+      )
+      privs <- as.data.frame(privs)[1, ]
+      groups <- privs$group
+      resh_id <- privs$org
+      role <- privs$role
     }
   }
 
@@ -166,30 +171,21 @@ userInfo <- function(
 #'
 #' For apps running as containers particular environment variables must be
 #' defined for an orderly handling of dynamic user privileges. This function
-#' makes use of information stored in the shiny session environment and in
-#' environmental variables defined by shinyproxy to set (new) environment
-#' variables APP_ORG and APP_ROLE that defines the current role and organization
-#' for the app.
+#' makes use of environmental variables defined by shinyproxy to provide
+#' available privileges for the shiny application
 #'
-#' @param shinySession A shiny session object
+#' @param group Character string providing the name of the app R package name.
+#'   The term "group" is used to relate to the environmental variable
+#'   SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.
 #' @param unit Integer providing the look-up unit id. Default value is NULL in
-#'   which case the first viable option will be used
+#'   which case all privileges for \code{group} are returned.
 #'
-#' @return Invisible NULL on success
+#' @return List of privileges
 #' @export
 
-setContainerEnv <- function(shinySession, unit = NULL) {
+getContainerPrivileges <- function(group, unit = NULL) {
 
-  stopifnot(!is.null(shinySession))
-
-  if (is.null(shinySession$userData$packageName) ||
-      shinySession$userData$packageName == "") {
-    stop(paste(
-      "Shiny session environment does not contain the package name. Until",
-      "furhter notice please add the following code in the server function:",
-      "'session$userData$packageName <- packageName()'."
-    ))
-  }
+  stopifnot(group %in% utils::installed.packages()[, 1])
 
   if (Sys.getenv("SHINYPROXY_USERGROUPS") == "" ||
       Sys.getenv("USERORGID") == "") {
@@ -200,20 +196,21 @@ setContainerEnv <- function(shinySession, unit = NULL) {
   }
 
   # make vectors of vals
-  orgs <- unlist(
+  units <- unlist(
     strsplit(
       gsub("\\s|\\[|\\]", "", Sys.getenv("USERORGID")),
       ","
     )
   )
-  apps <- unlist(
+
+  groups <- unlist(
     strsplit(
       gsub("\\s|\\[|\\]", "", Sys.getenv("SHINYPROXY_USERGROUPS")),
       ","
     )
   )
 
-  if(length(orgs) != length(apps)) {
+  if(length(units) != length(groups)) {
     stop(paste(
       "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID are of",
       "different lengths. Hence, correspondence cannot be anticipated."
@@ -221,22 +218,33 @@ setContainerEnv <- function(shinySession, unit = NULL) {
   }
 
   # NB Anticipate that element positions in vectors do correspond!
-  ## filter by this app
-  app <- apps[apps == shinySession$userData$packageName]
-  org <- orgs[apps == shinySession$userData$packageName]
+  ## filter by this group
+  units <- units[groups == group]
+  groups <- groups[groups == group]
 
-  ## return all or filter current unit when provided
-  if(is.null(unit)) {
-    list(
-      app = app,
-      org = org
-    )
-  } else {
-    list(
-      app = app[org == unit],
-      org = org[org == unit]
-    )
+  ## restrict when unit is provided
+  if(!is.null(unit)) {
+    groups <- groups[units == unit]
+    units <- units[units == unit]
   }
+
+  # Look up org, role and unit name
+  org <- vector()
+  role <- vector()
+  name <- vector()
+  for (i in seq_len(length(units))) {
+    org[i] <- unitAttribute(units[i], "resh")
+    role[i] <- unitAttribute(units[i], "role")
+    name[i] <- unitAttribute(units[i], "titlewithpath")
+  }
+
+  list(
+    group = groups,
+    unit = units,
+    org = org,
+    role = role,
+    name = name
+  )
 }
 
 #' Get unit attributes from an access tree file
