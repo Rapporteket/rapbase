@@ -17,10 +17,10 @@
 #'   called from. Default value is
 #'   \code{environmentName(topenv(parent.frame()))}. The value is used to
 #'   display the current version of the R package representing the registry at
-#'   Rapporteket. If this module is called from exported functions in th
-#'   registry R package use the default value. If the module is called from
-#'   outside the registry environment \code{caller} must be set to the actual
-#'   name of the R package.
+#'   Rapporteket. If this module is called from exported functions in the
+#'   registry R package the default value should be applied. If the module is
+#'   called from outside the registry environment \code{caller} must be set to
+#'   the actual name of the R package.
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name navbarWidget
@@ -81,10 +81,18 @@ navbarWidgetServer <- function(
 ) {
 
   shiny::moduleServer(id, function(input, output, session) {
-    output$name <- shiny::renderText(rapbase::getUserFullName(session))
-    output$affiliation <- shiny::renderText(
-      paste(orgName, getUserRole(session), sep = ", ")
+
+    # to be populated further if and when inside an app container
+    rv <- shiny::reactiveValues(
+      group = NULL,
+      unit = NULL,
+      org = NULL,
+      role = getUserRole(session),
+      name = NULL
     )
+
+    output$name <- shiny::renderText(rapbase::getUserFullName(session))
+    output$affiliation <- shiny::renderText(paste(orgName, rv$role, sep = ", "))
 
     # User info in widget
     userInfo <- howWeDealWithPersonalData(session, callerPkg = caller)
@@ -100,15 +108,19 @@ navbarWidgetServer <- function(
       )
     })
 
-    # Select organization in widget
+    # Select organization in widget (for container apps only)
     shiny::observeEvent(input$selectOrganization, {
+
+      ## Start MOVE OUTSIDE observer when we are all containers ------------- ##
       privs <- getContainerPrivileges(caller)
       choices <- privs$unit
       names(choices) <- paste0(privs$name, " (", privs$org, ") - ", privs$role)
+      ## End MOVE OUTSIDE --------------------------------------------------- ##
+
       shinyalert::shinyalert(
         html = TRUE,
         title = "Velg organisasjon og rolle",
-        text = shiny::tagList(
+        text = shiny::tagList(shiny::tagList(
           shiny::p(
             paste(
               "Velg organisasjon og rolle du ønsker å representere for",
@@ -119,17 +131,38 @@ navbarWidgetServer <- function(
             )
           ),
           shiny::selectInput(
-            session$ns("org"),
+            session$ns("unit"),
             "",
             choices
           )
-        ),
+        )),
         type = "", imageUrl = "rap/logo.svg",
         closeOnEsc = FALSE,
         closeOnClickOutside = FALSE,
         confirmButtonText = "OK"
       )
     })
+
+    shiny::observeEvent(input$unit, {
+      ## Start MOVE OUTSIDE observer when we are all containers ------------- ##
+      privs <- getContainerPrivileges(caller)
+      ## End MOVE OUTSIDE --------------------------------------------------- ##
+      rv$group <- privs$group[privs$unit == input$unit]
+      rv$unit <- privs$unit[privs$unit == input$unit]
+      rv$org <- privs$org[privs$unit == input$unit]
+      rv$role <- privs$role[privs$unit == input$unit]
+      rv$name <- privs$name[privs$unit == input$unit]
+    })
+
+    invisible(
+      list(
+        group = shiny::reactive(rv$group),
+        unit = shiny::reactive(rv$unit),
+        org = shiny::reactive(rv$org),
+        role = shiny::reactive(rv$role),
+        name = shiny::reactive(rv$name)
+      )
+    )
   })
 }
 
@@ -142,13 +175,17 @@ navbarWidgetApp <- function(orgName = "Org Name") {
       shiny::tabPanel(
         "Testpanel",
         shiny::mainPanel(
-          navbarWidgetInput("testWidget", selectOrganization = TRUE)
+          navbarWidgetInput(
+            "testWidget",
+            addUserInfo = FALSE,
+            selectOrganization = TRUE
+          )
         )
       )
     )
   )
   server <- function(input, output, session) {
-    navbarWidgetServer("testWidget", orgName = orgName)
+    privs <- navbarWidgetServer("testWidget", orgName = orgName)
   }
 
   shiny::shinyApp(ui, server)
@@ -207,6 +244,7 @@ appNavbarUserWidget <- function(user = "Undefined person",
                                 addUserInfo = FALSE,
                                 selectOrganization = FALSE,
                                 namespace = NULL) {
+
   if (addUserInfo) {
     userInfo <- shiny::tags$a(
       id = shiny::NS(namespace, "userInfo"),

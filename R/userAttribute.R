@@ -146,7 +146,7 @@ userInfo <- function(
       phone <- Sys.getenv("USERPHONE")
       # pick the first of available user privileges
       privs <- getContainerPrivileges(
-        group = environmentName(topenv(parent.frame()))
+        group = environmentName(topenv(parent.frame(2)))
       )
       privs <- as.data.frame(privs)[1, ]
       groups <- privs$group
