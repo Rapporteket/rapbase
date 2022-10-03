@@ -87,7 +87,7 @@ navbarWidgetServer <- function(
       group = NULL,
       unit = NULL,
       org = NULL,
-      role = getUserRole(session),
+      role = getUserRole(session, caller),
       name = NULL
     )
 

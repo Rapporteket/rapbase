@@ -122,9 +122,14 @@ NULL
 #' try(appLogger(list()))
 #' }
 #'
-appLogger <- function(session, msg = "No message provided") {
+appLogger <- function(session, msg = "No message provided",
+                      .topcall = sys.call(-1), .topenv = parent.frame()) {
   name <- "appLog"
-  content <- c(getSessionData(session), list(message = msg))
+  parent_environment <- environmentName(topenv(.topenv))
+  content <- c(
+    getSessionData(session, group = parent_environment),
+    list(message = msg)
+  )
   event <- makeLogRecord(content)
   appendLog(event, name)
 }
@@ -270,16 +275,19 @@ makeLogRecord <- function(content) {
 #' Internal function providing session data relevant to logging.
 #'
 #' @param session A shiny session object
+#' @param group Character string providing the name of the app R package name.
+#'   The term "group" is used to relate to the environmental variable
+#'   SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.
 #'
 #' @return A list of relevant log fields
 #' @keywords internal
-getSessionData <- function(session) {
+getSessionData <- function(session, group = NULL) {
   list(
-    user = rapbase::getUserName(session),
-    name = rapbase::getUserFullName(session),
-    group = rapbase::getUserGroups(session),
-    role = rapbase::getUserRole(session),
-    resh_id = rapbase::getUserReshId(session)
+    user = rapbase::getUserName(session, group),
+    name = rapbase::getUserFullName(session, group),
+    group = rapbase::getUserGroups(session, group),
+    role = rapbase::getUserRole(session, group),
+    resh_id = rapbase::getUserReshId(session, group)
   )
 }
 
