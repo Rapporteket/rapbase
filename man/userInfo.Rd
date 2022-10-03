@@ -9,7 +9,8 @@ userInfo(
   shinySession = NULL,
   devContexts = c("DEV"),
   testContexts = c("TEST"),
-  prodContexts = c("QA", "QAC", "PRODUCTION", "PRODUCTIONC")
+  prodContexts = c("QA", "QAC", "PRODUCTION", "PRODUCTIONC"),
+  group = NULL
 )
 }
 \arguments{
@@ -44,6 +45,10 @@ Instances provided cannot overlap instances in any other contexts. By
 default set to \code{c("QA", "QAC", "PRODUCTION", "PRODUCTIONC")}.
 Duplication as seen by the "C" suffix will be needed as long as apps in
 question are to be run on both shiny-server and as standalone containers.}
+
+\item{group}{Character string providing the name of the app R package name.
+The term "group" is used to relate to the environmental variable
+SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.}
 }
 \value{
 String of single user data element

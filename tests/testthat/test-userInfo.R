@@ -259,7 +259,7 @@ with_envvar(
   new = c(
     "R_RAP_INSTANCE" = "QAC",
     "SHINYPROXY_USERNAME" = "userc",
-    "SHINYPROXY_USERGROUPS" = "groupsc",
+    "SHINYPROXY_USERGROUPS" = "rapbase",
     "USERORGID" = "2",
     "USEREMAIL" = "userc@container.no",
     "USERFULLNAME" = "User Container",
@@ -267,13 +267,13 @@ with_envvar(
   ),
   code = {
     test_that("User attribs can be fetched in container instance (QA, PROD)", {
-      expect_equal(getUserName(shinySession), "userc")
-      expect_equal(getUserGroups(shinySession), "groupsc")
-      expect_equal(getUserReshId(shinySession), "102966")
-      expect_equal(getUserRole(shinySession), "LU")
-      expect_equal(getUserEmail(shinySession), "userc@container.no")
-      expect_equal(getUserFullName(shinySession), "User Container")
-      expect_equal(getUserPhone(shinySession), "+4787654321")
+      expect_equal(getUserName(shinySession, "rapbase"), "userc")
+      expect_equal(getUserGroups(shinySession, "rapbase"), "rapbase")
+      expect_equal(getUserReshId(shinySession, "rapbase"), "102966")
+      expect_equal(getUserRole(shinySession, "rapbase"), "LU")
+      expect_equal(getUserEmail(shinySession, "rapbase"), "userc@container.no")
+      expect_equal(getUserFullName(shinySession, "rapbase"), "User Container")
+      expect_equal(getUserPhone(shinySession, "rapbase"), "+4787654321")
     })
   }
 )

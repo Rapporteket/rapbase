@@ -31,10 +31,10 @@ available organizations.}
 called from. Default value is
 \code{environmentName(topenv(parent.frame()))}. The value is used to
 display the current version of the R package representing the registry at
-Rapporteket. If this module is called from exported functions in th
-registry R package use the default value. If the module is called from
-outside the registry environment \code{caller} must be set to the actual
-name of the R package.}
+Rapporteket. If this module is called from exported functions in the
+registry R package the default value should be applied. If the module is
+called from outside the registry environment \code{caller} must be set to
+the actual name of the R package.}
 }
 \value{
 Shiny objects, mostly. Helper functions may return other stuff too.
