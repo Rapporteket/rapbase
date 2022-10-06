@@ -7,11 +7,11 @@ j <- '
         "HasDatabase": true,
         "ExternalId": 100082,
         "HealthUnitId": 100082,
-        "Title": "Helse Bergen HF - SC",
+        "Title": "Helse Bergen HF - LU",
         "TitleWithPath": "Helse Bergen HF",
         "ValidFrom": null,
         "ValidTo": null,
-        "ExtraData": "SC"
+        "ExtraData": "LU"
       },
       {
         "UnitId": 2,
@@ -19,11 +19,11 @@ j <- '
         "HasDatabase": true,
         "ExternalId": 102966,
         "HealthUnitId": 102966,
-        "Title": "HB Hjerteavdelingen - LU",
+        "Title": "HB Hjerteavdelingen - SC",
         "TitleWithPath": "Helse Bergen HF - HB Hjerteavdelingen",
         "ValidFrom": null,
         "ValidTo": null,
-        "ExtraData": "LU"
+        "ExtraData": "SC"
       },
       {
         "UnitId": 3,
