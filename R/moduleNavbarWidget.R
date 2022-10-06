@@ -84,9 +84,9 @@ navbarWidgetServer <- function(
 
     # to be populated further if and when inside an app container
     rv <- shiny::reactiveValues(
-      group = NULL,
+      group = caller,
       unit = NULL,
-      org = NULL,
+      org = getUserReshId(session, caller),
       role = getUserRole(session, caller),
       name = NULL
     )

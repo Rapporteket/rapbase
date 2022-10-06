@@ -247,6 +247,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       tab = makeAutoReportTab(
         session = session,
         namespace = id,
+        group = registryName,
         type = type,
         mapOrgId = orgList2df(orgs)
       ),
@@ -307,6 +308,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
         makeAutoReportTab(
           session,
           namespace = id,
+          group = registryName,
           type = type,
           mapOrgId = orgList2df(orgs)
         )
@@ -330,6 +332,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
+        group = registryName,
         type = type,
         mapOrgId = orgList2df(orgs)
       )
@@ -351,6 +354,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
+        group = registryName,
         type = type,
         mapOrgId = orgList2df(orgs)
       )
