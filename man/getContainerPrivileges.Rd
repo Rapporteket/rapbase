@@ -15,7 +15,15 @@ SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.}
 which case all privileges for \code{group} are returned.}
 }
 \value{
-List of privileges
+List of privileges:
+  \describe{
+    \item{user}{The username for whom the privileges apply.}
+    \item{group}{Group of which the user is a member.}
+    \item{unit}{Unit id under which the privileges are defined.}
+    \item{org}{Organization id for the user.}
+    \item{role}{Role of the user.}
+    \item{orgName}{Name of the organization as defined under the unit id.}
+  }
 }
 \description{
 For apps running as containers particular environment variables must be

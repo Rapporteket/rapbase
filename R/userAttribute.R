@@ -182,7 +182,15 @@ userInfo <- function(
 #' @param unit Integer providing the look-up unit id. Default value is NULL in
 #'   which case all privileges for \code{group} are returned.
 #'
-#' @return List of privileges
+#' @return List of privileges:
+#'   \describe{
+#'     \item{user}{The username for whom the privileges apply.}
+#'     \item{group}{Group of which the user is a member.}
+#'     \item{unit}{Unit id under which the privileges are defined.}
+#'     \item{org}{Organization id for the user.}
+#'     \item{role}{Role of the user.}
+#'     \item{orgName}{Name of the organization as defined under the unit id.}
+#'   }
 #' @export
 
 getContainerPrivileges <- function(group, unit = NULL) {
@@ -196,6 +204,8 @@ getContainerPrivileges <- function(group, unit = NULL) {
       "be set!"
     ))
   }
+
+  user <- Sys.getenv("SHINYPROXY_USERNAME")
 
   # make vectors of vals
   units <- unlist(
@@ -241,11 +251,12 @@ getContainerPrivileges <- function(group, unit = NULL) {
   }
 
   list(
+    user = rep(user, length(units)),
     group = groups,
     unit = units,
     org = org,
     role = role,
-    name = name
+    orgName = name
   )
 }
 
