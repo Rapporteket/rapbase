@@ -252,7 +252,7 @@ test_that("warning is given when unit does not exist", {
 })
 
 test_that("unit attributes can be obtained", {
-  expect_equal(unitAttribute(2, "role"), "LU")
+  expect_equal(unitAttribute(2, "role"), "SC")
 })
 
 with_envvar(
@@ -270,7 +270,7 @@ with_envvar(
       expect_equal(getUserName(shinySession, "rapbase"), "userc")
       expect_equal(getUserGroups(shinySession, "rapbase"), "rapbase")
       expect_equal(getUserReshId(shinySession, "rapbase"), "102966")
-      expect_equal(getUserRole(shinySession, "rapbase"), "LU")
+      expect_equal(getUserRole(shinySession, "rapbase"), "SC")
       expect_equal(getUserEmail(shinySession, "rapbase"), "userc@container.no")
       expect_equal(getUserFullName(shinySession, "rapbase"), "User Container")
       expect_equal(getUserPhone(shinySession, "rapbase"), "+4787654321")

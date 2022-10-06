@@ -147,15 +147,17 @@ navbarWidgetServer <- function(
       ## Start MOVE OUTSIDE observer when we are all containers ------------- ##
       privs <- getContainerPrivileges(caller)
       ## End MOVE OUTSIDE --------------------------------------------------- ##
+      rv$user <- privs$user[privs$unit == input$unit]
       rv$group <- privs$group[privs$unit == input$unit]
       rv$unit <- privs$unit[privs$unit == input$unit]
       rv$org <- privs$org[privs$unit == input$unit]
       rv$role <- privs$role[privs$unit == input$unit]
-      rv$name <- privs$name[privs$unit == input$unit]
+      rv$orgName <- privs$orgName[privs$unit == input$unit]
     })
 
     invisible(
       list(
+        user = shiny::reactive(rv$user),
         group = shiny::reactive(rv$group),
         unit = shiny::reactive(rv$unit),
         org = shiny::reactive(rv$org),

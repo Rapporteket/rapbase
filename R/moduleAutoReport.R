@@ -26,40 +26,52 @@
 #'
 #' @param id Character string providing the shiny module id.
 #' @param registryName Character string with the registry name key. Must
-#' correspond to the registry R package name.
+#'   correspond to the registry R package name.
 #' @param type Character string defining the type of auto reports. Must be one
-#' of \code{c("subscription", "dispatchment", "bulletin")}
+#'   of \code{c("subscription", "dispatchment", "bulletin")}
 #' @param reports List of a given structure that provides meta data for the
-#' reports that are made available as automated reports. See Details for further
-#' description.
+#'   reports that are made available as automated reports. See Details for
+#'   further description.
 #' @param org Shiny reactive or NULL (default) defining the organization (id)
-#' of the data source used for dispatchments and bulletins (in which case it
-#' cannot be set to NULL) and its value will be used to populate the
-#' \emph{organization} field in auto report data (autoReport.yml) for these auto
-#' report types. On the other hand, since subscriptions are personal (per user)
-#' the only relevant organization id will implicit be that of the user and in
-#' this case any value of \code{org} will be disregarded.
+#'   of the data source used for dispatchments and bulletins (in which case it
+#'   cannot be set to NULL) and its value will be used to populate the
+#'   \emph{organization} field in auto report data (autoReport.yml) for these
+#'   auto report types. On the other hand, since subscriptions are personal
+#'   (per user) the only relevant organization id will implicit be that of the
+#'   user and in this case any value of \code{org} will be disregarded.
 #' @param paramNames Shiny reactive value as a vector of parameter names of
-#' which values are to be set interactively at application run time. Each
-#' element of this vector must match exactly those of \code{paramValues}.
-#' Default value is \code{shiny::reactiveVal("")}.
+#'   which values are to be set interactively at application run time. Each
+#'   element of this vector must match exactly those of \code{paramValues}.
+#'   Default value is \code{shiny::reactiveVal("")}.
 #' @param paramValues Shiny reactive value as a vector of those parameter values
-#' to be set interactively, \emph{i.e.} as per user input in the application.
-#' Default value is set to \code{shiny::reactiveVal("")} in which case parameter
-#' values defined in \code{reports} will be used as is. In other words,
-#' explicit use of \code{paramValues} will only be needed if parameter values
-#' must be changed during application run time. If so, each element of this
-#' vector must correspond exactly to those of \code{paramNames}.
+#'   to be set interactively, \emph{i.e.} as per user input in the application.
+#'   Default value is set to \code{shiny::reactiveVal("")} in which case
+#'   parameter values defined in \code{reports} will be used as is. In other
+#'   words, explicit use of \code{paramValues} will only be needed if parameter
+#'   values must be changed during application run time. If so, each element of
+#'   this vector must correspond exactly to those of \code{paramNames}.
 #' @param orgs Named list of organizations (names) and ids (values). When set to
-#' \code{NULL} (default) the ids found in auto report data will be used in the
-#' table listing existing auto reports.
+#'   \code{NULL} (default) the ids found in auto report data will be used in the
+#'   table listing existing auto reports.
 #' @param eligible Logical defining if the module should be allowed to work at
-#' full capacity. This might be useful when access to module products should be
-#' restricted. Default is TRUE, \emph{i.e.} no restrictions.
+#'   full capacity. This might be useful when access to module products should
+#'   be restricted. Default is TRUE, \emph{i.e.} no restrictions.
 #' @param freq Character string defining default frequency set in the auto
-#' report GUI. Must be one of
-#' \code{c("day", "week", "month", "quarter", "year")}. Default value is
-#' "month".
+#'   report GUI. Must be one of
+#'   \code{c("day", "week", "month", "quarter", "year")}. Default value is
+#'   "month".
+#' @param userName Shiny reactive value character string providing user name.
+#'   Default value set to \code{shiny::reactiveVal(getUserName(session))}. For
+#'   applications run under shinyproxy this value must be explicitly defined,
+#'   see \code{\link{navbarWidgetServer}}.
+#' @param userOrg Shiny reactive value character string providing user org id.
+#'   Default value set to \code{shiny::reactiveVal(getUserReshId(session))}. For
+#'   applications run under shinyproxy this value must be explicitly defined,
+#'   see \code{\link{navbarWidgetServer}}.
+#' @param userRole Shiny reactive value character string providing user role.
+#'   Default value set to \code{shiny::reactiveVal(getUserRole(session))}. For
+#'   applications run under shinyproxy this value must be explicitly defined,
+#'   see \code{\link{navbarWidgetServer}}.
 #'
 #'
 #' @return In general, shiny objects. In particular, \code{autoreportOrgServer}
@@ -70,8 +82,8 @@
 #' "id".
 #' @name autoReport
 #' @aliases autoReportUI autoReportOrgInput autoReportOrgServer
-#' autoReportFormatInput autoReportFormatSercer autoReportInput autoReportServer
-#' autoReportApp orgList2df
+#'   autoReportFormatInput autoReportFormatSercer autoReportInput
+#'   autoReportServer autoReportApp orgList2df
 #' @examples
 #' ## make a list for report metadata
 #' reports <- list(
@@ -221,17 +233,28 @@ autoReportInput <- function(id) {
 
 #' @rdname autoReport
 #' @export
-autoReportServer <- function(id, registryName, type, org = NULL,
-                             paramNames = shiny::reactiveVal(c("")),
-                             paramValues = shiny::reactiveVal(c("")),
-                             reports = NULL, orgs = NULL, eligible = TRUE,
-                             freq = "month") {
+autoReportServer <- function(
+    id,
+    registryName,
+    type,
+    org = NULL,
+    paramNames = shiny::reactiveVal(c("")),
+    paramValues = shiny::reactiveVal(c("")),
+    reports = NULL,
+    orgs = NULL,
+    eligible = TRUE,
+    freq = "month",
+    userName = shiny::reactiveVal(""),
+    userOrg = shiny::reactiveVal(""),
+    userRole = shiny::reactiveVal("")
+) {
   if (!type %in% c("subscription")) {
     stopifnot(shiny::is.reactive(org))
     stopifnot(shiny::is.reactive(paramNames))
     stopifnot(shiny::is.reactive(paramValues))
   }
-
+  stopifnot(shiny::is.reactive(userOrg))
+  stopifnot(shiny::is.reactive(userRole))
   stopifnot(freq %in% c("day", "week", "month", "quarter", "year"))
 
   defaultFreq <- switch(freq,
@@ -273,7 +296,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
 
       if (type %in% c("subscription") | is.null(orgs)) {
         email <- getUserEmail(session)
-        organization <- getUserReshId(session)
+        organization <- userOrg()
       } else {
         organization <- org()
         if (!paramValues()[1] == "") {
@@ -292,7 +315,7 @@ autoReportServer <- function(id, registryName, type, org = NULL,
         fun = report$fun,
         paramNames = report$paramNames,
         paramValues = paramValues,
-        owner = rapbase::getUserName(session),
+        owner = userName(),
         ownerName = rapbase::getUserFullName(session),
         email = email,
         organization = organization,
@@ -308,7 +331,9 @@ autoReportServer <- function(id, registryName, type, org = NULL,
         makeAutoReportTab(
           session,
           namespace = id,
+          user = userName(),
           group = registryName,
+          orgId = userOrg(),
           type = type,
           mapOrgId = orgList2df(orgs)
         )
@@ -332,7 +357,9 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
+        user = userName(),
         group = registryName,
+        orgId = userOrg(),
         type = type,
         mapOrgId = orgList2df(orgs)
       )
@@ -354,7 +381,9 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
+        user = userName(),
         group = registryName,
+        orgId = userOrg(),
         type = type,
         mapOrgId = orgList2df(orgs)
       )
