@@ -19,10 +19,10 @@
 #' schedule and must therefore represent existing and exported functions from
 #' the registry R package. For subscriptions the \emph{reports} list can be used
 #' as is, more specifically that the values provided in \emph{paramValues} can
-#' go unchanged. For dispatchments and bulletins it is likely that parameter
-#' values must be set dynamically in which case \emph{paramValues} must be
-#' a reactive part of the application. See Examples on how function arguments
-#' may be used as reactives in an application.
+#' go unchanged. It is likely that parameter values must be set dynamically at
+#' runtime in which case \emph{paramValues} must be a reactive part of the
+#' application. See Examples on how function arguments may be used as reactives
+#' in an application.
 #'
 #' @param id Character string providing the shiny module id.
 #' @param registryName Character string with the registry name key. Must
@@ -70,6 +70,10 @@
 #'   see \code{\link{navbarWidgetServer}}.
 #' @param userRole Shiny reactive value character string providing user role.
 #'   Default value set to \code{shiny::reactiveVal(getUserRole(session))}. For
+#'   applications run under shinyproxy this value must be explicitly defined,
+#'   see \code{\link{navbarWidgetServer}}.
+#' @param userEmail Shiny reactive value character string providing user email.
+#'   Default value set to \code{shiny::reactiveVal(getUserEmail(session))}. For
 #'   applications run under shinyproxy this value must be explicitly defined,
 #'   see \code{\link{navbarWidgetServer}}.
 #'
@@ -233,7 +237,7 @@ autoReportInput <- function(id) {
 
 #' @rdname autoReport
 #' @export
-autoReportServer <- function(
+autoReportServer2 <- function(
     id,
     registryName,
     type,
@@ -244,17 +248,16 @@ autoReportServer <- function(
     orgs = NULL,
     eligible = TRUE,
     freq = "month",
-    userName = shiny::reactiveVal(""),
-    userOrg = shiny::reactiveVal(""),
-    userRole = shiny::reactiveVal("")
+    user
 ) {
+  stopifnot(
+    all(unlist(lapply(user, shiny::is.reactive), use.names = FALSE))
+  )
   if (!type %in% c("subscription")) {
     stopifnot(shiny::is.reactive(org))
     stopifnot(shiny::is.reactive(paramNames))
     stopifnot(shiny::is.reactive(paramValues))
   }
-  stopifnot(shiny::is.reactive(userOrg))
-  stopifnot(shiny::is.reactive(userRole))
   stopifnot(freq %in% c("day", "week", "month", "quarter", "year"))
 
   defaultFreq <- switch(freq,
@@ -270,7 +273,9 @@ autoReportServer <- function(
       tab = makeAutoReportTab(
         session = session,
         namespace = id,
+        user = user$name(),
         group = registryName,
+        orgId = user$org(),
         type = type,
         mapOrgId = orgList2df(orgs)
       ),
@@ -294,18 +299,20 @@ autoReportServer <- function(
       paramValues <- report$paramValues
       paramNames <- report$paramNames
 
-      if (type %in% c("subscription") | is.null(orgs)) {
-        email <- getUserEmail(session)
-        organization <- userOrg()
+      if (type %in% c("subscription") || is.null(orgs)) {
+        email <- user$email()
+        organization <- user$org()
       } else {
         organization <- org()
-        if (!paramValues()[1] == "") {
-          stopifnot(length(paramNames()) == length(paramValues()))
-          for (i in seq_len(length(paramNames()))) {
-            paramValues[paramNames == paramNames()[i]] <- paramValues()[i]
-          }
-        }
         email <- autoReport$email
+      }
+      if (!paramValues()[1] == "") {
+        print(paste("paramName:", paramNames()))
+        print(paste("paramValue:", paramValues()))
+        stopifnot(length(paramNames()) == length(paramValues()))
+        for (i in seq_len(length(paramNames()))) {
+          paramValues[paramNames == paramNames()[i]] <- paramValues()[i]
+        }
       }
 
       createAutoReport(
@@ -315,8 +322,8 @@ autoReportServer <- function(
         fun = report$fun,
         paramNames = report$paramNames,
         paramValues = paramValues,
-        owner = userName(),
-        ownerName = rapbase::getUserFullName(session),
+        owner = user$name(),
+        ownerName = user$fullName(),
         email = email,
         organization = organization,
         runDayOfYear = makeRunDayOfYearSequence(
@@ -331,9 +338,9 @@ autoReportServer <- function(
         makeAutoReportTab(
           session,
           namespace = id,
-          user = userName(),
+          user = user$name(),
           group = registryName,
-          orgId = userOrg(),
+          orgId = user$org(),
           type = type,
           mapOrgId = orgList2df(orgs)
         )
@@ -357,9 +364,9 @@ autoReportServer <- function(
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
-        user = userName(),
+        user = user$name(),
         group = registryName,
-        orgId = userOrg(),
+        orgId = user$org(),
         type = type,
         mapOrgId = orgList2df(orgs)
       )
@@ -381,9 +388,9 @@ autoReportServer <- function(
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
-        user = userName(),
+        user = user$name(),
         group = registryName,
-        orgId = userOrg(),
+        orgId = user$org(),
         type = type,
         mapOrgId = orgList2df(orgs)
       )
@@ -533,7 +540,16 @@ autoReportServer <- function(
     })
 
     output$activeReports <- DT::renderDataTable(
-      autoReport$tab,
+      #autoReport$tab,
+      makeAutoReportTab(
+        session,
+        namespace = id,
+        user = user$name(),
+        group = registryName,
+        orgId = user$org(),
+        type = type,
+        mapOrgId = orgList2df(orgs)
+      ),
       server = FALSE, escape = FALSE, selection = "none",
       rownames = FALSE,
       options = list(
@@ -554,7 +570,17 @@ autoReportServer <- function(
           shiny::p("Ved sp\u00F8rsm\u00E5l ta gjerne kontakt med registeret."),
           shiny::hr()
         )
-      } else if (length(autoReport$tab) == 0) {
+      } else if (length(
+        makeAutoReportTab(
+          session,
+          namespace = id,
+          user = user$name(),
+          group = registryName,
+          orgId = user$org(),
+          type = type,
+          mapOrgId = orgList2df(orgs)
+        )
+      ) == 0) {
         shiny::tagList(
           shiny::h2("Det finnes ingen oppf\u00F8ringer"),
           shiny::p(paste(

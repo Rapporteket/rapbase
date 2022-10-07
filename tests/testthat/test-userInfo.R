@@ -140,12 +140,13 @@ file.copy(
 
 with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "rapbase"
+    "SHINYPROXY_USERGROUPS" = "rapbase",
+    "USERORGID" = ""
   ),
   code = {
     test_that("errors are returned when insufficient system environment", {
       expect_error(
-        getContainerPrivileges("rapbase"),
+        userAttribute("rapbase"),
         regexp = "Environmental variables SHINYPROXY_USERGROUPS and USERORGID")
     })
   }
@@ -153,12 +154,13 @@ with_envvar(
 
 with_envvar(
   new = c(
+    "SHINYPROXY_USERGROUPS" = "",
     "USERORGID" = "1"
   ),
   code = {
     test_that("errors are returned when insufficient system environment", {
       expect_error(
-        getContainerPrivileges("rapbase"),
+        userAttribute("rapbase"),
         regexp = "Environmental variables SHINYPROXY_USERGROUPS and USERORGID")
     })
   }
@@ -172,7 +174,7 @@ with_envvar(
   code = {
     test_that("error is returned when environment elements are not equal", {
       expect_error(
-        getContainerPrivileges("rapbase"),
+        userAttribute("rapbase"),
         regexp = "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID")
     })
   }
@@ -185,16 +187,16 @@ with_envvar(
   ),
   code = {
     test_that("group and unit are returned correspondingly when unit = NULL", {
-      expect_true(class(getContainerPrivileges("rapbase")) == "list")
+      expect_true(class(userAttribute("rapbase")) == "list")
       expect_true(
-        length(getContainerPrivileges("rapbase")$group) ==
-          length(getContainerPrivileges("rapbase")$unit)
+        length(userAttribute("rapbase")$group) ==
+          length(userAttribute("rapbase")$unit)
       )
-      expect_true(length(getContainerPrivileges("rapbase")$group) == 2)
-      expect_true(getContainerPrivileges("rapbase")$group[1] == "rapbase")
-      expect_true(getContainerPrivileges("rapbase")$group[2] == "rapbase")
-      expect_true(getContainerPrivileges("rapbase")$unit[1] == "1")
-      expect_true(getContainerPrivileges("rapbase")$unit[2] == "2")
+      expect_true(length(userAttribute("rapbase")$group) == 2)
+      expect_true(userAttribute("rapbase")$group[1] == "rapbase")
+      expect_true(userAttribute("rapbase")$group[2] == "rapbase")
+      expect_true(userAttribute("rapbase")$unit[1] == "1")
+      expect_true(userAttribute("rapbase")$unit[2] == "2")
     })
   }
 )
@@ -205,17 +207,17 @@ with_envvar(
     "USERORGID" = "[1, 2, 3, 4]"
   ),
   code = {
-    test_that("group and unit are returned correspondingly when unit is given", {
-      expect_true(class(getContainerPrivileges("rapbase")) == "list")
+    test_that("group and unit returned correspondingly when unit is given", {
+      expect_true(class(userAttribute("rapbase")) == "list")
       expect_true(
-        length(getContainerPrivileges("rapbase", unit = 2)$group) ==
-          length(getContainerPrivileges("rapbase", unit = 2)$unit)
+        length(userAttribute("rapbase", unit = 2)$group) ==
+          length(userAttribute("rapbase", unit = 2)$unit)
       )
       expect_true(
-        getContainerPrivileges("rapbase", unit = 2)$unit == 2
+        userAttribute("rapbase", unit = 2)$unit == 2
       )
       expect_true(
-        getContainerPrivileges("utils", unit = 3)$unit == 3
+        userAttribute("utils", unit = 3)$unit == 3
       )
     })
   }
@@ -229,10 +231,10 @@ with_envvar(
   code = {
     test_that("correct lookup values are provided", {
       expect_true(
-        getContainerPrivileges("rapbase", unit = 2)$org == 102966
+        userAttribute("rapbase", unit = 2)$org == 102966
       )
       expect_true(
-        getContainerPrivileges("utils", unit = 3)$role == "SC"
+        userAttribute("utils", unit = 3)$role == "SC"
       )
     })
   }

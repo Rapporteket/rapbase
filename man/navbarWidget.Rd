@@ -23,7 +23,7 @@ navbarWidgetApp(orgName = "Org Name")
 \item{addUserInfo}{Logical defining if an "about" hyperlink is to be added}
 
 \item{selectOrganization}{Logical providing option for selecting among
-available organizations.}
+available organizations and roles.}
 
 \item{orgName}{Character string naming the organization}
 
@@ -37,7 +37,9 @@ called from outside the registry environment \code{caller} must be set to
 the actual name of the R package.}
 }
 \value{
-Shiny objects, mostly. Helper functions may return other stuff too.
+Shiny objects, mostly. \code{navbarWidgetServer()} invisibly returns
+a list of reactive values representing user metadata and privileges. See
+\code{\link{userAttribute}} for further details on these values.
 }
 \description{
 Shiny modules for making a user information widget in registry shiny apps at

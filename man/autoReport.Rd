@@ -12,6 +12,7 @@
 \alias{autoReportApp}
 \alias{orgList2df}
 \alias{autoReportFormatServer}
+\alias{autoReportServer2}
 \title{Shiny modules and helper functions for registry auto reports}
 \usage{
 autoReportUI(id)
@@ -26,7 +27,7 @@ autoReportFormatServer(id)
 
 autoReportInput(id)
 
-autoReportServer(
+autoReportServer2(
   id,
   registryName,
   type,
@@ -37,9 +38,7 @@ autoReportServer(
   orgs = NULL,
   eligible = TRUE,
   freq = "month",
-  userName = shiny::reactiveVal(getUserName(session)),
-  userOrg = shiny::reactiveVal(getUserReshId(session)),
-  userRole = shiny::reactiveVal(getUserRole(session))
+  user
 )
 
 autoReportApp(
@@ -113,6 +112,11 @@ see \code{\link{navbarWidgetServer}}.}
 Default value set to \code{shiny::reactiveVal(getUserRole(session))}. For
 applications run under shinyproxy this value must be explicitly defined,
 see \code{\link{navbarWidgetServer}}.}
+
+\item{userEmail}{Shiny reactive value character string providing user email.
+Default value set to \code{shiny::reactiveVal(getUserEmail(session))}. For
+applications run under shinyproxy this value must be explicitly defined,
+see \code{\link{navbarWidgetServer}}.}
 }
 \value{
 In general, shiny objects. In particular, \code{autoreportOrgServer}
@@ -143,10 +147,10 @@ These named values will be used to run reports none-interactively on a given
 schedule and must therefore represent existing and exported functions from
 the registry R package. For subscriptions the \emph{reports} list can be used
 as is, more specifically that the values provided in \emph{paramValues} can
-go unchanged. For dispatchments and bulletins it is likely that parameter
-values must be set dynamically in which case \emph{paramValues} must be
-a reactive part of the application. See Examples on how function arguments
-may be used as reactives in an application.
+go unchanged. It is likely that parameter values must be set dynamically at
+runtime in which case \emph{paramValues} must be a reactive part of the
+application. See Examples on how function arguments may be used as reactives
+in an application.
 }
 \examples{
 ## make a list for report metadata

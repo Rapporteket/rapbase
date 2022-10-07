@@ -143,17 +143,16 @@ userInfo <- function(
     }
 
     if (context %in% c("QAC", "PRODUCTIONC")) {
-      user <- Sys.getenv("SHINYPROXY_USERNAME")
-      email <- Sys.getenv("USEREMAIL")
-      full_name <-
-        parse(text = paste0("'", Sys.getenv("USERFULLNAME"), "'"))[[1]]
-      phone <- Sys.getenv("USERPHONE")
+      userprivs <- userAttribute(group)
       # pick the first of available user privileges
-      privs <- getContainerPrivileges(group)
-      privs <- as.data.frame(privs)[1, ]
-      groups <- privs$group
-      resh_id <- privs$org
-      role <- privs$role
+      userprivs <- as.data.frame(userprivs)[1, ]
+      user <- userprivs$name
+      groups <- userprivs$group
+      resh_id <- userprivs$org
+      role <- userprivs$role
+      email <- userprivs$email
+      full_name <- userprivs$fullName
+      phone <- userprivs$phone
     }
   }
 
@@ -182,9 +181,12 @@ userInfo <- function(
 #' @param unit Integer providing the look-up unit id. Default value is NULL in
 #'   which case all privileges for \code{group} are returned.
 #'
-#' @return List of privileges:
+#' @return Invisibly a list of user metadata and privileges:
 #'   \describe{
-#'     \item{user}{The username for whom the privileges apply.}
+#'     \item{name}{The username for whom the privileges apply.}
+#'     \item{fullName}{User full name}
+#'     \item{phone}{User phone number}
+#'     \item{email}{User email}
 #'     \item{group}{Group of which the user is a member.}
 #'     \item{unit}{Unit id under which the privileges are defined.}
 #'     \item{org}{Organization id for the user.}
@@ -193,7 +195,7 @@ userInfo <- function(
 #'   }
 #' @export
 
-getContainerPrivileges <- function(group, unit = NULL) {
+userAttribute <- function(group, unit = NULL) {
 
   stopifnot(group %in% utils::installed.packages()[, 1])
 
@@ -205,7 +207,10 @@ getContainerPrivileges <- function(group, unit = NULL) {
     ))
   }
 
-  user <- Sys.getenv("SHINYPROXY_USERNAME")
+  name <- Sys.getenv("SHINYPROXY_USERNAME")
+  fullName <- parse(text = paste0("'", Sys.getenv("USERFULLNAME"), "'"))[[1]]
+  phone <- Sys.getenv("USERPHONE")
+  email <- Sys.getenv("USEREMAIL")
 
   # make vectors of vals
   units <- unlist(
@@ -241,22 +246,25 @@ getContainerPrivileges <- function(group, unit = NULL) {
   }
 
   # Look up org, role and unit name
-  org <- vector()
-  role <- vector()
-  name <- vector()
-  for (i in seq_len(length(units))) {
-    org[i] <- unitAttribute(units[i], "resh")
-    role[i] <- unitAttribute(units[i], "role")
-    name[i] <- unitAttribute(units[i], "titlewithpath")
+  orgs <- vector()
+  roles <- vector()
+  orgNames <- vector()
+    for (i in seq_len(length(units))) {
+    orgs[i] <- unitAttribute(units[i], "resh")
+    roles[i] <- unitAttribute(units[i], "role")
+    orgNames[i] <- unitAttribute(units[i], "titlewithpath")
   }
 
   list(
-    user = rep(user, length(units)),
+    name = rep(name, length(units)),
+    fullName = rep(fullName, length(units)),
+    phone = rep(phone, length(units)),
+    email = rep(email, length(units)),
     group = groups,
     unit = units,
-    org = org,
-    role = role,
-    orgName = name
+    org = orgs,
+    role = roles,
+    orgName = orgNames
   )
 }
 
