@@ -9,7 +9,7 @@
 \alias{getUserPhone}
 \alias{getUserReshId}
 \alias{getUserRole}
-\title{IN CONSTRUCTION: Get environmental variables for for container apps.}
+\title{User attributes in container apps running behind shinyproxy}
 \usage{
 userAttribute(group, unit = NULL)
 
@@ -59,7 +59,7 @@ String with user attribute
 For apps running as containers particular environment variables must be
 defined for an orderly handling of dynamic user privileges. This function
 makes use of environmental variables defined by shinyproxy to provide
-available privileges for the shiny application
+available privileges for the shiny application.
 
 These are helper function for \code{\link{userInfo}}. When used without a
 shiny session object calls to these functions is made without any arguments.

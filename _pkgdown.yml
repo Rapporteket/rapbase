@@ -45,6 +45,7 @@ reference:
     - getUserEmail
     - userInfo
     - unitAttribute
+    - userAttribute
 
   - title: Logging
     desc: >

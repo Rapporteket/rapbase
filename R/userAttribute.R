@@ -168,12 +168,12 @@ userInfo <- function(
 }
 
 
-#' IN CONSTRUCTION: Get environmental variables for for container apps.
+#' User attributes in container apps running behind shinyproxy
 #'
 #' For apps running as containers particular environment variables must be
 #' defined for an orderly handling of dynamic user privileges. This function
 #' makes use of environmental variables defined by shinyproxy to provide
-#' available privileges for the shiny application
+#' available privileges for the shiny application.
 #'
 #' @param group Character string providing the name of the app R package name.
 #'   The term "group" is used to relate to the environmental variable

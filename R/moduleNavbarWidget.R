@@ -76,6 +76,33 @@ navbarWidgetInput <- function(id,
 
 #' @rdname navbarWidget
 #' @export
+navbarWidgetServer <- function(id, orgName,
+                               caller = environmentName(rlang::caller_env())) {
+  shiny::moduleServer(id, function(input, output, session) {
+    output$name <- shiny::renderText(rapbase::getUserFullName(session))
+    output$affiliation <- shiny::renderText(
+      paste(orgName, getUserRole(session), sep = ", ")
+    )
+
+    # User info in widget
+    userInfo <- howWeDealWithPersonalData(session, callerPkg = caller)
+    shiny::observeEvent(input$userInfo, {
+      shinyalert::shinyalert(
+        "Dette vet Rapporteket om deg:",
+        userInfo,
+        type = "", imageUrl = "rap/logo.svg",
+        closeOnEsc = TRUE,
+        closeOnClickOutside = TRUE,
+        html = TRUE,
+        confirmButtonText = rapbase::noOptOutOk()
+      )
+    })
+  })
+}
+
+
+#' @rdname navbarWidget
+#' @export
 navbarWidgetServer2 <- function(
     id,
     orgName,
@@ -130,9 +157,9 @@ navbarWidgetServer2 <- function(
         text = shiny::tagList(shiny::tagList(
           shiny::p(
             paste(
-              "Velg organisasjon og rolle du ønsker å representere for",
-              orgName, "i Rapporteket og trykk OK.",
-              "Dine valgmuligheter er basert på de tilganger som er satt.",
+              "Velg organisasjon og rolle du \u00f8nsker \u00e5 representere",
+              "for", orgName, "i Rapporteket og trykk OK.",
+              "Dine valgmuligheter er basert p\u00e5 de tilganger som er satt.",
               "Ta kontakt med registeret om du mener at lista over valg",
               "ikke er riktg."
             )

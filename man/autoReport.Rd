@@ -27,6 +27,19 @@ autoReportFormatServer(id)
 
 autoReportInput(id)
 
+autoReportServer(
+  id,
+  registryName,
+  type,
+  org = NULL,
+  paramNames = shiny::reactiveVal(c("")),
+  paramValues = shiny::reactiveVal(c("")),
+  reports = NULL,
+  orgs = NULL,
+  eligible = TRUE,
+  freq = "month"
+)
+
 autoReportServer2(
   id,
   registryName,
@@ -98,25 +111,9 @@ report GUI. Must be one of
 \code{c("day", "week", "month", "quarter", "year")}. Default value is
 "month".}
 
-\item{userName}{Shiny reactive value character string providing user name.
-Default value set to \code{shiny::reactiveVal(getUserName(session))}. For
-applications run under shinyproxy this value must be explicitly defined,
-see \code{\link{navbarWidgetServer}}.}
-
-\item{userOrg}{Shiny reactive value character string providing user org id.
-Default value set to \code{shiny::reactiveVal(getUserReshId(session))}. For
-applications run under shinyproxy this value must be explicitly defined,
-see \code{\link{navbarWidgetServer}}.}
-
-\item{userRole}{Shiny reactive value character string providing user role.
-Default value set to \code{shiny::reactiveVal(getUserRole(session))}. For
-applications run under shinyproxy this value must be explicitly defined,
-see \code{\link{navbarWidgetServer}}.}
-
-\item{userEmail}{Shiny reactive value character string providing user email.
-Default value set to \code{shiny::reactiveVal(getUserEmail(session))}. For
-applications run under shinyproxy this value must be explicitly defined,
-see \code{\link{navbarWidgetServer}}.}
+\item{user}{List of shiny reactive values providing user metadata and
+privileges corresponding to the return value of
+\code{\link{navbarWidgetServer}}.}
 }
 \value{
 In general, shiny objects. In particular, \code{autoreportOrgServer}

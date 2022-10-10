@@ -5,9 +5,12 @@
 \alias{navbarWidgetInput}
 \alias{navbarWidgetServer2}
 \alias{navbarWidgetApp}
+\alias{navbarWidgetServer}
 \title{Shiny modules providing GUI and server logic for user info widget}
 \usage{
 navbarWidgetInput(id, addUserInfo = TRUE, selectOrganization = FALSE)
+
+navbarWidgetServer(id, orgName, caller = environmentName(rlang::caller_env()))
 
 navbarWidgetServer2(
   id,
