@@ -273,9 +273,9 @@ autoReportServer2 <- function(
       tab = makeAutoReportTab(
         session = session,
         namespace = id,
-        user = user$name(),
+        user = NULL,
         group = registryName,
-        orgId = user$org(),
+        orgId = NULL,
         type = type,
         mapOrgId = orgList2df(orgs)
       ),
@@ -283,6 +283,24 @@ autoReportServer2 <- function(
       org = unlist(orgs, use.names = FALSE)[1],
       freq = defaultFreq,
       email = vector()
+    )
+
+    ## update tab whenever changes to user privileges (and on init)
+    userEvent <- shiny::reactive(
+      list(user$name(), user$org(), user$role())
+    )
+    shiny::observeEvent(
+      userEvent(),
+        autoReport$tab <- makeAutoReportTab(
+          session = session,
+          namespace = id,
+          user = user$name(),
+          group = registryName,
+          orgId = user$org(),
+          type = type,
+          mapOrgId = orgList2df(orgs)
+        ),
+        ignoreNULL = FALSE
     )
 
     shiny::observeEvent(input$addEmail, {
@@ -307,8 +325,6 @@ autoReportServer2 <- function(
         email <- autoReport$email
       }
       if (!paramValues()[1] == "") {
-        print(paste("paramName:", paramNames()))
-        print(paste("paramValue:", paramValues()))
         stopifnot(length(paramNames()) == length(paramValues()))
         for (i in seq_len(length(paramNames()))) {
           paramValues[paramNames == paramNames()[i]] <- paramValues()[i]
@@ -540,16 +556,7 @@ autoReportServer2 <- function(
     })
 
     output$activeReports <- DT::renderDataTable(
-      #autoReport$tab,
-      makeAutoReportTab(
-        session,
-        namespace = id,
-        user = user$name(),
-        group = registryName,
-        orgId = user$org(),
-        type = type,
-        mapOrgId = orgList2df(orgs)
-      ),
+      autoReport$tab,
       server = FALSE, escape = FALSE, selection = "none",
       rownames = FALSE,
       options = list(
@@ -570,17 +577,7 @@ autoReportServer2 <- function(
           shiny::p("Ved sp\u00F8rsm\u00E5l ta gjerne kontakt med registeret."),
           shiny::hr()
         )
-      } else if (length(
-        makeAutoReportTab(
-          session,
-          namespace = id,
-          user = user$name(),
-          group = registryName,
-          orgId = user$org(),
-          type = type,
-          mapOrgId = orgList2df(orgs)
-        )
-      ) == 0) {
+      } else if (length(autoReport$tab) == 0) {
         shiny::tagList(
           shiny::h2("Det finnes ingen oppf\u00F8ringer"),
           shiny::p(paste(
