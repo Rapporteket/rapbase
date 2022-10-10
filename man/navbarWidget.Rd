@@ -3,13 +3,13 @@
 \name{navbarWidget}
 \alias{navbarWidget}
 \alias{navbarWidgetInput}
-\alias{navbarWidgetServer}
+\alias{navbarWidgetServer2}
 \alias{navbarWidgetApp}
 \title{Shiny modules providing GUI and server logic for user info widget}
 \usage{
 navbarWidgetInput(id, addUserInfo = TRUE, selectOrganization = FALSE)
 
-navbarWidgetServer(
+navbarWidgetServer2(
   id,
   orgName,
   caller = environmentName(topenv(parent.frame()))

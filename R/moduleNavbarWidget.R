@@ -26,7 +26,7 @@
 #' a list of reactive values representing user metadata and privileges. See
 #' \code{\link{userAttribute}} for further details on these values.
 #' @name navbarWidget
-#' @aliases navbarWidgetInput navbarWidgetServer navbarWidgetApp
+#' @aliases navbarWidgetInput navbarWidgetServer2 navbarWidgetApp
 #' @examples
 #' ## client user interface function
 #' ui <- shiny::tagList(
@@ -76,7 +76,7 @@ navbarWidgetInput <- function(id,
 
 #' @rdname navbarWidget
 #' @export
-navbarWidgetServer <- function(
+navbarWidgetServer2 <- function(
     id,
     orgName,
     caller = environmentName(topenv(parent.frame()))
@@ -84,17 +84,20 @@ navbarWidgetServer <- function(
 
   shiny::moduleServer(id, function(input, output, session) {
 
-    # to be populated further if and when inside an app container
+    user <- userAttribute(caller)
+    stopifnot(length(user$name) > 0)
+
+    # Initial privileges and affiliation will be first in list
     rv <- shiny::reactiveValues(
-      name = getUserName(session, caller),
-      fullName = getUserFullName(session, caller),
-      phone = NULL,
-      email = NULL,
-      group = caller,
-      unit = NULL,
-      org = getUserReshId(session, caller),
-      role = getUserRole(session, caller),
-      orgName = NULL
+      name = user$name[1],
+      fullName = user$fullName[1],
+      phone = user$phone[1],
+      email = user$email[1],
+      group = user$group[1],
+      unit = user$unit[1],
+      org = user$org[1],
+      role = user$role[1],
+      orgName = user$orgName[1]
     )
 
     output$name <- shiny::renderText(rv$fullName)
@@ -116,13 +119,9 @@ navbarWidgetServer <- function(
 
     # Select organization in widget (for container apps only)
     shiny::observeEvent(input$selectOrganization, {
-
-      ## Start MOVE OUTSIDE observer when we are all containers ------------- ##
-      privs <- userAttribute(caller)
-      ## End MOVE OUTSIDE --------------------------------------------------- ##
-      choices <- privs$unit
+      choices <- user$unit
       names(choices) <- paste0(
-        privs$orgName, " (", privs$org, ") - ", privs$role
+        user$orgName, " (", user$org, ") - ", user$role
       )
 
       shinyalert::shinyalert(
@@ -153,19 +152,15 @@ navbarWidgetServer <- function(
     })
 
     shiny::observeEvent(input$unit, {
-      ## Start MOVE OUTSIDE observer when we are all containers ------------- ##
-      privs <- userAttribute(caller)
-      ## End MOVE OUTSIDE --------------------------------------------------- ##
-
-      rv$name <- privs$name[privs$unit == input$unit]
-      rv$fullName <- privs$fullName[privs$unit == input$unit]
-      rv$phone <- privs$phone[privs$unit == input$unit]
-      rv$email <- privs$email[privs$unit == input$unit]
-      rv$group <- privs$group[privs$unit == input$unit]
-      rv$unit <- privs$unit[privs$unit == input$unit]
-      rv$org <- privs$org[privs$unit == input$unit]
-      rv$role <- privs$role[privs$unit == input$unit]
-      rv$orgName <- privs$orgName[privs$unit == input$unit]
+      rv$name <- user$name[user$unit == input$unit]
+      rv$fullName <- user$fullName[user$unit == input$unit]
+      rv$phone <- user$phone[user$unit == input$unit]
+      rv$email <- user$email[user$unit == input$unit]
+      rv$group <- user$group[user$unit == input$unit]
+      rv$unit <- user$unit[user$unit == input$unit]
+      rv$org <- user$org[user$unit == input$unit]
+      rv$role <- user$role[user$unit == input$unit]
+      rv$orgName <- user$orgName[user$unit == input$unit]
     })
 
     invisible(
