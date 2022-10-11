@@ -341,7 +341,6 @@ with_envvar(
     type <- "subscription"
     user <- userAttribute("rapbase", unit = 1)
     for (n in names(user)) {
-      print(user[[n]])
       user[[n]] <- shiny::reactiveVal(user[[n]])
     }
 
