@@ -225,7 +225,7 @@ navbarWidgetApp <- function(orgName = "Org Name") {
     )
   )
   server <- function(input, output, session) {
-    privs <- navbarWidgetServer("testWidget", orgName = orgName)
+    navbarWidgetServer("testWidget", orgName = orgName)
   }
 
   shiny::shinyApp(ui, server)
