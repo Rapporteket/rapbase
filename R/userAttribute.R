@@ -145,7 +145,7 @@ userInfo <- function(
     if (context %in% c("QAC", "PRODUCTIONC")) {
       userprivs <- userAttribute(group)
       # pick the first of available user privileges
-      userprivs <- as.data.frame(userprivs)[1, ]
+      userprivs <- as.data.frame(userprivs, stringsAsFactors = FALSE)[1, ]
       user <- userprivs$name
       groups <- userprivs$group
       resh_id <- userprivs$org
