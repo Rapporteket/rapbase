@@ -234,6 +234,16 @@ userAttribute <- function(group, unit = NULL) {
     ))
   }
 
+  ### DUE TO CURRENT LIMITATIONS TO FALK (currently application type OQR)    ###
+  #   HARD CODED ROLES HAVE TO BE MAPPED TO SHINYPROXY APPLICATION PRIVILEGES  #
+  #   THEREFORE, THE NEXT SECTION IS TO BE REMOVED ONCE A PROPER RAPPORTEKET   #
+  #   APPLICATION TYPE IS IN PLACE.                                            #
+  ### -------------------  REMOVE THE SECTION BELOW! ------------------------- #
+  groups[groups == "LU"] <- "falkdemo"
+  groups[groups == "LC"] <- "ablanor"
+  groups[groups == "SC"] <- "rapadm"
+
+
   # NB Anticipate that element positions in vectors do correspond!
   ## filter by this group
   units <- units[groups == group]
