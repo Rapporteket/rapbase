@@ -227,7 +227,7 @@ userAttribute <- function(group, unit = NULL) {
     )
   )
 
-  if(length(units) != length(groups)) {
+  if (length(units) != length(groups)) {
     stop(paste(
       "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID are of",
       "different lengths. Hence, correspondence cannot be anticipated."
@@ -250,7 +250,7 @@ userAttribute <- function(group, unit = NULL) {
   groups <- groups[groups == group]
 
   ## restrict when unit is provided
-  if(!is.null(unit)) {
+  if (!is.null(unit)) {
     groups <- groups[units == unit]
     units <- units[units == unit]
   }
