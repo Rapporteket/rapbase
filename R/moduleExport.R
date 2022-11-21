@@ -118,7 +118,7 @@ exportUCServer <- function(id, registryName, repoName = registryName,
         shiny::selectInput(
           shiny::NS(id, "exportKey"),
           label = shiny::tags$div(
-            shiny::HTML(as.character(shiny::icon("key")), "Velg \u00f8kkel:")
+            shiny::HTML(as.character(shiny::icon("key")), "Velg n\u00f8kkel:")
           ),
           choices = selectListPubkey(pubkey())
         )
