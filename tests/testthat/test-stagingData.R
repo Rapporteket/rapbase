@@ -13,7 +13,18 @@ testPath <- file.path(
 )
 testFile <- file.path(testPath, dataName)
 
-test_that("staging cannot commence if paret directory does not exist", {
+# test config for file backend
+test_config <- paste0(
+  "r:",
+  "\n  staging: ",
+  "\n    target: file",
+  "\n    key: staging\n"
+)
+cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml"))
+writeLines(test_config, cf)
+close(cf)
+
+test_that("staging cannot commence if parent directory does not exist", {
   expect_error(pathStagingData(registryName, dir = "imaginaryDir"))
   expect_error(
     saveStagingData(registryName, "testData", d, dir = "imaginaryDir")
@@ -69,10 +80,88 @@ test_that("a global clean of staging data can be performed (also dry run)", {
   expect_false(file.exists(testFile))
 })
 
+# clean up config for file backend
+unlink(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml"))
+
 test_that("a global clean of staging data will stop if no parent directory", {
   Sys.unsetenv("R_RAP_CONFIG_PATH")
   expect_error(cleanStagingData(0))
 })
 
+# Test with db as backend
+Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
+
+# Database infrastructure is only available at GA and our own dev env.
+# Tests running on other environments should be skipped
+checkDb <- function(is_test_that = TRUE) {
+  if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
+    NULL
+  } else if (Sys.getenv("GITHUB_ACTIONS_RUN_DB_UNIT_TESTS") == "true") {
+    NULL
+  } else {
+    if (is_test_that) {
+      testthat::skip("Possible lack of database infrastructure")
+    } else {
+      1
+    }
+  }
+}
+
+test_that("env vars needed for db testing is present", {
+  checkDb()
+  expect_true("DB_HOST" %in% names(Sys.getenv()))
+  expect_true("DB_USER" %in% names(Sys.getenv()))
+  expect_true("DB_PASS" %in% names(Sys.getenv()))
+})
+
+# make temporary config
+test_config <- paste0(
+  "staging:",
+  "\n  host : ", Sys.getenv("DB_HOST"),
+  "\n  name : staging",
+  "\n  user : ", Sys.getenv("DB_USER"),
+  "\n  pass : ", Sys.getenv("DB_PASS"),
+  "\n  disp : ephemaralUnitTesting\n"
+)
+cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
+writeLines(test_config, cf)
+close(cf)
+
+test_config <- paste0(
+  "r:",
+  "\n  staging: ",
+  "\n    target: db",
+  "\n    key: staging\n"
+)
+cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml"))
+writeLines(test_config, cf)
+close(cf)
+
+if (is.null(checkDb(is_test_that = FALSE))) {
+  dbStagingData("staging")
+}
+
+test_that("Error is returned when key cannot be found in config", {
+  expect_error(dbStagingData("wrongEntry"))
+})
+
+test_that("A db connection object can be opened and closed", {
+  con <- dbStagingConnection(key = "staging")
+  expect_true(inherits(con, "DBIConnection"))
+  con <- dbStagingConnection(con = con)
+  expect_true(is.null(con))
+})
+
+test_that("Data can be staged", {
+  d0 <- saveStagingData(registryName, "testData", d)
+  expect_true(identical(d, d0))
+})
+
+if (is.null(checkDb(is_test_that = FALSE))) {
+  dbStagingData("staging", drop = TRUE)
+}
+
 # Restore environment
+unlink(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml"))
+unlink(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)

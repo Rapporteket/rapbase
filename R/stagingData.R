@@ -43,7 +43,8 @@
 #'
 #' @name stagingData
 #' @aliases listStagingData mtimeStagingData saveStagingData loadStagingData
-#' deleteStagingData cleanStagingData pathStagingData
+#' deleteStagingData cleanStagingData pathStagingData dbStagingData
+#' dbStagingConnection
 #'
 #' @examples
 #' ## Prep test data
@@ -92,9 +93,42 @@ mtimeStagingData <- function(registryName,
 #' @export
 saveStagingData <- function(registryName, dataName, data,
                             dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
-  path <- pathStagingData(registryName, dir)
+  conf <- getConfig("rapbaseConfig.yml")$r$staging
 
-  readr::write_rds(data, file.path(path, dataName))
+  if (conf$target == "file") {
+    path <- pathStagingData(registryName, dir)
+    readr::write_rds(data, file.path(path, dataName))
+  }
+
+  if (conf$target == "db") {
+    dbStagingData(conf$key)
+    blob <- memCompress(
+      serialize(data, connection = NULL),
+      type = "bzip2"
+    )
+
+    df <- data.frame(
+      registry = registryName,
+      name = dataName,
+      data = blob::as.blob(blob)
+    )
+
+    cleanQuery <- paste0(
+      "DELETE FROM data WHERE registry = '",
+      registryName,
+      "' AND name = '",
+      dataName,
+      "'"
+    )
+
+    con <- dbStagingConnection(key = conf$key)
+    RMariaDB::dbExecute(con, cleanQuery)
+    RMariaDB::dbAppendTable(con, "data", df)
+    con <- dbStagingConnection(con = con)
+
+    return(invisible(data))
+
+  }
 }
 
 #' @rdname stagingData
@@ -172,4 +206,77 @@ pathStagingData <- function(registryName, dir) {
   }
 
   path
+}
+
+#' @rdname stagingData
+dbStagingData <- function(key, drop = FALSE) {
+
+  conf <- getConfig()[[key]]
+  if (is.null(conf)) {
+    stop(paste("There is no configuration corresponding to key", key))
+  }
+  if (drop) {
+    query <- paste("DROP DATABASE", conf$name)
+    msg <- paste0("Database '", conf$name, "' deleted.")
+  } else {
+    query <- c(
+      sprintf(
+        readLines(system.file("createStagingDb.sql", package = "rapbase")),
+        conf$name
+      ),
+      paste0(
+        readLines(system.file("createStagingTab.sql", package = "rapbase")),
+        collapse = "\n"
+      )
+    )
+    msg <- paste0("Database '", conf$name, "exists.")
+  }
+
+  con <- dbStagingConnection(key = key, init = TRUE)
+  for (q in query) {
+    tmp <- RMariaDB::dbExecute(con, q)
+  }
+
+  con <- dbStagingConnection(con = con)
+
+  invisible(msg)
+}
+
+#' @rdname stagingData
+dbStagingConnection <- function(key = NULL, con = NULL, init = FALSE) {
+
+  if (inherits(con, "DBIConnection")) {
+    con <- DBI::dbDisconnect(con)
+    con <- NULL
+    return(invisible(con))
+  }
+
+  if (!is.null(key)) {
+    conf <- getConfig()[[key]]
+    if (is.null(conf)) {
+      stop(
+        paste0(
+          "Could not connect to database because there is no configuration ",
+          "corresponding to key '", key,"'. Please check key and/or ",
+          "configuration."
+        )
+      )
+    }
+    if (init) {
+      dbname <- NULL
+    } else {
+      dbname <- conf$name
+    }
+    drv <- RMariaDB::MariaDB()
+    con <- RMariaDB::dbConnect(
+      drv,
+      dbname,
+      host = conf$host,
+      user = conf$user,
+      password = conf$pass
+    )
+    return(con)
+  } else {
+    stop("Either a key or a valid database connection object must be provided.")
+  }
 }

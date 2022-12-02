@@ -9,6 +9,8 @@
 \alias{deleteStagingData}
 \alias{cleanStagingData}
 \alias{pathStagingData}
+\alias{dbStagingData}
+\alias{dbStagingConnection}
 \title{Staging data functions}
 \usage{
 listStagingData(registryName, dir = Sys.getenv("R_RAP_CONFIG_PATH"))
@@ -33,6 +35,10 @@ deleteStagingData(
 cleanStagingData(eolAge, dryRun = TRUE)
 
 pathStagingData(registryName, dir)
+
+dbStagingData(key, drop = FALSE)
+
+dbStagingConnection(key = NULL, con = NULL)
 }
 \arguments{
 \item{registryName}{Character string providing the registry name.}
