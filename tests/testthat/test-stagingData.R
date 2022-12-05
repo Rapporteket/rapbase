@@ -152,9 +152,15 @@ test_that("A db connection object can be opened and closed", {
   expect_true(is.null(con))
 })
 
-test_that("Data can be staged", {
+test_that("Data can be staged with db backend", {
   d0 <- saveStagingData(registryName, "testData", d)
   expect_true(identical(d, d0))
+})
+
+test_that("staging files can be listed from db backend", {
+  v <- listStagingData(registryName)
+  expect_equal(class(v), "character")
+  expect_identical(v, "testData")
 })
 
 if (is.null(checkDb(is_test_that = FALSE))) {

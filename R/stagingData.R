@@ -70,9 +70,29 @@ NULL
 #' @export
 listStagingData <- function(registryName,
                             dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
-  path <- pathStagingData(registryName, dir)
 
-  list.files(path)
+  conf <- getConfig("rapbaseConfig.yml")$r$staging
+
+  if (conf$target == "file") {
+    path <- pathStagingData(registryName, dir)
+
+    return(list.files(path))
+  }
+
+  if (conf$target == "db") {
+    query <- paste0(
+      "SELECT name FROM data WHERE registry = ?;"
+    )
+    params <- list(registryName)
+    con <- dbStagingConnection(key = conf$key)
+    rs <- RMariaDB::dbSendQuery(con, query)
+    RMariaDB::dbBind(rs, params)
+    df <- RMariaDB::dbFetch(rs)
+    RMariaDB::dbClearResult(rs)
+    con <- dbStagingConnection(con = con)
+
+    return(df$name)
+  }
 }
 
 #' @rdname stagingData
