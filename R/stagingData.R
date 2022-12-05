@@ -97,7 +97,11 @@ saveStagingData <- function(registryName, dataName, data,
 
   if (conf$target == "file") {
     path <- pathStagingData(registryName, dir)
-    readr::write_rds(data, file.path(path, dataName))
+    return(
+      invisible(
+        readr::write_rds(data, file.path(path, dataName))
+      )
+    )
   }
 
   if (conf$target == "db") {
