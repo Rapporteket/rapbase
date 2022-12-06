@@ -44,7 +44,7 @@
 #' @name stagingData
 #' @aliases listStagingData mtimeStagingData saveStagingData loadStagingData
 #' deleteStagingData cleanStagingData pathStagingData dbStagingData
-#' dbStagingConnection
+#' dbStagingConnection dbStagingProcess
 #'
 #' @examples
 #' ## Prep test data
@@ -80,16 +80,9 @@ listStagingData <- function(registryName,
   }
 
   if (conf$target == "db") {
-    query <- paste0(
-      "SELECT name FROM data WHERE registry = ?;"
-    )
+    query <- "SELECT name FROM data WHERE registry = ?;"
     params <- list(registryName)
-    con <- dbStagingConnection(key = conf$key)
-    rs <- RMariaDB::dbSendQuery(con, query)
-    RMariaDB::dbBind(rs, params)
-    df <- RMariaDB::dbFetch(rs)
-    RMariaDB::dbClearResult(rs)
-    con <- dbStagingConnection(con = con)
+    df <- dbStagingProcess(conf$key, query, params)
 
     return(df$name)
   }
@@ -126,32 +119,22 @@ saveStagingData <- function(registryName, dataName, data,
 
   if (conf$target == "db") {
     dbStagingData(conf$key)
-    blob <- memCompress(
+    b <- memCompress(
       serialize(data, connection = NULL),
       type = "bzip2"
     )
 
-    df <- data.frame(
-      registry = registryName,
-      name = dataName,
-      data = blob::as.blob(blob)
-    )
+    # remove any existing registry data with same data name
+    query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
+    params <- list(registryName, dataName)
+    df <- dbStagingProcess(conf$key, query, params, statement = TRUE)
 
-    cleanQuery <- paste0(
-      "DELETE FROM data WHERE registry = '",
-      registryName,
-      "' AND name = '",
-      dataName,
-      "'"
-    )
-
-    con <- dbStagingConnection(key = conf$key)
-    RMariaDB::dbExecute(con, cleanQuery)
-    RMariaDB::dbAppendTable(con, "data", df)
-    con <- dbStagingConnection(con = con)
+    # insert new data
+    query <- "INSERT INTO data (registry, name, data) VALUES (?, ?, ?);"
+    params <- list(registryName, dataName, blob::as_blob(b))
+    df <- dbStagingProcess(conf$key, query, params, statement = TRUE)
 
     return(invisible(data))
-
   }
 }
 
@@ -303,4 +286,21 @@ dbStagingConnection <- function(key = NULL, con = NULL, init = FALSE) {
   } else {
     stop("Either a key or a valid database connection object must be provided.")
   }
+}
+
+#' @rdname stagingData
+dbStagingProcess <- function(key, query, params, statement = FALSE) {
+
+  con <- dbStagingConnection(key)
+  if (statement) {
+    df <- RMariaDB::dbExecute(con, query, params)
+  } else {
+    rs <- RMariaDB::dbSendQuery(con, query)
+    RMariaDB::dbBind(rs, params)
+    df <- RMariaDB::dbFetch(rs)
+    RMariaDB::dbClearResult(rs)
+  }
+  con <- dbStagingConnection(con = con)
+
+  df
 }

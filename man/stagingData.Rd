@@ -11,6 +11,7 @@
 \alias{pathStagingData}
 \alias{dbStagingData}
 \alias{dbStagingConnection}
+\alias{dbStagingProcess}
 \title{Staging data functions}
 \usage{
 listStagingData(registryName, dir = Sys.getenv("R_RAP_CONFIG_PATH"))
@@ -38,7 +39,9 @@ pathStagingData(registryName, dir)
 
 dbStagingData(key, drop = FALSE)
 
-dbStagingConnection(key = NULL, con = NULL)
+dbStagingConnection(key = NULL, con = NULL, init = FALSE)
+
+dbStagingProcess(key, query, params, statement = FALSE)
 }
 \arguments{
 \item{registryName}{Character string providing the registry name.}
