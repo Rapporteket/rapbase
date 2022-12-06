@@ -61,7 +61,7 @@ test_that("loading none-existing data returns false", {
   expect_false(loadStagingData(registryName, "imaginaryDataSet"))
 })
 
-test_that("deleting a none-existing file returns FALE", {
+test_that("deleting a none-existing file returns FALSE", {
   expect_false(deleteStagingData(registryName, "imaginaryDataSet"))
 })
 
@@ -165,6 +165,34 @@ test_that("staging files can be listed from db backend", {
 
 test_that("modification time of stagin data in db can be obtained", {
   expect_true("POSIXct" %in% class(mtimeStagingData(registryName)))
+})
+
+test_that("retrieval of none existing data returns FALSE", {
+  expect_false(loadStagingData(registryName, "noSuchDataSet"))
+})
+
+test_that("data can be retrieved from staging db", {
+  #print(loadStagingData(registryName, dataName))
+  expect_equal(loadStagingData(registryName, dataName), d)
+})
+
+test_that("deleting a none-existing dataset from db returns FALSE", {
+  expect_false(deleteStagingData(registryName, "imaginaryDataSet"))
+})
+
+test_that("a dataset can be deleted from db", {
+  expect_true(deleteStagingData(registryName, dataName))
+  expect_false(loadStagingData(registryName, dataName))
+})
+
+test_that("a global clean of db staging data can be performed (also dry run)", {
+  expect_equal(saveStagingData(registryName, dataName, d), d)
+  expect_true(file.exists(testFile))
+  expect_message(cleanStagingData(0))
+  expect_equal(class(cleanStagingData(0)), "character")
+  expect_true(file.exists(testFile))
+  expect_invisible(cleanStagingData(0, dryRun = FALSE))
+  expect_false(file.exists(testFile))
 })
 
 if (is.null(checkDb(is_test_that = FALSE))) {

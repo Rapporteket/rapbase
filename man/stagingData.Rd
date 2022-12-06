@@ -67,8 +67,9 @@ destructive) mode.}
     files for the given registry (\code{registryName}).
   \item \code{mtimeStagingData()} returns a staging file-named POSIXct vector
     of modification times for the given registry (\code{registryName}).
-  \item \code{saveStagingData()} returns the data object (\code{data}),
-    invisibly.
+  \item \code{saveStagingData()} when successful returns the data object
+    (\code{data}), invisibly. If saving fails a warning is issued and the
+    function returns FALSE.
   \item \code{loadStagingData()} returns the data object corresponding to
     the name given upon saving (\code{dataName}). If the requested data set
     for loading does not exist the function returns FALSE.

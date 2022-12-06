@@ -27,8 +27,9 @@
 #'     files for the given registry (\code{registryName}).
 #'   \item \code{mtimeStagingData()} returns a staging file-named POSIXct vector
 #'     of modification times for the given registry (\code{registryName}).
-#'   \item \code{saveStagingData()} returns the data object (\code{data}),
-#'     invisibly.
+#'   \item \code{saveStagingData()} when successful returns the data object
+#'     (\code{data}), invisibly. If saving fails a warning is issued and the
+#'     function returns FALSE.
 #'   \item \code{loadStagingData()} returns the data object corresponding to
 #'     the name given upon saving (\code{dataName}). If the requested data set
 #'     for loading does not exist the function returns FALSE.
@@ -136,17 +137,21 @@ saveStagingData <- function(registryName, dataName, data,
       type = "bzip2"
     )
 
-    # remove any existing registry data with same data name
+    # remove any existing registry data with same data name (should never fail)
     query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
     params <- list(registryName, dataName)
-    df <- dbStagingProcess(conf$key, query, params, statement = TRUE)
+    d <- dbStagingProcess(conf$key, query, params, statement = TRUE)
 
-    # insert new data
+    # insert new data (can fail, but hard to test...)
     query <- "INSERT INTO data (registry, name, data) VALUES (?, ?, ?);"
     params <- list(registryName, dataName, blob::as_blob(b))
-    df <- dbStagingProcess(conf$key, query, params, statement = TRUE)
-
-    return(invisible(data))
+    d <- dbStagingProcess(conf$key, query, params, statement = TRUE)
+    if (d > 0) {
+      return(invisible(data))
+    } else {
+      warning(paste0("The data set '", dataName, "' could not be saved!"))
+      return(FALSE)
+    }
   }
 }
 
@@ -154,29 +159,67 @@ saveStagingData <- function(registryName, dataName, data,
 #' @export
 loadStagingData <- function(registryName, dataName,
                             dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
-  path <- pathStagingData(registryName, dir)
-  filePath <- file.path(path, dataName)
 
-  if (file.exists(filePath)) {
-    readr::read_rds(filePath)
-  } else {
-    FALSE
+  conf <- getConfig("rapbaseConfig.yml")$r$staging
+
+  if (conf$target == "file") {
+    path <- pathStagingData(registryName, dir)
+    filePath <- file.path(path, dataName)
+
+    if (file.exists(filePath)) {
+      data <- readr::read_rds(filePath)
+    } else {
+      data <- FALSE
+    }
   }
+
+  if (conf$target == "db") {
+    query <- "SELECT data FROM data WHERE registry = ? AND name = ?;"
+    params <- list(registryName, dataName)
+    df <- dbStagingProcess(conf$key, query, params)
+    if (length(df$data) == 0) {
+      data <- FALSE
+    } else {
+      data <- df$data[[1]] %>%
+        memDecompress(type = "bzip2") %>%
+        unserialize()
+    }
+  }
+
+  data
 }
 
 #' @rdname stagingData
 #' @export
 deleteStagingData <- function(registryName, dataName,
                               dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
-  path <- pathStagingData(registryName, dir)
-  filePath <- file.path(path, dataName)
 
-  if (file.exists(filePath)) {
-    file.remove(filePath)
-    TRUE
-  } else {
-    FALSE
+  conf <- getConfig("rapbaseConfig.yml")$r$staging
+
+  if (conf$target == "file") {
+    path <- pathStagingData(registryName, dir)
+    filePath <- file.path(path, dataName)
+
+    if (file.exists(filePath)) {
+      file.remove(filePath)
+      isDelete <- TRUE
+    } else {
+      isDelete <- FALSE
+    }
   }
+
+  if (conf$target == "db") {
+    query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
+    params <- list(registryName, dataName)
+    d <- dbStagingProcess(conf$key, query, params, statement = TRUE)
+    if (d > 0) {
+      isDelete <- TRUE
+    } else {
+      isDelete <- FALSE
+    }
+  }
+
+  isDelete
 }
 
 #' @rdname stagingData
