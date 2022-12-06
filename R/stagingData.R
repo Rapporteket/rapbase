@@ -92,13 +92,25 @@ listStagingData <- function(registryName,
 #' @export
 mtimeStagingData <- function(registryName,
                              dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
-  parentPath <- "stagingData"
-  path <- file.path(dir, parentPath, registryName)
-  f <- normalizePath(list.files(path, recursive = TRUE, full.names = TRUE))
-  mtime <- file.mtime(f)
 
-  names(mtime) <- basename(f)
+  conf <- getConfig("rapbaseConfig.yml")$r$staging
 
+  if (conf$target == "file") {
+    parentPath <- "stagingData"
+    path <- file.path(dir, parentPath, registryName)
+    f <- normalizePath(list.files(path, recursive = TRUE, full.names = TRUE))
+    mtime <- file.mtime(f)
+
+    names(mtime) <- basename(f)
+  }
+
+  if (conf$target == "db") {
+    query <- "SELECT mtime, name FROM data WHERE registry = ?;"
+    params <- list(registryName)
+    df <- dbStagingProcess(conf$key, query, params)
+    mtime <- as.POSIXct(df$mtime)
+    names(mtime) <- df$name
+  }
   mtime
 }
 

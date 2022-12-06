@@ -163,6 +163,10 @@ test_that("staging files can be listed from db backend", {
   expect_identical(v, "testData")
 })
 
+test_that("modification time of stagin data in db can be obtained", {
+  expect_true("POSIXct" %in% class(mtimeStagingData(registryName)))
+})
+
 if (is.null(checkDb(is_test_that = FALSE))) {
   dbStagingData("staging", drop = TRUE)
 }
