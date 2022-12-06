@@ -187,12 +187,12 @@ test_that("a dataset can be deleted from db", {
 
 test_that("a global clean of db staging data can be performed (also dry run)", {
   expect_equal(saveStagingData(registryName, dataName, d), d)
-  expect_true(file.exists(testFile))
+  expect_identical(listStagingData(registryName), dataName)
   expect_message(cleanStagingData(0))
   expect_equal(class(cleanStagingData(0)), "character")
-  expect_true(file.exists(testFile))
+  expect_identical(listStagingData(registryName), dataName)
   expect_invisible(cleanStagingData(0, dryRun = FALSE))
-  expect_false(file.exists(testFile))
+  expect_false(loadStagingData(registryName, dataName))
 })
 
 if (is.null(checkDb(is_test_that = FALSE))) {

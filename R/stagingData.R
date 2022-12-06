@@ -227,31 +227,51 @@ deleteStagingData <- function(registryName, dataName,
 cleanStagingData <- function(eolAge, dryRun = TRUE) {
   if (Sys.getenv("R_RAP_CONFIG_PATH") == "") {
     stop(paste(
-      "Got no path to staging data. No data will be deleted.",
+      "No data store provided. Hence, no data will be deleted.",
       "Exiting."
     ))
   }
 
-  dir <- Sys.getenv("R_RAP_CONFIG_PATH")
-  parentPath <- "stagingData"
-  path <- file.path(dir, parentPath)
-  f <- normalizePath(list.files(path, recursive = TRUE, full.names = TRUE))
-  fAge <- as.numeric(Sys.time()) - as.numeric(file.mtime(f))
-  fDelete <- f[fAge > eolAge]
+  conf <- getConfig("rapbaseConfig.yml")$r$staging
+
+  if (conf$target == "file") {
+    dir <- Sys.getenv("R_RAP_CONFIG_PATH")
+    parentPath <- "stagingData"
+    path <- file.path(dir, parentPath)
+    f <- normalizePath(list.files(path, recursive = TRUE, full.names = TRUE))
+    fAge <- as.numeric(Sys.time()) - as.numeric(file.mtime(f))
+    deleteDataset <- f[fAge > eolAge]
+  }
+
+  if (conf$target == "db") {
+    eolTime <- Sys.time() - eolAge
+    query <- paste0(
+      "SELECT registry, name FROM data WHERE mtime < ? ORDER BY registry, name;"
+    )
+    params <- list(eolTime)
+    df <- dbStagingProcess(conf$key, query, params)
+    deleteDataset <- paste0(df$registry, ": ", df$name)
+  }
 
   if (dryRun) {
     message(
       paste(
-        "Function invoked in dry run mode and none of the returned files\n",
-        "will be deleted.\n",
-        "To delete the files please contemplate and re-run this function\n",
+        "Function invoked in dry run mode and none of the returned staging\n",
+        "data sets will be deleted.\n",
+        "To delete for real, please contemplate and re-run this function\n",
         "with the dryRun argument set to 'FALSE'. Godspeed!"
       )
     )
-    fDelete
+    deleteDataset
   } else {
-    file.remove(fDelete)
-    invisible(fDelete)
+    if (conf$target == "file") {
+      file.remove(deleteDataset)
+    }
+    if (conf$target == "db") {
+      query <- "DELETE FROM data WHERE mtime < ?;"
+      d <- dbStagingProcess(conf$key, query, params, statement = TRUE)
+    }
+    invisible(deleteDataset)
   }
 }
 
@@ -344,7 +364,7 @@ dbStagingConnection <- function(key = NULL, con = NULL, init = FALSE) {
 }
 
 #' @rdname stagingData
-dbStagingProcess <- function(key, query, params, statement = FALSE) {
+dbStagingProcess <- function(key, query, params = list(), statement = FALSE) {
 
   con <- dbStagingConnection(key)
   if (statement) {
