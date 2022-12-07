@@ -128,7 +128,7 @@ close(cf)
 test_config <- paste0(
   "staging:",
   "\n  host : ", Sys.getenv("DB_HOST"),
-  "\n  name : staging",
+  "\n  name : test_staging",
   "\n  user : ", Sys.getenv("DB_USER"),
   "\n  pass : ", Sys.getenv("DB_PASS"),
   "\n  disp : ephemaralUnitTesting\n"
