@@ -114,7 +114,17 @@ test_that("env vars needed for db testing is present", {
   expect_true("DB_PASS" %in% names(Sys.getenv()))
 })
 
-# make temporary config
+test_config <- paste0(
+  "r:",
+  "\n  staging: ",
+  "\n    target: db",
+  "\n    key: staging\n"
+)
+cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml"))
+writeLines(test_config, cf)
+close(cf)
+
+# make proper dbConfig
 test_config <- paste0(
   "staging:",
   "\n  host : ", Sys.getenv("DB_HOST"),
@@ -127,25 +137,27 @@ cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
 writeLines(test_config, cf)
 close(cf)
 
-test_config <- paste0(
-  "r:",
-  "\n  staging: ",
-  "\n    target: db",
-  "\n    key: staging\n"
-)
-cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml"))
-writeLines(test_config, cf)
-close(cf)
+test_that("No connection provided when no key (or connection object) given", {
+  expect_error(dbStagingConnection(key = NULL, con = NULL))
+})
 
-if (is.null(checkDb(is_test_that = FALSE))) {
-  dbStagingData("staging")
-}
+test_that("No connection provided when insufficient config", {
+  checkDb()
+  expect_error(dbStagingConnection("unknown"), regexp = "Could not connect")
+})
+
+# make new staging database using prereq function
+test_that("prereq creates database initially", {
+  checkDb()
+  expect_silent(dbStagingPrereq("staging"))
+})
 
 test_that("Error is returned when key cannot be found in config", {
   expect_error(dbStagingData("wrongEntry"))
 })
 
 test_that("A db connection object can be opened and closed", {
+  checkDb()
   con <- dbStagingConnection(key = "staging")
   expect_true(inherits(con, "DBIConnection"))
   con <- dbStagingConnection(con = con)
@@ -153,26 +165,30 @@ test_that("A db connection object can be opened and closed", {
 })
 
 test_that("Data can be staged with db backend", {
+  checkDb()
   d0 <- saveStagingData(registryName, "testData", d)
   expect_true(identical(d, d0))
 })
 
 test_that("staging files can be listed from db backend", {
+  checkDb()
   v <- listStagingData(registryName)
   expect_equal(class(v), "character")
   expect_identical(v, "testData")
 })
 
 test_that("modification time of stagin data in db can be obtained", {
+  checkDb()
   expect_true("POSIXct" %in% class(mtimeStagingData(registryName)))
 })
 
 test_that("retrieval of none existing data returns FALSE", {
+  checkDb()
   expect_false(loadStagingData(registryName, "noSuchDataSet"))
 })
 
 test_that("data can be retrieved from staging db", {
-  #print(loadStagingData(registryName, dataName))
+  checkDb()
   expect_equal(loadStagingData(registryName, dataName), d)
 })
 
@@ -181,11 +197,13 @@ test_that("deleting a none-existing dataset from db returns FALSE", {
 })
 
 test_that("a dataset can be deleted from db", {
+  checkDb()
   expect_true(deleteStagingData(registryName, dataName))
   expect_false(loadStagingData(registryName, dataName))
 })
 
 test_that("a global clean of db staging data can be performed (also dry run)", {
+  checkDb()
   expect_equal(saveStagingData(registryName, dataName, d), d)
   expect_identical(listStagingData(registryName), dataName)
   expect_message(cleanStagingData(0))

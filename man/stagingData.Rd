@@ -10,6 +10,7 @@
 \alias{cleanStagingData}
 \alias{pathStagingData}
 \alias{dbStagingData}
+\alias{dbStagingPrereq}
 \alias{dbStagingConnection}
 \alias{dbStagingProcess}
 \title{Staging data functions}
@@ -39,9 +40,11 @@ pathStagingData(registryName, dir)
 
 dbStagingData(key, drop = FALSE)
 
+dbStagingPrereq(key)
+
 dbStagingConnection(key = NULL, con = NULL, init = FALSE)
 
-dbStagingProcess(key, query, params, statement = FALSE)
+dbStagingProcess(key, query, params = list(), statement = FALSE)
 }
 \arguments{
 \item{registryName}{Character string providing the registry name.}

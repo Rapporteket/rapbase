@@ -45,7 +45,7 @@
 #' @name stagingData
 #' @aliases listStagingData mtimeStagingData saveStagingData loadStagingData
 #' deleteStagingData cleanStagingData pathStagingData dbStagingData
-#' dbStagingConnection dbStagingProcess
+#' dbStagingPrereq dbStagingConnection dbStagingProcess
 #'
 #' @examples
 #' ## Prep test data
@@ -81,6 +81,7 @@ listStagingData <- function(registryName,
   }
 
   if (conf$target == "db") {
+    dbStagingPrereq(conf$key)
     query <- "SELECT name FROM data WHERE registry = ?;"
     params <- list(registryName)
     df <- dbStagingProcess(conf$key, query, params)
@@ -106,6 +107,7 @@ mtimeStagingData <- function(registryName,
   }
 
   if (conf$target == "db") {
+    dbStagingPrereq(conf$key)
     query <- "SELECT mtime, name FROM data WHERE registry = ?;"
     params <- list(registryName)
     df <- dbStagingProcess(conf$key, query, params)
@@ -131,7 +133,7 @@ saveStagingData <- function(registryName, dataName, data,
   }
 
   if (conf$target == "db") {
-    dbStagingData(conf$key)
+    dbStagingPrereq(conf$key)
     b <- memCompress(
       serialize(data, connection = NULL),
       type = "bzip2"
@@ -174,6 +176,7 @@ loadStagingData <- function(registryName, dataName,
   }
 
   if (conf$target == "db") {
+    dbStagingPrereq(conf$key)
     query <- "SELECT data FROM data WHERE registry = ? AND name = ?;"
     params <- list(registryName, dataName)
     df <- dbStagingProcess(conf$key, query, params)
@@ -209,6 +212,7 @@ deleteStagingData <- function(registryName, dataName,
   }
 
   if (conf$target == "db") {
+    dbStagingPrereq(conf$key)
     query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
     params <- list(registryName, dataName)
     d <- dbStagingProcess(conf$key, query, params, statement = TRUE)
@@ -244,6 +248,7 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
   }
 
   if (conf$target == "db") {
+    dbStagingPrereq(conf$key)
     eolTime <- Sys.time() - eolAge
     query <- paste0(
       "SELECT registry, name FROM data WHERE mtime < ? ORDER BY registry, name;"
@@ -320,6 +325,24 @@ dbStagingData <- function(key, drop = FALSE) {
   }
 
   con <- dbStagingConnection(con = con)
+
+  invisible(msg)
+}
+
+#' @rdname stagingData
+dbStagingPrereq <- function(key) {
+
+  con <- dbStagingConnection(key, init = TRUE)
+  query <- "SHOW DATABASES LIKE 'staging';"
+  df <- RMariaDB::dbGetQuery(con, query)
+  # close and remove db connection
+  con <- dbStagingConnection(con = con)
+  if (length(df$Database) > 0) {
+    msg <- "You're good! Database for staging data already exists."
+  } else {
+    dbStagingData(key)
+    msg <- "Database for staging data was created."
+  }
 
   invisible(msg)
 }
