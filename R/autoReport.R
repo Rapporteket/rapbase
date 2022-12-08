@@ -55,7 +55,7 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   if (is.null(terminateDate)) {
     context <- Sys.getenv("R_RAP_INSTANCE")
     terminateDate <- as.POSIXlt(Sys.Date())
-    if (context %in% c("PRODUCTION")) {
+    if (context %in% c("PRODUCTION", "PRODUCTIONC")) {
       terminateDate$year <- terminateDate$year + 3
     } else {
       terminateDate$mon <- terminateDate$mon + 1
@@ -645,7 +645,7 @@ findNextRunDate <- function(runDayOfYear,
 #'
 #' Make a table to be rendered in a shiny app providing automated reports
 #' from a given user or registry as obtained from the shiny session
-#' object provided.
+#' object provided or environmental variables when run inside an app container.
 #'
 #' Each table record (line) represents a uniquely defined automated report.
 #' For each line two shiny action buttons are provided to allow
@@ -670,26 +670,42 @@ findNextRunDate <- function(runDayOfYear,
 #'
 #' @param session A shiny session object
 #' @param namespace String naming namespace. Defaults to \code{character()} in
-#' which case no namespace will be created. When this function is used by shiny
-#' modules namespace must be provided.
+#'   which case no namespace will be created. When this function is used by
+#'   shiny modules namespace must be provided.
+#' @param user Character string providing the username. Introduced as a new
+#'   argument when running apps inside containers. Default value is set to
+#'   \code{rapbase::getUserName(session)} to allow backward compatibility.
+#' @param group Character string defining the registry, normally corresponding
+#'   to the R package name and the value stemming from the SHINYPROXY_GROUPS
+#'   environment variable. Introduced as a new argument when running apps inside
+#'   containers. Default value is set to \code{rapbase::getUserGroups(session)}
+#'   to allow backward compatibility.
+#' @param orgId Character string or integer defining the organization (id) for
+#'   \code{user}. Default value is set to \code{rapbase::getUserReshId(session)}
+#'   to allow backward compatibility.
 #' @param type Character string defining the type of auto reports to tabulate.
-#' Must be one of \code{"subscription"}, \code{"dispatchment"} or
-#' \code{"bulletin"}. Default value set to \code{"subscription"}.
+#'   Must be one of \code{"subscription"}, \code{"dispatchment"} or
+#'   \code{"bulletin"}. Default value set to \code{"subscription"}.
 #' @param mapOrgId Data frame containing the two columns 'name' and 'id'
-#' corresponding to unique name and id of organizations. Default is NULL in
-#' which case the ids provided in auto report data will be used. In case
-#' mapOrgId is not NULL but no id match is found the id found in the auto
-#' report data will also be used
+#'   corresponding to unique name and id of organizations. Default is NULL in
+#'   which case the ids provided in auto report data will be used. In case
+#'   mapOrgId is not NULL but no id match is found the id found in the auto
+#'   report data will also be used
 #' @param includeReportId Logical if the unique report id should be added as
-#' the last column in the table. FALSE by default.
+#'   the last column in the table. FALSE by default.
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
 #' @importFrom magrittr "%>%"
 #' @export
 # nolint end
 
-makeAutoReportTab <- function(session, namespace = character(),
-                              type = "subscription", mapOrgId = NULL,
+makeAutoReportTab <- function(session,
+                              namespace = character(),
+                              user = rapbase::getUserName(session),
+                              group = rapbase::getUserGroups(session),
+                              orgId = rapbase::getUserReshId(session),
+                              type = "subscription",
+                              mapOrgId = NULL,
                               includeReportId = FALSE) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
@@ -697,13 +713,13 @@ makeAutoReportTab <- function(session, namespace = character(),
 
   l <- list()
   autoRep <- readAutoReportData() %>%
-    filterAutoRep(., by = "package", pass = getUserGroups(session)) %>%
+    filterAutoRep(., by = "package", pass = group) %>%
     filterAutoRep(., by = "type", pass = type)
 
   if (type == "subscription") {
     autoRep <- autoRep %>%
-      filterAutoRep(., by = "owner", pass = getUserName(session)) %>%
-      filterAutoRep(., by = "organization", pass = getUserReshId(session))
+      filterAutoRep(., by = "owner", pass = user) %>%
+      filterAutoRep(., by = "organization", pass = orgId)
   }
 
   dateFormat <- "%A %e. %B %Y"

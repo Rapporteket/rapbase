@@ -12,6 +12,7 @@
 \alias{autoReportApp}
 \alias{orgList2df}
 \alias{autoReportFormatServer}
+\alias{autoReportServer2}
 \title{Shiny modules and helper functions for registry auto reports}
 \usage{
 autoReportUI(id)
@@ -37,6 +38,20 @@ autoReportServer(
   orgs = NULL,
   eligible = TRUE,
   freq = "month"
+)
+
+autoReportServer2(
+  id,
+  registryName,
+  type,
+  org = NULL,
+  paramNames = shiny::reactiveVal(c("")),
+  paramValues = shiny::reactiveVal(c("")),
+  reports = NULL,
+  orgs = NULL,
+  eligible = TRUE,
+  freq = "month",
+  user
 )
 
 autoReportApp(
@@ -65,10 +80,10 @@ of \code{c("subscription", "dispatchment", "bulletin")}}
 \item{org}{Shiny reactive or NULL (default) defining the organization (id)
 of the data source used for dispatchments and bulletins (in which case it
 cannot be set to NULL) and its value will be used to populate the
-\emph{organization} field in auto report data (autoReport.yml) for these auto
-report types. On the other hand, since subscriptions are personal (per user)
-the only relevant organization id will implicit be that of the user and in
-this case any value of \code{org} will be disregarded.}
+\emph{organization} field in auto report data (autoReport.yml) for these
+auto report types. On the other hand, since subscriptions are personal
+(per user) the only relevant organization id will implicit be that of the
+user and in this case any value of \code{org} will be disregarded.}
 
 \item{paramNames}{Shiny reactive value as a vector of parameter names of
 which values are to be set interactively at application run time. Each
@@ -77,24 +92,28 @@ Default value is \code{shiny::reactiveVal("")}.}
 
 \item{paramValues}{Shiny reactive value as a vector of those parameter values
 to be set interactively, \emph{i.e.} as per user input in the application.
-Default value is set to \code{shiny::reactiveVal("")} in which case parameter
-values defined in \code{reports} will be used as is. In other words,
-explicit use of \code{paramValues} will only be needed if parameter values
-must be changed during application run time. If so, each element of this
-vector must correspond exactly to those of \code{paramNames}.}
+Default value is set to \code{shiny::reactiveVal("")} in which case
+parameter values defined in \code{reports} will be used as is. In other
+words, explicit use of \code{paramValues} will only be needed if parameter
+values must be changed during application run time. If so, each element of
+this vector must correspond exactly to those of \code{paramNames}.}
 
 \item{reports}{List of a given structure that provides meta data for the
-reports that are made available as automated reports. See Details for further
-description.}
+reports that are made available as automated reports. See Details for
+further description.}
 
 \item{eligible}{Logical defining if the module should be allowed to work at
-full capacity. This might be useful when access to module products should be
-restricted. Default is TRUE, \emph{i.e.} no restrictions.}
+full capacity. This might be useful when access to module products should
+be restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 
 \item{freq}{Character string defining default frequency set in the auto
 report GUI. Must be one of
 \code{c("day", "week", "month", "quarter", "year")}. Default value is
 "month".}
+
+\item{user}{List of shiny reactive values providing user metadata and
+privileges corresponding to the return value of
+\code{\link{navbarWidgetServer}}.}
 }
 \value{
 In general, shiny objects. In particular, \code{autoreportOrgServer}
@@ -125,10 +144,10 @@ These named values will be used to run reports none-interactively on a given
 schedule and must therefore represent existing and exported functions from
 the registry R package. For subscriptions the \emph{reports} list can be used
 as is, more specifically that the values provided in \emph{paramValues} can
-go unchanged. For dispatchments and bulletins it is likely that parameter
-values must be set dynamically in which case \emph{paramValues} must be
-a reactive part of the application. See Examples on how function arguments
-may be used as reactives in an application.
+go unchanged. It is likely that parameter values must be set dynamically at
+runtime in which case \emph{paramValues} must be a reactive part of the
+application. See Examples on how function arguments may be used as reactives
+in an application.
 }
 \examples{
 ## make a list for report metadata
