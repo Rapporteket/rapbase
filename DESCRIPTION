@@ -25,6 +25,7 @@ Depends:
     R (>= 3.5.0)
 Imports:
     base64enc,
+    blob,
     bookdown,
     DBI,
     digest,
