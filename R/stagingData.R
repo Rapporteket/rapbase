@@ -47,8 +47,7 @@
 #'
 #' @name stagingData
 #' @aliases listStagingData mtimeStagingData saveStagingData loadStagingData
-#' deleteStagingData cleanStagingData pathStagingData dbStagingData
-#' dbStagingPrereq dbStagingConnection dbStagingProcess
+#' deleteStagingData cleanStagingData
 #'
 #' @examples
 #' ## Prep test data
@@ -283,7 +282,50 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
   }
 }
 
-#' @rdname stagingData
+
+#' Data staging helper (internal) functions
+#'
+#' A set of helper functions to aid staging of registry data at Rapporteket.
+#'
+#'
+#' @param registryName Character string providing the registry name.
+#' @param dir Character string providing the path to where the staging data
+#'   directory resides in case of storage as files. Default value is
+#'   \code{Sys.getenv("R_RAP_CONFIG_PATH")}.
+#' @param key Character string with key to be used for staging data store
+#'   credentials.
+#' @param drop Logical defining if a database is to be deleted. FALSE by
+#'   default.
+#' @param con A database connection object.
+#' @param init Logical defining if the function call will perform an initial
+#'   set-up of a database. Default value is FALSE
+#' @param query Character string providing a database query.
+#' @param params List of values to be provided in a parameterized query.
+#' @param statement Logical defining if a query is a statement or not. Default
+#'   value is FALSE.
+#'
+#' @return \itemize{
+#'   \item \code{pathStagingData()} returns a character string with the path to
+#'     the staging directory of \code{registryName}. If its parent directory
+#'     (\code{dir}) does not exists an error is returned.
+#'   \item \code{dbStagingData()} creates or drops a staging data database and
+#'     returns a message invisibly.
+#'   \item \code{dbStagingPrereq()} ensures that a database for staging data is
+#'     properly setup and returns a message, invisibly.
+#'   \item \code{dbStagingConnection()} returns an open database connection
+#'     object or, when an open connection object is provided as an argument,
+#'     closes it and returns \code{NULL} invisibly.
+#'   \item \code{dbStagingProcess()} returns the raw result of a database query
+#'     based on the arguments provided.
+#' }
+#'
+#' @name stagingDataHelper
+#' @keywords internal
+#' @aliases pathStagingData dbStagingData dbStagingPrereq dbStagingConnection
+#'   dbStagingProcess
+NULL
+
+#' @rdname stagingDataHelper
 pathStagingData <- function(registryName, dir) {
   stopifnot(dir.exists(dir))
 
@@ -298,7 +340,7 @@ pathStagingData <- function(registryName, dir) {
   path
 }
 
-#' @rdname stagingData
+#' @rdname stagingDataHelper
 dbStagingData <- function(key, drop = FALSE) {
 
   conf <- getConfig()[[key]]
@@ -332,7 +374,7 @@ dbStagingData <- function(key, drop = FALSE) {
   invisible(msg)
 }
 
-#' @rdname stagingData
+#' @rdname stagingDataHelper
 dbStagingPrereq <- function(key) {
 
   conf <- getConfig()[[key]]
@@ -355,7 +397,7 @@ dbStagingPrereq <- function(key) {
   invisible(msg)
 }
 
-#' @rdname stagingData
+#' @rdname stagingDataHelper
 dbStagingConnection <- function(key = NULL, con = NULL, init = FALSE) {
 
   if (inherits(con, "DBIConnection")) {
@@ -394,7 +436,7 @@ dbStagingConnection <- function(key = NULL, con = NULL, init = FALSE) {
   }
 }
 
-#' @rdname stagingData
+#' @rdname stagingDataHelper
 dbStagingProcess <- function(key, query, params = list(), statement = FALSE) {
 
   con <- dbStagingConnection(key)
