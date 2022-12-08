@@ -193,6 +193,7 @@ test_that("data can be retrieved from staging db", {
 })
 
 test_that("deleting a none-existing dataset from db returns FALSE", {
+  checkDb()
   expect_false(deleteStagingData(registryName, "imaginaryDataSet"))
 })
 
