@@ -7,9 +7,15 @@
 \alias{dbStagingPrereq}
 \alias{dbStagingConnection}
 \alias{dbStagingProcess}
+\alias{wrapStagingData}
+\alias{unwrapStagingData}
 \title{Data staging helper (internal) functions}
 \usage{
 pathStagingData(registryName, dir)
+
+wrapStagingData(data, key)
+
+unwrapStagingData(data, key)
 
 dbStagingData(key, drop = FALSE)
 
@@ -26,6 +32,8 @@ dbStagingProcess(key, query, params = list(), statement = FALSE)
 directory resides in case of storage as files. Default value is
 \code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
 
+\item{data}{A data object that is to be added to or collected from staging.}
+
 \item{key}{Character string with key to be used for staging data store
 credentials.}
 
@@ -39,7 +47,7 @@ set-up of a database. Default value is FALSE}
 
 \item{query}{Character string providing a database query.}
 
-\item{params}{List of values to be provided in a parametrized query.}
+\item{params}{List of values to be provided in a parameterized query.}
 
 \item{statement}{Logical defining if a query is a statement or not. Default
 value is FALSE.}

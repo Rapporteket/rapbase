@@ -137,9 +137,7 @@ saveStagingData <- function(registryName, dataName, data,
   if (conf$target == "db") {
     dbStagingPrereq(conf$key)
     bKey <- digest::digest(getConfig()[[conf$key]]$pass, raw = TRUE)
-    b <- serialize(data, connection = NULL) %>%
-      sship::sym_enc(key = bKey, iv = NULL) %>%
-      memCompress(type = "bzip2")
+    b <- wrapStagingData(data, conf$key)
 
     # remove any existing registry data with same data name (should never fail)
     query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
@@ -185,11 +183,7 @@ loadStagingData <- function(registryName, dataName,
     if (length(df$data) == 0) {
       data <- FALSE
     } else {
-      bKey <- digest::digest(getConfig()[[conf$key]]$pass, raw = TRUE)
-      data <- df$data[[1]] %>%
-        memDecompress(type = "bzip2") %>%
-        sship::sym_dec(key = bKey, iv = NULL) %>%
-        unserialize()
+      data <- unwrapStagingData(df$data[[1]], conf$key)
     }
   }
 
@@ -294,6 +288,7 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
 #' @param dir Character string providing the path to where the staging data
 #'   directory resides in case of storage as files. Default value is
 #'   \code{Sys.getenv("R_RAP_CONFIG_PATH")}.
+#' @param data A data object that is to be added to or collected from staging.
 #' @param key Character string with key to be used for staging data store
 #'   credentials.
 #' @param drop Logical defining if a database is to be deleted. FALSE by
@@ -340,6 +335,24 @@ pathStagingData <- function(registryName, dir) {
   }
 
   path
+}
+
+#' @rdname stagingDataHelper
+wrapStagingData <- function(data, key) {
+
+  k <- digest::digest(getConfig()[[key]]$pass, raw = TRUE)
+  serialize(data, connection = NULL) %>%
+    sship::sym_enc(key = k, iv = NULL) %>%
+    memCompress(type = "bzip2")
+}
+
+#' @rdname stagingDataHelper
+unwrapStagingData <- function(data, key) {
+
+  k <- digest::digest(getConfig()[[key]]$pass, raw = TRUE)
+  memDecompress(data, type = "bzip2") %>%
+    sship::sym_dec(key = k, iv = NULL) %>%
+    unserialize()
 }
 
 #' @rdname stagingDataHelper
