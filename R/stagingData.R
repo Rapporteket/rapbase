@@ -136,10 +136,10 @@ saveStagingData <- function(registryName, dataName, data,
 
   if (conf$target == "db") {
     dbStagingPrereq(conf$key)
-    b <- memCompress(
-      serialize(data, connection = NULL),
-      type = "bzip2"
-    )
+    bKey <- digest::digest(getConfig()[[conf$key]]$pass, raw = TRUE)
+    b <- serialize(data, connection = NULL) %>%
+      sship::sym_enc(key = bKey, iv = NULL) %>%
+      memCompress(type = "bzip2")
 
     # remove any existing registry data with same data name (should never fail)
     query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
@@ -185,8 +185,10 @@ loadStagingData <- function(registryName, dataName,
     if (length(df$data) == 0) {
       data <- FALSE
     } else {
+      bKey <- digest::digest(getConfig()[[conf$key]]$pass, raw = TRUE)
       data <- df$data[[1]] %>%
         memDecompress(type = "bzip2") %>%
+        sship::sym_dec(key = bKey, iv = NULL) %>%
         unserialize()
     }
   }
