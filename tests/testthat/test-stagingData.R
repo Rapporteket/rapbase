@@ -24,6 +24,25 @@ cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml"))
 writeLines(test_config, cf)
 close(cf)
 
+# make proper dbConfig
+test_config <- paste0(
+  registryName, ":",
+  "\n  host : ", Sys.getenv("DB_HOST"),
+  "\n  name : test_staging",
+  "\n  user : ", Sys.getenv("DB_USER"),
+  "\n  pass : ", Sys.getenv("DB_PASS"),
+  "\n  disp : registryEphemaralUnitTesting\n",
+  "staging:",
+  "\n  host : ", Sys.getenv("DB_HOST"),
+  "\n  name : test_staging",
+  "\n  user : ", Sys.getenv("DB_USER"),
+  "\n  pass : ", Sys.getenv("DB_PASS"),
+  "\n  disp : dbBackendEphemaralUnitTesting\n"
+)
+cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
+writeLines(test_config, cf)
+close(cf)
+
 test_that("staging cannot commence if parent directory does not exist", {
   expect_error(pathStagingData(registryName, dir = "imaginaryDir"))
   expect_error(
@@ -126,12 +145,18 @@ close(cf)
 
 # make proper dbConfig
 test_config <- paste0(
+  registryName, ":",
+  "\n  host : ", Sys.getenv("DB_HOST"),
+  "\n  name : test_staging",
+  "\n  user : ", Sys.getenv("DB_USER"),
+  "\n  pass : ", Sys.getenv("DB_PASS"),
+  "\n  disp : registryEphemaralUnitTesting\n",
   "staging:",
   "\n  host : ", Sys.getenv("DB_HOST"),
   "\n  name : test_staging",
   "\n  user : ", Sys.getenv("DB_USER"),
   "\n  pass : ", Sys.getenv("DB_PASS"),
-  "\n  disp : ephemaralUnitTesting\n"
+  "\n  disp : dbBackendEphemaralUnitTesting\n"
 )
 cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
 writeLines(test_config, cf)

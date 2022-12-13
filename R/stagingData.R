@@ -124,20 +124,16 @@ mtimeStagingData <- function(registryName,
 saveStagingData <- function(registryName, dataName, data,
                             dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
   conf <- getConfig("rapbaseConfig.yml")$r$staging
+  b <- wrapStagingData(data, registryName) %>%
+    blob::as_blob()
 
   if (conf$target == "file") {
     path <- pathStagingData(registryName, dir)
-    return(
-      invisible(
-        readr::write_rds(data, file.path(path, dataName))
-      )
-    )
+    saveRDS(b, file.path(path, dataName))
   }
 
   if (conf$target == "db") {
     dbStagingPrereq(conf$key)
-    bKey <- digest::digest(getConfig()[[conf$key]]$pass, raw = TRUE)
-    b <- wrapStagingData(data, conf$key)
 
     # remove any existing registry data with same data name (should never fail)
     query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
@@ -146,15 +142,15 @@ saveStagingData <- function(registryName, dataName, data,
 
     # insert new data (can fail, but hard to test...)
     query <- "INSERT INTO data (registry, name, data) VALUES (?, ?, ?);"
-    params <- list(registryName, dataName, blob::as_blob(b))
+    params <- list(registryName, dataName, b)
     d <- dbStagingProcess(conf$key, query, params, statement = TRUE)
-    if (d > 0) {
-      return(invisible(data))
-    } else {
+    if (d < 1) {
       warning(paste0("The data set '", dataName, "' could not be saved!"))
-      return(FALSE)
+      data <- FALSE
     }
   }
+
+  data
 }
 
 #' @rdname stagingData
@@ -169,7 +165,9 @@ loadStagingData <- function(registryName, dataName,
     filePath <- file.path(path, dataName)
 
     if (file.exists(filePath)) {
-      data <- readr::read_rds(filePath)
+      b <- readRDS(filePath)
+      # raw is first element in blob list
+      data <- unwrapStagingData(b[[1]], registryName)
     } else {
       data <- FALSE
     }
@@ -183,6 +181,7 @@ loadStagingData <- function(registryName, dataName,
     if (length(df$data) == 0) {
       data <- FALSE
     } else {
+      # raw is first element in blob list
       data <- unwrapStagingData(df$data[[1]], conf$key)
     }
   }
