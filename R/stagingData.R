@@ -6,6 +6,13 @@
 #' must therefore be established within each registry that take staging data
 #' into use.
 #'
+#' Staging data can be stored as files or as binary large objects in a database
+#' and method of choice is defined by the \code{rapbase} configuration.
+#' Regardless of storage method a per registry symmetric encryption of storage
+#' content is enforced. Keys used for encryption are generated from existing
+#' database credentials. Therefore, please note that removing or changing
+#' such credentials will render any historic staging data inaccessible.
+#'
 #' \code{cleanStagingData()} globally removes all staging data with store date
 #' prior to the end-of-life age provided. This is a vastly destructive function
 #' that should be used with great care.
@@ -51,7 +58,7 @@
 #'
 #' @examples
 #' ## Prep test data
-#' registryName <- "myReg"
+#' registryName <- "rapbase"
 #' dataName <- "testData"
 #' data <- mtcars
 #' dir <- tempdir()
@@ -59,11 +66,12 @@
 #' ## Save data for staging
 #' saveStagingData(registryName, dataName, data, dir)
 #'
-#' ## List files currently in staging
+#' ## List data currently in staging
 #' listStagingData(registryName, dir)
 #'
-#' ## Retrieve data set from staging
-#' loadStagingData(registryName, dataName, dir)
+#' ## Retrieve data set from staging and compare to outset
+#' stagedData <- loadStagingData(registryName, dataName, dir)
+#' identical(data, stagedData)
 #'
 #' ## Get modification time for staging file(s)
 #' mtimeStagingData(registryName, dir)
