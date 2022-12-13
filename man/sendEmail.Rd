@@ -13,8 +13,7 @@ address, SMTP server url and port number}
 \item{to}{Character vector containing email addresses. May also contain
 full names like '\code{Jane Doe <janed@nowhere.com>}'}
 
-\item{subject}{Character string providing email subject. The string is
-converted within this function to conform to RFC 1342}
+\item{subject}{Character string providing email subject.}
 
 \item{text}{Character string providing the plain email text}
 
