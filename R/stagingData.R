@@ -158,7 +158,7 @@ saveStagingData <- function(registryName, dataName, data,
     }
   }
 
-  data
+  invisible(data)
 }
 
 #' @rdname stagingData
