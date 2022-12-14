@@ -279,7 +279,7 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
     }
     if (conf$target == "db") {
       query <- "DELETE FROM data WHERE mtime < ?;"
-      d <- dbStagingProcess(conf$key, query, params, statement = TRUE)
+      dbStagingProcess(conf$key, query, params, statement = TRUE)
     }
     invisible(deleteDataset)
   }
@@ -388,7 +388,7 @@ dbStagingData <- function(key, drop = FALSE) {
 
   con <- dbStagingConnection(key = key, init = TRUE)
   for (q in query) {
-    tmp <- RMariaDB::dbExecute(con, q)
+    invisible(RMariaDB::dbExecute(con, q))
   }
 
   con <- dbStagingConnection(con = con)
@@ -434,7 +434,7 @@ dbStagingConnection <- function(key = NULL, con = NULL, init = FALSE) {
       stop(
         paste0(
           "Could not connect to database because there is no configuration ",
-          "corresponding to key '", key,"'. Please check key and/or ",
+          "corresponding to key '", key, "'. Please check key and/or ",
           "configuration."
         )
       )
@@ -472,5 +472,5 @@ dbStagingProcess <- function(key, query, params = list(), statement = FALSE) {
   }
   con <- dbStagingConnection(con = con)
 
-  df
+  invisible(df)
 }
