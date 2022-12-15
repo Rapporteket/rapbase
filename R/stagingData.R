@@ -347,7 +347,7 @@ pathStagingData <- function(registryName, dir) {
 #' @rdname stagingDataHelper
 wrapStagingData <- function(data, key) {
 
-  k <- digest::digest(getConfig()[[key]]$pass, serialize = FALSE, raw = TRUE)
+  k <- digest::digest(getConfig()[[key]]$pass, algo = "sha256", raw = TRUE)
   ### Remove after debugging
   cat(
     paste0(
@@ -363,7 +363,7 @@ wrapStagingData <- function(data, key) {
 #' @rdname stagingDataHelper
 unwrapStagingData <- function(data, key) {
 
-  k <- digest::digest(getConfig()[[key]]$pass, serialize = FALSE, raw = TRUE)
+  k <- digest::digest(getConfig()[[key]]$pass, algo = "sha256", raw = TRUE)
   ### Remove after debugging
   cat(
     paste0(
