@@ -190,7 +190,7 @@ loadStagingData <- function(registryName, dataName,
       data <- FALSE
     } else {
       # raw is first element in blob list
-      data <- unwrapStagingData(df$data[[1]], conf$key)
+      data <- unwrapStagingData(df$data[[1]], registryName)
     }
   }
 
