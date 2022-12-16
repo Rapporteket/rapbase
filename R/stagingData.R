@@ -348,13 +348,6 @@ pathStagingData <- function(registryName, dir) {
 wrapStagingData <- function(data, key) {
 
   k <- digest::digest(getConfig()[[key]]$pass, algo = "sha256", raw = TRUE)
-  ### Remove after debugging
-  cat(
-    paste0(
-      "I will use this key to encrypt: '", paste0(k, collapse = " "), "'"
-    )
-  )
-  ### End remove after debugging
   serialize(data, connection = NULL) %>%
     sship::sym_enc(key = k, iv = NULL) %>%
     memCompress(type = "bzip2")
@@ -364,13 +357,6 @@ wrapStagingData <- function(data, key) {
 unwrapStagingData <- function(data, key) {
 
   k <- digest::digest(getConfig()[[key]]$pass, algo = "sha256", raw = TRUE)
-  ### Remove after debugging
-  cat(
-    paste0(
-      "I will use this key to decrypt: '", paste0(k, collapse = " "), "'"
-    )
-  )
-  ### End remove after debugging
   memDecompress(data, type = "bzip2") %>%
     sship::sym_dec(key = k, iv = NULL) %>%
     unserialize()
