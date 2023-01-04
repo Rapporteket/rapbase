@@ -19,9 +19,6 @@
     <loc>/dev/news/index.html</loc>
   </url>
   <url>
-    <loc>/dev/reference/Helligdager2008til2022.html</loc>
-  </url>
-  <url>
     <loc>/dev/reference/appLog.html</loc>
   </url>
   <url>
@@ -173,9 +170,6 @@
   </url>
   <url>
     <loc>/dev/reference/runNoweb.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/runShinyApp.html</loc>
   </url>
   <url>
     <loc>/dev/reference/sanitizeLog.html</loc>
