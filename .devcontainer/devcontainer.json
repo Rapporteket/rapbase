@@ -8,5 +8,9 @@
   },
   "overrideFeatureInstallOrder": [
     "ghcr.io/rocker-org/devcontainer-features/r-apt"
+  ],
+  "mounts": [
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/rstudio/.ssh,type=bind,consistency=cached",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.gitconfig,target=/home/rstudio/.gitconfig,type=bind,consistency=cached"
   ]
 }
