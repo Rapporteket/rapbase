@@ -1,6 +1,12 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "image": "ghcr.io/rocker-org/devcontainer/r-ver:4",
   "features": {
-    "ghcr.io/rocker-org/devcontainer-features/r-apt:latest": {}
-  }
+    "ghcr.io/rocker-org/devcontainer-features/r-apt:latest": {},
+    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+      "packages": "r-cran-rapbase"
+    }
+  },
+  "overrideFeatureInstallOrder": [
+    "ghcr.io/rocker-org/devcontainer-features/r-apt"
+  ]
 }
