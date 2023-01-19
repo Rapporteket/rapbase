@@ -1,7 +1,5 @@
 .Rproj.user
 .Rhistory
 .RData
-inst/doc
-inst/jrxml/*.jasper
 vignettes/*.pdf
 docs/
