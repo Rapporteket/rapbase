@@ -95,16 +95,12 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"Rapporteket/rapbase@*release"</span><span class="op">)</span></span></code></pre></div>
 <p>Or install the development version from GitHub with:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install</span><span class="op">(</span><span class="st">"Rapporteket/rapbase"</span><span class="op">)</span></span></code></pre></div>
-<p>Alternatively, the package source code can be <a href="https://github.com/Rapporteket/rapbase" class="external-link">cloned from GitHub</a> and built locally.</p>
-</div>
-<div class="section level2">
-<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
-</h2>
-<p>Once the package is installed functions can be called from within R, <em>e.g.</em>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">rapbase</span><span class="fu">::</span><span class="fu"><a href="reference/halloRapporteket.html">halloRapporteket</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>remotes<span class="sc">::</span><span class="fu">install</span>(<span class="st">"Rapporteket/rapbase"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Usage</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>Once the package is installed functions can be called from within R, <span class="sc">*</span>e.g.<span class="sc">*</span><span class="er">:</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="st">```</span><span class="at">r</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="at">rapbase::halloRapporteket()</span></span></code></pre></div>
 <p>For a complete and updated view of the package documentation please consult the <a href="https://rapporteket.github.io/rapbase/index.html" class="external-link"><em>rapbase</em>-site</a>. Looking into <a href="https://github.com/Rapporteket" class="external-link">how others have implemented <em>rapbase</em> for various registries</a> is also an excellent way of learning the use of <em>rapbase</em>. In the <a href="https://github.com/Rapporteket/rapRegTemplate" class="external-link">rapRegTemplate package (in Norwegian)</a> that provides a Shiny application template to be used for making registries there is some boiler plate code to aid start up. Please feel free to also contact the maintainers and authors directly.</p>
 </div>
 <div class="section level2">
@@ -116,6 +112,12 @@
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
 </h2>
 <p>If you want to make changes to this project please follow the <a href="https://rapporteket.github.io/rapbase/CONTRIBUTING.html" class="external-link">Contributing guide</a>. Proposed changes will be processed based on manual code reviews. Code that is accepted will be merged into the main branch and used for full scale TESTING and QA prior to making a release for PRODUCTION deployment.</p>
+<p>For kick-starting, a development environment set-up is included and may be applied if <a href="https://docs.docker.com/get-docker/" class="external-link">docker</a> and <a href="https://docs.docker.com/compose/install/" class="external-link">docker-compose</a> is at hand. After cloning <em>rapbase</em> the development environment can be startet from a terminal at the local work copy root directory by:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up</span></code></pre></div>
+<p>Navigate a browser to <a href="localhost:8787">localhost:8787</a>, log in to the <a href="https://posit.co/products/open-source/rstudio/" class="external-link">RStudio IDE</a> and initiate the project by “clicking” the file <em>rapbase.Rproj</em> inside the <em>rapbase</em> directory. For development all suggested imports for the <em>rapbase</em> R package will be needed. To make sure these are installed use the R Console and run</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_dev_deps</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>After installing has finished all should be set to start change-build-test iterations <span class="emoji" data-emoji="rocket">🚀</span></p>
 </div>
 <div class="section level2">
 <h2 id="ethics">Ethics<a class="anchor" aria-label="anchor" href="#ethics"></a>
