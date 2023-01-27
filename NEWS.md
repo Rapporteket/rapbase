@@ -1,3 +1,11 @@
+# rapbase 1.24.0
+
+In summary, registries at Rapporteket may now run as standalone container apps. Thus, shiny-server is no longer a requirement for app deployment. Below is a summary of what has been done.
+
+* Extended handling of user attributes when behind an app proxy (spring boot/shinyproxy)
+* Added a database backend for staging data
+* Per app (registry) encryption of staging data (regardless of file or database backend)
+
 # rapbase 1.23.1
 
 * Fixed Fixed bug in log sanitizer function ([#130](https://github.com/Rapporteket/rapbase/pull/130))
