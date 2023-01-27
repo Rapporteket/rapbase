@@ -55,3 +55,4 @@ Suggests:
     rvest,
     testthat,
     withr
+VignetteBuilder: knitr

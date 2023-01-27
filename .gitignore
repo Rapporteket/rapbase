@@ -5,3 +5,5 @@ inst/doc
 inst/jrxml/*.jasper
 vignettes/*.pdf
 docs/
+/doc/
+/Meta/

@@ -1,0 +1,74 @@
+---
+title: "Staging data: principles and set-up"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Staging data: principles and set-up}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+Registry applications at Rapporteket normally obtains data by opening connections to a database containing raw registry data. Before figures, tables and reports can be made, data usually have to be filtered, combined and analyzed. Depending on the amount of data and the complexity of the analysis this process can be time-consuming. Quite often, such pre-processing can be generalized and does not have to be run each and every time a user interacts with a registry application. Staging data allow for such pre-processed data to be stored for quick and easy retrieval and therefore reduce the time the registry applications need to spend on processing data.
+
+This document aim to describe how staging of data works and how to enable it at Rapporteket.
+
+## Backend
+Staging data may be stored as binary files or as blobs in a database. In any case, creating and retrieving staging data follow the same scheme regardless of how it is stored. Selecting a backend is configurable and will apply globally, _i.e._ for all registry applications at Rapporteket.
+
+### File
+To store staging data as binary files make sure to set the property __target__ to the value __file__ in _$R_RAP_CONFIG_PATH/rapbaseConfig.yml_:
+
+```yaml
+...
+  # Staging data
+  staging:
+    target: file
+    key: staging
+...
+```
+
+When staging data is stored as files the property __key__ is not in use and may take any value. For a given registry _MyRegistry_ staging of the data set _MyData_ will then be stored with the file path _R_RAP_CONFIG_PATH/stagingData/MyRegistry/MyData_.
+
+### Database
+To store staging data as blobs in a database make sure to set the property __target__ to the value __db__ in _$R_RAP_CONFIG_PATH/rapbaseConfig.yml_:
+
+```yaml
+...
+  # Staging data
+  staging:
+    target: db
+    key: stagingDb
+...
+```
+
+When staging data is stored in a database __key__ must match the corresponding entry in _$R_RAP_CONFIG_PATH/dbConfig.yml_ that provides the database connection credentials:
+
+```yaml
+...
+stagingDb:
+  host: database_server_hostname_or_ip
+  name: database_name
+  user: some_username
+  pass: password_for_some_username
+  disp: optional_information
+...
+```
+
+The database server must exist and accept connections as defined in the above configuration. If the database itself does not exist when an registry application request staging of data, it will be created. 
+
+## Encryption
+Prior to storage the R data structure to become staging data is serialized to binary, encrypted and compressed. When reading data already staged this process is reversed. Encryption is based on the  AES256 algorithm and the key applied is generated from the password of the database credentials as defined in _\$R_RAP_CONFIG_PATH/dbConfig.yml_ for the corresponding registry. Hence, there will be a registry specific encryption for staged data meaning that from a common place of storage, staged data will not be accessible across registries. Protection as provided by the encryption solely rest on the accessibility of _\$R_RAP_CONFIG_PATH/dbConfig.yml_ that holds the information needed to decrypt staging data. 
+
+
+## Caveats
+If the key used for encryption is lost staging data will no longer be accessible. If the key cannot be restored all staging data encrypted with this key will also be forever lost. Hence, if the purpose is to remove staging data, destroying the key will be a very potent method to ensure proper deletion, but please note that making staged data inaccessible may lead to errors in registry applications that uses staged data. For any number of reasons database credentials for registries at Rapporteket may also at some point be altered having the unintentional effect of making staged data inaccessible.  
+
+## Implementation
+For developers of registry applications at Rapporteket that wants to implement staging data, please refer to the staging data function documentation: `help("rapbase::stagingData")`.
