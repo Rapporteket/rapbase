@@ -5,6 +5,7 @@ In summary, registries at Rapporteket may now run as standalone container apps. 
 * Extended handling of user attributes when behind an app proxy (spring boot/shinyproxy)
 * Added a database backend for staging data
 * Per app (registry) encryption of staging data (regardless of file or database backend)
+* Added a vignette with a short description of staging data server side set-up
 
 # rapbase 1.23.1
 
