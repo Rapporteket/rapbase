@@ -27,8 +27,6 @@ remotes::install_github("Rapporteket/rapbase@*release")
 Or install the development version from GitHub with:
 ```r
 remotes::install("Rapporteket/rapbase")
-```
-Alternatively, the package source code can be [cloned from GitHub](https://github.com/Rapporteket/rapbase) and built locally. 
 
 ## Usage
 Once the package is installed functions can be called from within R, *e.g.*:
@@ -42,6 +40,16 @@ Please provide any comments (*e.g.* on proposed enhancements, shortcomings, erro
 
 ## Contributing
 If you want to make changes to this project please follow the [Contributing guide](https://rapporteket.github.io/rapbase/CONTRIBUTING.html). Proposed changes will be processed based on manual code reviews. Code that is accepted will be merged into the main branch and used for full scale TESTING and QA prior to making a release for PRODUCTION deployment.
+
+For kick-starting, a development environment set-up is included and may be applied if [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) is at hand. After cloning *rapbase* the development environment can be startet from a terminal at the local work copy root directory by:
+```bash
+docker-compose up
+```
+Navigate a browser to [localhost:8787](localhost:8787), log in to the [RStudio IDE](https://posit.co/products/open-source/rstudio/) and initiate the project by "clicking" the file *rapbase.Rproj* inside the *rapbase* directory. For development all suggested imports for the *rapbase* R package will be needed. To make sure these are installed use the R Console and run
+```r
+devtools::install_dev_deps()
+```
+After installing has finished all should be set to start change-build-test iterations :rocket:
 
 ## Ethics
 Please note that the 'rapbase' project is released with a

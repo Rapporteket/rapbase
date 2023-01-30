@@ -1,8 +1,8 @@
 # Contributing to rapbase
 
 This outlines how to propose a change to rapbase. 
-For more detailed info about contributing to this, and other tidyverse packages, please see the
-[**development contributing guide**](https://rstd.io/tidy-contrib). 
+For more detailed info about contributing, please see the
+[**tidyverse development contributing guide**](https://rstd.io/tidy-contrib). 
 
 ## Fixing typos
 
