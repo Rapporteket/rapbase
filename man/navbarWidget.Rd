@@ -3,9 +3,9 @@
 \name{navbarWidget}
 \alias{navbarWidget}
 \alias{navbarWidgetInput}
+\alias{navbarWidgetServer}
 \alias{navbarWidgetServer2}
 \alias{navbarWidgetApp}
-\alias{navbarWidgetServer}
 \title{Shiny modules providing GUI and server logic for user info widget}
 \usage{
 navbarWidgetInput(id, addUserInfo = TRUE, selectOrganization = FALSE)
@@ -40,9 +40,9 @@ called from outside the registry environment \code{caller} must be set to
 the actual name of the R package.}
 }
 \value{
-Shiny objects, mostly. \code{navbarWidgetServer()} invisibly returns
-a list of reactive values representing user metadata and privileges. See
-\code{\link{userAttribute}} for further details on these values.
+Shiny objects, mostly.  \code{navbarWidgetServer2()} invisibly returns
+  a list of reactive values representing user metadata and privileges. See
+  \code{\link{userAttribute}} for further details on these values.
 }
 \description{
 Shiny modules for making a user information widget in registry shiny apps at
@@ -52,7 +52,12 @@ number of code lines for each registry.
 \details{
 These modules take use of the shiny session object to obtain data for the
 widget. Hence, a Rapporteket like context will be needed for these modules to
-function properly.
+function properly. For deployment of (shiny) application as containers make
+sure to migrate to \code{navbarWidgetServer2()}. In addition to serving the
+user information widget, this function provides a list of reactive user
+attributes. Hence, when using \code{navbarWidgetServer2()} the source of
+(static) user attributes is no longer the shiny session object but rather the
+list object (of reactive user attributes) returned by this function.
 }
 \examples{
 ## client user interface function

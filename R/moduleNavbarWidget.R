@@ -6,7 +6,12 @@
 #'
 #' These modules take use of the shiny session object to obtain data for the
 #' widget. Hence, a Rapporteket like context will be needed for these modules to
-#' function properly.
+#' function properly. For deployment of (shiny) application as containers make
+#' sure to migrate to \code{navbarWidgetServer2()}. In addition to serving the
+#' user information widget, this function provides a list of reactive user
+#' attributes. Hence, when using \code{navbarWidgetServer2()} the source of
+#' (static) user attributes is no longer the shiny session object but rather the
+#' list object (of reactive user attributes) returned by this function.
 #'
 #' @param id Character string providing module namespace
 #' @param addUserInfo Logical defining if an "about" hyperlink is to be added
@@ -22,11 +27,12 @@
 #'   called from outside the registry environment \code{caller} must be set to
 #'   the actual name of the R package.
 #'
-#' @return Shiny objects, mostly. \code{navbarWidgetServer()} invisibly returns
-#' a list of reactive values representing user metadata and privileges. See
-#' \code{\link{userAttribute}} for further details on these values.
+#' @return Shiny objects, mostly.  \code{navbarWidgetServer2()} invisibly returns
+#'   a list of reactive values representing user metadata and privileges. See
+#'   \code{\link{userAttribute}} for further details on these values.
 #' @name navbarWidget
-#' @aliases navbarWidgetInput navbarWidgetServer2 navbarWidgetApp
+#' @aliases navbarWidgetInput navbarWidgetServer navbarWidgetServer2
+#'   navbarWidgetApp
 #' @examples
 #' ## client user interface function
 #' ui <- shiny::tagList(
