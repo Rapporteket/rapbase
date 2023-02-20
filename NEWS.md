@@ -7,6 +7,9 @@ In summary, registries at Rapporteket may now run as standalone container apps. 
 * Per app (registry) encryption of staging data (regardless of file or database backend)
 * Added a vignette with a short description of staging data server side set-up
 
+## Breaking changes
+By introducing encryption, staging data will not work across this and previous versions. All existing staging data should therefore be removed when upgrading to this version of rapbase (or downgrading from this to any previous version). To remove all staging data delete all related files and directories. If staging data uses a database backend, the database itself should be dropped. There should be no need for further actions as both files and database will be recreated upon the next request for storing of staging data.  
+
 # rapbase 1.23.1
 
 * Fixed Fixed bug in log sanitizer function ([#130](https://github.com/Rapporteket/rapbase/pull/130))
