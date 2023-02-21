@@ -40,7 +40,7 @@ By introducing encryption, staging data will not work across this and previous v
 
 * Fix short-term error in function finding next run date in auto reports
 * As result of the above a new field "startDate" was added to auto report data with functions for upgrading existing data missing this field ([#99](https://github.com/Rapporteket/rapbase/pull/99)) and the start date is checked before reports are run ([#100](https://github.com/Rapporteket/rapbase/pull/100))
-* R package sship now installed from Cran rather than GitHUb ([#101](https://github.com/Rapporteket/rapbase/pull/101))
+* R package sship now installed from Cran rather than GitHub ([#101](https://github.com/Rapporteket/rapbase/pull/101))
 
 # rapbase 1.20.1
 
@@ -56,7 +56,7 @@ By introducing encryption, staging data will not work across this and previous v
 
 # rapbase 1.19.3
 
-* Added T1 fontencoding to default LaTeX template for proper printing of symbols (_e.g._ > and <) in pdfs ([#94](https://github.com/Rapporteket/rapbase/pull/94))
+* Added T1 font encoding to default LaTeX template for proper printing of symbols (_e.g._ > and <) in pdfs ([#94](https://github.com/Rapporteket/rapbase/pull/94))
 * Replaced function none ascii with unicode characters
 
 # rapbase 1.19.2
