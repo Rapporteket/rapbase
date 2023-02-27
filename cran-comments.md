@@ -7,11 +7,8 @@
 
 ### R-hub
 
-* Apple Silicon (M1), macOS 11.6 Big Sur: R version 4.1.3 (2022-03-10)
-* Fedora Linux (clang, gfortran) x86_64-pc-linux-gnu: R Under development (unstable) (2022-08-15 r82721)
-* Debian Linux, GCC (debian-gcc-devel): R Under development (unstable) (2022-07-31 r82648)
-
-* Fedora Linux, 
+* macOS 10.13.6 High Sierra, (CRANS's setup) x86_64-apple-darwin17.0 (64-bit): R version 4.1.1 (2021-08-10)
+* Fedora Linux, (clang, gfortran) x86_64-redhat-linux-gnu: R Under development (unstable) (2023-02-23 r83895)
 * Debian Linux, debian-gcc-release x86_64-pc-linux-gnu (64-bit): R version 4.2.2 Patched (2022-11-10 r83330)
 
 ### GitHub Actions
