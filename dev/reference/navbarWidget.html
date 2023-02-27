@@ -14,7 +14,7 @@ number of code lines for each registry."><meta property="og:image" content="/log
     
     <a class="navbar-brand me-2" href="../index.html">rapbase</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.23.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.24.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,12 @@ number of code lines for each registry."><meta property="og:image" content="/log
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/stagingData.html">Staging data: principles and set-up</a>
+  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -57,9 +63,15 @@ number of code lines for each registry.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">navbarWidgetInput</span><span class="op">(</span><span class="va">id</span>, addUserInfo <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">navbarWidgetInput</span><span class="op">(</span><span class="va">id</span>, addUserInfo <span class="op">=</span> <span class="cn">TRUE</span>, selectOrganization <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">navbarWidgetServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">orgName</span>, caller <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environmentName</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">navbarWidgetServer2</span><span class="op">(</span></span>
+<span>  <span class="va">id</span>,</span>
+<span>  <span class="va">orgName</span>,</span>
+<span>  caller <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environmentName</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-topenv.html" class="external-link">topenv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">navbarWidgetApp</span><span class="op">(</span>orgName <span class="op">=</span> <span class="st">"Org Name"</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -74,31 +86,45 @@ number of code lines for each registry.</p>
 <dd><p>Logical defining if an "about" hyperlink is to be added</p></dd>
 
 
+<dt>selectOrganization</dt>
+<dd><p>Logical providing option for selecting among
+available organizations and roles.</p></dd>
+
+
 <dt>orgName</dt>
 <dd><p>Character string naming the organization</p></dd>
 
 
 <dt>caller</dt>
 <dd><p>Character string naming the environment this function was
-called from. Default value is <code>environmentName(rlang::caller_env())</code>.
-The value is used to display the current version of the R package
-representing the registry at Rapporteket. If this module is called from
-exported functions in the registry R package use the default value. If the
-module is called from outside the registry environment <code>caller</code> must be
-set to the actual name of the R package.</p></dd>
+called from. Default value is
+<code>environmentName(topenv(parent.frame()))</code>. The value is used to
+display the current version of the R package representing the registry at
+Rapporteket. If this module is called from exported functions in the
+registry R package the default value should be applied. If the module is
+called from outside the registry environment <code>caller</code> must be set to
+the actual name of the R package.</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>Shiny objects, mostly. Helper functions may return other stuff too.</p>
+<p>Shiny objects, mostly.  <code>navbarWidgetServer2()</code> invisibly returns
+  a list of reactive values representing user metadata and privileges. See</p>
+<p></p>
+<p><code><a href="userAttribute.html">userAttribute</a></code> for further details on these values.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>These modules take use of the shiny session object to obtain data for the
 widget. Hence, a Rapporteket like context will be needed for these modules to
-function properly.</p>
+function properly. For deployment of (shiny) application as containers make
+sure to migrate to <code>navbarWidgetServer2()</code>. In addition to serving the
+user information widget, this function provides a list of reactive user
+attributes. Hence, when using <code>navbarWidgetServer2()</code> the source of
+(static) user attributes is no longer the shiny session object but rather the
+list object (of reactive user attributes) returned by this function.</p>
     </div>
 
     <div class="section level2">

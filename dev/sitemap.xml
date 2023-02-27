@@ -10,6 +10,12 @@
     <loc>/dev/LICENSE.html</loc>
   </url>
   <url>
+    <loc>/dev/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>/dev/articles/stagingData.html</loc>
+  </url>
+  <url>
     <loc>/dev/authors.html</loc>
   </url>
   <url>
@@ -77,27 +83,6 @@
   </url>
   <url>
     <loc>/dev/reference/getSessionData.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getUserEmail.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getUserFullName.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getUserGroups.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getUserName.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getUserPhone.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getUserReshId.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getUserRole.html</loc>
   </url>
   <url>
     <loc>/dev/reference/halloRapporteket.html</loc>
@@ -181,13 +166,22 @@
     <loc>/dev/reference/stagingData.html</loc>
   </url>
   <url>
+    <loc>/dev/reference/stagingDataHelper.html</loc>
+  </url>
+  <url>
     <loc>/dev/reference/stats.html</loc>
   </url>
   <url>
     <loc>/dev/reference/statsGuide.html</loc>
   </url>
   <url>
+    <loc>/dev/reference/unitAttribute.html</loc>
+  </url>
+  <url>
     <loc>/dev/reference/upgradeAutoReportData.html</loc>
+  </url>
+  <url>
+    <loc>/dev/reference/userAttribute.html</loc>
   </url>
   <url>
     <loc>/dev/reference/userInfo.html</loc>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rapbase</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.23.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.24.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +20,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/stagingData.html">Staging data: principles and set-up</a>
+  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -98,7 +104,7 @@
 
       <dl><dt>
           
-          <code><a href="stagingData.html">listStagingData()</a></code> <code><a href="stagingData.html">mtimeStagingData()</a></code> <code><a href="stagingData.html">saveStagingData()</a></code> <code><a href="stagingData.html">loadStagingData()</a></code> <code><a href="stagingData.html">deleteStagingData()</a></code> <code><a href="stagingData.html">cleanStagingData()</a></code> <code><a href="stagingData.html">pathStagingData()</a></code> 
+          <code><a href="stagingData.html">listStagingData()</a></code> <code><a href="stagingData.html">mtimeStagingData()</a></code> <code><a href="stagingData.html">saveStagingData()</a></code> <code><a href="stagingData.html">loadStagingData()</a></code> <code><a href="stagingData.html">deleteStagingData()</a></code> <code><a href="stagingData.html">cleanStagingData()</a></code> 
         </dt>
         <dd>Staging data functions</dd>
       </dl></div><div class="section level2">
@@ -114,44 +120,19 @@
 
       <dl><dt>
           
-          <code><a href="getUserName.html">getUserName()</a></code> 
+          <code><a href="userAttribute.html">userAttribute()</a></code> <code><a href="userAttribute.html">getUserEmail()</a></code> <code><a href="userAttribute.html">getUserFullName()</a></code> <code><a href="userAttribute.html">getUserGroups()</a></code> <code><a href="userAttribute.html">getUserName()</a></code> <code><a href="userAttribute.html">getUserPhone()</a></code> <code><a href="userAttribute.html">getUserReshId()</a></code> <code><a href="userAttribute.html">getUserRole()</a></code> 
         </dt>
-        <dd>Get user name from config or session object</dd>
-      </dl><dl><dt>
-          
-          <code><a href="getUserGroups.html">getUserGroups()</a></code> 
-        </dt>
-        <dd>Get user groups from config or session object</dd>
-      </dl><dl><dt>
-          
-          <code><a href="getUserRole.html">getUserRole()</a></code> 
-        </dt>
-        <dd>Get user role from config or session object</dd>
-      </dl><dl><dt>
-          
-          <code><a href="getUserReshId.html">getUserReshId()</a></code> 
-        </dt>
-        <dd>Get user resh ID from config or session object</dd>
-      </dl><dl><dt>
-          
-          <code><a href="getUserFullName.html">getUserFullName()</a></code> 
-        </dt>
-        <dd>Get user full name from config or session object</dd>
-      </dl><dl><dt>
-          
-          <code><a href="getUserPhone.html">getUserPhone()</a></code> 
-        </dt>
-        <dd>Get user phone (number) from config or session object</dd>
-      </dl><dl><dt>
-          
-          <code><a href="getUserEmail.html">getUserEmail()</a></code> 
-        </dt>
-        <dd>Get user email from config or session object</dd>
+        <dd>User attributes in container apps running behind shinyproxy</dd>
       </dl><dl><dt>
           
           <code><a href="userInfo.html">userInfo()</a></code> 
         </dt>
         <dd>Provide user attributes based on environment context</dd>
+      </dl><dl><dt>
+          
+          <code><a href="unitAttribute.html">unitAttribute()</a></code> 
+        </dt>
+        <dd>Get unit attributes from an access tree file</dd>
       </dl></div><div class="section level2">
       <h2 id="logging">Logging<a class="anchor" aria-label="anchor" href="#logging"></a></h2>
       
@@ -251,7 +232,7 @@
         <dd>Filter auto report data</dd>
       </dl><dl><dt>
           
-          <code><a href="autoReport.html">autoReportUI()</a></code> <code><a href="autoReport.html">autoReportOrgInput()</a></code> <code><a href="autoReport.html">autoReportOrgServer()</a></code> <code><a href="autoReport.html">autoReportFormatInput()</a></code> <code><a href="autoReport.html">autoReportFormatServer()</a></code> <code><a href="autoReport.html">autoReportInput()</a></code> <code><a href="autoReport.html">autoReportServer()</a></code> <code><a href="autoReport.html">autoReportApp()</a></code> <code><a href="autoReport.html">orgList2df()</a></code> 
+          <code><a href="autoReport.html">autoReportUI()</a></code> <code><a href="autoReport.html">autoReportOrgInput()</a></code> <code><a href="autoReport.html">autoReportOrgServer()</a></code> <code><a href="autoReport.html">autoReportFormatInput()</a></code> <code><a href="autoReport.html">autoReportFormatServer()</a></code> <code><a href="autoReport.html">autoReportInput()</a></code> <code><a href="autoReport.html">autoReportServer()</a></code> <code><a href="autoReport.html">autoReportServer2()</a></code> <code><a href="autoReport.html">autoReportApp()</a></code> <code><a href="autoReport.html">orgList2df()</a></code> 
         </dt>
         <dd>Shiny modules and helper functions for registry auto reports</dd>
       </dl><dl><dt>
@@ -277,7 +258,7 @@
 
       <dl><dt>
           
-          <code><a href="navbarWidget.html">navbarWidgetInput()</a></code> <code><a href="navbarWidget.html">navbarWidgetServer()</a></code> <code><a href="navbarWidget.html">navbarWidgetApp()</a></code> 
+          <code><a href="navbarWidget.html">navbarWidgetInput()</a></code> <code><a href="navbarWidget.html">navbarWidgetServer()</a></code> <code><a href="navbarWidget.html">navbarWidgetServer2()</a></code> <code><a href="navbarWidget.html">navbarWidgetApp()</a></code> 
         </dt>
         <dd>Shiny modules providing GUI and server logic for user info widget</dd>
       </dl><dl><dt>

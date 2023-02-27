@@ -42,7 +42,7 @@
     
     <a class="navbar-brand me-2" href="index.html">rapbase</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.23.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.24.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,6 +53,12 @@
       <ul class="navbar-nav me-auto">
 <li class="nav-item">
   <a class="nav-link" href="reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="articles/stagingData.html">Staging data: principles and set-up</a>
+  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="news/index.html">Changelog</a>
@@ -114,7 +120,7 @@
 <p>If you want to make changes to this project please follow the <a href="https://rapporteket.github.io/rapbase/CONTRIBUTING.html" class="external-link">Contributing guide</a>. Proposed changes will be processed based on manual code reviews. Code that is accepted will be merged into the main branch and used for full scale TESTING and QA prior to making a release for PRODUCTION deployment.</p>
 <p>For kick-starting, a development environment set-up is included and may be applied if <a href="https://docs.docker.com/get-docker/" class="external-link">docker</a> and <a href="https://docs.docker.com/compose/install/" class="external-link">docker-compose</a> is at hand. After cloning <em>rapbase</em> the development environment can be startet from a terminal at the local work copy root directory by:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker-compose</span> up</span></code></pre></div>
-<p>Navigate a browser to <a href="localhost:8787">localhost:8787</a>, log in to the <a href="https://posit.co/products/open-source/rstudio/" class="external-link">RStudio IDE</a> and initiate the project by “clicking” the file <em>rapbase.Rproj</em> inside the <em>rapbase</em> directory. For development all suggested imports for the <em>rapbase</em> R package will be needed. To make sure these are installed use the R Console and run</p>
+<p>Navigate a browser to localhost on port 8787, log in to the <a href="https://posit.co/products/open-source/rstudio/" class="external-link">RStudio IDE</a> and initiate the project by “clicking” the file <em>rapbase.Rproj</em> inside the <em>rapbase</em> directory. For development all suggested imports for the <em>rapbase</em> R package will be needed. To make sure these are installed use the R Console and run</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_dev_deps</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>After installing has finished all should be set to start change-build-test iterations <span class="emoji" data-emoji="rocket">🚀</span></p>
@@ -170,7 +176,7 @@
 <ul class="list-unstyled">
 <li><a href="https://github.com/rapporteket/rapbase/releases" class="external-link"><img src="https://img.shields.io/github/v/release/rapporteket/rapbase?sort=semver" alt="Version"></a></li>
 <li><a href="https://github.com/Rapporteket/rapbase/actions" class="external-link"><img src="https://github.com/Rapporteket/rapbase/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://codecov.io/github/Rapporteket/rapbase?branch=master" class="external-link"><img src="https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=master" alt="codecov.io"></a></li>
+<li><a href="https://app.codecov.io/gh/rapporteket/rapbase?branch=master" class="external-link"><img src="https://codecov.io/gh/Rapporteket/rapbase/branch/master/graph/badge.svg" alt="codecov.io"></a></li>
 <li><a href="https://CRAN.R-project.org/package=rapbase" class="external-link"><img src="https://www.r-pkg.org/badges/version/rapbase" alt="CRAN status"></a></li>
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://img.shields.io/badge/lifecycle-stable-green.svg" alt="Lifecycle: stable"></a></li>
 <li><a href="https://rapporteket.github.io/rapbase/" class="external-link"><img src="https://img.shields.io/badge/Doc--grey.svg" alt="Doc"></a></li>

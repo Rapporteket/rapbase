@@ -14,7 +14,7 @@ logout/exit as hyperlinked text."><meta property="og:image" content="/logo.svg">
     
     <a class="navbar-brand me-2" href="../index.html">rapbase</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.23.1.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">1.24.0.9000</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -24,6 +24,12 @@ logout/exit as hyperlinked text."><meta property="og:image" content="/logo.svg">
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item">
   <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/stagingData.html">Staging data: principles and set-up</a>
+  </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
@@ -61,6 +67,7 @@ logout/exit as hyperlinked text.</p>
 <span>  user <span class="op">=</span> <span class="st">"Undefined person"</span>,</span>
 <span>  organization <span class="op">=</span> <span class="st">"Undefined organization"</span>,</span>
 <span>  addUserInfo <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  selectOrganization <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  namespace <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -78,6 +85,10 @@ logout/exit as hyperlinked text.</p>
 <dt>addUserInfo</dt>
 <dd><p>Logical defining whether a user data pop-up is to be part
 of the widget (TRUE) or not (FALSE, default)</p></dd>
+
+
+<dt>selectOrganization</dt>
+<dd><p>Logical if organization can be selected.</p></dd>
 
 
 <dt>namespace</dt>
@@ -102,8 +113,8 @@ the information provided by the server.</p>
 <p>Example of use in shiny (pseudo code):</p><div class="sourceCode"><pre><code><span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">...</span></span>
-<span>  <span class="va">output</span><span class="op">$</span><span class="va">appUserName</span> <span class="op">&lt;-</span> <span class="fu">renderText</span><span class="op">(</span><span class="fu"><a href="../reference/getUserName.html">getUserName</a></span><span class="op">(</span><span class="va">session</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="va">output</span><span class="op">$</span><span class="va">appUserOrg</span> <span class="op">&lt;-</span> <span class="fu">renderText</span><span class="op">(</span><span class="fu"><a href="../reference/getUserReshId.html">getUserReshId</a></span><span class="op">(</span><span class="va">session</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">output</span><span class="op">$</span><span class="va">appUserName</span> <span class="op">&lt;-</span> <span class="fu">renderText</span><span class="op">(</span><span class="fu"><a href="../reference/userAttribute.html">getUserName</a></span><span class="op">(</span><span class="va">session</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="va">output</span><span class="op">$</span><span class="va">appUserOrg</span> <span class="op">&lt;-</span> <span class="fu">renderText</span><span class="op">(</span><span class="fu"><a href="../reference/userAttribute.html">getUserReshId</a></span><span class="op">(</span><span class="va">session</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">}</span></span>
 <span></span>
