@@ -11,4 +11,7 @@
 ^appveyor\.yml$
 ^\.lintr$
 ^data-raw$
+^doc$
+^Meta$
 ^docker-compose.yml$
+^.devcontainer$

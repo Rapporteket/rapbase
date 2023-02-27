@@ -1,3 +1,15 @@
+# rapbase 1.24.0
+
+In summary, registries at Rapporteket may now run as standalone container apps. Thus, shiny-server is no longer a requirement for app deployment. Below is a summary of what has been done.
+
+* Extended handling of user attributes when behind an app proxy (spring boot/shinyproxy)
+* Added a database backend for staging data
+* Per app (registry) encryption of staging data (regardless of file or database backend)
+* Added a vignette with a short description of staging data server side set-up
+
+## Breaking changes
+By introducing encryption, staging data will not work across this and previous versions. All existing staging data should therefore be removed when upgrading to this version of rapbase (or downgrading from this to any previous version). To remove all staging data delete all related files and directories. If staging data uses a database backend, the database itself should be dropped. There should be no need for further actions as both files and database will be recreated upon the next request for storing of staging data.  
+
 # rapbase 1.23.1
 
 * Fixed Fixed bug in log sanitizer function ([#130](https://github.com/Rapporteket/rapbase/pull/130))
@@ -28,7 +40,7 @@
 
 * Fix short-term error in function finding next run date in auto reports
 * As result of the above a new field "startDate" was added to auto report data with functions for upgrading existing data missing this field ([#99](https://github.com/Rapporteket/rapbase/pull/99)) and the start date is checked before reports are run ([#100](https://github.com/Rapporteket/rapbase/pull/100))
-* R package sship now installed from Cran rather than GitHUb ([#101](https://github.com/Rapporteket/rapbase/pull/101))
+* R package sship now installed from Cran rather than GitHub ([#101](https://github.com/Rapporteket/rapbase/pull/101))
 
 # rapbase 1.20.1
 
@@ -44,7 +56,7 @@
 
 # rapbase 1.19.3
 
-* Added T1 fontencoding to default LaTeX template for proper printing of symbols (_e.g._ > and <) in pdfs ([#94](https://github.com/Rapporteket/rapbase/pull/94))
+* Added T1 font encoding to default LaTeX template for proper printing of symbols (_e.g._ > and <) in pdfs ([#94](https://github.com/Rapporteket/rapbase/pull/94))
 * Replaced function none ascii with unicode characters
 
 # rapbase 1.19.2

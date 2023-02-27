@@ -3,7 +3,7 @@
 <!-- badges: start -->
 [![Version](https://img.shields.io/github/v/release/rapporteket/rapbase?sort=semver)](https://github.com/rapporteket/rapbase/releases)
 [![R build status](https://github.com/Rapporteket/rapbase/workflows/R-CMD-check/badge.svg)](https://github.com/Rapporteket/rapbase/actions)
-[![codecov.io](https://codecov.io/github/Rapporteket/rapbase/rapbase.svg?branch=master)](https://codecov.io/github/Rapporteket/rapbase?branch=master)
+[![codecov.io](https://codecov.io/gh/Rapporteket/rapbase/branch/master/graph/badge.svg)](https://app.codecov.io/gh/rapporteket/rapbase?branch=master)
 [![CRAN status](https://www.r-pkg.org/badges/version/rapbase)](https://CRAN.R-project.org/package=rapbase)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![Doc](https://img.shields.io/badge/Doc--grey.svg)](https://rapporteket.github.io/rapbase/)
@@ -45,7 +45,7 @@ For kick-starting, a development environment set-up is included and may be appli
 ```bash
 docker-compose up
 ```
-Navigate a browser to [localhost:8787](localhost:8787), log in to the [RStudio IDE](https://posit.co/products/open-source/rstudio/) and initiate the project by "clicking" the file *rapbase.Rproj* inside the *rapbase* directory. For development all suggested imports for the *rapbase* R package will be needed. To make sure these are installed use the R Console and run
+Navigate a browser to localhost on port 8787, log in to the [RStudio IDE](https://posit.co/products/open-source/rstudio/) and initiate the project by "clicking" the file *rapbase.Rproj* inside the *rapbase* directory. For development all suggested imports for the *rapbase* R package will be needed. To make sure these are installed use the R Console and run
 ```r
 devtools::install_dev_deps()
 ```

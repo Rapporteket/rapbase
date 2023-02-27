@@ -4,12 +4,19 @@
 \alias{navbarWidget}
 \alias{navbarWidgetInput}
 \alias{navbarWidgetServer}
+\alias{navbarWidgetServer2}
 \alias{navbarWidgetApp}
 \title{Shiny modules providing GUI and server logic for user info widget}
 \usage{
-navbarWidgetInput(id, addUserInfo = TRUE)
+navbarWidgetInput(id, addUserInfo = TRUE, selectOrganization = FALSE)
 
 navbarWidgetServer(id, orgName, caller = environmentName(rlang::caller_env()))
+
+navbarWidgetServer2(
+  id,
+  orgName,
+  caller = environmentName(topenv(parent.frame()))
+)
 
 navbarWidgetApp(orgName = "Org Name")
 }
@@ -18,18 +25,24 @@ navbarWidgetApp(orgName = "Org Name")
 
 \item{addUserInfo}{Logical defining if an "about" hyperlink is to be added}
 
+\item{selectOrganization}{Logical providing option for selecting among
+available organizations and roles.}
+
 \item{orgName}{Character string naming the organization}
 
 \item{caller}{Character string naming the environment this function was
-called from. Default value is \code{environmentName(rlang::caller_env())}.
-The value is used to display the current version of the R package
-representing the registry at Rapporteket. If this module is called from
-exported functions in the registry R package use the default value. If the
-module is called from outside the registry environment \code{caller} must be
-set to the actual name of the R package.}
+called from. Default value is
+\code{environmentName(topenv(parent.frame()))}. The value is used to
+display the current version of the R package representing the registry at
+Rapporteket. If this module is called from exported functions in the
+registry R package the default value should be applied. If the module is
+called from outside the registry environment \code{caller} must be set to
+the actual name of the R package.}
 }
 \value{
-Shiny objects, mostly. Helper functions may return other stuff too.
+Shiny objects, mostly.  \code{navbarWidgetServer2()} invisibly returns
+  a list of reactive values representing user metadata and privileges. See
+  \code{\link{userAttribute}} for further details on these values.
 }
 \description{
 Shiny modules for making a user information widget in registry shiny apps at
@@ -39,7 +52,12 @@ number of code lines for each registry.
 \details{
 These modules take use of the shiny session object to obtain data for the
 widget. Hence, a Rapporteket like context will be needed for these modules to
-function properly.
+function properly. For deployment of (shiny) application as containers make
+sure to migrate to \code{navbarWidgetServer2()}. In addition to serving the
+user information widget, this function provides a list of reactive user
+attributes. Hence, when using \code{navbarWidgetServer2()} the source of
+(static) user attributes is no longer the shiny session object but rather the
+list object (of reactive user attributes) returned by this function.
 }
 \examples{
 ## client user interface function

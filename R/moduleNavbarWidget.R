@@ -6,22 +6,33 @@
 #'
 #' These modules take use of the shiny session object to obtain data for the
 #' widget. Hence, a Rapporteket like context will be needed for these modules to
-#' function properly.
+#' function properly. For deployment of (shiny) application as containers make
+#' sure to migrate to \code{navbarWidgetServer2()}. In addition to serving the
+#' user information widget, this function provides a list of reactive user
+#' attributes. Hence, when using \code{navbarWidgetServer2()} the source of
+#' (static) user attributes is no longer the shiny session object but rather the
+#' list object (of reactive user attributes) returned by this function.
 #'
 #' @param id Character string providing module namespace
 #' @param addUserInfo Logical defining if an "about" hyperlink is to be added
+#' @param selectOrganization Logical providing option for selecting among
+#'   available organizations and roles.
 #' @param orgName Character string naming the organization
 #' @param caller Character string naming the environment this function was
-#' called from. Default value is \code{environmentName(rlang::caller_env())}.
-#' The value is used to display the current version of the R package
-#' representing the registry at Rapporteket. If this module is called from
-#' exported functions in the registry R package use the default value. If the
-#' module is called from outside the registry environment \code{caller} must be
-#' set to the actual name of the R package.
+#'   called from. Default value is
+#'   \code{environmentName(topenv(parent.frame()))}. The value is used to
+#'   display the current version of the R package representing the registry at
+#'   Rapporteket. If this module is called from exported functions in the
+#'   registry R package the default value should be applied. If the module is
+#'   called from outside the registry environment \code{caller} must be set to
+#'   the actual name of the R package.
 #'
-#' @return Shiny objects, mostly. Helper functions may return other stuff too.
+#' @return Shiny objects, mostly.  \code{navbarWidgetServer2()} invisibly returns
+#'   a list of reactive values representing user metadata and privileges. See
+#'   \code{\link{userAttribute}} for further details on these values.
 #' @name navbarWidget
-#' @aliases navbarWidgetInput navbarWidgetServer navbarWidgetApp
+#' @aliases navbarWidgetInput navbarWidgetServer navbarWidgetServer2
+#'   navbarWidgetApp
 #' @examples
 #' ## client user interface function
 #' ui <- shiny::tagList(
@@ -50,7 +61,9 @@ NULL
 
 #' @rdname navbarWidget
 #' @export
-navbarWidgetInput <- function(id, addUserInfo = TRUE) {
+navbarWidgetInput <- function(id,
+                              addUserInfo = TRUE,
+                              selectOrganization = FALSE) {
   shiny::addResourcePath("rap", system.file("www", package = "rapbase"))
 
   shiny::tagList(
@@ -58,6 +71,7 @@ navbarWidgetInput <- function(id, addUserInfo = TRUE) {
       user = shiny::uiOutput(shiny::NS(id, "name")),
       organization = shiny::uiOutput(shiny::NS(id, "affiliation")),
       addUserInfo = addUserInfo,
+      selectOrganization = selectOrganization,
       namespace = id
     ),
     shiny::tags$head(
@@ -92,6 +106,112 @@ navbarWidgetServer <- function(id, orgName,
   })
 }
 
+
+#' @rdname navbarWidget
+#' @export
+navbarWidgetServer2 <- function(
+    id,
+    orgName,
+    caller = environmentName(topenv(parent.frame()))
+) {
+
+  shiny::moduleServer(id, function(input, output, session) {
+
+    user <- userAttribute(caller)
+    stopifnot(length(user$name) > 0)
+
+    # Initial privileges and affiliation will be first in list
+    rv <- shiny::reactiveValues(
+      name = user$name[1],
+      fullName = user$fullName[1],
+      phone = user$phone[1],
+      email = user$email[1],
+      group = user$group[1],
+      unit = user$unit[1],
+      org = user$org[1],
+      role = user$role[1],
+      orgName = user$orgName[1]
+    )
+
+    output$name <- shiny::renderText(rv$fullName)
+    output$affiliation <- shiny::renderText(paste(orgName, rv$role, sep = ", "))
+
+    # User info in widget
+    userInfo <- howWeDealWithPersonalData(session, callerPkg = caller)
+    shiny::observeEvent(input$userInfo, {
+      shinyalert::shinyalert(
+        "Dette vet Rapporteket om deg:",
+        userInfo,
+        type = "", imageUrl = "rap/logo.svg",
+        closeOnEsc = TRUE,
+        closeOnClickOutside = TRUE,
+        html = TRUE,
+        confirmButtonText = rapbase::noOptOutOk()
+      )
+    })
+
+    # Select organization in widget (for container apps only)
+    shiny::observeEvent(input$selectOrganization, {
+      choices <- user$unit
+      names(choices) <- paste0(
+        user$orgName, " (", user$org, ") - ", user$role
+      )
+
+      shinyalert::shinyalert(
+        html = TRUE,
+        title = "Velg organisasjon og rolle",
+        text = shiny::tagList(shiny::tagList(
+          shiny::p(
+            paste(
+              "Velg organisasjon og rolle du \u00f8nsker \u00e5 representere",
+              "for", orgName, "i Rapporteket og trykk OK.",
+              "Dine valgmuligheter er basert p\u00e5 de tilganger som er satt.",
+              "Ta kontakt med registeret om du mener at lista over valg",
+              "ikke er riktg."
+            )
+          ),
+          shiny::selectInput(
+            session$ns("unit"),
+            "",
+            choices,
+            selected = rv$unit
+          )
+        )),
+        type = "", imageUrl = "rap/logo.svg",
+        closeOnEsc = FALSE,
+        closeOnClickOutside = FALSE,
+        confirmButtonText = "OK"
+      )
+    })
+
+    shiny::observeEvent(input$unit, {
+      rv$name <- user$name[user$unit == input$unit]
+      rv$fullName <- user$fullName[user$unit == input$unit]
+      rv$phone <- user$phone[user$unit == input$unit]
+      rv$email <- user$email[user$unit == input$unit]
+      rv$group <- user$group[user$unit == input$unit]
+      rv$unit <- user$unit[user$unit == input$unit]
+      rv$org <- user$org[user$unit == input$unit]
+      rv$role <- user$role[user$unit == input$unit]
+      rv$orgName <- user$orgName[user$unit == input$unit]
+    })
+
+    invisible(
+      list(
+        name = shiny::reactive(rv$name),
+        fullName = shiny::reactive(rv$fullName),
+        phone = shiny::reactive(rv$phone),
+        email = shiny::reactive(rv$email),
+        group = shiny::reactive(rv$group),
+        unit = shiny::reactive(rv$unit),
+        org = shiny::reactive(rv$org),
+        role = shiny::reactive(rv$role),
+        orgName = shiny::reactive(rv$orgName)
+      )
+    )
+  })
+}
+
 #' @rdname navbarWidget
 #' @export
 navbarWidgetApp <- function(orgName = "Org Name") {
@@ -101,7 +221,11 @@ navbarWidgetApp <- function(orgName = "Org Name") {
       shiny::tabPanel(
         "Testpanel",
         shiny::mainPanel(
-          navbarWidgetInput("testWidget")
+          navbarWidgetInput(
+            "testWidget",
+            addUserInfo = TRUE,
+            selectOrganization = FALSE
+          )
         )
       )
     )
@@ -151,9 +275,10 @@ navbarWidgetApp <- function(orgName = "Org Name") {
 #' @param user String providing the name of the user
 #' @param organization String providing the organization of the user
 #' @param addUserInfo Logical defining whether a user data pop-up is to be part
-#' of the widget (TRUE) or not (FALSE, default)
+#'   of the widget (TRUE) or not (FALSE, default)
+#' @param selectOrganization Logical if organization can be selected.
 #' @param namespace Character string providing the namespace to use, if any.
-#' Defaults is \code{NULL} in which case no namespace will be applied.
+#'   Defaults is \code{NULL} in which case no namespace will be applied.
 #'
 #' @return Ready made html script
 #' @export
@@ -163,7 +288,9 @@ navbarWidgetApp <- function(orgName = "Org Name") {
 appNavbarUserWidget <- function(user = "Undefined person",
                                 organization = "Undefined organization",
                                 addUserInfo = FALSE,
+                                selectOrganization = FALSE,
                                 namespace = NULL) {
+
   if (addUserInfo) {
     userInfo <- shiny::tags$a(
       id = shiny::NS(namespace, "userInfo"),
@@ -175,6 +302,17 @@ appNavbarUserWidget <- function(user = "Undefined person",
     userInfo <- character()
   }
 
+  if (selectOrganization) {
+    org <- shiny::tags$a(
+      id = shiny::NS(namespace, "selectOrganization"),
+      href = "#",
+      class = "action-button",
+      shiny::HTML(gsub("\\n", "", organization))
+    )
+  } else {
+    org <- organization
+  }
+
   txtWidget <-
     paste0(
       "var header = $('.navbar> .container-fluid');\n",
@@ -182,7 +320,7 @@ appNavbarUserWidget <- function(user = "Undefined person",
       "style=\"float:right;vertical-align:super;font-size:65%\">",
       userInfo,
       user,
-      organization,
+      org,
       "</div>');\n",
       "console.log(header)"
     )

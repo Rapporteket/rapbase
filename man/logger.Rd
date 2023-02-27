@@ -7,7 +7,12 @@
 \alias{autLogger}
 \title{Log user events in shiny applications at Rapporteket}
 \usage{
-appLogger(session, msg = "No message provided")
+appLogger(
+  session,
+  msg = "No message provided",
+  .topcall = sys.call(-1),
+  .topenv = parent.frame()
+)
 
 repLogger(
   session,

@@ -9,12 +9,13 @@ userInfo(
   shinySession = NULL,
   devContexts = c("DEV"),
   testContexts = c("TEST"),
-  prodContexts = c("QA", "PRODUCTION")
+  prodContexts = c("QA", "QAC", "PRODUCTION", "PRODUCTIONC"),
+  group = NULL
 )
 }
 \arguments{
 \item{entity}{String defining the element to return. Currently, one of
-'user', groups', 'resh_id', 'role', 'email', 'full_name' or 'phone'}
+'user', groups', 'resh_id', 'role', 'email', 'full_name' or 'phone'.}
 
 \item{shinySession}{Shiny session object (list, NULL by default). Must be
 provided when the source of user attributes is either the shiny app url or
@@ -25,36 +26,42 @@ object must be provided.}
 \item{devContexts}{A character vector providing unique instances to be
 regarded as a development context. In this context user attributes will be
 read from configuration as provided by 'rapbaseConfig.yml'. The instances
-provided cannot overlap instances provided in any other contexts. By default
-set to \code{c("DEV")}.}
+provided cannot overlap instances provided in any other contexts. By
+default set to \code{c("DEV")}.}
 
 \item{testContexts}{A character vector providing unique instances to be
 regarded as a test context. In this context user attributes will be read
 from the url call to a shiny application. Hence, for this context the
 corresponding shiny session object must also be provided. The instances
-provided cannot overlap instances provided in any other contexts. By default
-set to \code{c("TEST")}.}
+provided cannot overlap instances provided in any other contexts. By
+default set to \code{c("TEST")}.}
 
 \item{prodContexts}{A character vector providing unique instances to be
 regarded as a production context. In this context user attributes will be
-read from the shiny session object (as shiny server interacts with an
-external log-in service). Hence, for this context the corresponding shiny
-session object must also be provided. The instances provided cannot overlap
-instances provided in any other contexts. By default set to
-\code{c("QA", "PRODUCTION")}.}
+read from the shiny session object (on deployment in shiny-server) or, from
+environmental variables (on standalone container deployment). Hence, for
+this context the corresponding shiny session object must also be provided.
+Instances provided cannot overlap instances in any other contexts. By
+default set to \code{c("QA", "QAC", "PRODUCTION", "PRODUCTIONC")}.
+Duplication as seen by the "C" suffix will be needed as long as apps in
+question are to be run on both shiny-server and as standalone containers.}
+
+\item{group}{Character string providing the name of the app R package name.
+The term "group" is used to relate to the environmental variable
+SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.}
 }
 \value{
 String of single user data element
 }
 \description{
-Extracts elements from either config, url (shiny) or session (shiny)
-relevant for user data such as name, group, role and reshId. Source of info
-is based on environment context and can be controlled by altering the default
-settings for which contexts that will apply for the various sources of user
-data. This function will normally be used via its helper functions (see
-below).
+Extracts elements from either config, url (shiny), shiny session or
+environmental variables relevant for user data such as name, group, role and
+org id (\emph{e.g.} resh id). Source of info is based on environment context
+and can be controlled by altering the default settings for which contexts
+that will apply for the various sources of user data. This function will
+normally be used via its helper functions (see below).
 }
 \seealso{
 \code{\link{getUserName}}, \code{\link{getUserGroups}},
-\code{\link{getUserReshId}}, \code{\link{getUserRole}}
+  \code{\link{getUserReshId}}, \code{\link{getUserRole}}
 }

@@ -8,6 +8,7 @@ appNavbarUserWidget(
   user = "Undefined person",
   organization = "Undefined organization",
   addUserInfo = FALSE,
+  selectOrganization = FALSE,
   namespace = NULL
 )
 }
@@ -18,6 +19,8 @@ appNavbarUserWidget(
 
 \item{addUserInfo}{Logical defining whether a user data pop-up is to be part
 of the widget (TRUE) or not (FALSE, default)}
+
+\item{selectOrganization}{Logical if organization can be selected.}
 
 \item{namespace}{Character string providing the namespace to use, if any.
 Defaults is \code{NULL} in which case no namespace will be applied.}

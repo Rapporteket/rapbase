@@ -20,6 +20,11 @@ r :
     target: file
     key: autoreport
 
+  # Staging data
+  staging:
+    target: file
+    key: staging
+
   # User data for testing purposes
   testUser :
     user : ttester
@@ -94,3 +99,18 @@ db :
     user : rapbase
     pass : rapbase
     disp : ForTestingOnly
+
+## Access tree
+accesstree:
+  file: accesstree.json
+  list:
+    unit: AccessUnits.UnitId
+    resh: AccessUnits.HealthUnitId
+    role: AccessUnits.ExtraData
+    parent: AccessUnits.ParentUnitId
+    database: AccessUnits.HasDatabase
+    external: AccessUnits.ExternalId
+    title: AccessUnits.Title
+    titlewithpath: AccessUnits.TitleWithPath
+    validfrom: AccessUnits.ValidFrom
+    validto: AccessUnits.ValidTo

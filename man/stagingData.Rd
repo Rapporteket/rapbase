@@ -8,7 +8,6 @@
 \alias{loadStagingData}
 \alias{deleteStagingData}
 \alias{cleanStagingData}
-\alias{pathStagingData}
 \title{Staging data functions}
 \usage{
 listStagingData(registryName, dir = Sys.getenv("R_RAP_CONFIG_PATH"))
@@ -31,22 +30,21 @@ deleteStagingData(
 )
 
 cleanStagingData(eolAge, dryRun = TRUE)
-
-pathStagingData(registryName, dir)
 }
 \arguments{
 \item{registryName}{Character string providing the registry name.}
 
 \item{dir}{Character string providing the path to where the staging data
-directory resides. Default value is \code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
+directory resides in case of storage as files. Default value is
+\code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
 
 \item{dataName}{Character string providing the data set name.}
 
 \item{data}{A data object such as a data.frame to be stored as
 \code{dataName}.}
 
-\item{eolAge}{Numeric providing the staging file end-of-life age in seconds.
-Based on the current time and the file modification time stamp staging files
+\item{eolAge}{Numeric providing the staging data end-of-life age in seconds.
+Based on the current time and the time of storage staging files
 older than \code{eolAge} will be identified as subject for removal.}
 
 \item{dryRun}{Logical defining if function is to be run in dry (none
@@ -55,17 +53,20 @@ destructive) mode.}
 \value{
 \itemize{
   \item \code{listStagingData()} returns a character vector of staging data
-    files for the given registry (\code{registryName}).
-  \item \code{mtimeStagingData()} returns a staging file-named POSIXct vector
-    of modification times for the given registry (\code{registryName}).
-  \item \code{saveStagingData()} returns the data object (\code{data}),
-    invisibly.
+    sets for the given registry (\code{registryName}).
+  \item \code{mtimeStagingData()} returns a staging data set named POSIXct
+    vector of modification times for the given registry
+    (\code{registryName}).
+  \item \code{saveStagingData()} when successful returns the data object
+    (\code{data}), invisibly. If saving fails a warning is issued and the
+    function returns FALSE.
   \item \code{loadStagingData()} returns the data object corresponding to
     the name given upon saving (\code{dataName}). If the requested data set
     for loading does not exist the function returns FALSE.
-  \item \code{deleteStagingData()} returns TRUE if the file was deleted and
-    FALSE if not.
-  \item \code{cleanStagingData()} returns a list of files (to be) removed.
+  \item \code{deleteStagingData()} returns TRUE if the data set was deleted
+    and FALSE if not.
+  \item \code{cleanStagingData()} returns a list of data sets (to be)
+    removed.
   \item \code{rapbase:::pathStagingData()} is an internal helper function and
     returns a character string with the path to the staging directory of
     \code{registryName}. If its parent directory (\code{dir}) does not exists
@@ -80,13 +81,20 @@ must therefore be established within each registry that take staging data
 into use.
 }
 \details{
-\code{cleanStagingData()} globally removes all staging data files older than
-the end-of-life age provided. This is potentially a vastly destructive
-function that should be used with great care.
+Staging data can be stored as files or as binary large objects in a database
+and method of choice is defined by the \code{rapbase} configuration.
+Regardless of storage method a per registry symmetric encryption of storage
+content is enforced. Keys used for encryption are generated from existing
+database credentials. Therefore, please note that removing or changing
+such credentials will render any historic staging data inaccessible.
+
+\code{cleanStagingData()} globally removes all staging data with store date
+prior to the end-of-life age provided. This is a vastly destructive function
+that should be used with great care.
 }
 \examples{
 ## Prep test data
-registryName <- "myReg"
+registryName <- "rapbase"
 dataName <- "testData"
 data <- mtcars
 dir <- tempdir()
@@ -94,11 +102,12 @@ dir <- tempdir()
 ## Save data for staging
 saveStagingData(registryName, dataName, data, dir)
 
-## List files currently in staging
+## List data currently in staging
 listStagingData(registryName, dir)
 
-## Retrieve data set from staging
-loadStagingData(registryName, dataName, dir)
+## Retrieve data set from staging and compare to outset
+stagedData <- loadStagingData(registryName, dataName, dir)
+identical(data, stagedData)
 
 ## Get modification time for staging file(s)
 mtimeStagingData(registryName, dir)
