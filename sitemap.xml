@@ -13,6 +13,12 @@
     <loc>/LICENSE.html</loc>
   </url>
   <url>
+    <loc>/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>/articles/stagingData.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -80,27 +86,6 @@
   </url>
   <url>
     <loc>/reference/getSessionData.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getUserEmail.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getUserFullName.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getUserGroups.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getUserName.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getUserPhone.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getUserReshId.html</loc>
-  </url>
-  <url>
-    <loc>/reference/getUserRole.html</loc>
   </url>
   <url>
     <loc>/reference/halloRapporteket.html</loc>
@@ -184,13 +169,22 @@
     <loc>/reference/stagingData.html</loc>
   </url>
   <url>
+    <loc>/reference/stagingDataHelper.html</loc>
+  </url>
+  <url>
     <loc>/reference/stats.html</loc>
   </url>
   <url>
     <loc>/reference/statsGuide.html</loc>
   </url>
   <url>
+    <loc>/reference/unitAttribute.html</loc>
+  </url>
+  <url>
     <loc>/reference/upgradeAutoReportData.html</loc>
+  </url>
+  <url>
+    <loc>/reference/userAttribute.html</loc>
   </url>
   <url>
     <loc>/reference/userInfo.html</loc>
