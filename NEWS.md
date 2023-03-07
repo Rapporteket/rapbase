@@ -1,3 +1,7 @@
+# rapbase 1.24.1
+
+* Fixed bug in export module ([#141](https://github.com/Rapporteket/rapbase/pull/141)). The downloaded data file was empty since `--column-statistics=0` was an unknown variable in mysqldump.
+
 # rapbase 1.24.0
 
 In summary, registries at Rapporteket may now run as standalone container apps. Thus, shiny-server is no longer a requirement for app deployment. Below is a summary of what has been done.
