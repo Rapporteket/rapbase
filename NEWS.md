@@ -1,3 +1,7 @@
+# rapbase 1.24.2
+
+* Fixed failing test(s) on mac os ([]())
+
 # rapbase 1.24.1
 
 * Fixed bug in export module ([#141](https://github.com/Rapporteket/rapbase/pull/141)). The downloaded data file was empty since `--column-statistics=0` was an unknown variable in mysqldump.
