@@ -1,6 +1,6 @@
 # rapbase 1.24.2
 
-* Fixed failing test(s) on mac os ([]())
+* Fixed failing test(s) on mac-os ([#142](https://github.com/Rapporteket/rapbase/pull/142))
 
 # rapbase 1.24.1
 
