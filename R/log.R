@@ -397,7 +397,7 @@ readLog <- function(type, name = "") {
     query <- paste0(query, ";")
     log <- loadRegData(config$r$raplog$key, query)
     log <- log %>%
-      dplyr::select(-.data$id)
+      dplyr::select(-"id")
   } else {
     stop(paste0(
       "Log target '", target, "' is not supported. ",
