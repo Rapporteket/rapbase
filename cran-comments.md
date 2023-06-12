@@ -9,6 +9,10 @@
 
 * Debian Linux, R-devel, clang, ISO-8859-15 locale (debian-clang-devel):R Under development (unstable) (2023-06-07 r84523)
 
+### mac.r-project.org macOS builder
+
+* Mac mini, Apple M1, macOS 13.3.1 (22E261): R version 4.3.0 Patched (2023-05-18 r84451)
+
 ### GitHub Actions
 
 * Ubuntu 20.04.6 LTS x86_64, linux-gnu: R Under development (unstable) (2023-06-07 r84523)
