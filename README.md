@@ -27,6 +27,7 @@ remotes::install_github("Rapporteket/rapbase@*release")
 Or install the development version from GitHub with:
 ```r
 remotes::install("Rapporteket/rapbase")
+```
 
 ## Usage
 Once the package is installed functions can be called from within R, *e.g.*:
