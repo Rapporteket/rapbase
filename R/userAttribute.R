@@ -199,51 +199,61 @@ userAttribute <- function(group, unit = NULL) {
 
   stopifnot(group %in% utils::installed.packages()[, 1])
 
-  if (Sys.getenv("SHINYPROXY_USERGROUPS") == "" ||
-      Sys.getenv("USERORGID") == "") {
-    stop(paste(
-      "Environmental variables SHINYPROXY_USERGROUPS and USERORGID must both",
-      "be set!"
-    ))
-  }
+  # if (Sys.getenv("SHINYPROXY_USERGROUPS") == "" ||
+  #     Sys.getenv("USERORGID") == "") {
+  #   stop(paste(
+  #     "Environmental variables SHINYPROXY_USERGROUPS and USERORGID must both",
+  #     "be set!"
+  #   ))
+  # }
+
+  token <- Sys.getenv("SHINYPROXY_OIDC_ACCESS_TOKEN")
+  token <- strsplit(token, ".", fixed = TRUE)[[1]]
+  token <- rawToChar(jose::base64url_decode(token[2]))
+  token <- jsonlite::fromJSON(token)
+
+  tilganger <- jsonlite::parse_json(token$`falk://claims/v1/extended_user_rights`)
+  tilganger <- as.data.frame(do.call(rbind, tilganger))
+  tilganger <- apply(tilganger, 2, unlist)
+  tilganger <- as.data.frame(tilganger)
 
   name <- Sys.getenv("SHINYPROXY_USERNAME")
   fullName <- parse(text = paste0("'", Sys.getenv("USERFULLNAME"), "'"))[[1]]
   phone <- Sys.getenv("USERPHONE")
   email <- Sys.getenv("USEREMAIL")
 
-  # make vectors of vals
-  units <- unlist(
-    strsplit(
-      gsub("\\s|\\[|\\]", "", Sys.getenv("USERORGID")),
-      ","
-    )
-  )
-
-  groups <- unlist(
-    strsplit(
-      gsub("\\s|\\[|\\]", "", Sys.getenv("SHINYPROXY_USERGROUPS")),
-      ","
-    )
-  )
-
-  if (length(units) != length(groups)) {
-    stop(paste(
-      "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID are of",
-      "different lengths. Hence, correspondence cannot be anticipated."
-    ))
-  }
-
-  # NB Anticipate that element positions in vectors do correspond!
-  ## filter by this group
-  units <- units[groups == group]
-  groups <- groups[groups == group]
-
-  ## restrict when unit is provided
-  if (!is.null(unit)) {
-    groups <- groups[units == unit]
-    units <- units[units == unit]
-  }
+  # # make vectors of vals
+  # units <- unlist(
+  #   strsplit(
+  #     gsub("\\s|\\[|\\]", "", Sys.getenv("USERORGID")),
+  #     ","
+  #   )
+  # )
+  #
+  # groups <- unlist(
+  #   strsplit(
+  #     gsub("\\s|\\[|\\]", "", Sys.getenv("SHINYPROXY_USERGROUPS")),
+  #     ","
+  #   )
+  # )
+  #
+  # if (length(units) != length(groups)) {
+  #   stop(paste(
+  #     "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID are of",
+  #     "different lengths. Hence, correspondence cannot be anticipated."
+  #   ))
+  # }
+#
+#   # NB Anticipate that element positions in vectors do correspond!
+#   ## filter by this group
+#   units <- units[groups == group]
+#   groups <- groups[groups == group]
+#
+#   ## restrict when unit is provided
+#   if (!is.null(unit)) {
+#     groups <- groups[units == unit]
+#     units <- units[units == unit]
+#   }
 
   # Look up org, role and unit name
   orgs <- vector()
