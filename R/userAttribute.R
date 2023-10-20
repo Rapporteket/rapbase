@@ -223,13 +223,13 @@ userAttribute <- function(group, unit = NULL) {
 
   orgs <- tilganger$U
   roles <- tilganger$R
-  orgNames <- paste0("Sykehus", 1:dim(tilganger)[1]) # HACK I PÅVENTE AV TILGANGSTRE
 
   tilgangstre_url <- Sys.getenv("ACCESSTREE_URL")
-  httr::set_config(httr::config(ssl_verifypeer = 0L))
-  tilgangstre <- httr::GET(tilgangstre_url)
-  tilgangstre <- httr::content(tilgangstre, as="text")
-  # tilgangstre <- "{\"AccessUnits\":[{\"UnitId\":0,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"0\",\"HealthUnitId\":null,\"Title\":\"Nasjonal instans\",\"TitleWithPath\":\"Nasjonal instans\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":100083,\"ParentUnitId\":0,\"HasDatabase\":true,\"ExternalId\":\"100083\",\"HealthUnitId\":null,\"Title\":\"Helse Stavanger HF\",\"TitleWithPath\":\"Helse Stavanger HF\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":102212,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"102212\",\"HealthUnitId\":null,\"Title\":\"Helse Midt-Norge IT\",\"TitleWithPath\":\"Helse Midt-Norge IT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":104919,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"104919\",\"HealthUnitId\":null,\"Title\":\"Helse Vest IKT\",\"TitleWithPath\":\"Helse Vest IKT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":105403,\"ParentUnitId\":100083,\"HasDatabase\":false,\"ExternalId\":\"105403\",\"HealthUnitId\":null,\"Title\":\"Ortopedisk avdeling\",\"TitleWithPath\":\"Helse Stavanger HF/Ortopedisk avdeling\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null}]}"
+  # httr::set_config(httr::config(ssl_verifypeer = 0L))
+  # tilgangstre <- httr::GET(tilgangstre_url)
+  # tilgangstre <- httr::content(tilgangstre, as="text")
+  # HACK I PÅVENTE AV PROXYINNSTILLINGER
+  tilgangstre <- "{\"AccessUnits\":[{\"UnitId\":0,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"0\",\"HealthUnitId\":null,\"Title\":\"Nasjonal instans\",\"TitleWithPath\":\"Nasjonal instans\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":100083,\"ParentUnitId\":0,\"HasDatabase\":true,\"ExternalId\":\"100083\",\"HealthUnitId\":null,\"Title\":\"Helse Stavanger HF\",\"TitleWithPath\":\"Helse Stavanger HF\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":102212,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"102212\",\"HealthUnitId\":null,\"Title\":\"Helse Midt-Norge IT\",\"TitleWithPath\":\"Helse Midt-Norge IT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":104919,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"104919\",\"HealthUnitId\":null,\"Title\":\"Helse Vest IKT\",\"TitleWithPath\":\"Helse Vest IKT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":105403,\"ParentUnitId\":100083,\"HasDatabase\":false,\"ExternalId\":\"105403\",\"HealthUnitId\":null,\"Title\":\"Ortopedisk avdeling\",\"TitleWithPath\":\"Helse Stavanger HF/Ortopedisk avdeling\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null}]}"
   tilgangstre <- jsonlite::fromJSON(tilgangstre, flatten=FALSE)[[1]]
   orgNames <- tilgangstre$TitleWithPath[match(orgs, tilgangstre$UnitId)]
 
