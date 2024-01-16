@@ -23,7 +23,7 @@ services:
       - 8.8.8.8
     restart: "no"
     environment:
-      PASSWORD: password
+      DISABLE_AUTH: "true"
       DB_HOST: db
       DB_USER: root
       DB_PASS: root
