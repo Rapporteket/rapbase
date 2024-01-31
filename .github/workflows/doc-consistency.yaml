@@ -7,7 +7,7 @@ name: doc-consistency
 
 jobs:
   doc-consistency:
-    runs-on: macOS-latest
+    runs-on: ubuntu-22.04
     env:
       GITHUB_PAT: ${{ secrets.GH_TOKEN }}
     steps:
