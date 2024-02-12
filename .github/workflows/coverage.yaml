@@ -21,7 +21,9 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@v2.5.0
 
-      - uses: r-lib/actions/setup-tinytex@v2.5.0
+      - uses: r-lib/actions/setup-tinytex@v2
+
+      - run: tlmgr update --self
 
       - name: Db unit tests in ubuntu/linux only
         if: runner.os != 'Windows'
