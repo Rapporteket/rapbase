@@ -11,7 +11,7 @@ services:
   dev:
     depends_on:
       - db
-    image: rapporteket/dev:nightly
+    image: rapporteket/dev:weekly
     volumes:
       - .:/home/rstudio/rapbase/
       - ~/.ssh:/home/rstudio/.ssh
