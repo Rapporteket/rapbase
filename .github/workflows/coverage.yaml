@@ -10,7 +10,7 @@ name: test-coverage
 
 jobs:
   test-coverage:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       GITHUB_PAT: ${{ secrets.GH_TOKEN }}
       GITHUB_ACTIONS_RUN_DB_UNIT_TESTS: true
