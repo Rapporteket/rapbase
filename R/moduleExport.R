@@ -237,7 +237,7 @@ exportDb <- function(registryName, compress = FALSE, session) {
   conf <- rapbase::getConfig()[[registryName]]
   cmd <- paste0(
     "mysqldump ",
-    "--no-tablespaces --single-transaction --add-drop-database "
+    "--no-tablespaces --single-transaction --add-drop-database --ssl "
   )
   cmd <- sprintf(
     "%s -B -u %s -p'%s' -h %s %s > %s",
