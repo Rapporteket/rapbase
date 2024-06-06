@@ -34,4 +34,4 @@ jobs:
           lintr::lint_package()
         shell: Rscript {0}
         env:
-          LINTR_ERROR_ON_LINT: false
+          LINTR_ERROR_ON_LINT: true
