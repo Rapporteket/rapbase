@@ -18,13 +18,11 @@ test_that("Rmd source can be rendered", {
   expect_true(file.exists(renderRmd(sourceFile)))
   expect_true("html" %in%
     class(renderRmd(sourceFile, outputType = "html_fragment")))
-  if (Sys.getenv("GITHUB_ACTIONS_RUN_DB_UNIT_TESTS") != "true") {
-    expect_true(file.exists(renderRmd(sourceFile,
-      outputType = "pdf",
-      logoFile = logoFile,
-      params = list(reglogo = "logo")
-    )))
-  }
+  expect_true(file.exists(renderRmd(sourceFile,
+    outputType = "pdf",
+    logoFile = logoFile,
+    params = list(reglogo = "logo")
+  )))
   expect_error(renderRmd(sourceFile, outputType = "beamer"))
   expect_error(renderRmd(sourceFile = "noneExistingFile.Rmd"))
 })
