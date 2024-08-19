@@ -1,6 +1,18 @@
 # rapbase 1.24.3
 
-* Included Arnfinn as author and maintainer of `rapbase`.
+## Main change
+
+* Support special characters in database password by @kevinthon in https://github.com/Rapporteket/rapbase/pull/154
+
+## Other changes
+
+* Configure Renovate by @renovate in https://github.com/Rapporteket/rapbase/pull/145
+* Deactivate renderRmd test on github by @arnfinn in https://github.com/Rapporteket/rapbase/pull/155
+* Github actions cleanup by @arnfinn in https://github.com/Rapporteket/rapbase/pull/161
+* docker-compose: use dev:weekly by @arnfinn in https://github.com/Rapporteket/rapbase/pull/152
+* dev-container: disable authorization by @arnfinn in https://github.com/Rapporteket/rapbase/pull/146
+* Bump actions/checkout from 3 to 4 by @dependabot in https://github.com/Rapporteket/rapbase/pull/144
+* Update JamesIves/github-pages-deploy-action action to v4.6.1 by @renovate in https://github.com/Rapporteket/rapbase/pull/163
 
 # rapbase 1.24.2
 
