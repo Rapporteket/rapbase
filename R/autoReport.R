@@ -289,9 +289,12 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
       )
       # to maintain some order, remove files older than 30 days
       files <- file.info(list.files(bckFilePath, full.names = TRUE))
-      rmFiles <- rownames(files[difftime(Sys.time(), files[, "mtime"],
-        units = "days"
-      ) > 30, ])
+      rmFiles <- rownames(files[difftime(Sys.time(),
+            files[, "mtime"],
+            units = "days"
+          ) > 30,
+        ]
+      )
       file.remove(rmFiles)
       con <- file(oriFile, "w")
     }
@@ -453,6 +456,7 @@ getRegs <- function(config) {
 #' runAutoReport()
 #' }
 #'
+
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                           type = c("subscription", "dispatchment"),
                           dryRun = FALSE) {
