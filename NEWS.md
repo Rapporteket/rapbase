@@ -13,6 +13,7 @@
 * dev-container: disable authorization by @arnfinn in https://github.com/Rapporteket/rapbase/pull/146
 * Bump actions/checkout from 3 to 4 by @dependabot in https://github.com/Rapporteket/rapbase/pull/144
 * Update JamesIves/github-pages-deploy-action action to v4.6.1 by @renovate in https://github.com/Rapporteket/rapbase/pull/163
+* Deactivate testing on R 3.6. No longer working with Tidyverse packages.
 
 # rapbase 1.24.2
 
