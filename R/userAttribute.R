@@ -46,12 +46,12 @@
 #' @export
 
 userInfo <- function(
-    entity,
-    shinySession = NULL,
-    devContexts = c("DEV"),
-    testContexts = c("TEST"),
-    prodContexts = c("QA", "QAC", "PRODUCTION", "PRODUCTIONC"),
-    group = NULL
+  entity,
+  shinySession = NULL,
+  devContexts = c("DEV"),
+  testContexts = c("TEST"),
+  prodContexts = c("QA", "QAC", "PRODUCTION", "PRODUCTIONC"),
+  group = NULL
 ) {
 
   # stop helper function
@@ -200,7 +200,7 @@ userAttribute <- function(group, unit = NULL) {
   stopifnot(group %in% utils::installed.packages()[, 1])
 
   if (Sys.getenv("SHINYPROXY_USERGROUPS") == "" ||
-      Sys.getenv("USERORGID") == "") {
+        Sys.getenv("USERORGID") == "") {
     stop(paste(
       "Environmental variables SHINYPROXY_USERGROUPS and USERORGID must both",
       "be set!"
@@ -249,7 +249,7 @@ userAttribute <- function(group, unit = NULL) {
   orgs <- vector()
   roles <- vector()
   orgNames <- vector()
-    for (i in seq_len(length(units))) {
+  for (i in seq_len(length(units))) {
     orgs[i] <- unitAttribute(units[i], "resh")
     roles[i] <- unitAttribute(units[i], "role")
     orgNames[i] <- unitAttribute(units[i], "titlewithpath")
