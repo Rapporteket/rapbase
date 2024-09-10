@@ -236,12 +236,13 @@ autoReportServer <- function(id, registryName, type, org = NULL,
 
   stopifnot(freq %in% c("day", "week", "month", "quarter", "year"))
 
-  defaultFreq <- switch(freq,
-                        day = "Daglig-day",
-                        week = "Ukentlig-week",
-                        month = "M\u00E5nedlig-month",
-                        quarter = "Kvartalsvis-quarter",
-                        year = "\u00C5rlig-year"
+  defaultFreq <- switch(
+    freq,
+    day = "Daglig-day",
+    week = "Ukentlig-week",
+    month = "M\u00E5nedlig-month",
+    quarter = "Kvartalsvis-quarter",
+    year = "\u00C5rlig-year"
   )
 
   shiny::moduleServer(id, function(input, output, session) {
@@ -416,8 +417,8 @@ autoReportServer <- function(id, registryName, type, org = NULL,
           Sys.Date() + 1
         } else {
           seq.Date(Sys.Date(),
-                   by = strsplit(input$freq, "-")[[1]][2],
-                   length.out = 2
+            by = strsplit(input$freq, "-")[[1]][2],
+            length.out = 2
           )[2]
         },
         min = Sys.Date() + 1,
@@ -555,17 +556,17 @@ autoReportServer <- function(id, registryName, type, org = NULL,
 #' @rdname autoReport
 #' @export
 autoReportServer2 <- function(
-    id,
-    registryName,
-    type,
-    org = NULL,
-    paramNames = shiny::reactiveVal(c("")),
-    paramValues = shiny::reactiveVal(c("")),
-    reports = NULL,
-    orgs = NULL,
-    eligible = TRUE,
-    freq = "month",
-    user
+  id,
+  registryName,
+  type,
+  org = NULL,
+  paramNames = shiny::reactiveVal(c("")),
+  paramValues = shiny::reactiveVal(c("")),
+  reports = NULL,
+  orgs = NULL,
+  eligible = TRUE,
+  freq = "month",
+  user
 ) {
   stopifnot(
     all(unlist(lapply(user, shiny::is.reactive), use.names = FALSE))
@@ -608,16 +609,16 @@ autoReportServer2 <- function(
     )
     shiny::observeEvent(
       userEvent(),
-        autoReport$tab <- makeAutoReportTab(
-          session = session,
-          namespace = id,
-          user = user$name(),
-          group = registryName,
-          orgId = user$org(),
-          type = type,
-          mapOrgId = orgList2df(orgs)
-        ),
-        ignoreNULL = FALSE
+      autoReport$tab <- makeAutoReportTab(
+        session = session,
+        namespace = id,
+        user = user$name(),
+        group = registryName,
+        orgId = user$org(),
+        type = type,
+        mapOrgId = orgList2df(orgs)
+      ),
+      ignoreNULL = FALSE
     )
 
     shiny::observeEvent(input$addEmail, {
