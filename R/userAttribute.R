@@ -144,6 +144,7 @@ userInfo <- function(
 
     if (context %in% c("QAC", "PRODUCTIONC")) {
       userprivs <- userAttribute(group)
+      # print(userprivs)
       # pick the first of available user privileges
       userprivs <- as.data.frame(userprivs, stringsAsFactors = FALSE)[1, ]
       user <- userprivs$name
@@ -197,63 +198,60 @@ userInfo <- function(
 
 userAttribute <- function(group, unit = NULL) {
 
-  stopifnot(group %in% utils::installed.packages()[, 1])
+ stopifnot(group %in% utils::installed.packages()[, 1])
 
-  if (Sys.getenv("SHINYPROXY_USERGROUPS") == "" ||
-      Sys.getenv("USERORGID") == "") {
-    stop(paste(
-      "Environmental variables SHINYPROXY_USERGROUPS and USERORGID must both",
-      "be set!"
-    ))
+  token <- Sys.getenv("SHINYPROXY_OIDC_ACCESS_TOKEN")
+  token <- strsplit(token, ".", fixed = TRUE)[[1]]
+  token <- rawToChar(jose::base64url_decode(token[2]))
+  token <- jsonlite::fromJSON(token)
+
+  tilganger <- jsonlite::parse_json(token$`falk://claims/v1/extended_user_rights`) # nolint: line_length_linter.
+  tilganger <- as.data.frame(do.call(rbind, tilganger))
+  tilganger <- apply(tilganger, 2, unlist)
+  tilganger <- as.data.frame(tilganger)
+
+  # tilganger <- tilganger[tilganger$A == "110", ]
+  tilganger <- tilganger[tilganger$A == Sys.getenv("FALKAPPID"), ]
+
+## restrict when unit is provided
+  if (!is.null(unit)) {
+    tilganger <- tilganger[tilganger$U == unit, ]
   }
+
+  groups <- rep(group, dim(tilganger)[1])
+  units <- tilganger$U
+
+  orgs <- tilganger$U
+  roles <- tilganger$R
+  
+  if (Sys.getenv("http_proxy") == "") {
+    f <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
+    if (file.exists(f)) {
+      proxy <- yaml::yaml.load_file(f)$network$proxy$http
+      Sys.setenv(http_proxy = proxy)
+      Sys.setenv(https_proxy = proxy)
+    }
+  }
+  # proxy <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")$
+  tilgangstre_url <- Sys.getenv("ACCESSTREE_URL")
+  httr::set_config(httr::config(ssl_verifypeer = 0L))
+  tilgangstre <- httr::GET(tilgangstre_url)
+  tilgangstre <- httr::content(tilgangstre, as="text")
+  # HACK I PÅVENTE AV PROXYINNSTILLINGER
+  # tilgangstre <- "{\"AccessUnits\":[{\"UnitId\":0,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"0\",\"HealthUnitId\":null,\"Title\":\"Nasjonal instans\",\"TitleWithPath\":\"Nasjonal instans\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":100083,\"ParentUnitId\":0,\"HasDatabase\":true,\"ExternalId\":\"100083\",\"HealthUnitId\":null,\"Title\":\"Helse Stavanger HF\",\"TitleWithPath\":\"Helse Stavanger HF\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":102212,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"102212\",\"HealthUnitId\":null,\"Title\":\"Helse Midt-Norge IT\",\"TitleWithPath\":\"Helse Midt-Norge IT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":104919,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"104919\",\"HealthUnitId\":null,\"Title\":\"Helse Vest IKT\",\"TitleWithPath\":\"Helse Vest IKT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":105403,\"ParentUnitId\":100083,\"HasDatabase\":false,\"ExternalId\":\"105403\",\"HealthUnitId\":null,\"Title\":\"Ortopedisk avdeling\",\"TitleWithPath\":\"Helse Stavanger HF/Ortopedisk avdeling\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null}]}"
+  tilgangstre <- jsonlite::fromJSON(tilgangstre, flatten=FALSE)[[1]]
+  orgNames <- tilgangstre$TitleWithPath[match(orgs, tilgangstre$UnitId)]
 
   name <- Sys.getenv("SHINYPROXY_USERNAME")
   fullName <- parse(text = paste0("'", Sys.getenv("USERFULLNAME"), "'"))[[1]]
   phone <- Sys.getenv("USERPHONE")
   email <- Sys.getenv("USEREMAIL")
 
-  # make vectors of vals
-  units <- unlist(
-    strsplit(
-      gsub("\\s|\\[|\\]", "", Sys.getenv("USERORGID")),
-      ","
-    )
-  )
-
-  groups <- unlist(
-    strsplit(
-      gsub("\\s|\\[|\\]", "", Sys.getenv("SHINYPROXY_USERGROUPS")),
-      ","
-    )
-  )
-
-  if (length(units) != length(groups)) {
-    stop(paste(
-      "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID are of",
-      "different lengths. Hence, correspondence cannot be anticipated."
-    ))
-  }
-
-  # NB Anticipate that element positions in vectors do correspond!
-  ## filter by this group
-  units <- units[groups == group]
-  groups <- groups[groups == group]
-
-  ## restrict when unit is provided
-  if (!is.null(unit)) {
-    groups <- groups[units == unit]
-    units <- units[units == unit]
-  }
-
   # Look up org, role and unit name
-  orgs <- vector()
-  roles <- vector()
-  orgNames <- vector()
-    for (i in seq_len(length(units))) {
-    orgs[i] <- unitAttribute(units[i], "resh")
-    roles[i] <- unitAttribute(units[i], "role")
-    orgNames[i] <- unitAttribute(units[i], "titlewithpath")
-  }
+  # orgNames <- vector()
+  # for (i in seq_len(length(units))) {
+  #   orgNames[i] <- rapbase::unitAttribute(tilganger$U[i], "titlewithpath")
+  # }
 
   list(
     name = rep(name, length(units)),
