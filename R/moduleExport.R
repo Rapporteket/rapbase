@@ -239,9 +239,9 @@ exportDb <- function(registryName, compress = FALSE, session) {
     "mysqldump ",
     "--no-tablespaces --single-transaction --add-drop-database "
   )
-  cmd <- paste0(
-    cmd, "-B -u ", conf$user, " -p", conf$pass, " -h ", conf$host,
-    " ", conf$name, " > ", f
+  cmd <- sprintf(
+    "%s -B -u %s -p'%s' -h %s %s > %s",
+    cmd, conf$user, conf$pass, conf$host, conf$name, f
   )
   invisible(system(cmd))
 
