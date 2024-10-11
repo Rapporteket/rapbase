@@ -200,12 +200,7 @@ userAttribute <- function(group, unit = NULL) {
 
  stopifnot(group %in% utils::installed.packages()[, 1])
 
-  token <- Sys.getenv("SHINYPROXY_OIDC_ACCESS_TOKEN")
-  token <- strsplit(token, ".", fixed = TRUE)[[1]]
-  token <- rawToChar(jose::base64url_decode(token[2]))
-  token <- jsonlite::fromJSON(token)
-
-  tilganger <- jsonlite::parse_json(token$`falk://claims/v1/extended_user_rights`) # nolint: line_length_linter.
+  tilganger <- jsonlite::parse_json(Sys.getenv("FALK_EXTENDED_USER_RIGHTS"))
   tilganger <- as.data.frame(do.call(rbind, tilganger))
   tilganger <- apply(tilganger, 2, unlist)
   tilganger <- as.data.frame(tilganger)
