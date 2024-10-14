@@ -206,7 +206,7 @@ userAttribute <- function(group, unit = NULL) {
   tilganger <- as.data.frame(tilganger)
 
   # tilganger <- tilganger[tilganger$A == "110", ]
-  tilganger <- tilganger[tilganger$A == Sys.getenv("FALKAPPID"), ]
+  tilganger <- tilganger[tilganger$A == Sys.getenv("FALK_APP_ID"), ]
 
 ## restrict when unit is provided
   if (!is.null(unit)) {
