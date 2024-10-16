@@ -2,7 +2,7 @@ version: '3.3'
 
 services:
   db:
-    image: mysql:5.7
+    image: mysql:9.1
     command: --innodb-log-file-size=500M --innodb_strict_mode=0
     restart: "no"
     environment:
