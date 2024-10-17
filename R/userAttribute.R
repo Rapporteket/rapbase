@@ -219,7 +219,8 @@ userAttribute <- function(group, unit = NULL) {
   orgs <- tilganger$U
   roles <- tilganger$R
   
-  if (Sys.getenv("http_proxy") == "") {
+#  if (Sys.getenv("http_proxy") == "") {
+  if (FALSE) {
     f <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
     if (file.exists(f)) {
       proxy <- yaml::yaml.load_file(f)$network$proxy$http
