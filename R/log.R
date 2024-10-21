@@ -231,7 +231,7 @@ appendLog <- function(event, name) {
     doAppend <- TRUE
     doColNames <- FALSE
     if (!file.exists(file.path(path, name)) ||
-      file.size(file.path(path, name)) == 0) {
+          file.size(file.path(path, name)) == 0) {
       doAppend <- FALSE
       doColNames <- TRUE
     }
@@ -440,13 +440,13 @@ sanitizeLog <- function() {
         lf <- lf %>%
           dplyr::filter(as.Date(.data$time) > eolDate)
         write.table(
-          lf,
-          logFile[i],
-          append = FALSE,
-          sep = ",",
-          row.names = FALSE,
-          col.names = TRUE,
-          qmethod = "double")
+                    lf,
+                    logFile[i],
+                    append = FALSE,
+                    sep = ",",
+                    row.names = FALSE,
+                    col.names = TRUE,
+                    qmethod = "double")
       }
     }
   }
