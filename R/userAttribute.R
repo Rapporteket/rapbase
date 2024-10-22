@@ -188,7 +188,6 @@ userInfo <- function(
 #'     \item{fullName}{User full name}
 #'     \item{phone}{User phone number}
 #'     \item{email}{User email}
-#'     \item{group}{Group of which the user is a member.}
 #'     \item{unit}{Unit id under which the privileges are defined.}
 #'     \item{org}{Organization id for the user.}
 #'     \item{role}{Role of the user.}
@@ -196,38 +195,42 @@ userInfo <- function(
 #'   }
 #' @export
 
-userAttribute <- function(group, unit = NULL) {
+userAttribute <- function(unit = NULL) {
 
- stopifnot(group %in% utils::installed.packages()[, 1])
+  if (Sys.getenv("FALK_EXTENDED_USER_RIGHTS") == "" ||
+        Sys.getenv("FALK_APP_ID") == "") {
+    stop(paste(
+      "Environmental variables",
+      "FALK_EXTENDED_USER_RIGHTS and FALK_APP_ID",
+      "must both be set!"
+    ))
+  }
 
   tilganger <- jsonlite::parse_json(Sys.getenv("FALK_EXTENDED_USER_RIGHTS"))
   tilganger <- as.data.frame(do.call(rbind, tilganger))
   tilganger <- apply(tilganger, 2, unlist)
   tilganger <- as.data.frame(tilganger)
-
-  # tilganger <- tilganger[tilganger$A == "110", ]
   tilganger <- tilganger[tilganger$A == Sys.getenv("FALK_APP_ID"), ]
 
-## restrict when unit is provided
+  # restrict when unit is provided
   if (!is.null(unit)) {
     tilganger <- tilganger[tilganger$U == unit, ]
   }
 
-  groups <- rep(group, dim(tilganger)[1])
+  groups <- tilganger$A
   units <- tilganger$U
 
   orgs <- tilganger$U
   roles <- tilganger$R
-  
-#  if (Sys.getenv("http_proxy") == "") {
-  if (FALSE) {
-    f <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
-    if (file.exists(f)) {
-      proxy <- yaml::yaml.load_file(f)$network$proxy$http
-      Sys.setenv(http_proxy = proxy)
-      Sys.setenv(https_proxy = proxy)
-    }
-  }
+
+  # if (Sys.getenv("http_proxy") == "") {
+  #   f <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
+  #   if (file.exists(f)) {
+  #     proxy <- yaml::yaml.load_file(f)$network$proxy$http
+  #     Sys.setenv(http_proxy = proxy)
+  #     Sys.setenv(https_proxy = proxy)
+  #   }
+  # }
   # proxy <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")$
   #tilgangstre_url <- Sys.getenv("ACCESSTREE_URL")
   #httr::set_config(httr::config(ssl_verifypeer = 0L))
@@ -239,9 +242,13 @@ userAttribute <- function(group, unit = NULL) {
   orgNames <- tilgangstre$TitleWithPath[match(orgs, tilgangstre$UnitId)]
 
   name <- Sys.getenv("SHINYPROXY_USERNAME")
-  fullName <- parse(text = paste0("'", Sys.getenv("USERFULLNAME"), "'"))[[1]]
-  phone <- Sys.getenv("USERPHONE")
-  email <- Sys.getenv("USEREMAIL")
+  fullName <- parse(text = paste0(
+    "'",
+    Sys.getenv("FALK_USER_FULLNAME"),
+    "'"
+  ))[[1]]
+  phone <- Sys.getenv("FALK_USER_PHONE")
+  email <- Sys.getenv("FALK_USER_EMAIL")
 
   # Look up org, role and unit name
   # orgNames <- vector()

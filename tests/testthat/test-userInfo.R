@@ -140,101 +140,88 @@ file.copy(
 
 with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "rapbase",
-    "USERORGID" = ""
+    "FALK_EXTENDED_USER_RIGHTS" = "rapbase",
+    "FALK_APP_ID" = ""
   ),
   code = {
     test_that("errors are returned when insufficient system environment", {
       expect_error(
-        userAttribute("rapbase"),
-        regexp = "Environmental variables SHINYPROXY_USERGROUPS and USERORGID")
+        userAttribute(),
+        regexp = "Environmental variables FALK_EXTENDED_USER_RIGHTS and FALK_APP_ID"
+      )
     })
   }
 )
 
 with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "",
-    "USERORGID" = "1"
+    "FALK_EXTENDED_USER_RIGHTS" = "",
+    "FALK_APP_ID" = "1"
   ),
   code = {
     test_that("errors are returned when insufficient system environment", {
       expect_error(
-        userAttribute("rapbase"),
-        regexp = "Environmental variables SHINYPROXY_USERGROUPS and USERORGID")
+        userAttribute(),
+        regexp = "Environmental variables FALK_EXTENDED_USER_RIGHTS and FALK_APP_ID"
+      )
     })
   }
 )
 
 with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "rapbase,utils",
-    "USERORGID" = "[1]"
-  ),
-  code = {
-    test_that("error is returned when environment elements are not equal", {
-      expect_error(
-        userAttribute("rapbase"),
-        regexp = "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID")
-    })
-  }
-)
-
-with_envvar(
-  new = c(
-    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
-    "USERORGID" = "[1, 2, 3, 4]"
+    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
+    "FALK_APP_ID" = "80"
   ),
   code = {
     test_that("group and unit are returned correspondingly when unit = NULL", {
-      expect_true(class(userAttribute("rapbase")) == "list")
+      expect_true(class(userAttribute()) == "list")
       expect_true(
-        length(userAttribute("rapbase")$group) ==
-          length(userAttribute("rapbase")$unit)
+        length(userAttribute()$group) ==
+          length(userAttribute()$unit)
       )
-      expect_true(length(userAttribute("rapbase")$group) == 2)
-      expect_true(userAttribute("rapbase")$group[1] == "rapbase")
-      expect_true(userAttribute("rapbase")$group[2] == "rapbase")
-      expect_true(userAttribute("rapbase")$unit[1] == "1")
-      expect_true(userAttribute("rapbase")$unit[2] == "2")
+      expect_true(length(userAttribute()$group) == 2)
+      expect_true(userAttribute()$group[1] == "80")
+      expect_true(userAttribute()$group[2] == "80")
+      expect_true(userAttribute()$unit[1] == "1")
+      expect_true(userAttribute()$unit[2] == "2")
     })
   }
 )
 
 with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
-    "USERORGID" = "[1, 2, 3, 4]"
+    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
+    "FALK_APP_ID" = "80"
   ),
   code = {
     test_that("group and unit returned correspondingly when unit is given", {
-      expect_true(class(userAttribute("rapbase")) == "list")
+      expect_true(class(userAttribute()) == "list")
       expect_true(
-        length(userAttribute("rapbase", unit = 2)$group) ==
-          length(userAttribute("rapbase", unit = 2)$unit)
+        length(userAttribute(unit = 2)$group) ==
+          length(userAttribute(unit = 2)$unit)
       )
       expect_true(
-        userAttribute("rapbase", unit = 2)$unit == 2
+        userAttribute(unit = 2)$unit == 2
       )
-      expect_true(
-        userAttribute("utils", unit = 3)$unit == 3
-      )
+      print(userAttribute(unit = 3)$unit)
+      expect_equal_to_reference(userAttribute(unit = 3)$unit, "data/empty_char_vec.rda")
     })
   }
 )
 
 with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
-    "USERORGID" = "[1, 2, 3, 4]"
+    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
+    "FALK_APP_ID" = "80"
   ),
   code = {
     test_that("correct lookup values are provided", {
       expect_true(
-        userAttribute("rapbase", unit = 2)$org == 102966
+        userAttribute(unit = 2)$org == 102966
       )
       expect_true(
-        userAttribute("utils", unit = 3)$role == "SC"
+        userAttribute(unit = 3)$role == "SC"
       )
     })
   }
