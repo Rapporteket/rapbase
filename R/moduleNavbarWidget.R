@@ -27,7 +27,7 @@
 #'   called from outside the registry environment \code{caller} must be set to
 #'   the actual name of the R package.
 #'
-#' @return Shiny objects, mostly.  \code{navbarWidgetServer2()} invisibly returns
+#' @return Shiny objects, mostly. \code{navbarWidgetServer2()} invisibly returns
 #'   a list of reactive values representing user metadata and privileges. See
 #'   \code{\link{userAttribute}} for further details on these values.
 #' @name navbarWidget
@@ -110,9 +110,9 @@ navbarWidgetServer <- function(id, orgName,
 #' @rdname navbarWidget
 #' @export
 navbarWidgetServer2 <- function(
-    id,
-    orgName,
-    caller = environmentName(topenv(parent.frame()))
+  id,
+  orgName,
+  caller = environmentName(topenv(parent.frame()))
 ) {
 
   shiny::moduleServer(id, function(input, output, session) {

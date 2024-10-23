@@ -46,12 +46,12 @@
 #' @export
 
 userInfo <- function(
-    entity,
-    shinySession = NULL,
-    devContexts = c("DEV"),
-    testContexts = c("TEST"),
-    prodContexts = c("QA", "QAC", "PRODUCTION", "PRODUCTIONC"),
-    group = NULL
+  entity,
+  shinySession = NULL,
+  devContexts = c("DEV"),
+  testContexts = c("TEST"),
+  prodContexts = c("QA", "QAC", "PRODUCTION", "PRODUCTIONC"),
+  group = NULL
 ) {
 
   # stop helper function

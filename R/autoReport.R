@@ -289,9 +289,12 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
       )
       # to maintain some order, remove files older than 30 days
       files <- file.info(list.files(bckFilePath, full.names = TRUE))
-      rmFiles <- rownames(files[difftime(Sys.time(), files[, "mtime"],
-        units = "days"
-      ) > 30, ])
+      rmFiles <- rownames(files[difftime(Sys.time(),
+            files[, "mtime"],
+            units = "days"
+          ) > 30,
+        ]
+      )
       file.remove(rmFiles)
       con <- file(oriFile, "w")
     }
@@ -453,10 +456,13 @@ getRegs <- function(config) {
 #' runAutoReport()
 #' }
 #'
+
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                           type = c("subscription", "dispatchment"),
                           dryRun = FALSE) {
+  # nolint start: object_name_linter
   . <- ""
+  # nolint end
 
   # get report candidates
   reps <- readAutoReportData() %>%
@@ -474,8 +480,8 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
       {
         rep <- reps[[i]]
         if (dayNumber %in% rep$runDayOfYear &
-          as.Date(rep$terminateDate) > Sys.Date() &
-          as.Date(rep$startDate) <= Sys.Date()) {
+              as.Date(rep$terminateDate) > Sys.Date() &
+              as.Date(rep$startDate) <= Sys.Date()) {
           # get explicit referenced function and call it
           f <- .getFun(paste0(rep$package, "::", rep$fun))
           content <- do.call(what = f, args = rep$params)
@@ -709,7 +715,9 @@ makeAutoReportTab <- function(session,
                               includeReportId = FALSE) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
+  # nolint start: object_name_linter
   . <- ""
+  # nolint end
 
   l <- list()
   autoRep <- readAutoReportData() %>%
