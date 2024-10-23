@@ -2,10 +2,29 @@
 % Please edit documentation in R/rapbase.R
 \docType{package}
 \name{rapbase}
+\alias{rapbase-package}
 \alias{rapbase}
 \title{rapbase: Base Functions and Resources for Rapporteket}
 \description{
 Provide common functions and resources for registry specific
 R-packages at Rapporteket. This packages is relevant for developers of
 packages/registries at Rapporteket
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/Rapporteket/rapbase}
+  \item Report bugs at \url{https://github.com/Rapporteket/rapbase/issues}
+}
+
+}
+\author{
+\strong{Maintainer}: Are Edvardsen \email{biorakel@gmail.com} (\href{https://orcid.org/0000-0002-5210-3656}{ORCID})
+
+Authors:
+\itemize{
+  \item Kevin Otto Thon \email{kevin.thon@helse-nord.no}
+  \item Arnfinn Hykkerud Steindal \email{arnfinn.steindal@gmail.com} (\href{https://orcid.org/0000-0002-4088-7860}{ORCID})
+}
+
 }

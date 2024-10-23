@@ -40,7 +40,7 @@ called from outside the registry environment \code{caller} must be set to
 the actual name of the R package.}
 }
 \value{
-Shiny objects, mostly.  \code{navbarWidgetServer2()} invisibly returns
+Shiny objects, mostly. \code{navbarWidgetServer2()} invisibly returns
   a list of reactive values representing user metadata and privileges. See
   \code{\link{userAttribute}} for further details on these values.
 }
