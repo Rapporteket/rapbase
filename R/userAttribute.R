@@ -238,6 +238,9 @@ userAttribute <- function(unit = NULL) {
   #tilgangstre <- httr::content(tilgangstre, as="text")
   # HACK I PÅVENTE AV PROXYINNSTILLINGER
   tilgangstre <- "{\"AccessUnits\":[{\"UnitId\":0,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"0\",\"HealthUnitId\":null,\"Title\":\"Nasjonal instans\",\"TitleWithPath\":\"Nasjonal instans\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":100083,\"ParentUnitId\":0,\"HasDatabase\":true,\"ExternalId\":\"100083\",\"HealthUnitId\":null,\"Title\":\"Helse Stavanger HF\",\"TitleWithPath\":\"Helse Stavanger HF\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":102212,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"102212\",\"HealthUnitId\":null,\"Title\":\"Helse Midt-Norge IT\",\"TitleWithPath\":\"Helse Midt-Norge IT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":104919,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"104919\",\"HealthUnitId\":null,\"Title\":\"Helse Vest IKT\",\"TitleWithPath\":\"Helse Vest IKT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":105403,\"ParentUnitId\":100083,\"HasDatabase\":false,\"ExternalId\":\"105403\",\"HealthUnitId\":null,\"Title\":\"Ortopedisk avdeling\",\"TitleWithPath\":\"Helse Stavanger HF/Ortopedisk avdeling\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null}]}"
+#  tilgangstreyaml <- yaml::read_yaml(paste0(Sys.getenv("R_RAP_CONFIG_PATH"), "/accesstree.yaml"))
+#  tilgangstrejson <- tilgangstreyaml$data$accesstree.json
+#  tilgangstre <- jsonlite::fromJSON(tilgangstrejson, flatten=FALSE)[[1]]
   tilgangstre <- jsonlite::fromJSON(tilgangstre, flatten=FALSE)[[1]]
   orgNames <- tilgangstre$TitleWithPath[match(orgs, tilgangstre$UnitId)]
 

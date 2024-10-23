@@ -132,13 +132,13 @@ test_that("Function can handle redefined contexts", {
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 file.copy(
   system.file(
-    c("rapbaseConfig.yml", "extdata/accesstree.json"), package = "rapbase"
+    c("rapbaseConfig.yml", "extdata/accesstree.yaml"), package = "rapbase"
   ),
   Sys.getenv("R_RAP_CONFIG_PATH")
 )
 
 
-with_envvar(
+withr::with_envvar(
   new = c(
     "FALK_EXTENDED_USER_RIGHTS" = "rapbase",
     "FALK_APP_ID" = ""
@@ -153,7 +153,7 @@ with_envvar(
   }
 )
 
-with_envvar(
+withr::with_envvar(
   new = c(
     "FALK_EXTENDED_USER_RIGHTS" = "",
     "FALK_APP_ID" = "1"
@@ -168,7 +168,7 @@ with_envvar(
   }
 )
 
-with_envvar(
+withr::with_envvar(
   new = c(
     "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
     "FALK_APP_ID" = "80"
@@ -189,39 +189,41 @@ with_envvar(
   }
 )
 
-with_envvar(
+withr::with_envvar(
   new = c(
     "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
     "FALK_APP_ID" = "80"
   ),
   code = {
     test_that("group and unit returned correspondingly when unit is given", {
-      expect_true(class(userAttribute()) == "list")
-      expect_true(
-        length(userAttribute(unit = 2)$group) ==
-          length(userAttribute(unit = 2)$unit)
+      expect_equal(class(userAttribute()), "list")
+      expect_equal(
+        length(userAttribute(unit = 2)$group),
+        length(userAttribute(unit = 2)$unit)
       )
-      expect_true(
-        userAttribute(unit = 2)$unit == 2
+      expect_equal(
+        userAttribute(unit = 2)$unit, "2"
       )
-      print(userAttribute(unit = 3)$unit)
-      expect_equal_to_reference(userAttribute(unit = 3)$unit, "data/empty_char_vec.rda")
+      expect_equal(userAttribute(unit = 3)$unit, character(0))
     })
   }
 )
 
-with_envvar(
+withr::with_envvar(
   new = c(
     "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
     "FALK_APP_ID" = "80"
   ),
   code = {
     test_that("correct lookup values are provided", {
-      expect_true(
-        userAttribute(unit = 2)$org == 102966
+      expect_equal(
+        userAttribute(unit = 2)$org, "2"
       )
-      expect_true(
-        userAttribute(unit = 3)$role == "SC"
+      expect_equal(
+        userAttribute(unit = 2)$role, "SC"
+      )
+      expect_equal(
+        userAttribute(unit = 1)$role, "LC"
       )
     })
   }
@@ -244,7 +246,7 @@ test_that("unit attributes can be obtained", {
   expect_equal(unitAttribute(2, "role"), "SC")
 })
 
-with_envvar(
+withr::with_envvar(
   new = c(
     "R_RAP_INSTANCE" = "QAC",
     "SHINYPROXY_USERNAME" = "userc",
