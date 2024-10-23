@@ -144,7 +144,6 @@ userInfo <- function(
 
     if (context %in% c("QAC", "PRODUCTIONC")) {
       userprivs <- userAttribute()
-      # print(userprivs)
       # pick the first of available user privileges
       userprivs <- as.data.frame(userprivs, stringsAsFactors = FALSE)[1, ]
       user <- userprivs$name
@@ -223,6 +222,7 @@ userAttribute <- function(unit = NULL) {
   orgs <- tilganger$U
   roles <- tilganger$R
 
+  # nolint start
   # if (Sys.getenv("http_proxy") == "") {
   #   f <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
   #   if (file.exists(f)) {
@@ -238,10 +238,12 @@ userAttribute <- function(unit = NULL) {
   #tilgangstre <- httr::content(tilgangstre, as="text")
   # HACK I PÅVENTE AV PROXYINNSTILLINGER
   tilgangstre <- "{\"AccessUnits\":[{\"UnitId\":0,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"0\",\"HealthUnitId\":null,\"Title\":\"Nasjonal instans\",\"TitleWithPath\":\"Nasjonal instans\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":100083,\"ParentUnitId\":0,\"HasDatabase\":true,\"ExternalId\":\"100083\",\"HealthUnitId\":null,\"Title\":\"Helse Stavanger HF\",\"TitleWithPath\":\"Helse Stavanger HF\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":102212,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"102212\",\"HealthUnitId\":null,\"Title\":\"Helse Midt-Norge IT\",\"TitleWithPath\":\"Helse Midt-Norge IT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":104919,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"104919\",\"HealthUnitId\":null,\"Title\":\"Helse Vest IKT\",\"TitleWithPath\":\"Helse Vest IKT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":105403,\"ParentUnitId\":100083,\"HasDatabase\":false,\"ExternalId\":\"105403\",\"HealthUnitId\":null,\"Title\":\"Ortopedisk avdeling\",\"TitleWithPath\":\"Helse Stavanger HF/Ortopedisk avdeling\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null}]}"
-#  tilgangstreyaml <- yaml::read_yaml(paste0(Sys.getenv("R_RAP_CONFIG_PATH"), "/accesstree.yaml"))
-#  tilgangstrejson <- tilgangstreyaml$data$accesstree.json
-#  tilgangstre <- jsonlite::fromJSON(tilgangstrejson, flatten=FALSE)[[1]]
-  tilgangstre <- jsonlite::fromJSON(tilgangstre, flatten=FALSE)[[1]]
+  #  tilgangstreyaml <- yaml::read_yaml(
+  #    paste0(Sys.getenv("R_RAP_CONFIG_PATH"), "/accesstree.yaml"))
+  #  tilgangstrejson <- tilgangstreyaml$data$accesstree.json
+  #  tilgangstre <- jsonlite::fromJSON(tilgangstrejson, flatten = FALSE)[[1]]
+  # nolint end
+  tilgangstre <- jsonlite::fromJSON(tilgangstre, flatten = FALSE)[[1]]
   orgNames <- tilgangstre$TitleWithPath[match(orgs, tilgangstre$UnitId)]
 
   name <- Sys.getenv("SHINYPROXY_USERNAME")
@@ -254,10 +256,12 @@ userAttribute <- function(unit = NULL) {
   email <- Sys.getenv("FALK_USER_EMAIL")
 
   # Look up org, role and unit name
+  # nolint start
   # orgNames <- vector()
   # for (i in seq_len(length(units))) {
   #   orgNames[i] <- rapbase::unitAttribute(tilganger$U[i], "titlewithpath")
   # }
+  # nolint end
 
   list(
     name = rep(name, length(units)),
