@@ -12,7 +12,7 @@ name: lint
 
 jobs:
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     env:
       GITHUB_PAT: ${{ secrets.GH_TOKEN }}
     steps:
@@ -24,14 +24,11 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-           cache-version: 2
-           extra-packages: |
-             any::lintr
-           needs: lint
+          extra-packages: any::lintr, local::.
+          needs: lint
 
       - name: Lint
-        run: |
-          lintr::lint_package()
+        run: lintr::lint_package()
         shell: Rscript {0}
         env:
-          LINTR_ERROR_ON_LINT: false
+          LINTR_ERROR_ON_LINT: true

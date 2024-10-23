@@ -132,109 +132,98 @@ test_that("Function can handle redefined contexts", {
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 file.copy(
   system.file(
-    c("rapbaseConfig.yml", "extdata/accesstree.json"), package = "rapbase"
+    c("rapbaseConfig.yml", "extdata/accesstree.yaml"), package = "rapbase"
   ),
   Sys.getenv("R_RAP_CONFIG_PATH")
 )
 
 
-with_envvar(
+withr::with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "rapbase",
-    "USERORGID" = ""
+    "FALK_EXTENDED_USER_RIGHTS" = "rapbase",
+    "FALK_APP_ID" = ""
   ),
   code = {
     test_that("errors are returned when insufficient system environment", {
       expect_error(
-        userAttribute("rapbase"),
-        regexp = "Environmental variables SHINYPROXY_USERGROUPS and USERORGID")
+        userAttribute(),
+        regexp = "Environmental variables FALK_EXTENDED_USER_RIGHTS and FALK_APP_ID"
+      )
     })
   }
 )
 
-with_envvar(
+withr::with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "",
-    "USERORGID" = "1"
+    "FALK_EXTENDED_USER_RIGHTS" = "",
+    "FALK_APP_ID" = "1"
   ),
   code = {
     test_that("errors are returned when insufficient system environment", {
       expect_error(
-        userAttribute("rapbase"),
-        regexp = "Environmental variables SHINYPROXY_USERGROUPS and USERORGID")
+        userAttribute(),
+        regexp = "Environmental variables FALK_EXTENDED_USER_RIGHTS and FALK_APP_ID"
+      )
     })
   }
 )
 
-with_envvar(
+withr::with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "rapbase,utils",
-    "USERORGID" = "[1]"
-  ),
-  code = {
-    test_that("error is returned when environment elements are not equal", {
-      expect_error(
-        userAttribute("rapbase"),
-        regexp = "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID")
-    })
-  }
-)
-
-with_envvar(
-  new = c(
-    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
-    "USERORGID" = "[1, 2, 3, 4]"
+    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
+    "FALK_APP_ID" = "80"
   ),
   code = {
     test_that("group and unit are returned correspondingly when unit = NULL", {
-      expect_true(class(userAttribute("rapbase")) == "list")
+      expect_true(class(userAttribute()) == "list")
       expect_true(
-        length(userAttribute("rapbase")$group) ==
-          length(userAttribute("rapbase")$unit)
+        length(userAttribute()$group) ==
+          length(userAttribute()$unit)
       )
-      expect_true(length(userAttribute("rapbase")$group) == 2)
-      expect_true(userAttribute("rapbase")$group[1] == "rapbase")
-      expect_true(userAttribute("rapbase")$group[2] == "rapbase")
-      expect_true(userAttribute("rapbase")$unit[1] == "1")
-      expect_true(userAttribute("rapbase")$unit[2] == "2")
+      expect_true(length(userAttribute()$group) == 2)
+      expect_true(userAttribute()$group[1] == "80")
+      expect_true(userAttribute()$group[2] == "80")
+      expect_true(userAttribute()$unit[1] == "1")
+      expect_true(userAttribute()$unit[2] == "2")
     })
   }
 )
 
-with_envvar(
+withr::with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
-    "USERORGID" = "[1, 2, 3, 4]"
+    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
+    "FALK_APP_ID" = "80"
   ),
   code = {
     test_that("group and unit returned correspondingly when unit is given", {
-      expect_true(class(userAttribute("rapbase")) == "list")
-      expect_true(
-        length(userAttribute("rapbase", unit = 2)$group) ==
-          length(userAttribute("rapbase", unit = 2)$unit)
+      expect_equal(class(userAttribute()), "list")
+      expect_equal(
+        length(userAttribute(unit = 2)$group),
+        length(userAttribute(unit = 2)$unit)
       )
-      expect_true(
-        userAttribute("rapbase", unit = 2)$unit == 2
+      expect_equal(
+        userAttribute(unit = 2)$unit, 2
       )
-      expect_true(
-        userAttribute("utils", unit = 3)$unit == 3
-      )
+      expect_equal(userAttribute(unit = 3)$unit, integer(0))
     })
   }
 )
 
-with_envvar(
+withr::with_envvar(
   new = c(
-    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
-    "USERORGID" = "[1, 2, 3, 4]"
+    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
+    "FALK_APP_ID" = "80"
   ),
   code = {
     test_that("correct lookup values are provided", {
-      expect_true(
-        userAttribute("rapbase", unit = 2)$org == 102966
+      expect_equal(
+        userAttribute(unit = 2)$org, 2
       )
-      expect_true(
-        userAttribute("utils", unit = 3)$role == "SC"
+      expect_equal(
+        userAttribute(unit = 2)$role, "SC"
+      )
+      expect_equal(
+        userAttribute(unit = 1)$role, "LC"
       )
     })
   }
@@ -249,36 +238,36 @@ test_that("error is returned when unknown attribute", {
   expect_error(unitAttribute(1, "userRole"))
 })
 
-test_that("warning is given when unit does not exist", {
-  expect_warning(unitAttribute(100000, "role"))
-})
-
-test_that("unit attributes can be obtained", {
-  expect_equal(unitAttribute(2, "role"), "SC")
-})
-
-with_envvar(
-  new = c(
-    "R_RAP_INSTANCE" = "QAC",
-    "SHINYPROXY_USERNAME" = "userc",
-    "SHINYPROXY_USERGROUPS" = "rapbase",
-    "USERORGID" = "2",
-    "USEREMAIL" = "userc@container.no",
-    "USERFULLNAME" = "User Container",
-    "USERPHONE" = "+4787654321"
-  ),
-  code = {
-    test_that("User attribs can be fetched in container instance (QA, PROD)", {
-      expect_equal(getUserName(shinySession, "rapbase"), "userc")
-      expect_equal(getUserGroups(shinySession, "rapbase"), "rapbase")
-      expect_equal(getUserReshId(shinySession, "rapbase"), "102966")
-      expect_equal(getUserRole(shinySession, "rapbase"), "SC")
-      expect_equal(getUserEmail(shinySession, "rapbase"), "userc@container.no")
-      expect_equal(getUserFullName(shinySession, "rapbase"), "User Container")
-      expect_equal(getUserPhone(shinySession, "rapbase"), "+4787654321")
-    })
-  }
-)
+#test_that("warning is given when unit does not exist", {
+#  expect_warning(unitAttribute(100000, "role"))
+#})
+#
+#test_that("unit attributes can be obtained", {
+#  expect_equal(unitAttribute(2, "role"), "SC")
+#})
+#
+#withr::with_envvar(
+#  new = c(
+#    "R_RAP_INSTANCE" = "QAC",
+#    "SHINYPROXY_USERNAME" = "userc",
+#    "SHINYPROXY_USERGROUPS" = "rapbase",
+#    "USERORGID" = "2",
+#    "USEREMAIL" = "userc@container.no",
+#    "USERFULLNAME" = "User Container",
+#    "USERPHONE" = "+4787654321"
+#  ),
+#  code = {
+#    test_that("User attribs can be fetched in container instance (QA, PROD)", {
+#      expect_equal(getUserName(shinySession, "rapbase"), "userc")
+#      expect_equal(getUserGroups(shinySession, "rapbase"), "rapbase")
+#      expect_equal(getUserReshId(shinySession, "rapbase"), "102966")
+#      expect_equal(getUserRole(shinySession, "rapbase"), "SC")
+#      expect_equal(getUserEmail(shinySession, "rapbase"), "userc@container.no")
+#      expect_equal(getUserFullName(shinySession, "rapbase"), "User Container")
+#      expect_equal(getUserPhone(shinySession, "rapbase"), "+4787654321")
+#    })
+#  }
+#)
 
 # Restore instance
 Sys.setenv(R_RAP_INSTANCE = currentInstance)

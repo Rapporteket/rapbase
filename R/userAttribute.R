@@ -46,12 +46,12 @@
 #' @export
 
 userInfo <- function(
-    entity,
-    shinySession = NULL,
-    devContexts = c("DEV"),
-    testContexts = c("TEST"),
-    prodContexts = c("QA", "QAC", "PRODUCTION", "PRODUCTIONC"),
-    group = NULL
+  entity,
+  shinySession = NULL,
+  devContexts = c("DEV"),
+  testContexts = c("TEST"),
+  prodContexts = c("QA", "QAC", "PRODUCTION", "PRODUCTIONC"),
+  group = NULL
 ) {
 
   # stop helper function
@@ -143,7 +143,7 @@ userInfo <- function(
     }
 
     if (context %in% c("QAC", "PRODUCTIONC")) {
-      userprivs <- userAttribute(group)
+      userprivs <- userAttribute()
       # pick the first of available user privileges
       userprivs <- as.data.frame(userprivs, stringsAsFactors = FALSE)[1, ]
       user <- userprivs$name
@@ -187,7 +187,6 @@ userInfo <- function(
 #'     \item{fullName}{User full name}
 #'     \item{phone}{User phone number}
 #'     \item{email}{User email}
-#'     \item{group}{Group of which the user is a member.}
 #'     \item{unit}{Unit id under which the privileges are defined.}
 #'     \item{org}{Organization id for the user.}
 #'     \item{role}{Role of the user.}
@@ -195,65 +194,74 @@ userInfo <- function(
 #'   }
 #' @export
 
-userAttribute <- function(group, unit = NULL) {
+userAttribute <- function(unit = NULL) {
 
-  stopifnot(group %in% utils::installed.packages()[, 1])
-
-  if (Sys.getenv("SHINYPROXY_USERGROUPS") == "" ||
-      Sys.getenv("USERORGID") == "") {
+  if (Sys.getenv("FALK_EXTENDED_USER_RIGHTS") == "" ||
+        Sys.getenv("FALK_APP_ID") == "") {
     stop(paste(
-      "Environmental variables SHINYPROXY_USERGROUPS and USERORGID must both",
-      "be set!"
+      "Environmental variables",
+      "FALK_EXTENDED_USER_RIGHTS and FALK_APP_ID",
+      "must both be set!"
     ))
   }
+
+  tilganger <- jsonlite::parse_json(
+    Sys.getenv("FALK_EXTENDED_USER_RIGHTS"),
+    simplifyVector = TRUE
+  )
+  tilganger <- tilganger[tilganger$A == Sys.getenv("FALK_APP_ID"), ]
+
+  # restrict when unit is provided
+  if (!is.null(unit)) {
+    tilganger <- tilganger[tilganger$U == unit, ]
+  }
+
+  groups <- tilganger$A
+  units <- tilganger$U
+
+  orgs <- tilganger$U
+  roles <- tilganger$R
+
+  # nolint start
+  # if (Sys.getenv("http_proxy") == "") {
+  #   f <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
+  #   if (file.exists(f)) {
+  #     proxy <- yaml::yaml.load_file(f)$network$proxy$http
+  #     Sys.setenv(http_proxy = proxy)
+  #     Sys.setenv(https_proxy = proxy)
+  #   }
+  # }
+  # proxy <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")$
+  #tilgangstre_url <- Sys.getenv("ACCESSTREE_URL")
+  #httr::set_config(httr::config(ssl_verifypeer = 0L))
+  #tilgangstre <- httr::GET(tilgangstre_url)
+  #tilgangstre <- httr::content(tilgangstre, as="text")
+  # HACK I PÅVENTE AV PROXYINNSTILLINGER
+  tilgangstre <- "{\"AccessUnits\":[{\"UnitId\":0,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"0\",\"HealthUnitId\":null,\"Title\":\"Nasjonal instans\",\"TitleWithPath\":\"Nasjonal instans\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":100083,\"ParentUnitId\":0,\"HasDatabase\":true,\"ExternalId\":\"100083\",\"HealthUnitId\":null,\"Title\":\"Helse Stavanger HF\",\"TitleWithPath\":\"Helse Stavanger HF\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":102212,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"102212\",\"HealthUnitId\":null,\"Title\":\"Helse Midt-Norge IT\",\"TitleWithPath\":\"Helse Midt-Norge IT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":104919,\"ParentUnitId\":null,\"HasDatabase\":true,\"ExternalId\":\"104919\",\"HealthUnitId\":null,\"Title\":\"Helse Vest IKT\",\"TitleWithPath\":\"Helse Vest IKT\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null},{\"UnitId\":105403,\"ParentUnitId\":100083,\"HasDatabase\":false,\"ExternalId\":\"105403\",\"HealthUnitId\":null,\"Title\":\"Ortopedisk avdeling\",\"TitleWithPath\":\"Helse Stavanger HF/Ortopedisk avdeling\",\"ValidFrom\":null,\"ValidTo\":null,\"ExtraData\":null}]}"
+  #  tilgangstreyaml <- yaml::read_yaml(
+  #    paste0(Sys.getenv("R_RAP_CONFIG_PATH"), "/accesstree.yaml"))
+  #  tilgangstrejson <- tilgangstreyaml$data$accesstree.json
+  #  tilgangstre <- jsonlite::fromJSON(tilgangstrejson, flatten = FALSE)[[1]]
+  # nolint end
+  tilgangstre <- jsonlite::fromJSON(tilgangstre, flatten = FALSE)[[1]]
+  orgNames <- tilgangstre$TitleWithPath[match(orgs, tilgangstre$UnitId)]
 
   name <- Sys.getenv("SHINYPROXY_USERNAME")
-  fullName <- parse(text = paste0("'", Sys.getenv("USERFULLNAME"), "'"))[[1]]
-  phone <- Sys.getenv("USERPHONE")
-  email <- Sys.getenv("USEREMAIL")
-
-  # make vectors of vals
-  units <- unlist(
-    strsplit(
-      gsub("\\s|\\[|\\]", "", Sys.getenv("USERORGID")),
-      ","
-    )
-  )
-
-  groups <- unlist(
-    strsplit(
-      gsub("\\s|\\[|\\]", "", Sys.getenv("SHINYPROXY_USERGROUPS")),
-      ","
-    )
-  )
-
-  if (length(units) != length(groups)) {
-    stop(paste(
-      "Vectors obtained from SHINYPROXY_USERGROUPS and USERORGID are of",
-      "different lengths. Hence, correspondence cannot be anticipated."
-    ))
-  }
-
-  # NB Anticipate that element positions in vectors do correspond!
-  ## filter by this group
-  units <- units[groups == group]
-  groups <- groups[groups == group]
-
-  ## restrict when unit is provided
-  if (!is.null(unit)) {
-    groups <- groups[units == unit]
-    units <- units[units == unit]
-  }
+  fullName <- parse(text = paste0(
+    "'",
+    Sys.getenv("FALK_USER_FULLNAME"),
+    "'"
+  ))[[1]]
+  phone <- Sys.getenv("FALK_USER_PHONE")
+  email <- Sys.getenv("FALK_USER_EMAIL")
 
   # Look up org, role and unit name
-  orgs <- vector()
-  roles <- vector()
-  orgNames <- vector()
-    for (i in seq_len(length(units))) {
-    orgs[i] <- unitAttribute(units[i], "resh")
-    roles[i] <- unitAttribute(units[i], "role")
-    orgNames[i] <- unitAttribute(units[i], "titlewithpath")
-  }
+  # nolint start
+  # orgNames <- vector()
+  # for (i in seq_len(length(units))) {
+  #   orgNames[i] <- rapbase::unitAttribute(tilganger$U[i], "titlewithpath")
+  # }
+  # nolint end
 
   list(
     name = rep(name, length(units)),
