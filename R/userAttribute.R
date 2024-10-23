@@ -143,7 +143,7 @@ userInfo <- function(
     }
 
     if (context %in% c("QAC", "PRODUCTIONC")) {
-      userprivs <- userAttribute(group)
+      userprivs <- userAttribute()
       # print(userprivs)
       # pick the first of available user privileges
       userprivs <- as.data.frame(userprivs, stringsAsFactors = FALSE)[1, ]
@@ -206,10 +206,10 @@ userAttribute <- function(unit = NULL) {
     ))
   }
 
-  tilganger <- jsonlite::parse_json(Sys.getenv("FALK_EXTENDED_USER_RIGHTS"))
-  tilganger <- as.data.frame(do.call(rbind, tilganger))
-  tilganger <- apply(tilganger, 2, unlist)
-  tilganger <- as.data.frame(tilganger)
+  tilganger <- jsonlite::parse_json(
+    Sys.getenv("FALK_EXTENDED_USER_RIGHTS"),
+    simplifyVector = TRUE
+  )
   tilganger <- tilganger[tilganger$A == Sys.getenv("FALK_APP_ID"), ]
 
   # restrict when unit is provided

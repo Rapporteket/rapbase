@@ -117,7 +117,7 @@ navbarWidgetServer2 <- function(
 
   shiny::moduleServer(id, function(input, output, session) {
 
-    user <- userAttribute(caller)
+    user <- userAttribute()
     stopifnot(length(user$name) > 0)
 
     # Initial privileges and affiliation will be first in list
