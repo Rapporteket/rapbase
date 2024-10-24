@@ -20,19 +20,22 @@ rapOpenDbConnection <- function(registryName = "data", dbType = "mysql") {
         name = Sys.getenv("MYSQL_DB"),
         host = Sys.getenv("MYSQL_HOST_LOG"),
         user = Sys.getenv("MYSQL_USERNAME"),
-        password = Sys.getenv("MYSQL_PASSWORD")
+        password = Sys.getenv("MYSQL_PASSWORD"),
+        port = as.numeric(Sys.getenv("MYSQL_PORT_LOG", "3306"))
       ),
       "autoreport" = data.frame(
         name = Sys.getenv("MYSQL_DB"),
         host = Sys.getenv("MYSQL_HOST_AUTOREPORT"),
         user = Sys.getenv("MYSQL_USERNAME"),
-        password = Sys.getenv("MYSQL_PASSWORD")
+        password = Sys.getenv("MYSQL_PASSWORD"),
+        port = as.numeric(Sys.getenv("MYSQL_PORT_AUTOREPORT", "3306"))
       ),
       "data" = data.frame(
         name = Sys.getenv("MYSQL_DB"),
         host = Sys.getenv("MYSQL_HOST"),
         user = Sys.getenv("MYSQL_USERNAME"),
-        password = Sys.getenv("MYSQL_PASSWORD")
+        password = Sys.getenv("MYSQL_PASSWORD"),
+        port = as.numeric(Sys.getenv("MYSQL_PORT_DATA", "3306"))
       )
     )
   } else {
@@ -55,7 +58,7 @@ rapOpenDbConnection <- function(registryName = "data", dbType = "mysql") {
       host = conf$host,
       user = conf$user,
       password = conf$pass,
-      port = as.numeric(Sys.getenv("MYSQL_PORT", "3306")),
+      port = conf$port,
       bigint = "integer"
     )
     # ensure utf8 encoding
