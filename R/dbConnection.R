@@ -11,24 +11,54 @@
 #'   driver, respectively.
 #' @export
 
-rapOpenDbConnection <- function(registryName, dbType = "mysql") {
-  conf <- getConfig()
-  conf <- conf[[registryName]]
-  if (is.null(conf)) {
-    stop(paste0(
-      "Could not connect to database because there is no
+rapOpenDbConnection <- function(registryName = "data", dbType = "mysql") {
+  print(registryName)
+  if (Sys.getenv("R_RAP_INSTANCE") %in% c("QAC", "PRODUCTIONC")) {
+    conf <- switch(
+      registryName,
+      "raplog" = data.frame(
+        name = Sys.getenv("MYSQL_DB"),
+        host = Sys.getenv("MYSQL_HOST_LOG"),
+        user = Sys.getenv("MYSQL_USERNAME"),
+        password = Sys.getenv("MYSQL_PASSWORD"),
+        port = as.numeric(Sys.getenv("MYSQL_PORT_LOG", "3306"))
+      ),
+      "autoreport" = data.frame(
+        name = Sys.getenv("MYSQL_DB"),
+        host = Sys.getenv("MYSQL_HOST_AUTOREPORT"),
+        user = Sys.getenv("MYSQL_USERNAME"),
+        password = Sys.getenv("MYSQL_PASSWORD"),
+        port = as.numeric(Sys.getenv("MYSQL_PORT_AUTOREPORT", "3306"))
+      ),
+      "data" = data.frame(
+        name = Sys.getenv("MYSQL_DB"),
+        host = Sys.getenv("MYSQL_HOST"),
+        user = Sys.getenv("MYSQL_USERNAME"),
+        password = Sys.getenv("MYSQL_PASSWORD"),
+        port = as.numeric(Sys.getenv("MYSQL_PORT_DATA", "3306"))
+      )
+    )
+  } else {
+    conf <- getConfig()
+    conf <- conf[[registryName]]
+    if (is.null(conf)) {
+      stop(paste0(
+        "Could not connect to database because there is no
                 configuration corresponding to key '", registryName,
-      "'. Please check key and/or configuration."
-    ))
+        "'. Please check key and/or configuration."
+      ))
+    }
   }
 
   if (dbType == "mysql") {
     drv <- RMariaDB::MariaDB()
-    con <- DBI::dbConnect(drv,
+    con <- DBI::dbConnect(
+      drv,
       dbname = conf$name,
       host = conf$host,
       user = conf$user,
       password = conf$pass,
+      port = conf$port,
       bigint = "integer"
     )
     # ensure utf8 encoding
