@@ -11,7 +11,7 @@
 #'   driver, respectively.
 #' @export
 
-rapOpenDbConnection <- function(registryName, dbType = "mysql") {
+rapOpenDbConnection <- function(registryName = "data", dbType = "mysql") {
   print(registryName)
   if (Sys.getenv("R_RAP_INSTANCE") %in% c("QAC", "PRODUCTIONC")) {
     conf <- switch(
@@ -28,7 +28,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
         user = Sys.getenv("DB_USER"),
         password = Sys.getenv("DB_PASS")
       ),
-      "nordicscir" = data.frame(
+      "data" = data.frame(
         name = Sys.getenv("DB_NAME"),
         host = Sys.getenv("DB_HOST_DATA"),
         user = Sys.getenv("DB_USER"),
@@ -49,12 +49,13 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
 
   if (dbType == "mysql") {
     drv <- RMariaDB::MariaDB()
-    con <- DBI::dbConnect(drv,
-                          dbname = conf$name,
-                          host = conf$host,
-                          user = conf$user,
-                          password = conf$pass,
-                          bigint = "integer"
+    con <- DBI::dbConnect(
+      drv,
+      dbname = conf$name,
+      host = conf$host,
+      user = conf$user,
+      password = conf$pass,
+      bigint = "integer"
     )
     # ensure utf8 encoding
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
