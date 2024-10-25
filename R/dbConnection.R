@@ -11,32 +11,20 @@
 #'   driver, respectively.
 #' @export
 
-rapOpenDbConnection <- function(registryName = "data", dbType = "mysql") {
+rapOpenDbConnection <- function(registryName, dbType = "mysql") {
   print(registryName)
   if (Sys.getenv("R_RAP_INSTANCE") %in% c("QAC", "PRODUCTIONC")) {
-    conf <- switch(
+    conf <- data.frame(
+      host = Sys.getenv("MYSQL_HOST"),
+      user = Sys.getenv("MYSQL_USER"),
+      password = Sys.getenv("MYSQL_PASSWORD"),
+      port = as.numeric(Sys.getenv("MYSQL_PORT", "3306"))
+    )
+    conf$name <- switch(
       registryName,
-      "raplog" = data.frame(
-        name = Sys.getenv("MYSQL_DB"),
-        host = Sys.getenv("MYSQL_HOST_LOG"),
-        user = Sys.getenv("MYSQL_USERNAME"),
-        password = Sys.getenv("MYSQL_PASSWORD"),
-        port = as.numeric(Sys.getenv("MYSQL_PORT_LOG", "3306"))
-      ),
-      "autoreport" = data.frame(
-        name = Sys.getenv("MYSQL_DB"),
-        host = Sys.getenv("MYSQL_HOST_AUTOREPORT"),
-        user = Sys.getenv("MYSQL_USERNAME"),
-        password = Sys.getenv("MYSQL_PASSWORD"),
-        port = as.numeric(Sys.getenv("MYSQL_PORT_AUTOREPORT", "3306"))
-      ),
-      "data" = data.frame(
-        name = Sys.getenv("MYSQL_DB"),
-        host = Sys.getenv("MYSQL_HOST"),
-        user = Sys.getenv("MYSQL_USERNAME"),
-        password = Sys.getenv("MYSQL_PASSWORD"),
-        port = as.numeric(Sys.getenv("MYSQL_PORT_DATA", "3306"))
-      )
+      "raplog" = Sys.getenv("LOGS_DB"),
+      "autoreport" = Sys.getenv("AUTOREPORT_DB"),
+      Sys.getenv(registryName)
     )
   } else {
     conf <- getConfig()
