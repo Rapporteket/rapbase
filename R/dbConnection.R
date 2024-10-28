@@ -12,7 +12,6 @@
 #' @export
 
 rapOpenDbConnection <- function(registryName, dbType = "mysql") {
-  print(registryName)
   if (Sys.getenv("R_RAP_INSTANCE") %in% c("QAC", "PRODUCTIONC")) {
     conf <- data.frame(
       host = Sys.getenv("MYSQL_HOST"),
@@ -38,7 +37,6 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
       ))
     }
   }
-  print(conf)
 
   if (dbType == "mysql") {
     drv <- RMariaDB::MariaDB()
