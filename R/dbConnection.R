@@ -12,19 +12,36 @@
 #' @export
 
 rapOpenDbConnection <- function(registryName, dbType = "mysql") {
-  conf <- getConfig()
-  conf <- conf[[registryName]]
-  if (is.null(conf)) {
-    stop(paste0(
-      "Could not connect to database because there is no
+  if (Sys.getenv("R_RAP_INSTANCE") %in% c("QAC", "PRODUCTIONC")) {
+    conf <- data.frame(
+      host = Sys.getenv("MYSQL_HOST"),
+      user = Sys.getenv("MYSQL_USER"),
+      password = Sys.getenv("MYSQL_PASSWORD"),
+      port = as.numeric(Sys.getenv("MYSQL_PORT", "3306"))
+    )
+    conf$name <- switch(
+      registryName,
+      "raplog" = Sys.getenv("MYSQL_DB_LOG"),
+      "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
+      "data" = Sys.getenv("MYSQL_DB_DATA"),
+      Sys.getenv(registryName)
+    )
+  } else {
+    conf <- getConfig()
+    conf <- conf[[registryName]]
+    if (is.null(conf)) {
+      stop(paste0(
+        "Could not connect to database because there is no
                 configuration corresponding to key '", registryName,
-      "'. Please check key and/or configuration."
-    ))
+        "'. Please check key and/or configuration."
+      ))
+    }
   }
 
   if (dbType == "mysql") {
     drv <- RMariaDB::MariaDB()
-    con <- DBI::dbConnect(drv,
+    con <- DBI::dbConnect(
+      drv,
       dbname = conf$name,
       host = conf$host,
       user = conf$user,
