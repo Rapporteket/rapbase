@@ -22,8 +22,9 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
     )
     conf$name <- switch(
       registryName,
-      "raplog" = Sys.getenv("LOGS_DB"),
-      "autoreport" = Sys.getenv("AUTOREPORT_DB"),
+      "raplog" = Sys.getenv("MYSQL_DB_LOG"),
+      "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
+      "data" = Sys.getenv("MYSQL_DB_DATA"),
       Sys.getenv(registryName)
     )
   } else {
@@ -37,6 +38,7 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
       ))
     }
   }
+  print(conf)
 
   if (dbType == "mysql") {
     drv <- RMariaDB::MariaDB()
