@@ -19,7 +19,7 @@ If redefining contexts is needed, please use userInfo instead."><meta property="
 
     <a class="navbar-brand me-2" href="../index.html">rapbase</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.25.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.24.3</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,7 +44,7 @@ If redefining contexts is needed, please use userInfo instead."><meta property="
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>User attributes in container apps running behind shinyproxy</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/main/R/userAttribute.R" class="external-link"><code>R/userAttribute.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/master/R/userAttribute.R" class="external-link"><code>R/userAttribute.R</code></a></small>
       <div class="d-none name"><code>userAttribute.Rd</code></div>
     </div>
 
@@ -60,7 +60,7 @@ If redefining contexts is needed, please use <code><a href="userInfo.html">userI
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">userAttribute</span><span class="op">(</span>unit <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">userAttribute</span><span class="op">(</span><span class="va">group</span>, unit <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">getUserEmail</span><span class="op">(</span>shinySession <span class="op">=</span> <span class="cn">NULL</span>, group <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
@@ -81,21 +81,21 @@ If redefining contexts is needed, please use <code><a href="userInfo.html">userI
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-unit">unit<a class="anchor" aria-label="anchor" href="#arg-unit"></a></dt>
+<dl><dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
+<dd><p>Character string providing the name of the app R package name.
+The term "group" is used to relate to the environmental variable
+SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.
+Default value is NULL but should always be set when shiny app is run as a
+shinyproxy container.</p></dd>
+
+
+<dt id="arg-unit">unit<a class="anchor" aria-label="anchor" href="#arg-unit"></a></dt>
 <dd><p>Integer providing the look-up unit id. Default value is NULL in
 which case all privileges for <code>group</code> are returned.</p></dd>
 
 
 <dt id="arg-shinysession">shinySession<a class="anchor" aria-label="anchor" href="#arg-shinysession"></a></dt>
 <dd><p>A shiny session object. Default value is NULL</p></dd>
-
-
-<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
-<dd><p>Character string providing the name of the app R package name.
-The term "group" is used to relate to the environmental variable
-SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.
-Default value is NULL but should always be set when shiny app is run as a
-shinyproxy container.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -111,6 +111,9 @@ shinyproxy container.</p></dd>
 
     <dt>email</dt>
 <dd><p>User email</p></dd>
+
+    <dt>group</dt>
+<dd><p>Group of which the user is a member.</p></dd>
 
     <dt>unit</dt>
 <dd><p>Unit id under which the privileges are defined.</p></dd>
