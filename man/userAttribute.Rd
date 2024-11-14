@@ -11,7 +11,7 @@
 \alias{getUserRole}
 \title{User attributes in container apps running behind shinyproxy}
 \usage{
-userAttribute(group, unit = NULL)
+userAttribute(unit = NULL)
 
 getUserEmail(shinySession = NULL, group = NULL)
 
@@ -28,16 +28,16 @@ getUserReshId(shinySession = NULL, group = NULL)
 getUserRole(shinySession = NULL, group = NULL)
 }
 \arguments{
+\item{unit}{Integer providing the look-up unit id. Default value is NULL in
+which case all privileges for \code{group} are returned.}
+
+\item{shinySession}{A shiny session object. Default value is NULL}
+
 \item{group}{Character string providing the name of the app R package name.
 The term "group" is used to relate to the environmental variable
 SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.
 Default value is NULL but should always be set when shiny app is run as a
 shinyproxy container.}
-
-\item{unit}{Integer providing the look-up unit id. Default value is NULL in
-which case all privileges for \code{group} are returned.}
-
-\item{shinySession}{A shiny session object. Default value is NULL}
 }
 \value{
 Invisibly a list of user metadata and privileges:
@@ -46,7 +46,6 @@ Invisibly a list of user metadata and privileges:
     \item{fullName}{User full name}
     \item{phone}{User phone number}
     \item{email}{User email}
-    \item{group}{Group of which the user is a member.}
     \item{unit}{Unit id under which the privileges are defined.}
     \item{org}{Organization id for the user.}
     \item{role}{Role of the user.}

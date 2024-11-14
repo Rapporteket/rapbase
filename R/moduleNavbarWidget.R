@@ -117,7 +117,7 @@ navbarWidgetServer2 <- function(
 
   shiny::moduleServer(id, function(input, output, session) {
 
-    user <- userAttribute(caller)
+    user <- userAttribute()
     stopifnot(length(user$name) > 0)
 
     # Initial privileges and affiliation will be first in list
@@ -152,10 +152,7 @@ navbarWidgetServer2 <- function(
 
     # Select organization in widget (for container apps only)
     shiny::observeEvent(input$selectOrganization, {
-      choices <- user$unit
-      names(choices) <- paste0(
-        user$orgName, " (", user$org, ") - ", user$role
-      )
+      choices <- paste0(user$orgName, " (", user$org, ") - ", user$role)
 
       shinyalert::shinyalert(
         html = TRUE,
@@ -174,7 +171,7 @@ navbarWidgetServer2 <- function(
             session$ns("unit"),
             "",
             choices,
-            selected = rv$unit
+            selected = choices[1]
           )
         )),
         type = "", imageUrl = "rap/logo.svg",
@@ -185,15 +182,16 @@ navbarWidgetServer2 <- function(
     })
 
     shiny::observeEvent(input$unit, {
-      rv$name <- user$name[user$unit == input$unit]
-      rv$fullName <- user$fullName[user$unit == input$unit]
-      rv$phone <- user$phone[user$unit == input$unit]
-      rv$email <- user$email[user$unit == input$unit]
-      rv$group <- user$group[user$unit == input$unit]
-      rv$unit <- user$unit[user$unit == input$unit]
-      rv$org <- user$org[user$unit == input$unit]
-      rv$role <- user$role[user$unit == input$unit]
-      rv$orgName <- user$orgName[user$unit == input$unit]
+      choices <- paste0(user$orgName, " (", user$org, ") - ", user$role)
+      rv$name <- user$name[choices == input$unit]
+      rv$fullName <- user$fullName[choices == input$unit]
+      rv$phone <- user$phone[choices == input$unit]
+      rv$email <- user$email[choices == input$unit]
+      rv$group <- user$group[choices == input$unit]
+      rv$unit <- user$unit[choices == input$unit]
+      rv$org <- user$org[choices == input$unit]
+      rv$role <- user$role[choices == input$unit]
+      rv$orgName <- user$orgName[choices == input$unit]
     })
 
     invisible(

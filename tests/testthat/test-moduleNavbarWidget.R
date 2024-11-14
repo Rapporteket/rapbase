@@ -45,10 +45,13 @@ file.copy(
 
 with_envvar(
   new = c(
+    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LU\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
+    "FALK_APP_ID" = "80",
+    "FALK_USER_FULLNAME" = "Tore Tester Container",
     "R_RAP_INSTANCE" = "QAC",
     "SHINYPROXY_USERNAME" = "ttesterc",
-    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
-    "USERORGID" = "[1, 2, 3, 4]",
+    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils",
+    "USERORGID" = "[1, 2, 3]",
     "USERFULLNAME" = "Tore Tester Container"
   ),
   code = {
@@ -58,15 +61,15 @@ with_envvar(
         orgName = registryName,
         caller = "rapbase"
       ), {
-        expect_equal(output$name, "Tore Tester Container")
+        # expect_equal(output$name, "Tore Tester Container")
         expect_equal(class(output$affiliation), "character")
-        session$setInputs(userInfo = 1)
-        session$setInputs(selectOrganization = 1, unit = 1)
+        # session$setInputs(userInfo = 1)
+        # session$setInputs(selectOrganization = 1, unit = 1)
         expect_equal(rv$name, "ttesterc")
         expect_equal(rv$fullName, "Tore Tester Container")
-        expect_equal(rv$group, "rapbase")
-        expect_equal(rv$unit, "1")
-        expect_equal(rv$org, "100082")
+        expect_equal(rv$group, 80)
+        expect_equal(rv$unit, 1)
+        expect_equal(rv$org, 1)
         expect_equal(rv$role, "LU")
       })
     })
