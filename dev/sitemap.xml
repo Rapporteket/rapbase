@@ -1,192 +1,66 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>/dev/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>/dev/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>/dev/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>/dev/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>/dev/articles/stagingData.html</loc>
-  </url>
-  <url>
-    <loc>/dev/authors.html</loc>
-  </url>
-  <url>
-    <loc>/dev/index.html</loc>
-  </url>
-  <url>
-    <loc>/dev/news/index.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/appLog.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/appNavbarUserWidget.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/appendLog.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/autoReport.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/createAutoReport.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/createLogDb.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/createLogDbTabs.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/deleteAutoReport.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/dot-getFun.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/dot-testAutoReport.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/export.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/exportGuide.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/filterAutoRep.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/findNextRunDate.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/fireInTheHole.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getConfig.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getGithub.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getRapPackages.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getRegs.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/getSessionData.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/halloRapporteket.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/howWeDealWithPersonalData.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/isPkgRapReg.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/isRapContext.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/loadRegData.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/logger.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/makeAutoReportTab.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/makeLogRecord.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/makeRunDayOfYearSequence.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/makeStandardTable.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/navbarWidget.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/noOptOutOk.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/pipe.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/pronoun.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/rapCloseDbConnection.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/rapOpenDbConnection.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/rapbase.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/readAutoReportData.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/readLog.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/renderRmd.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/runAutoReport.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/runBulletin.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/runNoweb.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/sanitizeLog.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/sendEmail.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/stagingData.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/stagingDataHelper.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/stats.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/statsGuide.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/unitAttribute.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/upgradeAutoReportData.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/userAttribute.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/userInfo.html</loc>
-  </url>
-  <url>
-    <loc>/dev/reference/writeAutoReportData.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/dev/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>/dev/CONTRIBUTING.html</loc></url>
+<url><loc>/dev/LICENSE.html</loc></url>
+<url><loc>/dev/articles/index.html</loc></url>
+<url><loc>/dev/articles/stagingData.html</loc></url>
+<url><loc>/dev/authors.html</loc></url>
+<url><loc>/dev/index.html</loc></url>
+<url><loc>/dev/news/index.html</loc></url>
+<url><loc>/dev/reference/appLog.html</loc></url>
+<url><loc>/dev/reference/appNavbarUserWidget.html</loc></url>
+<url><loc>/dev/reference/appendLog.html</loc></url>
+<url><loc>/dev/reference/autoReport.html</loc></url>
+<url><loc>/dev/reference/createAutoReport.html</loc></url>
+<url><loc>/dev/reference/createLogDb.html</loc></url>
+<url><loc>/dev/reference/createLogDbTabs.html</loc></url>
+<url><loc>/dev/reference/deleteAutoReport.html</loc></url>
+<url><loc>/dev/reference/dot-getFun.html</loc></url>
+<url><loc>/dev/reference/dot-testAutoReport.html</loc></url>
+<url><loc>/dev/reference/export.html</loc></url>
+<url><loc>/dev/reference/exportGuide.html</loc></url>
+<url><loc>/dev/reference/filterAutoRep.html</loc></url>
+<url><loc>/dev/reference/findNextRunDate.html</loc></url>
+<url><loc>/dev/reference/fireInTheHole.html</loc></url>
+<url><loc>/dev/reference/getConfig.html</loc></url>
+<url><loc>/dev/reference/getGithub.html</loc></url>
+<url><loc>/dev/reference/getRapPackages.html</loc></url>
+<url><loc>/dev/reference/getRegs.html</loc></url>
+<url><loc>/dev/reference/getSessionData.html</loc></url>
+<url><loc>/dev/reference/halloRapporteket.html</loc></url>
+<url><loc>/dev/reference/howWeDealWithPersonalData.html</loc></url>
+<url><loc>/dev/reference/index.html</loc></url>
+<url><loc>/dev/reference/isPkgRapReg.html</loc></url>
+<url><loc>/dev/reference/isRapContext.html</loc></url>
+<url><loc>/dev/reference/loadRegData.html</loc></url>
+<url><loc>/dev/reference/logger.html</loc></url>
+<url><loc>/dev/reference/makeAutoReportTab.html</loc></url>
+<url><loc>/dev/reference/makeLogRecord.html</loc></url>
+<url><loc>/dev/reference/makeRunDayOfYearSequence.html</loc></url>
+<url><loc>/dev/reference/makeStandardTable.html</loc></url>
+<url><loc>/dev/reference/navbarWidget.html</loc></url>
+<url><loc>/dev/reference/noOptOutOk.html</loc></url>
+<url><loc>/dev/reference/pipe.html</loc></url>
+<url><loc>/dev/reference/pronoun.html</loc></url>
+<url><loc>/dev/reference/rapCloseDbConnection.html</loc></url>
+<url><loc>/dev/reference/rapOpenDbConnection.html</loc></url>
+<url><loc>/dev/reference/rapbase.html</loc></url>
+<url><loc>/dev/reference/readAutoReportData.html</loc></url>
+<url><loc>/dev/reference/readLog.html</loc></url>
+<url><loc>/dev/reference/renderRmd.html</loc></url>
+<url><loc>/dev/reference/runAutoReport.html</loc></url>
+<url><loc>/dev/reference/runBulletin.html</loc></url>
+<url><loc>/dev/reference/runNoweb.html</loc></url>
+<url><loc>/dev/reference/sanitizeLog.html</loc></url>
+<url><loc>/dev/reference/sendEmail.html</loc></url>
+<url><loc>/dev/reference/stagingData.html</loc></url>
+<url><loc>/dev/reference/stagingDataHelper.html</loc></url>
+<url><loc>/dev/reference/stats.html</loc></url>
+<url><loc>/dev/reference/statsGuide.html</loc></url>
+<url><loc>/dev/reference/unitAttribute.html</loc></url>
+<url><loc>/dev/reference/upgradeAutoReportData.html</loc></url>
+<url><loc>/dev/reference/userAttribute.html</loc></url>
+<url><loc>/dev/reference/userInfo.html</loc></url>
+<url><loc>/dev/reference/writeAutoReportData.html</loc></url>
 </urlset>
+
