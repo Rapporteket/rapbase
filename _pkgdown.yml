@@ -51,6 +51,7 @@ reference:
     desc: >
       Handle logging
     contents:
+    - loggerSetup
     - logger
     - sanitizeLog
 

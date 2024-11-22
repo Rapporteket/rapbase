@@ -213,10 +213,10 @@ test_that("append and read errors when target is not known", {
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
   con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
-    host = Sys.getenv("DB_HOST"),
-    user = Sys.getenv("DB_USER"),
-    password = Sys.getenv("DB_PASS"),
-    bigint = "integer"
+                             host = Sys.getenv("DB_HOST"),
+                             user = Sys.getenv("DB_USER"),
+                             password = Sys.getenv("DB_PASS"),
+                             bigint = "integer"
   )
   RMariaDB::dbExecute(con, paste("DROP DATABASE", nameLogDb))
   rapbase::rapCloseDbConnection(con)
@@ -225,3 +225,39 @@ if (is.null(check_db(is_test_that = FALSE))) {
 # Restore instance
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfig)
 Sys.setenv(R_RAP_INSTANCE = currentInstance)
+
+test_that("loggerSetup is working", {
+  # env-stuff
+  currentUser <- Sys.getenv("SHINYPROXY_USERNAME")
+  currentApp <- Sys.getenv("SHINYPROXY_APPID")
+  Sys.setenv(SHINYPROXY_USERNAME = "jesus@sky.com")
+  Sys.setenv(SHINYPROXY_APPID = "rapbasis")
+
+  # run the function we want to test
+  loggerSetup(testing = TRUE)
+
+  # log something
+  infoLogjson <- logger::log_info(
+    "Test log setup"
+  )$default$record
+
+  # Test what has been logged
+  expect_true(jsonlite::validate(infoLogjson))
+  infoLog <- jsonlite::fromJSON(infoLogjson)
+  expect_equal(nchar(infoLog$time), 23)
+  expect_equal(infoLog$level, "INFO")
+  expect_equal(infoLog$message, "Test log setup")
+  expect_equal(infoLog$app, "rapbasis")
+  expect_equal(infoLog$user, "jesus@sky.com")
+
+  # env-stuff
+  if (currentUser == "" && currentApp == "") {
+    Sys.unsetenv("SHINYPROXY_USERNAME")
+    Sys.unsetenv("SHINYPROXY_APPID")
+  } else {
+    Sys.setenv(SHINYPROXY_USERNAME = currentUser)
+    Sys.setenv(SHINYPROXY_APPID = currentApp)
+  }
+
+  expect_error(loggerSetup())
+})
