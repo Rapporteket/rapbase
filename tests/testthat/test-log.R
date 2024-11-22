@@ -244,11 +244,21 @@ test_that("loggerSetup is working", {
   # Test what has been logged
   expect_true(jsonlite::validate(infoLogjson))
   infoLog <- jsonlite::fromJSON(infoLogjson)
-  expect_equal(nchar(infoLog$time), 23)
-  expect_equal(infoLog$level, "INFO")
-  expect_equal(infoLog$message, "Test log setup")
-  expect_equal(infoLog$app, "rapbasis")
-  expect_equal(infoLog$user, "jesus@sky.com")
+  expect_equal(
+    c(
+      nchar(infoLog$time),
+      infoLog$level,
+      infoLog$message,
+      infoLog$app,
+      infoLog$user),
+    c(
+      23,
+      "INFO",
+      "Test log setup",
+      "rapbasis",
+      "jesus@sky.com"
+    )
+  )
 
   # env-stuff
   if (currentUser == "" && currentApp == "") {
