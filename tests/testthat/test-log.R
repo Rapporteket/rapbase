@@ -234,7 +234,7 @@ test_that("loggerSetup is working", {
   Sys.setenv(SHINYPROXY_APPID = "rapbasis")
 
   # run the function we want to test
-  loggerSetup(testing = TRUE)
+  loggerSetup(hooks = FALSE)
 
   # log something
   infoLogjson <- logger::log_info(

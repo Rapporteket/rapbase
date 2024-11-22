@@ -7,7 +7,7 @@
 loggerSetup(
   usernameEnv = "SHINYPROXY_USERNAME",
   appidEnv = "SHINYPROXY_APPID",
-  testing = FALSE
+  hooks = TRUE
 )
 }
 \arguments{
@@ -15,8 +15,7 @@ loggerSetup(
 
 \item{appidEnv}{Global variable containing application name}
 
-\item{testing}{Is the if function running in a test?
-Function will skip some calls if it does.}
+\item{hooks}{Logical defining if hooks for automatic logging should be set}
 }
 \description{
 Every info, warning and error will be logged in json format.

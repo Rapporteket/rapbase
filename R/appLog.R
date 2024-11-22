@@ -4,15 +4,14 @@
 #'
 #' @param usernameEnv Global variable containing user name
 #' @param appidEnv Global variable containing application name
-#' @param testing Is the if function running in a test?
-#' Function will skip some calls if it does.
+#' @param hooks Logical defining if hooks for automatic logging should be set
 #'
 #' @export
 #'
 loggerSetup <- function(
   usernameEnv = "SHINYPROXY_USERNAME",
   appidEnv = "SHINYPROXY_APPID",
-  testing = FALSE
+  hooks = TRUE
 ) {
   logger::log_threshold(logger::INFO)
   formatterJson <- function(level, message, ...) {
@@ -31,7 +30,7 @@ loggerSetup <- function(
     )
   }
   logger::log_layout(formatterJson)
-  if (!testing) {
+  if (hooks) {
     logger::log_messages()
     logger::log_warnings()
     logger::log_errors()
