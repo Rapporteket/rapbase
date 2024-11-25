@@ -52,6 +52,7 @@ reference:
       Handle logging
     contents:
     - loggerSetup
+    - logShinyInputChanges
     - logger
     - sanitizeLog
 
