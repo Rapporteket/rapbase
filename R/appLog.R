@@ -36,3 +36,13 @@ loggerSetup <- function(
     logger::log_errors()
   }
 }
+
+#' Wrapper around logger::log_shiny_input_changes
+#'
+#' @param input passed from Shiny's server
+#'
+#' @export
+#'
+logShinyInputChanges <- function(input) {
+  logger::log_shiny_input_changes(input)
+}
