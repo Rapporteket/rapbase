@@ -34,6 +34,7 @@
 <url><loc>/dev/reference/isRapContext.html</loc></url>
 <url><loc>/dev/reference/loadRegData.html</loc></url>
 <url><loc>/dev/reference/logger.html</loc></url>
+<url><loc>/dev/reference/loggerSetup.html</loc></url>
 <url><loc>/dev/reference/makeAutoReportTab.html</loc></url>
 <url><loc>/dev/reference/makeLogRecord.html</loc></url>
 <url><loc>/dev/reference/makeRunDayOfYearSequence.html</loc></url>
