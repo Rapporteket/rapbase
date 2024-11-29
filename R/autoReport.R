@@ -132,10 +132,10 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   target <- config$r$autoReport$target
 
   if (target == "db") {
-    # RMariaDB does not seem to handle json well, so cast to string serverside
-    query <- "SELECT CAST(j AS CHAR) AS j FROM autoreport;"
+    query <- "SELECT * FROM autoreport2;"
     res <- rapbase::loadRegData(config$r$autoReport$key, query)
-    conf <- jsonlite::unserializeJSON(res$j)
+    print(res)
+    conf <- res
   } else if (target == "file") {
     path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
