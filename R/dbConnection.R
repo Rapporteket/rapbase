@@ -46,7 +46,9 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
       host = conf$host,
       user = conf$user,
       password = conf$pass,
-      bigint = "integer"
+      bigint = "integer",
+      client.flag = 2048,  # Request SSL connection
+      ssl.verify = FALSE         # Disable SSL verification
     )
     # ensure utf8 encoding
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
