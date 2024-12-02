@@ -134,8 +134,7 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   if (target == "db") {
     query <- "SELECT * FROM autoreport2;"
     res <- rapbase::loadRegData(config$r$autoReport$key, query)
-    print(res)
-    conf <- res
+    return(res)
   } else if (target == "file") {
     path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
@@ -154,9 +153,9 @@ readAutoReportData <- function(fileName = "autoReport.yml",
     }
 
     conf <- yaml::yaml.load_file(config_file)
+    upgradeAutoReportData(conf)
   }
 
-  upgradeAutoReportData(conf)
   # conf
 }
 
@@ -290,10 +289,10 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
       # to maintain some order, remove files older than 30 days
       files <- file.info(list.files(bckFilePath, full.names = TRUE))
       rmFiles <- rownames(files[difftime(Sys.time(),
-            files[, "mtime"],
-            units = "days"
-          ) > 30,
-        ]
+                                         files[, "mtime"],
+                                         units = "days"
+      ) > 30,
+      ]
       )
       file.remove(rmFiles)
       con <- file(oriFile, "w")
@@ -329,17 +328,23 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #'
 filterAutoRep <- function(data, by, pass) {
   stopifnot(by %in% c("package", "type", "owner", "organization"))
+  rc <- getConfig(fileName = "rapbaseConfig.yml")
+  target <- rc$r$autoReport$target
 
   if (length(data) == 0) {
     list()
   } else {
-    ind <- integer()
-    for (i in seq_len(length(data))) {
-      if (data[[i]][[by]] %in% pass) {
-        ind <- c(ind, i)
+    if (target == "db") {
+      return(dplyr::filter(data, .data[[by]] %in% pass))
+    } else {
+      ind <- integer()
+      for (i in seq_len(length(data))) {
+        if (data[[i]][[by]] %in% pass) {
+          ind <- c(ind, i)
+        }
       }
+      c(data[ind])
     }
-    c(data[ind])
   }
 }
 
@@ -470,7 +475,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
 
   # standard text for email body
   stdTxt <- readr::read_file(system.file("autoReportStandardEmailText.txt",
-    package = "rapbase"
+                                         package = "rapbase"
   ))
   # get sender from common config
   conf <- rapbase::getConfig("rapbaseConfig.yml")
@@ -480,8 +485,8 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
       {
         rep <- reps[[i]]
         if (dayNumber %in% rep$runDayOfYear &
-              as.Date(rep$terminateDate) > Sys.Date() &
-              as.Date(rep$startDate) <= Sys.Date()) {
+            as.Date(rep$terminateDate) > Sys.Date() &
+            as.Date(rep$startDate) <= Sys.Date()) {
           # get explicit referenced function and call it
           f <- .getFun(paste0(rep$package, "::", rep$fun))
           content <- do.call(what = f, args = rep$params)
@@ -505,7 +510,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
               fun = rep$fun,
               param = rep$params,
               msg = paste("recipients:", paste(rep$email,
-                collapse = ", "
+                                               collapse = ", "
               ))
             )
             sendEmail(
@@ -753,7 +758,7 @@ makeAutoReportTab <- function(session,
       "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
       "Periode" = autoRep[[n]]$intervalName,
       "Slutt" = strftime(as.Date(autoRep[[n]]$terminateDate),
-        format = "%b %Y"
+                         format = "%b %Y"
       ),
       "Neste" = nextDate,
       "Endre" = as.character(
