@@ -91,14 +91,14 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
     writeAutoReportData(config = l)
   } else {
     # Read current autoreport data and add new entry
-  rd <- readAutoReportData()
+    rd <- readAutoReportData()
 
-  rd[[eval(autoRepId)]] <- l
+    rd[[eval(autoRepId)]] <- l
 
-  if (dryRun) {
-    rd
-  } else {
-    writeAutoReportData(config = rd)
+    if (dryRun) {
+      rd
+    } else {
+      writeAutoReportData(config = rd)
     }
   }
 }
@@ -266,8 +266,13 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
   if (target == "db") {
     mydata <- config |> purrr::map(purrr::modify_at("runDayOfYear", toString))
     # Create empty data frame
-    dataframe <- setNames(data.frame(matrix(ncol = 15, nrow = 0)), c("id", names(mydata[[1]]))) |>
-      dplyr::mutate(across(everything(), as.character))
+    dataframe <- setNames(
+      data.frame(
+        matrix(ncol = 15, nrow = 0)
+      ),
+      c("id", names(mydata[[1]]))
+    ) |>
+      dplyr::mutate(dplyr::across(dplyr::everything(), as.character))
     k <- 0
     for (oppf in mydata) {
       k <- k + 1
@@ -277,7 +282,17 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
           synopsis = oppf$synopsis,
           package = oppf$package,
           fun = oppf$fun,
-          params = paste0("{", paste0("\"", names(oppf$params), "\": \"", oppf$params, "\"",collapse=", " ), "}"),
+          params = paste0(
+            "{",
+            paste0(
+              "\"",
+              names(oppf$params),
+              "\": \"",
+              oppf$params,
+              "\"",
+              collapse = ", "
+            ), "}"
+          ),
           owner = oppf$owner,
           email = emails,
           organization = oppf$organization,
@@ -322,10 +337,12 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
       )
       # to maintain some order, remove files older than 30 days
       files <- file.info(list.files(bckFilePath, full.names = TRUE))
-      rmFiles <- rownames(files[difftime(Sys.time(),
-            files[, "mtime"],
-            units = "days"
-          ) > 30,
+      rmFiles <- rownames(
+        files[difftime(
+          Sys.time(),
+          files[, "mtime"],
+          units = "days"
+        ) > 30,
         ]
       )
       file.remove(rmFiles)
@@ -508,9 +525,12 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
     filterAutoRep(., by = "type", pass = type)
 
   # standard text for email body
-  stdTxt <- readr::read_file(system.file("autoReportStandardEmailText.txt",
-    package = "rapbase"
-  ))
+  stdTxt <- readr::read_file(
+    system.file(
+      "autoReportStandardEmailText.txt",
+      package = "rapbase"
+    )
+  )
   # get sender from common config
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
@@ -518,9 +538,11 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
     tryCatch(
       {
         rep <- reps[[i]]
-        if (dayNumber %in% rep$runDayOfYear &
-              as.Date(rep$terminateDate) > Sys.Date() &
-              as.Date(rep$startDate) <= Sys.Date()) {
+        if (
+          dayNumber %in% rep$runDayOfYear
+          && as.Date(rep$terminateDate) > Sys.Date()
+          && as.Date(rep$startDate) <= Sys.Date()
+        ) {
           # get explicit referenced function and call it
           f <- .getFun(paste0(rep$package, "::", rep$fun))
           content <- do.call(what = f, args = rep$params)
@@ -543,9 +565,13 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
               pkg = rep$package,
               fun = rep$fun,
               param = rep$params,
-              msg = paste("recipients:", paste(rep$email,
-                collapse = ", "
-              ))
+              msg = paste(
+                "recipients:",
+                paste(
+                  rep$email,
+                  collapse = ", "
+                )
+              )
             )
             sendEmail(
               conf = conf, to = rep$email, subject = rep$synopsis,
@@ -774,19 +800,21 @@ makeAutoReportTab <- function(session,
   if (target == "db") {
     output <- autoRep %>%
       dplyr::transmute(
-        Rapport = synopsis,
-        Datakilde = organization,
-        Mottaker = email,
-        Periode = intervalName,
-        Slutt = as.Date(terminateDate),
+        Rapport = .data$synopsis,
+        Datakilde = .data$organization,
+        Mottaker = .data$email,
+        Periode = .data$intervalName,
+        Slutt = as.Date(.data$terminateDate),
         Neste = findNextRunDate(
-          runDayOfYear = as.vector(as.integer(strsplit(runDayOfYear, ",")[[1]])),
-          startDate = startDate,
-          returnFormat = dateFormat
+          runDayOfYear = as.vector(
+            as.integer(strsplit(.data$runDayOfYear, ",")[[1]])
+          ),
+          startDate = .data$startDate,
+          returnFormat = .data$dateFormat
         ),
         "Endre" = as.character(
           shiny::actionButton(
-            inputId = shiny::NS(namespace, paste0("edit__", id)),
+            inputId = shiny::NS(namespace, paste0("edit__", .data$id)),
             label = "",
             icon = shiny::icon("edit"),
             onclick = sprintf(
@@ -797,7 +825,7 @@ makeAutoReportTab <- function(session,
         ),
         "Slett" = as.character(
           shiny::actionButton(
-            inputId = shiny::NS(namespace, paste0("del__", id)),
+            inputId = shiny::NS(namespace, paste0("del__", .data$id)),
             label = "",
             icon = shiny::icon("trash"),
             onclick = sprintf(
@@ -811,71 +839,74 @@ makeAutoReportTab <- function(session,
         # Replace Neste with Utlopt if so, and stringify Slutt date
         Neste = dplyr::case_when(
           as.Date(Neste, format = dateFormat) > Slutt ~ "Utl\u00F8pt",
-          .default = Neste
+          .default = .data$Neste
         ),
         Slutt = strftime(
-          Slutt,
+          .data$Slutt,
           format = "%b %Y"
         )
       )
     return(as.matrix(output))
   } else {
     l <- list()
-  for (n in names(autoRep)) {
-    nextDate <- findNextRunDate(
-      runDayOfYear = autoRep[[n]]$runDayOfYear,
-      startDate = autoRep[[n]]$startDate,
-      returnFormat = dateFormat
-    )
-    if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
-      nextDate <- "Utl\u00F8pt"
-    }
-    dataSource <- autoRep[[n]]$organization
-    if (!is.null(mapOrgId)) {
-      if (dataSource %in% mapOrgId$id) {
-        dataSource <- mapOrgId$name[mapOrgId$id == dataSource]
+    for (n in names(autoRep)) {
+      nextDate <- findNextRunDate(
+        runDayOfYear = autoRep[[n]]$runDayOfYear,
+        startDate = autoRep[[n]]$startDate,
+        returnFormat = dateFormat
+      )
+      if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
+        nextDate <- "Utl\u00F8pt"
       }
-    }
-    r <- list(
-      "Rapport" = autoRep[[n]]$synopsis,
-      "Datakilde" = dataSource,
-      "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
-      "Periode" = autoRep[[n]]$intervalName,
-      "Slutt" = strftime(as.Date(autoRep[[n]]$terminateDate),
-        format = "%b %Y"
-      ),
-      "Neste" = nextDate,
-      "Endre" = as.character(
-        shiny::actionButton(
-          inputId = shiny::NS(namespace, paste0("edit__", n)),
-          label = "",
-          icon = shiny::icon("edit"),
-          onclick = sprintf(
-            "Shiny.onInputChange('%s', this.id)",
-            shiny::NS(namespace, "edit_button")
+      dataSource <- autoRep[[n]]$organization
+      if (!is.null(mapOrgId)) {
+        if (dataSource %in% mapOrgId$id) {
+          dataSource <- mapOrgId$name[mapOrgId$id == dataSource]
+        }
+      }
+      r <- list(
+        "Rapport" = autoRep[[n]]$synopsis,
+        "Datakilde" = dataSource,
+        "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
+        "Periode" = autoRep[[n]]$intervalName,
+        "Slutt" = strftime(
+          as.Date(
+            autoRep[[n]]$terminateDate
+          ),
+          format = "%b %Y"
+        ),
+        "Neste" = nextDate,
+        "Endre" = as.character(
+          shiny::actionButton(
+            inputId = shiny::NS(namespace, paste0("edit__", n)),
+            label = "",
+            icon = shiny::icon("edit"),
+            onclick = sprintf(
+              "Shiny.onInputChange('%s', this.id)",
+              shiny::NS(namespace, "edit_button")
+            )
           )
-        )
-      ),
-      "Slett" = as.character(
-        shiny::actionButton(
-          inputId = shiny::NS(namespace, paste0("del__", n)),
-          label = "",
-          icon = shiny::icon("trash"),
-          onclick = sprintf(
-            "Shiny.onInputChange('%s', this.id)",
-            shiny::NS(namespace, "del_button")
+        ),
+        "Slett" = as.character(
+          shiny::actionButton(
+            inputId = shiny::NS(namespace, paste0("del__", n)),
+            label = "",
+            icon = shiny::icon("trash"),
+            onclick = sprintf(
+              "Shiny.onInputChange('%s', this.id)",
+              shiny::NS(namespace, "del_button")
+            )
           )
         )
       )
-    )
-    if (includeReportId) {
-      r <- c(r, list("id" = n))
+      if (includeReportId) {
+        r <- c(r, list("id" = n))
+      }
+      if (!type %in% c("subscription")) {
+        r <- c(list(Ansvarlig = autoRep[[n]]$ownerName), r)
+      }
+      l <- rbind(l, r)
     }
-    if (!type %in% c("subscription")) {
-      r <- c(list(Ansvarlig = autoRep[[n]]$ownerName), r)
-    }
-    l <- rbind(l, r)
-  }
     return(as.matrix(l))
   }
 }
