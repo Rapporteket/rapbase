@@ -746,7 +746,6 @@ makeAutoReportTab <- function(session,
                               includeReportId = FALSE) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
-  l <- list()
   autoRep <- readAutoReportData() %>%
     filterAutoRep(by = "package", pass = group) %>%
     filterAutoRep(by = "type", pass = type)
@@ -757,8 +756,63 @@ makeAutoReportTab <- function(session,
       filterAutoRep(by = "organization", pass = orgId)
   }
 
+  if (length(autoRep$id) == 0) {
+    return(as.matrix(autoRep))
+  }
+
   dateFormat <- "%A %e. %B %Y"
 
+  target <- getConfig(fileName = "rapbaseConfig.yml")$r$raplog$target
+  if (target == "db") {
+    output <- autoRep %>%
+      dplyr::transmute(
+        Rapport = synopsis,
+        Datakilde = organization,
+        Mottaker = email,
+        Periode = intervalName,
+        Slutt = as.Date(terminateDate),
+        Neste = findNextRunDate(
+          runDayOfYear = as.vector(as.integer(strsplit(runDayOfYear, ",")[[1]])),
+          startDate = startDate,
+          returnFormat = dateFormat
+        ),
+        "Endre" = as.character(
+          shiny::actionButton(
+            inputId = shiny::NS(namespace, paste0("edit__", id)),
+            label = "",
+            icon = shiny::icon("edit"),
+            onclick = sprintf(
+              "Shiny.onInputChange('%s', this.id)",
+              shiny::NS(namespace, "edit_button")
+            )
+          )
+        ),
+        "Slett" = as.character(
+          shiny::actionButton(
+            inputId = shiny::NS(namespace, paste0("del__", id)),
+            label = "",
+            icon = shiny::icon("trash"),
+            onclick = sprintf(
+              "Shiny.onInputChange('%s', this.id)",
+              shiny::NS(namespace, "del_button")
+            )
+          )
+        )
+      ) %>%
+      dplyr::mutate(
+        # Replace Neste with Utlopt if so, and stringify Slutt date
+        Neste = dplyr::case_when(
+          as.Date(Neste, format = dateFormat) > Slutt ~ "Utl\u00F8pt",
+          .default = Neste
+        ),
+        Slutt = strftime(
+          Slutt,
+          format = "%b %Y"
+        )
+      )
+    return(as.matrix(output))
+  } else {
+    l <- list()
   for (n in names(autoRep)) {
     nextDate <- findNextRunDate(
       runDayOfYear = autoRep[[n]]$runDayOfYear,
@@ -814,5 +868,6 @@ makeAutoReportTab <- function(session,
     }
     l <- rbind(l, r)
   }
-  as.matrix(l)
+    return(as.matrix(l))
+  }
 }
