@@ -256,10 +256,36 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
   key <- rc$r$autoReport$key
 
   if (target == "db") {
-    config <- jsonlite::serializeJSON(config)
-    query <- paste0("UPDATE autoreport SET j = '", config, "';")
+    mydata <- config |> purrr::map(purrr::modify_at("runDayOfYear", toString))
+    # Create empty data frame
+    dataframe <- setNames(data.frame(matrix(ncol = 15, nrow = 0)), c("id", names(mydata[[1]]))) |>
+      dplyr::mutate(across(everything(), as.character))
+    k <- 0
+    for (oppf in mydata) {
+      k <- k + 1
+      for (emails in oppf$email) {
+        dataframe <- dataframe |> tibble::add_row(
+          id = names(mydata)[k],
+          synopsis = oppf$synopsis,
+          package = oppf$package,
+          fun = oppf$fun,
+          params = paste0("{", paste0("\"", names(oppf$params), "\": \"", oppf$params, "\"",collapse=", " ), "}"),
+          owner = oppf$owner,
+          email = emails,
+          organization = oppf$organization,
+          terminateDate = oppf$terminateDate,
+          interval = oppf$interval,
+          intervalName = oppf$intervalName,
+          type = oppf$type,
+          ownerName = oppf$ownerName,
+          startDate = oppf$startDate,
+          runDayOfYear = oppf$runDayOfYear
+        )
+      }
+    }
+
     con <- rapOpenDbConnection(key)$con
-    DBI::dbExecute(con, query)
+    DBI::dbAppendTable(con, key, dataframe, row.names = NULL)
     rapCloseDbConnection(con)
   } else if (target == "file") {
     path <- Sys.getenv("R_RAP_CONFIG_PATH")
