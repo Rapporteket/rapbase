@@ -84,6 +84,13 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   l$intervalName <- intervalName
   l$runDayOfYear <- runDayOfYear
 
+  config <- getConfig(fileName = "rapbaseConfig.yml")
+  target <- config$r$autoReport$target
+
+  if (target == "db") {
+    writeAutoReportData(config = l)
+  } else {
+    # Read current autoreport data and add new entry
   rd <- readAutoReportData()
 
   rd[[eval(autoRepId)]] <- l
@@ -92,6 +99,7 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
     rd
   } else {
     writeAutoReportData(config = rd)
+    }
   }
 }
 
