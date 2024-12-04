@@ -746,19 +746,15 @@ makeAutoReportTab <- function(session,
                               includeReportId = FALSE) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
-  # nolint start: object_name_linter
-  . <- ""
-  # nolint end
-
   l <- list()
   autoRep <- readAutoReportData() %>%
-    filterAutoRep(., by = "package", pass = group) %>%
-    filterAutoRep(., by = "type", pass = type)
+    filterAutoRep(by = "package", pass = group) %>%
+    filterAutoRep(by = "type", pass = type)
 
   if (type == "subscription") {
     autoRep <- autoRep %>%
-      filterAutoRep(., by = "owner", pass = user) %>%
-      filterAutoRep(., by = "organization", pass = orgId)
+      filterAutoRep(by = "owner", pass = user) %>%
+      filterAutoRep(by = "organization", pass = orgId)
   }
 
   dateFormat <- "%A %e. %B %Y"
