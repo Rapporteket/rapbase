@@ -810,7 +810,7 @@ makeAutoReportTab <- function(session,
             as.integer(strsplit(.data$runDayOfYear, ",")[[1]])
           ),
           startDate = .data$startDate,
-          returnFormat = .data$dateFormat
+          returnFormat = dateFormat
         ),
         "Endre" = as.character(
           shiny::actionButton(
