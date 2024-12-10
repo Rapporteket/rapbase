@@ -77,7 +77,7 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   l$owner <- owner
   l$ownerName <- ownerName
   l$email <- email
-  l$organization <- organization
+  l$organization <- as.character(organization)
   l$startDate <- as.character(startDate)
   l$terminateDate <- as.character(terminateDate)
   l$interval <- interval
