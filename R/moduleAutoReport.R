@@ -718,7 +718,7 @@ autoReportServer2 <- function(
 
     shiny::observeEvent(input$del_button, {
       repId <- strsplit(input$del_button, "__")[[1]][2]
-      deleteAutoReport(repId)
+      deleteAutoReport2(repId)
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,

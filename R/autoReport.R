@@ -103,6 +103,21 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   }
 }
 
+#' Delete existing report from db
+#'
+#' @param autoReportId String providing the auto report unique id
+#'
+#' @seealso \code{\link{createAutoReport}}
+#' @export
+
+deleteAutoReport2 <- function(autoReportId) {
+  query <- paste0('DELETE FROM autoreport WHERE id = "', autoReportId, '";')
+  dbConnect <- rapOpenDbConnection("autoreport")
+  DBI::dbExecute(dbConnect$con, query)
+  rapCloseDbConnection(dbConnect$con)
+  dbConnect <- NULL
+}
+
 #' Delete existing report from config
 #'
 #' @param autoReportId String providing the auto report unique id
