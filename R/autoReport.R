@@ -830,7 +830,7 @@ makeAutoReportTab <- function(session,
       r <- list(
         "Rapport" = autoRep[i, ]$synopsis,
         "Datakilde" = dataSource,
-        "Mottaker" = paste0(autoRep[i, ]$email, collapse = "<br>"),
+        "Mottaker" = autoRep[i, ]$email,
         "Periode" = autoRep[i, ]$intervalName,
         "Slutt" = strftime(
           as.Date(

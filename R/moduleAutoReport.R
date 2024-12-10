@@ -683,18 +683,15 @@ autoReportServer2 <- function(
 
     shiny::observeEvent(input$edit_button, {
       repId <- strsplit(input$edit_button, "__")[[1]][2]
-      rep <- readAutoReportData()[[repId]]
-
-      # try matching report by synopsis, fallback to currently selected
-      for (i in names(reports)) {
-        if (reports[[i]]$synopsis == rep$synopsis) {
-          autoReport$report <- i
-        }
+      rep <- readAutoReportData() %>% dplyr::filter(id == repId)
+      if (nrow(rep) != 1) {
+        message("Can not modify (either less or more than 1)")
+        return(NULL)
       }
       autoReport$org <- rep$organization
       autoReport$freq <- paste0(rep$intervalName, "-", rep$interval)
       autoReport$email <- rep$email
-      deleteAutoReport(repId)
+      deleteAutoReport(repId, target = "db")
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
