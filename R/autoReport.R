@@ -103,35 +103,29 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   }
 }
 
-#' Delete existing report from db
+#' Delete existing report from config/db
 #'
 #' @param autoReportId String providing the auto report unique id
+#' @param target autoreport-list in file or database
 #'
 #' @seealso \code{\link{createAutoReport}}
 #' @export
 
-deleteAutoReport2 <- function(autoReportId) {
-  query <- paste0('DELETE FROM autoreport WHERE id = "', autoReportId, '";')
-  dbConnect <- rapOpenDbConnection("autoreport")
-  DBI::dbExecute(dbConnect$con, query)
-  rapCloseDbConnection(dbConnect$con)
-  dbConnect <- NULL
-}
-
-#' Delete existing report from config
-#'
-#' @param autoReportId String providing the auto report unique id
-#'
-#' @seealso \code{\link{createAutoReport}}
-#' @export
-
-deleteAutoReport <- function(autoReportId) {
-  rd <- readAutoReportData()
-  # just stop with an error if report does not exist
-  stopifnot(!is.null(rd[[autoReportId]]))
-  ind <- names(rd) == autoReportId
-  rd <- rd[!ind]
-  writeAutoReportData(config = rd)
+deleteAutoReport <- function(autoReportId, target = "file") {
+  if (target == "file") {
+    rd <- readAutoReportData()
+    # just stop with an error if report does not exist
+    stopifnot(!is.null(rd[[autoReportId]]))
+    ind <- names(rd) == autoReportId
+    rd <- rd[!ind]
+    writeAutoReportData(config = rd)
+  } else if (target == "db") {
+    query <- paste0('DELETE FROM autoreport WHERE id = "', autoReportId, '";')
+    dbConnect <- rapOpenDbConnection("autoreport")
+    DBI::dbExecute(dbConnect$con, query)
+    rapCloseDbConnection(dbConnect$con)
+    dbConnect <- NULL
+  }
 }
 
 #' Read automated report metadata
