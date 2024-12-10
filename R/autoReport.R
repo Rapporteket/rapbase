@@ -800,39 +800,39 @@ makeAutoReportTab <- function(session,
   target <- getConfig(fileName = "rapbaseConfig.yml")$r$raplog$target
   if (target == "db") {
     l <- list()
-    for (i in 1:nrow(autoRep)) {
+    for (i in seq_len(nrow(autoRep))) {
       runDayOfYear <- as.vector(
-        as.integer(strsplit(autoRep[i,]$runDayOfYear, ",")[[1]])
+        as.integer(strsplit(autoRep[i, ]$runDayOfYear, ",")[[1]])
       )
       nextDate <- findNextRunDate(
         runDayOfYear = runDayOfYear,
-        startDate = autoRep[i,]$startDate,
+        startDate = autoRep[i, ]$startDate,
         returnFormat = dateFormat
       )
-      if (as.Date(nextDate, format = dateFormat) > autoRep[i,]$terminateDate) {
+      if (as.Date(nextDate, format = dateFormat) > autoRep[i, ]$terminateDate) {
         nextDate <- "Utl\u00F8pt"
       }
-      dataSource <- autoRep[i,]$organization
+      dataSource <- autoRep[i, ]$organization
       if (!is.null(mapOrgId)) {
         if (dataSource %in% mapOrgId$id) {
           dataSource <- mapOrgId$name[mapOrgId$id == dataSource]
         }
       }
       r <- list(
-        "Rapport" = autoRep[i,]$synopsis,
+        "Rapport" = autoRep[i, ]$synopsis,
         "Datakilde" = dataSource,
-        "Mottaker" = paste0(autoRep[i,]$email, collapse = "<br>"),
-        "Periode" = autoRep[i,]$intervalName,
+        "Mottaker" = paste0(autoRep[i, ]$email, collapse = "<br>"),
+        "Periode" = autoRep[i, ]$intervalName,
         "Slutt" = strftime(
           as.Date(
-            autoRep[i,]$terminateDate
+            autoRep[i, ]$terminateDate
           ),
           format = "%b %Y"
         ),
         "Neste" = nextDate,
         "Endre" = as.character(
           shiny::actionButton(
-            inputId = shiny::NS(namespace, paste0("edit__", autoRep[i,]$id)),
+            inputId = shiny::NS(namespace, paste0("edit__", autoRep[i, ]$id)),
             label = "",
             icon = shiny::icon("edit"),
             onclick = sprintf(
@@ -843,7 +843,7 @@ makeAutoReportTab <- function(session,
         ),
         "Slett" = as.character(
           shiny::actionButton(
-            inputId = shiny::NS(namespace, paste0("del__", autoRep[i,]$id)),
+            inputId = shiny::NS(namespace, paste0("del__", autoRep[i, ]$id)),
             label = "",
             icon = shiny::icon("trash"),
             onclick = sprintf(
@@ -854,10 +854,10 @@ makeAutoReportTab <- function(session,
         )
       )
       if (includeReportId) {
-        r <- c(r, list("id" = autoRep[i,]$id))
+        r <- c(r, list("id" = autoRep[i, ]$id))
       }
       if (!type %in% c("subscription")) {
-        r <- c(list(Ansvarlig = autoRep[i,]$ownerName), r)
+        r <- c(list(Ansvarlig = autoRep[i, ]$ownerName), r)
       }
       l <- rbind(l, r)
     }
