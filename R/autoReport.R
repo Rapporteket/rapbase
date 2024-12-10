@@ -140,7 +140,7 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   target <- config$r$autoReport$target
 
   if (target == "db") {
-    query <- "SELECT * FROM autoreport2;"
+    query <- "SELECT * FROM autoreport;"
     res <- rapbase::loadRegData(config$r$autoReport$key, query)
     return(res)
   } else if (target == "file") {
@@ -264,47 +264,48 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
   key <- rc$r$autoReport$key
 
   if (target == "db") {
-    mydata <- config |> purrr::map(purrr::modify_at("runDayOfYear", toString))
+    oppf <- config |> purrr::modify_at("runDayOfYear", toString)
     # Create empty data frame
     dataframe <- setNames(
       data.frame(
         matrix(ncol = 15, nrow = 0)
       ),
-      c("id", names(mydata[[1]]))
+      c("id", names(oppf))
     ) |>
       dplyr::mutate(dplyr::across(dplyr::everything(), as.character))
-    k <- 0
-    for (oppf in mydata) {
-      k <- k + 1
-      for (emails in oppf$email) {
-        dataframe <- dataframe |> tibble::add_row(
-          id = names(mydata)[k],
-          synopsis = oppf$synopsis,
-          package = oppf$package,
-          fun = oppf$fun,
-          params = paste0(
-            "{",
-            paste0(
-              "\"",
-              names(oppf$params),
-              "\": \"",
-              oppf$params,
-              "\"",
-              collapse = ", "
-            ), "}"
-          ),
-          owner = oppf$owner,
-          email = emails,
-          organization = oppf$organization,
-          terminateDate = oppf$terminateDate,
-          interval = oppf$interval,
-          intervalName = oppf$intervalName,
-          type = oppf$type,
-          ownerName = oppf$ownerName,
-          startDate = oppf$startDate,
-          runDayOfYear = oppf$runDayOfYear
-        )
-      }
+    for (email in oppf$email) {
+      dataframe <- dataframe |> tibble::add_row(
+        id = digest::digest(
+          paste0(
+            email,
+            as.character(as.integer(as.POSIXct(Sys.time())))
+          )
+        ),
+        synopsis = oppf$synopsis,
+        package = oppf$package,
+        fun = oppf$fun,
+        params = paste0(
+          "{",
+          paste0(
+            "\"",
+            names(oppf$params),
+            "\": \"",
+            oppf$params,
+            "\"",
+            collapse = ", "
+          ), "}"
+        ),
+        owner = oppf$owner,
+        email = email,
+        organization = oppf$organization,
+        terminateDate = oppf$terminateDate,
+        interval = oppf$interval,
+        intervalName = oppf$intervalName,
+        type = oppf$type,
+        ownerName = oppf$ownerName,
+        startDate = oppf$startDate,
+        runDayOfYear = oppf$runDayOfYear
+      )
     }
 
     con <- rapOpenDbConnection(key)$con
@@ -798,23 +799,40 @@ makeAutoReportTab <- function(session,
 
   target <- getConfig(fileName = "rapbaseConfig.yml")$r$raplog$target
   if (target == "db") {
-    output <- autoRep %>%
-      dplyr::transmute(
-        Rapport = .data$synopsis,
-        Datakilde = .data$organization,
-        Mottaker = .data$email,
-        Periode = .data$intervalName,
-        Slutt = as.Date(.data$terminateDate),
-        Neste = findNextRunDate(
-          runDayOfYear = as.vector(
-            as.integer(strsplit(.data$runDayOfYear, ",")[[1]])
+    l <- list()
+    for (i in 1:nrow(autoRep)) {
+      runDayOfYear <- as.vector(
+        as.integer(strsplit(autoRep[i,]$runDayOfYear, ",")[[1]])
+      )
+      nextDate <- findNextRunDate(
+        runDayOfYear = runDayOfYear,
+        startDate = autoRep[i,]$startDate,
+        returnFormat = dateFormat
+      )
+      if (as.Date(nextDate, format = dateFormat) > autoRep[i,]$terminateDate) {
+        nextDate <- "Utl\u00F8pt"
+      }
+      dataSource <- autoRep[i,]$organization
+      if (!is.null(mapOrgId)) {
+        if (dataSource %in% mapOrgId$id) {
+          dataSource <- mapOrgId$name[mapOrgId$id == dataSource]
+        }
+      }
+      r <- list(
+        "Rapport" = autoRep[i,]$synopsis,
+        "Datakilde" = dataSource,
+        "Mottaker" = paste0(autoRep[i,]$email, collapse = "<br>"),
+        "Periode" = autoRep[i,]$intervalName,
+        "Slutt" = strftime(
+          as.Date(
+            autoRep[i,]$terminateDate
           ),
-          startDate = .data$startDate,
-          returnFormat = dateFormat
+          format = "%b %Y"
         ),
+        "Neste" = nextDate,
         "Endre" = as.character(
           shiny::actionButton(
-            inputId = shiny::NS(namespace, paste0("edit__", .data$id)),
+            inputId = shiny::NS(namespace, paste0("edit__", autoRep[i,]$id)),
             label = "",
             icon = shiny::icon("edit"),
             onclick = sprintf(
@@ -825,7 +843,7 @@ makeAutoReportTab <- function(session,
         ),
         "Slett" = as.character(
           shiny::actionButton(
-            inputId = shiny::NS(namespace, paste0("del__", .data$id)),
+            inputId = shiny::NS(namespace, paste0("del__", autoRep[i,]$id)),
             label = "",
             icon = shiny::icon("trash"),
             onclick = sprintf(
@@ -834,19 +852,16 @@ makeAutoReportTab <- function(session,
             )
           )
         )
-      ) %>%
-      dplyr::mutate(
-        # Replace Neste with Utlopt if so, and stringify Slutt date
-        Neste = dplyr::case_when(
-          as.Date(Neste, format = dateFormat) > Slutt ~ "Utl\u00F8pt",
-          .default = .data$Neste
-        ),
-        Slutt = strftime(
-          .data$Slutt,
-          format = "%b %Y"
-        )
       )
-    return(as.matrix(output))
+      if (includeReportId) {
+        r <- c(r, list("id" = autoRep[i,]$id))
+      }
+      if (!type %in% c("subscription")) {
+        r <- c(list(Ansvarlig = autoRep[i,]$ownerName), r)
+      }
+      l <- rbind(l, r)
+    }
+    return(as.matrix(l))
   } else {
     l <- list()
     for (n in names(autoRep)) {
