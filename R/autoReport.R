@@ -88,7 +88,7 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   target <- config$r$autoReport$target
 
   if (target == "db") {
-    writeAutoReportData(config = l)
+    writeAutoReportData(config = list(l))
   } else {
     # Read current autoreport data and add new entry
     rd <- readAutoReportData()
@@ -149,7 +149,7 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   target <- config$r$autoReport$target
 
   if (target == "db") {
-    query <- "SELECT * FROM autoreport;"
+    query <- paste0("SELECT * FROM ", config$r$autoReport$key,";")
     res <- rapbase::loadRegData(config$r$autoReport$key, query)
     return(res)
   } else if (target == "file") {
@@ -281,39 +281,41 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
       c("id", names(config[[1]]))
     ) |>
       dplyr::mutate(dplyr::across(dplyr::everything(), as.character))
-    for (email in config$email) {
-      dataframe <- dataframe |> tibble::add_row(
-        id = digest::digest(
-          paste0(
-            email,
-            as.character(as.integer(as.POSIXct(Sys.time())))
-          )
-        ),
-        synopsis = config$synopsis,
-        package = config$package,
-        fun = config$fun,
-        params = paste0(
-          "{",
-          paste0(
-            "\"",
-            names(config$params),
-            "\": \"",
-            config$params,
-            "\"",
-            collapse = ", "
-          ), "}"
-        ),
-        owner = config$owner,
-        email = email,
-        organization = config$organization,
-        terminateDate = config$terminateDate,
-        interval = config$interval,
-        intervalName = config$intervalName,
-        type = config$type,
-        ownerName = config$ownerName,
-        startDate = config$startDate,
-        runDayOfYear = toString(config$runDayOfYear)
-      )
+    for (element in config) {
+      for (email in element$email) {
+        dataframe <- dataframe |> tibble::add_row(
+          id = digest::digest(
+            paste0(
+              email,
+              as.character(as.integer(as.POSIXct(Sys.time())))
+            )
+          ),
+          synopsis = element$synopsis,
+          package = element$package,
+          fun = element$fun,
+          params = paste0(
+            "{",
+            paste0(
+              "\"",
+              names(element$params),
+              "\": \"",
+              element$params,
+              "\"",
+              collapse = ", "
+            ), "}"
+          ),
+          owner = element$owner,
+          email = email,
+          organization = element$organization,
+          terminateDate = element$terminateDate,
+          interval = element$interval,
+          intervalName = element$intervalName,
+          type = element$type,
+          ownerName = element$ownerName,
+          startDate = element$startDate,
+          runDayOfYear = toString(element$runDayOfYear)
+        )
+      }
     }
 
     con <- rapOpenDbConnection(key)$con

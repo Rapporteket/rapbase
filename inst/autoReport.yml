@@ -8,6 +8,7 @@ testAutoReportFirst:
   - aChar: a
   - anExp: Sys.Date()
   owner: ttester
+  ownerName: 'Tore Tester'
   email:
   - Some One <someone@nowhere.com>
   - Jesus <jesus@sky.com>
@@ -29,6 +30,7 @@ testAutoReportSecond:
   - aChar: '3.14'
   - anExp: sessionInfo()
   owner: ttester
+  ownerName: 'Tore Tester'
   email: <someone@nowhere.com>
   organization: '999999'
   startDate: '1900-01-01'
@@ -72,6 +74,7 @@ testAutoReportThird:
   - aChar: someString
   - anExp: Sys.Date()
   owner: ttester
+  ownerName: 'Tore Tester'
   email: tester@skde.no
   organization: '999999'
   startDate: '1900-01-01'
@@ -88,6 +91,7 @@ cd467ac14dd848b8798a384a3e51512c:
   - aChar: someString
   - anExp: Sys.Date()
   owner: ttester
+  ownerName: 'Tore Tester'
   email: tester@skde.no
   organization: '999999'
   startDate: '1900-01-01'

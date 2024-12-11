@@ -115,8 +115,10 @@ test_that("a sample of auto report data can be written to db", {
 
 test_that("sample auto report data can be read from db", {
   check_db()
-  expect_equal(class(readAutoReportData()), "list")
-  expect_identical(readAutoReportData(), upgradeAutoReportData(arSample))
+  expect_equal(nrow(readAutoReportData()), 7)
+  expect_equal(class(readAutoReportData()), "data.frame")
+  writeAutoReportData(config = arSample)
+  expect_equal(nrow(readAutoReportData()), 14)
 })
 
 
