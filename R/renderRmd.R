@@ -72,7 +72,8 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
     output_file = tempfile(pattern = ""),
     clean = TRUE,
     params = params,
-    envir = new.env()
+    envir = new.env(),
+    quiet = TRUE
   )
 
   if (outputType == "html_fragment") {
