@@ -801,14 +801,14 @@ makeAutoReportTab <- function(session,
       filterAutoRep(by = "organization", pass = orgId)
   }
 
-  if (length(autoRep$id) == 0) {
-    return(as.matrix(autoRep))
-  }
-
   dateFormat <- "%A %e. %B %Y"
 
   target <- getConfig(fileName = "rapbaseConfig.yml")$r$raplog$target
   if (target == "db") {
+    if (length(autoRep$id) == 0) {
+      return(as.matrix(autoRep))
+    }
+
     l <- list()
     for (i in seq_len(nrow(autoRep))) {
       runDayOfYear <- as.vector(
