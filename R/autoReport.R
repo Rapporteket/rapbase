@@ -273,16 +273,15 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
   key <- rc$r$autoReport$key
 
   if (target == "db") {
-    oppf <- config |> purrr::modify_at("runDayOfYear", toString)
     # Create empty data frame
     dataframe <- setNames(
       data.frame(
         matrix(ncol = 15, nrow = 0)
       ),
-      c("id", names(oppf))
+      c("id", names(config[[1]]))
     ) |>
       dplyr::mutate(dplyr::across(dplyr::everything(), as.character))
-    for (email in oppf$email) {
+    for (email in config$email) {
       dataframe <- dataframe |> tibble::add_row(
         id = digest::digest(
           paste0(
@@ -290,30 +289,30 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
             as.character(as.integer(as.POSIXct(Sys.time())))
           )
         ),
-        synopsis = oppf$synopsis,
-        package = oppf$package,
-        fun = oppf$fun,
+        synopsis = config$synopsis,
+        package = config$package,
+        fun = config$fun,
         params = paste0(
           "{",
           paste0(
             "\"",
-            names(oppf$params),
+            names(config$params),
             "\": \"",
-            oppf$params,
+            config$params,
             "\"",
             collapse = ", "
           ), "}"
         ),
-        owner = oppf$owner,
+        owner = config$owner,
         email = email,
-        organization = oppf$organization,
-        terminateDate = oppf$terminateDate,
-        interval = oppf$interval,
-        intervalName = oppf$intervalName,
-        type = oppf$type,
-        ownerName = oppf$ownerName,
-        startDate = oppf$startDate,
-        runDayOfYear = oppf$runDayOfYear
+        organization = config$organization,
+        terminateDate = config$terminateDate,
+        interval = config$interval,
+        intervalName = config$intervalName,
+        type = config$type,
+        ownerName = config$ownerName,
+        startDate = config$startDate,
+        runDayOfYear = toString(config$runDayOfYear)
       )
     }
 
