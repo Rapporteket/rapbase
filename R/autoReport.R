@@ -149,7 +149,7 @@ readAutoReportData <- function(fileName = "autoReport.yml",
   target <- config$r$autoReport$target
 
   if (target == "db") {
-    query <- paste0("SELECT * FROM ", config$r$autoReport$key,";")
+    query <- paste0("SELECT * FROM ", config$r$autoReport$key, ";")
     res <- rapbase::loadRegData(config$r$autoReport$key, query)
     return(res)
   } else if (target == "file") {
