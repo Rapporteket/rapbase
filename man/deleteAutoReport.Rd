@@ -2,15 +2,17 @@
 % Please edit documentation in R/autoReport.R
 \name{deleteAutoReport}
 \alias{deleteAutoReport}
-\title{Delete existing report from config}
+\title{Delete existing report from config/db}
 \usage{
-deleteAutoReport(autoReportId)
+deleteAutoReport(autoReportId, target = "file")
 }
 \arguments{
 \item{autoReportId}{String providing the auto report unique id}
+
+\item{target}{autoreport-list in file or database}
 }
 \description{
-Delete existing report from config
+Delete existing report from config/db
 }
 \seealso{
 \code{\link{createAutoReport}}

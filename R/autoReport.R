@@ -274,7 +274,7 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 
   if (target == "db") {
     # Create empty data frame
-    dataframe <- setNames(
+    dataframe <- stats::setNames(
       data.frame(
         matrix(ncol = 15, nrow = 0)
       ),
