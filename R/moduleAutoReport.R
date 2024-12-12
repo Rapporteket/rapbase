@@ -585,6 +585,8 @@ autoReportServer2 <- function(
     quarter = "Kvartalsvis-quarter",
     year = "\u00C5rlig-year"
   )
+  # Either get autoreport-list from file or database
+  target <- getConfig(fileName = "rapbaseConfig.yml")$r$autoReport$target
 
   shiny::moduleServer(id, function(input, output, session) {
     autoReport <- shiny::reactiveValues(
@@ -683,15 +685,25 @@ autoReportServer2 <- function(
 
     shiny::observeEvent(input$edit_button, {
       repId <- strsplit(input$edit_button, "__")[[1]][2]
-      rep <- readAutoReportData() %>% dplyr::filter(id == repId)
-      if (nrow(rep) != 1) {
-        message("Can not modify (either less or more than 1)")
-        return(NULL)
+      if (target == "db") {
+        rep <- readAutoReportData() %>% dplyr::filter(id == repId)
+        if (nrow(rep) != 1) {
+          message("Can not modify (either less or more than 1)")
+          return(NULL)
+        }
+      } else {
+        rep <- readAutoReportData()[[repId]]
+        # try matching report by synopsis, fallback to currently selected
+        for (i in names(reports)) {
+          if (reports[[i]]$synopsis == rep$synopsis) {
+            autoReport$report <- i
+          }
+        }
       }
       autoReport$org <- rep$organization
       autoReport$freq <- paste0(rep$intervalName, "-", rep$interval)
       autoReport$email <- rep$email
-      deleteAutoReport(repId, target = "db")
+      deleteAutoReport(repId, target = target)
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
@@ -715,7 +727,7 @@ autoReportServer2 <- function(
 
     shiny::observeEvent(input$del_button, {
       repId <- strsplit(input$del_button, "__")[[1]][2]
-      deleteAutoReport(repId, target = "db")
+      deleteAutoReport(repId, target = target)
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
