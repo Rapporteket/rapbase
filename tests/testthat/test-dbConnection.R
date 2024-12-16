@@ -101,6 +101,7 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
   expect_true(RMariaDB::dbIsValid(l$con))
   rapCloseDbConnection(l$con)
   expect_false(RMariaDB::dbIsValid(l$con))
+  l <- NULL
 })
 
 test_that("Deprecated defunct interface provides an error", {
@@ -153,6 +154,7 @@ test_that("Bigints are returned as integers (not bit64::integer64)", {
   query <- "SELECT * FROM testTable;"
   df <- DBI::dbGetQuery(l$con, query)
   rapCloseDbConnection(l$con)
+  l <- NULL
   expect_is(df[["someBigInt"]], "integer")
 })
 
@@ -170,6 +172,7 @@ if (is.null(checkDb(is_test_that = FALSE))) {
   con <- rapbase::rapOpenDbConnection(regName)$con
   RMariaDB::dbExecute(con, "DROP DATABASE rapbase;")
   rapbase::rapCloseDbConnection(con)
+  con <- NULL
 }
 
 # restore initial state

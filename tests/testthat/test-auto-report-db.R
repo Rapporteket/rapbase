@@ -96,6 +96,7 @@ createAutoReportTab <- function() {
     RMariaDB::dbExecute(con, queries[i])
   }
   rapbase::rapCloseDbConnection(con)
+  con <- NULL
 }
 
 test_that("a db for auto report defs can be created", {
