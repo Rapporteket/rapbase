@@ -597,7 +597,8 @@ autoReportServer2 <- function(
         group = registryName,
         orgId = NULL,
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        target = target
       ),
       report = names(reports)[1],
       org = unlist(orgs, use.names = FALSE)[1],
@@ -618,7 +619,8 @@ autoReportServer2 <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        target = target
       ),
       ignoreNULL = FALSE
     )
@@ -668,7 +670,8 @@ autoReportServer2 <- function(
         ),
         startDate = input$start,
         interval = interval,
-        intervalName = strsplit(input$freq, "-")[[1]][1]
+        intervalName = strsplit(input$freq, "-")[[1]][1],
+        target = target
       )
       autoReport$tab <-
         makeAutoReportTab(
@@ -678,7 +681,8 @@ autoReportServer2 <- function(
           group = registryName,
           orgId = user$org(),
           type = type,
-          mapOrgId = orgList2df(orgs)
+          mapOrgId = orgList2df(orgs),
+          target = target
         )
       autoReport$email <- vector()
     })
@@ -686,7 +690,8 @@ autoReportServer2 <- function(
     shiny::observeEvent(input$edit_button, {
       repId <- strsplit(input$edit_button, "__")[[1]][2]
       if (target == "db") {
-        rep <- readAutoReportData() %>% dplyr::filter(id == repId)
+        rep <- readAutoReportData(target = target) %>%
+          dplyr::filter(id == repId)
         if (nrow(rep) != 1) {
           message("Can not modify (either less or more than 1)")
           return(NULL)
@@ -711,7 +716,8 @@ autoReportServer2 <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        target = target
       )
 
       if (rep$type == "subscription") {
@@ -735,7 +741,8 @@ autoReportServer2 <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        target = target
       )
     })
 

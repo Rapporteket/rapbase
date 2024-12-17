@@ -38,6 +38,7 @@
 #' @param dryRun Logical defining if global auto report config actually is to
 #' be updated. If set to TRUE the actual config (all of it) will be returned by
 #' the function. FALSE by default
+#' @param target List of autoreports in file or database
 #'
 #' @return Nothing unless dryRun is set TRUE in which case a list of all config
 #' will be returned
@@ -49,7 +50,8 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
                              email, organization, runDayOfYear,
                              startDate = as.character(Sys.Date()),
                              terminateDate = NULL, interval = "",
-                             intervalName = "", dryRun = FALSE) {
+                             intervalName = "", dryRun = FALSE,
+                             target = "file") {
 
   # When NULL, set expiry date based on context
   if (is.null(terminateDate)) {
@@ -84,29 +86,26 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
   l$intervalName <- intervalName
   l$runDayOfYear <- runDayOfYear
 
-  config <- getConfig(fileName = "rapbaseConfig.yml")
-  target <- config$r$autoReport$target
-
   if (target == "db") {
-    writeAutoReportData(config = list(l))
+    rd <- list(l)
   } else {
     # Read current autoreport data and add new entry
     rd <- readAutoReportData()
 
     rd[[eval(autoRepId)]] <- l
+  }
 
-    if (dryRun) {
-      rd
-    } else {
-      writeAutoReportData(config = rd)
-    }
+  if (dryRun) {
+    rd
+  } else {
+    writeAutoReportData(config = rd, target = target)
   }
 }
 
 #' Delete existing report from config/db
 #'
 #' @param autoReportId String providing the auto report unique id
-#' @param target autoreport-list in file or database
+#' @param target List of autoreports in file or database
 #'
 #' @seealso \code{\link{createAutoReport}}
 #' @export
@@ -136,6 +135,7 @@ deleteAutoReport <- function(autoReportId, target = "file") {
 #' configuration file resides. A configuration file within an R-package is
 #' only used in case the environmental variable 'R_RAP_CONFIG_PATH' is not
 #' defined (empty)
+#' @param target List of autoreports in file or database
 #'
 #' @return a list of yaml data
 #' @export
@@ -143,12 +143,11 @@ deleteAutoReport <- function(autoReportId, target = "file") {
 #' @examples
 #' readAutoReportData()
 readAutoReportData <- function(fileName = "autoReport.yml",
-                               packageName = "rapbase") {
-  config <- getConfig(fileName = "rapbaseConfig.yml")
-
-  target <- config$r$autoReport$target
+                               packageName = "rapbase",
+                               target = "file") {
 
   if (target == "db") {
+    config <- getConfig(fileName = "rapbaseConfig.yml")
     query <- paste0("SELECT * FROM ", config$r$autoReport$key, ";")
     res <- rapbase::loadRegData(config$r$autoReport$key, query)
     return(res)
@@ -170,9 +169,9 @@ readAutoReportData <- function(fileName = "autoReport.yml",
     }
 
     conf <- yaml::yaml.load_file(config_file)
-    upgradeAutoReportData(conf)
   }
 
+  upgradeAutoReportData(conf)
   # conf
 }
 
@@ -255,6 +254,7 @@ upgradeAutoReportData <- function(config) {
 #'
 #' @inheritParams readAutoReportData
 #' @param config a list of yaml configuration
+#' @param target List of autoreports in file or database
 #'
 #' @return NULL
 #' @export
@@ -267,12 +267,12 @@ upgradeAutoReportData <- function(config) {
 #' }
 #'
 writeAutoReportData <- function(fileName = "autoReport.yml", config,
-                                packageName = "rapbase") {
-  rc <- getConfig(fileName = "rapbaseConfig.yml")
-  target <- rc$r$autoReport$target
-  key <- rc$r$autoReport$key
+                                packageName = "rapbase",
+                                target = "file") {
 
   if (target == "db") {
+    rc <- getConfig(fileName = "rapbaseConfig.yml")
+    key <- rc$r$autoReport$key
     # Create empty data frame
     dataframe <- stats::setNames(
       data.frame(
@@ -380,6 +380,7 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #' represents the registry name
 #' @param pass Character vector defining the values of the filtering entity that
 #' will allow reports to pass through the filter
+#' @param target List of autoreports in file or database
 #'
 #' @return List of auto reports matching the filtering criteria
 #' @export
@@ -388,10 +389,8 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #' ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
 #' filterAutoRep(ar, "type", "B") # ar2
 #'
-filterAutoRep <- function(data, by, pass) {
+filterAutoRep <- function(data, by, pass, target = "file") {
   stopifnot(by %in% c("package", "type", "owner", "organization"))
-  rc <- getConfig(fileName = "rapbaseConfig.yml")
-  target <- rc$r$autoReport$target
 
   if (length(data) == 0) {
     list()
@@ -775,6 +774,7 @@ findNextRunDate <- function(runDayOfYear,
 #'   report data will also be used
 #' @param includeReportId Logical if the unique report id should be added as
 #'   the last column in the table. FALSE by default.
+#' @param target autoreport-list in file or database
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
 #' @importFrom magrittr "%>%"
@@ -788,22 +788,22 @@ makeAutoReportTab <- function(session,
                               orgId = rapbase::getUserReshId(session),
                               type = "subscription",
                               mapOrgId = NULL,
-                              includeReportId = FALSE) {
+                              includeReportId = FALSE,
+                              target = "file") {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
-  autoRep <- readAutoReportData() %>%
-    filterAutoRep(by = "package", pass = group) %>%
-    filterAutoRep(by = "type", pass = type)
+  autoRep <- readAutoReportData(target = target) %>%
+    filterAutoRep(by = "package", pass = group, target = target) %>%
+    filterAutoRep(by = "type", pass = type, target = target)
 
   if (type == "subscription") {
     autoRep <- autoRep %>%
-      filterAutoRep(by = "owner", pass = user) %>%
-      filterAutoRep(by = "organization", pass = orgId)
+      filterAutoRep(by = "owner", pass = user, target = target) %>%
+      filterAutoRep(by = "organization", pass = orgId, target = target)
   }
 
   dateFormat <- "%A %e. %B %Y"
 
-  target <- getConfig(fileName = "rapbaseConfig.yml")$r$raplog$target
   if (target == "db") {
     if (length(autoRep$id) == 0) {
       return(as.matrix(autoRep))

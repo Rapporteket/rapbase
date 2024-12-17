@@ -4,7 +4,7 @@
 \alias{filterAutoRep}
 \title{Filter auto report data}
 \usage{
-filterAutoRep(data, by, pass)
+filterAutoRep(data, by, pass, target = "file")
 }
 \arguments{
 \item{data}{List (nested) specifying auto reports to be filtered. May be
@@ -16,6 +16,8 @@ represents the registry name}
 
 \item{pass}{Character vector defining the values of the filtering entity that
 will allow reports to pass through the filter}
+
+\item{target}{List of autoreports in file or database}
 }
 \value{
 List of auto reports matching the filtering criteria

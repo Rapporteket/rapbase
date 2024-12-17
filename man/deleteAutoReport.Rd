@@ -9,7 +9,7 @@ deleteAutoReport(autoReportId, target = "file")
 \arguments{
 \item{autoReportId}{String providing the auto report unique id}
 
-\item{target}{autoreport-list in file or database}
+\item{target}{List of autoreports in file or database}
 }
 \description{
 Delete existing report from config/db
