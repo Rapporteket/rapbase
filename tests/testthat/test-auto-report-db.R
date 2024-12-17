@@ -122,6 +122,60 @@ test_that("sample auto report data can be read from db", {
   expect_equal(nrow(readAutoReportData(target = "db")), 14)
 })
 
+# Test autoReportServer2 with db.
+# Tests are copied from test-moduleAutoReport.R since the current file
+# is ready for db.
+withr::with_envvar(
+  new = c(
+    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
+    "FALK_APP_ID" = "80"
+  ),
+  code = {
+    check_db()
+    registryName <- "autoreportTest"
+    ## make a list for report metadata
+    reports <- list(
+      FirstReport = list(
+        synopsis = "First example report",
+        fun = "fun1",
+        paramNames = c("organization", "outputFormat"),
+        paramValues = c(100082, "html")
+      ),
+      SecondReport = list(
+        synopsis = "Second example report",
+        fun = "fun2",
+        paramNames = c("organization", "outputFormat"),
+        paramValues = c(102966, "pdf")
+      )
+    )
+    ## make a list of organization names and numbers
+    orgs <- list(
+      OrgOne = 100082,
+      OrgTwo = 102966
+    )
+    type <- "subscription"
+    user <- userAttribute(unit = 1)
+    for (n in names(user)) {
+      user[[n]] <- shiny::reactiveVal(user[[n]])
+    }
+
+    test_that("module server provides sensible output", {
+      shiny::testServer(autoReportServer2,
+                        args = list(
+                          registryName = registryName, type = type,
+                          reports = reports, orgs = orgs, user = user
+                        ),
+                        {
+                          session$setInputs(report = "FirstReport")
+                          expect_equal(class(output$reports), "list")
+                        }
+      )
+    })
+
+  }
+)
+
+
 
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
