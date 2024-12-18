@@ -132,7 +132,6 @@ withr::with_envvar(
     "FALK_APP_ID" = "80"
   ),
   code = {
-    check_db()
     registryName <- "autoreportTest"
     ## make a list for report metadata
     reports <- list(
@@ -170,6 +169,72 @@ withr::with_envvar(
                           session$setInputs(report = "FirstReport")
                           expect_equal(class(output$reports), "list")
                         }
+      )
+    })
+
+    test_that("no report select list created when no reports available", {
+      shiny::testServer(
+        autoReportServer2,
+        args = list(
+          registryName = registryName, type = type,
+          reports = NULL, orgs = orgs, user = user
+        ),
+        {
+          expect_true(is.null(output$reports))
+        }
+      )
+    })
+    type <- "dispatchment"
+    test_that("email can be added and deleted for dispatchment", {
+      shiny::testServer(
+        autoReportServer2,
+        args = list(
+          registryName = registryName, type = type,
+          org = shiny::reactive(100082),
+          reports = reports, orgs = orgs, user = user
+        ),
+        {
+          session$setInputs(email = "true@email.no")
+          expect_equal(length(autoReport$email), 0)
+          session$setInputs(addEmail = 1)
+          expect_equal(autoReport$email[1], "true@email.no")
+          session$setInputs(delEmail = 1)
+          expect_equal(length(autoReport$email), 0)
+        }
+      )
+    })
+
+
+    test_that("add email button is not created if email is not valid", {
+      shiny::testServer(
+        autoReportServer2,
+        args = list(
+          registryName = registryName, type = type,
+          org = shiny::reactive(100082),
+          reports = reports, orgs = orgs, user = user
+        ),
+        {
+          session$setInputs(email = "invalid@email-format")
+          expect_true(is.null(output$editEmail))
+          session$setInputs(email = "invalid@email-format.o")
+          expect_true(is.null(output$editEmail))
+          session$setInputs(email = "invalid.email-format.on")
+          expect_true(is.null(output$editEmail))
+        }
+      )
+    })
+
+    test_that("no submit button is provided when module is not eligible", {
+      shiny::testServer(
+        autoReportServer2,
+        args = list(
+          registryName = registryName, type = "subscription",
+          reports = reports, orgs = orgs, eligible = FALSE, user = user
+        ),
+        {
+          session$setInputs(email = "valid.email@format.no")
+          expect_true(is.null(output$makeAutoReport))
+        }
       )
     })
 
