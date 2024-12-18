@@ -7,7 +7,8 @@
 writeAutoReportData(
   fileName = "autoReport.yml",
   config,
-  packageName = "rapbase"
+  packageName = "rapbase",
+  target = "file"
 )
 }
 \arguments{
@@ -20,6 +21,8 @@ writeAutoReportData(
 configuration file resides. A configuration file within an R-package is
 only used in case the environmental variable 'R_RAP_CONFIG_PATH' is not
 defined (empty)}
+
+\item{target}{List of autoreports in file or database}
 }
 \description{
 Write automated report metadata
