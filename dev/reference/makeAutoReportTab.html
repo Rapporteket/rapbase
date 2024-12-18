@@ -56,7 +56,8 @@ object provided or environmental variables when run inside an app container.</p>
 <span>  orgId <span class="op">=</span> <span class="fu">rapbase</span><span class="fu">::</span><span class="fu"><a href="userAttribute.html">getUserReshId</a></span><span class="op">(</span><span class="va">session</span><span class="op">)</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"subscription"</span>,</span>
 <span>  mapOrgId <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  includeReportId <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  includeReportId <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  target <span class="op">=</span> <span class="st">"file"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -111,6 +112,10 @@ report data will also be used</p></dd>
 <dt id="arg-includereportid">includeReportId<a class="anchor" aria-label="anchor" href="#arg-includereportid"></a></dt>
 <dd><p>Logical if the unique report id should be added as
 the last column in the table. FALSE by default.</p></dd>
+
+
+<dt id="arg-target">target<a class="anchor" aria-label="anchor" href="#arg-target"></a></dt>
+<dd><p>autoreport-list in file or database</p></dd>
 
 </dl></div>
     <div class="section level2">

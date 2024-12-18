@@ -42,7 +42,11 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">readAutoReportData</span><span class="op">(</span>fileName <span class="op">=</span> <span class="st">"autoReport.yml"</span>, packageName <span class="op">=</span> <span class="st">"rapbase"</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">readAutoReportData</span><span class="op">(</span></span>
+<span>  fileName <span class="op">=</span> <span class="st">"autoReport.yml"</span>,</span>
+<span>  packageName <span class="op">=</span> <span class="st">"rapbase"</span>,</span>
+<span>  target <span class="op">=</span> <span class="st">"file"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -60,6 +64,10 @@ configuration file resides. A configuration file within an R-package is
 only used in case the environmental variable 'R_RAP_CONFIG_PATH' is not
 defined (empty)</p></dd>
 
+
+<dt id="arg-target">target<a class="anchor" aria-label="anchor" href="#arg-target"></a></dt>
+<dd><p>List of autoreports in file or database</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -70,7 +78,6 @@ defined (empty)</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">readAutoReportData</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Auto report data were upgraded: auto reports with no type defined now set to 'subscription'.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Auto report data were upgraded: auto reports with no owner name defined now set to an empty string.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Auto report data were upgraded: function params list un-nested. Please check that autor reports for registries are still working as expected.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportFirst</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportFirst$synopsis</span>
@@ -99,6 +106,9 @@ defined (empty)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportFirst$owner</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ttester"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportFirst$ownerName</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Tore Tester"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportFirst$email</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Some One &lt;someone@nowhere.com&gt;" "Jesus &lt;jesus@sky.com&gt;"         </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -119,9 +129,6 @@ defined (empty)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportFirst$runDayOfYear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 30 60</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportFirst$ownerName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportSecond</span>
@@ -151,6 +158,9 @@ defined (empty)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportSecond$owner</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ttester"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportSecond$ownerName</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Tore Tester"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportSecond$email</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "&lt;someone@nowhere.com&gt;"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -171,9 +181,6 @@ defined (empty)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportSecond$runDayOfYear</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 30 60 90</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportSecond$ownerName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $testAutoReportThird</span>
@@ -255,6 +262,9 @@ defined (empty)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`5a0e7e28fd4c641be535a2b292a6b7b2`$owner</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ttester"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $`5a0e7e28fd4c641be535a2b292a6b7b2`$ownerName</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Tore Tester"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`5a0e7e28fd4c641be535a2b292a6b7b2`$email</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tester@skde.no"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -278,9 +288,6 @@ defined (empty)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $`5a0e7e28fd4c641be535a2b292a6b7b2`$type</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "subscription"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $`5a0e7e28fd4c641be535a2b292a6b7b2`$ownerName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cd467ac14dd848b8798a384a3e51512c</span>
@@ -307,6 +314,9 @@ defined (empty)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cd467ac14dd848b8798a384a3e51512c$owner</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ttester"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $cd467ac14dd848b8798a384a3e51512c$ownerName</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Tore Tester"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cd467ac14dd848b8798a384a3e51512c$email</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "tester@skde.no"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -330,9 +340,6 @@ defined (empty)</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $cd467ac14dd848b8798a384a3e51512c$type</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "subscription"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $cd467ac14dd848b8798a384a3e51512c$ownerName</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
