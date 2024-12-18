@@ -125,6 +125,7 @@ test_that("sample auto report data can be read from db", {
 # Test autoReportServer2 with db.
 # Tests are copied from test-moduleAutoReport.R since the current file
 # is ready for db.
+if (is.null(check_db(is_test_that = FALSE))) {
 withr::with_envvar(
   new = c(
     "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
@@ -174,7 +175,7 @@ withr::with_envvar(
 
   }
 )
-
+}
 
 
 # remove test db
