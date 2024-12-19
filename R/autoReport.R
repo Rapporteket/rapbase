@@ -525,14 +525,11 @@ getRegs <- function(config) {
 
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                           type = c("subscription", "dispatchment"),
-                          dryRun = FALSE) {
-  # nolint start: object_name_linter
-  . <- ""
-  # nolint end
+                          target = "file", dryRun = FALSE) {
 
   # get report candidates
-  reps <- readAutoReportData() %>%
-    filterAutoRep(., by = "type", pass = type)
+  reps <- readAutoReportData(target = target) %>%
+    filterAutoRep(by = "type", pass = type, target = target)
 
   # standard text for email body
   stdTxt <- readr::read_file(
@@ -547,15 +544,30 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
   for (i in seq_len(length(reps))) {
     tryCatch(
       {
-        rep <- reps[[i]]
+        if (target == "db") {
+          rep <- reps[i, ]
+          runDayOfYear <- as.vector(
+            as.integer(
+              strsplit(
+                rep$runDayOfYear,
+                ","
+              )[[1]]
+            )
+          )
+          params <- jsonlite::fromJSON(rep$params)
+        } else {
+          rep <- reps[[i]]
+          runDayOfYear <- rep$runDayOfYear
+          params <- rep$params
+        }
         if (
-          dayNumber %in% rep$runDayOfYear
+          dayNumber %in% runDayOfYear
           && as.Date(rep$terminateDate) > Sys.Date()
           && as.Date(rep$startDate) <= Sys.Date()
         ) {
           # get explicit referenced function and call it
           f <- .getFun(paste0(rep$package, "::", rep$fun))
-          content <- do.call(what = f, args = rep$params)
+          content <- do.call(what = f, args = params)
           if (rep$type == "bulletin") {
             text <- content
             attFile <- NULL
