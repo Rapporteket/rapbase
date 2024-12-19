@@ -542,7 +542,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
   # get sender from common config
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
-  for (i in seq_len(dim(reps)[1])) {
+  for (i in seq_len(ifelse(target == "db", dim(reps)[1], length(reps)))) {
     tryCatch(
       {
         if (target == "db") {
