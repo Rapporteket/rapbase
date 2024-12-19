@@ -7,6 +7,7 @@
 runAutoReport(
   dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
   type = c("subscription", "dispatchment"),
+  target = "file",
   dryRun = FALSE
 )
 }
@@ -19,6 +20,8 @@ yday is base 0)}
 May contain one or more of
 \code{c("subscription", "dispatchment", "bulletin")}. Defaults value set to
 \code{c("subscription", "dispatchment")}.}
+
+\item{target}{List of autoreports in file or database}
 
 \item{dryRun}{Logical defining if emails are to be sent. If TRUE a message
 with reference to the payload file is given but no emails will actually be
