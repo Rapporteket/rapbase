@@ -6,6 +6,7 @@
 \usage{
 runAutoReport(
   dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
+  dato = Sys.Date(),
   type = c("subscription", "dispatchment"),
   target = "file",
   dryRun = FALSE
