@@ -508,6 +508,7 @@ getRegs <- function(config) {
 #' May contain one or more of
 #' \code{c("subscription", "dispatchment", "bulletin")}. Defaults value set to
 #' \code{c("subscription", "dispatchment")}.
+#' @param target List of autoreports in file or database
 #' @param dryRun Logical defining if emails are to be sent. If TRUE a message
 #' with reference to the payload file is given but no emails will actually be
 #' sent. Default is FALSE
