@@ -412,15 +412,8 @@ autoReportServer <- function(id, registryName, type, org = NULL,
             as.character(shiny::icon("calendar")), "F\u00F8rste utsending:"
           )
         ),
-        # if freq is year make first issue tomorrow, otherwise postpone by freq
-        value = if (strsplit(input$freq, "-")[[1]][2] == "year") {
-          Sys.Date() + 1
-        } else {
-          seq.Date(Sys.Date(),
-            by = strsplit(input$freq, "-")[[1]][2],
-            length.out = 2
-          )[2]
-        },
+        # set the following day as default
+        value = Sys.Date() + 1,
         min = Sys.Date() + 1,
         max = seq.Date(Sys.Date(), length.out = 2, by = "1 years")[2] - 1
       )
@@ -799,15 +792,8 @@ autoReportServer2 <- function(
             as.character(shiny::icon("calendar")), "F\u00F8rste utsending:"
           )
         ),
-        # if freq is year make first issue tomorrow, otherwise postpone by freq
-        value = if (strsplit(input$freq, "-")[[1]][2] == "year") {
-          Sys.Date() + 1
-        } else {
-          seq.Date(Sys.Date(),
-            by = strsplit(input$freq, "-")[[1]][2],
-            length.out = 2
-          )[2]
-        },
+        # set default to following day
+        value = Sys.Date() + 1,
         min = Sys.Date() + 1,
         max = seq.Date(Sys.Date(), length.out = 2, by = "1 years")[2] - 1
       )
