@@ -283,7 +283,7 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
       dplyr::mutate(dplyr::across(dplyr::everything(), as.character))
     for (element in config) {
       for (email in element$email) {
-        dataframe <- dataframe |> tibble::add_row(
+        dataframe <- dataframe |> dplyr::add_row(
           id = digest::digest(
             paste0(
               email,
@@ -512,6 +512,8 @@ getRegs <- function(config) {
 #' @param dryRun Logical defining if emails are to be sent. If TRUE a message
 #' with reference to the payload file is given but no emails will actually be
 #' sent. Default is FALSE
+#' @param dato Date-class date when report will be run first time. Default value
+#' is set to \code{Sys.Date()}
 #'
 #' @return Emails with corresponding file attachment. If dryRun == TRUE just a
 #' message
@@ -525,6 +527,7 @@ getRegs <- function(config) {
 #'
 
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
+                          dato = Sys.Date(),
                           type = c("subscription", "dispatchment"),
                           target = "file", dryRun = FALSE) {
 
@@ -547,25 +550,26 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
       {
         if (target == "db") {
           rep <- reps[i, ]
-          runDayOfYear <- as.vector(
-            as.integer(
-              strsplit(
-                rep$runDayOfYear,
-                ","
-              )[[1]]
-            )
-          )
           params <- jsonlite::fromJSON(rep$params)
         } else {
           rep <- reps[[i]]
-          runDayOfYear <- rep$runDayOfYear
           params <- rep$params
         }
-        if (
-          dayNumber %in% runDayOfYear
+        if ((
+          target == "file"
+          && dayNumber %in% rep$runDayOfYear
           && as.Date(rep$terminateDate) > Sys.Date()
           && as.Date(rep$startDate) <= Sys.Date()
-        ) {
+        ) || (
+          target == "db"
+          && as.Date(rep$startDate) <= dato
+          && as.Date(rep$terminateDate) > dato
+          && dato %in% timeplyr::time_seq(
+            as.Date(rep$startDate),
+            dato,
+            time_by = rep$interval
+          ) # 'days', 'weeks', 'months', 'years',
+        )) {
           # get explicit referenced function and call it
           f <- .getFun(paste0(rep$package, "::", rep$fun))
           content <- do.call(what = f, args = params)
@@ -790,7 +794,7 @@ findNextRunDate <- function(runDayOfYear,
 #' @param target autoreport-list in file or database
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
-#' @importFrom magrittr "%>%"
+#' @importFrom dplyr "%>%"
 #' @export
 # nolint end
 
