@@ -122,25 +122,78 @@ test_that("sample auto report data can be read from db", {
   expect_equal(nrow(readAutoReportData(target = "db")), 14)
 })
 
-# For a valid test make sure there is ONE standard dummy report scheduled for
-# day 90
-test_that("Auto reports can be processed (shipment by email not tested)", {
+# For a valid test make sure there is ONE standard dummy report scheduled
+# monthly and with start date first of some month.
+# 1 January 1900 is a Monday
+# 1 December 2024 is a Sunday, but given number of months from start date
+test_that("Auto reports can be processed monthly", {
   check_db()
-  expect_message(runAutoReport(dayNumber = 90, dryRun = TRUE, target = "db"),
+  expect_message(runAutoReport(
+    dato = "2024-12-01",
+    dryRun = TRUE,
+    target = "db"
+    ),
+    "No emails sent. Content is:",
+    all = FALSE
+  )
+})
+
+# 1 January 1900 is a Monday
+# 2 December 2024 is a Monday
+test_that("Auto reports can be processed weekly", {
+  check_db()
+  expect_message(runAutoReport(
+    dato = "2024-12-02",
+    dryRun = TRUE,
+    target = "db"
+    ),
     "No emails sent. Content is:",
     all = FALSE
   )
 })
 
 # Do the same for a bulletin, above conditions also apply!
-test_that("Auto reports can be processed (shipment by email not tested)", {
+test_that("Bulletin reports can be processed (monthly)", {
   check_db()
   expect_message(
-    runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = TRUE, target = "db"),
+    runAutoReport(
+      dato = "2024-12-01",
+      type = c("bulletin"),
+      dryRun = TRUE,
+      target = "db"
+      ),
     "No emails sent. Content is: This is a simple",
     all = FALSE
   )
 })
+
+test_that("Auto reports not sent because of no reports this date", {
+  check_db()
+  expect_silent(runAutoReport(
+    dato = "2024-12-03",
+    dryRun = TRUE,
+    target = "db"
+    ))
+})
+
+test_that("Auto reports not sent if before start date", {
+  check_db()
+  expect_silent(runAutoReport(
+    dato = "1800-01-01",
+    dryRun = TRUE,
+    target = "db"
+    ))
+})
+
+test_that("Auto reports not sent if after start date", {
+  check_db()
+  expect_silent(runAutoReport(
+    dato = "3000-01-01",
+    dryRun = TRUE,
+    target = "db"
+    ))
+})
+
 
 # Test autoReportServer2 with db.
 # Tests are copied from test-moduleAutoReport.R since the current file
