@@ -550,23 +550,14 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
       {
         if (target == "db") {
           rep <- reps[i, ]
-          runDayOfYear <- as.vector(
-            as.integer(
-              strsplit(
-                rep$runDayOfYear,
-                ","
-              )[[1]]
-            )
-          )
           params <- jsonlite::fromJSON(rep$params)
         } else {
           rep <- reps[[i]]
-          runDayOfYear <- rep$runDayOfYear
           params <- rep$params
         }
         if ((
           target == "file"
-          && dayNumber %in% runDayOfYear
+          && dayNumber %in% rep$runDayOfYear
           && as.Date(rep$terminateDate) > Sys.Date()
           && as.Date(rep$startDate) <= Sys.Date()
         ) || (
