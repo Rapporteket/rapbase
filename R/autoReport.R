@@ -512,6 +512,8 @@ getRegs <- function(config) {
 #' @param dryRun Logical defining if emails are to be sent. If TRUE a message
 #' with reference to the payload file is given but no emails will actually be
 #' sent. Default is FALSE
+#' @param dato Date-class date when report will be run first time. Default value
+#' is set to \code{Sys.Date()}
 #'
 #' @return Emails with corresponding file attachment. If dryRun == TRUE just a
 #' message
@@ -562,21 +564,21 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
           runDayOfYear <- rep$runDayOfYear
           params <- rep$params
         }
-        if (
-          (target == "file"
-           && dayNumber %in% runDayOfYear
-           && as.Date(rep$terminateDate) > Sys.Date()
-           && as.Date(rep$startDate) <= Sys.Date()
-          ) ||
-          (target == "db"
-           && as.Date(rep$startDate) <= dato
-           && as.Date(rep$terminateDate) > dato
-           && dato %in% timeplyr::time_seq(
-             as.Date(rep$startDate), dato,
-             time_by = rep$interval) # 'days', 'weeks', 'months', 'years',
-          )                          # 'fortnights', 'quarters', 'semesters',
-        )                            # 'olympiads', 'lustrums', 'decades',
-        {                            # 'indictions', 'scores', 'centuries', 'milleniums'
+        if ((
+          target == "file"
+          && dayNumber %in% runDayOfYear
+          && as.Date(rep$terminateDate) > Sys.Date()
+          && as.Date(rep$startDate) <= Sys.Date()
+        ) || (
+          target == "db"
+          && as.Date(rep$startDate) <= dato
+          && as.Date(rep$terminateDate) > dato
+          && dato %in% timeplyr::time_seq(
+            as.Date(rep$startDate),
+            dato,
+            time_by = rep$interval
+          ) # 'days', 'weeks', 'months', 'years',
+        )) {
           # get explicit referenced function and call it
           f <- .getFun(paste0(rep$package, "::", rep$fun))
           content <- do.call(what = f, args = params)

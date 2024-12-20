@@ -7,6 +7,6 @@
 .data
 }
 \description{
-See \code{rlang::\link[rlang:tidyeval-data]{.data}} for details
+Data pronouns
 }
 \keyword{internal}
