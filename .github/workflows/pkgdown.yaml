@@ -12,6 +12,10 @@ name: pkgdown
 
 permissions: read-all
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   pkgdown:
     runs-on: ubuntu-24.04

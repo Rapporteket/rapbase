@@ -122,6 +122,26 @@ test_that("sample auto report data can be read from db", {
   expect_equal(nrow(readAutoReportData(target = "db")), 14)
 })
 
+# For a valid test make sure there is ONE standard dummy report scheduled for
+# day 90
+test_that("Auto reports can be processed (shipment by email not tested)", {
+  check_db()
+  expect_message(runAutoReport(dayNumber = 90, dryRun = TRUE, target = "db"),
+    "No emails sent. Content is:",
+    all = FALSE
+  )
+})
+
+# Do the same for a bulletin, above conditions also apply!
+test_that("Auto reports can be processed (shipment by email not tested)", {
+  check_db()
+  expect_message(
+    runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = TRUE, target = "db"),
+    "No emails sent. Content is: This is a simple",
+    all = FALSE
+  )
+})
+
 # Test autoReportServer2 with db.
 # Tests are copied from test-moduleAutoReport.R since the current file
 # is ready for db.

@@ -4,9 +4,9 @@ testAutoReportFirst:
   type: dispatchment
   fun: .testAutoReport
   params:
-  - aNum: 1
-  - aChar: a
-  - anExp: Sys.Date()
+    aNum: 1
+    aChar: a
+    anExp: Sys.Date()
   owner: ttester
   ownerName: 'Tore Tester'
   email:
@@ -26,9 +26,9 @@ testAutoReportSecond:
   type: subscription
   fun: .testAutoReport
   params:
-  - aNum: 2.0
-  - aChar: '3.14'
-  - anExp: sessionInfo()
+    aNum: 2.0
+    aChar: '3.14'
+    anExp: sessionInfo()
   owner: ttester
   ownerName: 'Tore Tester'
   email: <someone@nowhere.com>
@@ -47,10 +47,10 @@ testAutoReportThird:
   package: rapbase
   fun: .testAutoReport
   params:
-  - aNum: 2.0
-  - aChar: '3.14'
-  - anExp: sessionInfo()
-  - bulletin: yes
+    aNum: 2.0
+    aChar: '3.14'
+    anExp: sessionInfo()
+    bulletin: yes
   owner: ttester
   ownerName: Tore Tester
   email:
@@ -70,9 +70,9 @@ testAutoReportThird:
   package: rapbase
   fun: .testAutoReport
   params:
-  - aNum: '1'
-  - aChar: someString
-  - anExp: Sys.Date()
+    aNum: '1'
+    aChar: someString
+    anExp: Sys.Date()
   owner: ttester
   ownerName: 'Tore Tester'
   email: tester@skde.no
@@ -87,9 +87,9 @@ cd467ac14dd848b8798a384a3e51512c:
   package: rapbase
   fun: .testAutoReport
   params:
-  - aNum: '1'
-  - aChar: someString
-  - anExp: Sys.Date()
+    aNum: '1'
+    aChar: someString
+    anExp: Sys.Date()
   owner: ttester
   ownerName: 'Tore Tester'
   email: tester@skde.no
