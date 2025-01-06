@@ -151,6 +151,7 @@ if (is.null(checkDb(is_test_that = FALSE))) {
   con <- rapbase::rapOpenDbConnection(regName)$con
   RMariaDB::dbExecute(con, "DROP DATABASE rapbase;")
   rapbase::rapCloseDbConnection(con)
+  con <- NULL
 }
 
 

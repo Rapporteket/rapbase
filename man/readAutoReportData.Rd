@@ -4,7 +4,11 @@
 \alias{readAutoReportData}
 \title{Read automated report metadata}
 \usage{
-readAutoReportData(fileName = "autoReport.yml", packageName = "rapbase")
+readAutoReportData(
+  fileName = "autoReport.yml",
+  packageName = "rapbase",
+  target = "file"
+)
 }
 \arguments{
 \item{fileName}{String defining name of the yaml configuration file. Default
@@ -14,6 +18,8 @@ readAutoReportData(fileName = "autoReport.yml", packageName = "rapbase")
 configuration file resides. A configuration file within an R-package is
 only used in case the environmental variable 'R_RAP_CONFIG_PATH' is not
 defined (empty)}
+
+\item{target}{List of autoreports in file or database}
 }
 \value{
 a list of yaml data

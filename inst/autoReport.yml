@@ -4,17 +4,18 @@ testAutoReportFirst:
   type: dispatchment
   fun: .testAutoReport
   params:
-  - aNum: 1
-  - aChar: a
-  - anExp: Sys.Date()
+    aNum: 1
+    aChar: a
+    anExp: Sys.Date()
   owner: ttester
+  ownerName: 'Tore Tester'
   email:
   - Some One <someone@nowhere.com>
   - Jesus <jesus@sky.com>
   organization: '999999'
   startDate: '1900-01-01'
-  terminateDate: '9999-12-31'
-  interval:
+  terminateDate: '2099-12-31'
+  interval: months
   intervalName:
   runDayOfYear:
   - 30
@@ -25,15 +26,16 @@ testAutoReportSecond:
   type: subscription
   fun: .testAutoReport
   params:
-  - aNum: 2.0
-  - aChar: '3.14'
-  - anExp: sessionInfo()
+    aNum: 2.0
+    aChar: '3.14'
+    anExp: sessionInfo()
   owner: ttester
+  ownerName: 'Tore Tester'
   email: <someone@nowhere.com>
   organization: '999999'
   startDate: '1900-01-01'
-  terminateDate: '9999-12-31'
-  interval:
+  terminateDate: '2099-12-31'
+  interval: weeks
   intervalName:
   runDayOfYear:
   - 30
@@ -45,10 +47,10 @@ testAutoReportThird:
   package: rapbase
   fun: .testAutoReport
   params:
-  - aNum: 2.0
-  - aChar: '3.14'
-  - anExp: sessionInfo()
-  - bulletin: yes
+    aNum: 2.0
+    aChar: '3.14'
+    anExp: sessionInfo()
+    bulletin: yes
   owner: ttester
   ownerName: Tore Tester
   email:
@@ -56,8 +58,8 @@ testAutoReportThird:
   - jesus@sky.com
   organization: '999999'
   startDate: '1900-01-01'
-  terminateDate: '9999-12-31'
-  interval:
+  terminateDate: '2099-12-31'
+  interval: months
   intervalName:
   runDayOfYear:
   - 30
@@ -68,15 +70,16 @@ testAutoReportThird:
   package: rapbase
   fun: .testAutoReport
   params:
-  - aNum: '1'
-  - aChar: someString
-  - anExp: Sys.Date()
+    aNum: '1'
+    aChar: someString
+    anExp: Sys.Date()
   owner: ttester
+  ownerName: 'Tore Tester'
   email: tester@skde.no
   organization: '999999'
   startDate: '1900-01-01'
-  terminateDate: '9999-12-31'
-  interval:
+  terminateDate: '2099-12-31'
+  interval: years
   intervalName:
   runDayOfYear: 170.0
 cd467ac14dd848b8798a384a3e51512c:
@@ -84,14 +87,15 @@ cd467ac14dd848b8798a384a3e51512c:
   package: rapbase
   fun: .testAutoReport
   params:
-  - aNum: '1'
-  - aChar: someString
-  - anExp: Sys.Date()
+    aNum: '1'
+    aChar: someString
+    anExp: Sys.Date()
   owner: ttester
+  ownerName: 'Tore Tester'
   email: tester@skde.no
   organization: '999999'
   startDate: '1900-01-01'
   terminateDate: '0000-01-01'
-  interval:
+  interval: years
   intervalName:
   runDayOfYear: 171.0

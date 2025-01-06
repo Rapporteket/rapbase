@@ -243,6 +243,7 @@ appendLog <- function(event, name) {
     con <- rapOpenDbConnection(config$r$raplog$key)$con
     DBI::dbAppendTable(con, name, event, row.names = NULL)
     rapCloseDbConnection(con)
+    con <- NULL
   } else {
     stop(paste0(
       "Target ", target, " is not supported. ",
@@ -342,6 +343,7 @@ createLogDbTabs <- function() {
     RMariaDB::dbExecute(con, queries[i])
   }
   rapbase::rapCloseDbConnection(con)
+  con <- NULL
 }
 
 
@@ -464,6 +466,7 @@ sanitizeLog <- function() {
     )
     DBI::dbExecute(con, query)
     rapCloseDbConnection(con)
+    con <- NULL
   }
 
   NULL

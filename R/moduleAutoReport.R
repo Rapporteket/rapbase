@@ -412,15 +412,8 @@ autoReportServer <- function(id, registryName, type, org = NULL,
             as.character(shiny::icon("calendar")), "F\u00F8rste utsending:"
           )
         ),
-        # if freq is year make first issue tomorrow, otherwise postpone by freq
-        value = if (strsplit(input$freq, "-")[[1]][2] == "year") {
-          Sys.Date() + 1
-        } else {
-          seq.Date(Sys.Date(),
-            by = strsplit(input$freq, "-")[[1]][2],
-            length.out = 2
-          )[2]
-        },
+        # set the following day as default
+        value = Sys.Date() + 1,
         min = Sys.Date() + 1,
         max = seq.Date(Sys.Date(), length.out = 2, by = "1 years")[2] - 1
       )
@@ -585,6 +578,8 @@ autoReportServer2 <- function(
     quarter = "Kvartalsvis-quarter",
     year = "\u00C5rlig-year"
   )
+  # Either get autoreport-list from file or database
+  target <- getConfig(fileName = "rapbaseConfig.yml")$r$autoReport$target
 
   shiny::moduleServer(id, function(input, output, session) {
     autoReport <- shiny::reactiveValues(
@@ -595,7 +590,8 @@ autoReportServer2 <- function(
         group = registryName,
         orgId = NULL,
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        target = target
       ),
       report = names(reports)[1],
       org = unlist(orgs, use.names = FALSE)[1],
@@ -616,7 +612,8 @@ autoReportServer2 <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        target = target
       ),
       ignoreNULL = FALSE
     )
@@ -666,7 +663,8 @@ autoReportServer2 <- function(
         ),
         startDate = input$start,
         interval = interval,
-        intervalName = strsplit(input$freq, "-")[[1]][1]
+        intervalName = strsplit(input$freq, "-")[[1]][1],
+        target = target
       )
       autoReport$tab <-
         makeAutoReportTab(
@@ -676,25 +674,34 @@ autoReportServer2 <- function(
           group = registryName,
           orgId = user$org(),
           type = type,
-          mapOrgId = orgList2df(orgs)
+          mapOrgId = orgList2df(orgs),
+          target = target
         )
       autoReport$email <- vector()
     })
 
     shiny::observeEvent(input$edit_button, {
       repId <- strsplit(input$edit_button, "__")[[1]][2]
-      rep <- readAutoReportData()[[repId]]
-
-      # try matching report by synopsis, fallback to currently selected
-      for (i in names(reports)) {
-        if (reports[[i]]$synopsis == rep$synopsis) {
-          autoReport$report <- i
+      if (target == "db") {
+        rep <- readAutoReportData(target = target) %>%
+          dplyr::filter(id == repId)
+        if (nrow(rep) != 1) {
+          message("Can not modify (either less or more than 1)")
+          return(NULL)
+        }
+      } else {
+        rep <- readAutoReportData()[[repId]]
+        # try matching report by synopsis, fallback to currently selected
+        for (i in names(reports)) {
+          if (reports[[i]]$synopsis == rep$synopsis) {
+            autoReport$report <- i
+          }
         }
       }
       autoReport$org <- rep$organization
       autoReport$freq <- paste0(rep$intervalName, "-", rep$interval)
       autoReport$email <- rep$email
-      deleteAutoReport(repId)
+      deleteAutoReport(repId, target = target)
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
@@ -702,7 +709,8 @@ autoReportServer2 <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        target = target
       )
 
       if (rep$type == "subscription") {
@@ -718,7 +726,7 @@ autoReportServer2 <- function(
 
     shiny::observeEvent(input$del_button, {
       repId <- strsplit(input$del_button, "__")[[1]][2]
-      deleteAutoReport(repId)
+      deleteAutoReport(repId, target = target)
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
@@ -726,7 +734,8 @@ autoReportServer2 <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        target = target
       )
     })
 
@@ -783,15 +792,8 @@ autoReportServer2 <- function(
             as.character(shiny::icon("calendar")), "F\u00F8rste utsending:"
           )
         ),
-        # if freq is year make first issue tomorrow, otherwise postpone by freq
-        value = if (strsplit(input$freq, "-")[[1]][2] == "year") {
-          Sys.Date() + 1
-        } else {
-          seq.Date(Sys.Date(),
-            by = strsplit(input$freq, "-")[[1]][2],
-            length.out = 2
-          )[2]
-        },
+        # set default to following day
+        value = Sys.Date() + 1,
         min = Sys.Date() + 1,
         max = seq.Date(Sys.Date(), length.out = 2, by = "1 years")[2] - 1
       )

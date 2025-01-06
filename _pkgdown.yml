@@ -51,6 +51,8 @@ reference:
     desc: >
       Handle logging
     contents:
+    - loggerSetup
+    - logShinyInputChanges
     - logger
     - sanitizeLog
 
