@@ -687,55 +687,84 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 findNextRunDate <- function(runDayOfYear,
                             baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
                             startDate = NULL,
-                            returnFormat = "%A %e. %B %Y") {
-  year <- as.POSIXlt(Sys.Date())$year + 1900
+                            terminateDate = NULL,
+                            interval = NULL,
+                            returnFormat = "%A %e. %B %Y",
+                            target = "file") {
 
-  if (!is.null(startDate)) {
-    if (as.Date(startDate) > as.Date(strptime(
-      paste(year, baseDayNum),
-      "%Y %j"
-    ))) {
-      # since we pull the NEXT run day set new base day on day BEFORE star date
-      baseDayNum <- as.POSIXlt(startDate)$yday
+  if (target == "db") {
+    if (Sys.Date() < startDate) {
+      nextDate <- as.Date(startDate)
     }
-  }
-
-  # special case if out of max range and only one run day defined (yearly)
-  if (baseDayNum >= max(runDayOfYear) || length(runDayOfYear) == 1) {
-    # next run will be first run in day num vector
-    nextDayNum <- min(runDayOfYear)
-  } else {
-    # find year transition, if any
-    nDay <- length(runDayOfYear)
-    deltaDay <- runDayOfYear[2:nDay] - runDayOfYear[1:(nDay - 1)]
-    trans <- deltaDay < 0
-    if (any(trans)) {
-      indTrans <- match(TRUE, trans)
-      # vector head
-      dHead <- runDayOfYear[1:indTrans]
-      # vector tail
-      dTail <- runDayOfYear[(indTrans + 1):nDay]
-
-      if (baseDayNum >= max(dTail)) {
-        ## next run day to be found in vector head
-        runDayOfYearSubset <- dHead
+    if (Sys.Date() >= startDate && Sys.Date() <= terminateDate) {
+      dateseq <- timeplyr::time_seq(
+        as.Date(startDate),
+        as.Date(terminateDate),
+        time_by = interval)
+      tidsdiff <- difftime(dateseq, Sys.Date(), units = "days")
+      tidsdiff[tidsdiff <= 0] <- NA
+      if (length(tidsdiff) == sum(is.na(tidsdiff))){
+        nextDate <- as.Date(terminateDate) + 1
       } else {
-        ## next run day to be found in vector tail
-        runDayOfYearSubset <- dTail
+        nextDate <- dateseq[which(tidsdiff==min(tidsdiff, na.rm = TRUE))]
       }
-    } else {
-      runDayOfYearSubset <- runDayOfYear
+    }
+    if (Sys.Date() > terminateDate){
+      nextDate <- as.Date(terminateDate) + 1
     }
 
-    nextDayNum <- min(runDayOfYearSubset[runDayOfYearSubset > baseDayNum])
-  }
+    return(format(nextDate, format = returnFormat))
+  } else {
 
-  # if current day num larger than nextDayNum report will be run next year
-  if (as.numeric(format(Sys.Date(), "%j")) > nextDayNum) {
-    year <- year + 1
-  }
+    year <- as.POSIXlt(Sys.Date())$year + 1900
 
-  format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
+    if (!is.null(startDate)) {
+      if (as.Date(startDate) > as.Date(strptime(
+        paste(year, baseDayNum),
+        "%Y %j"
+      ))) {
+        # since we pull the NEXT run day set new base day on day BEFORE star date
+        baseDayNum <- as.POSIXlt(startDate)$yday
+      }
+    }
+
+    # special case if out of max range and only one run day defined (yearly)
+    if (baseDayNum >= max(runDayOfYear) || length(runDayOfYear) == 1) {
+      # next run will be first run in day num vector
+      nextDayNum <- min(runDayOfYear)
+    } else {
+      # find year transition, if any
+      nDay <- length(runDayOfYear)
+      deltaDay <- runDayOfYear[2:nDay] - runDayOfYear[1:(nDay - 1)]
+      trans <- deltaDay < 0
+      if (any(trans)) {
+        indTrans <- match(TRUE, trans)
+        # vector head
+        dHead <- runDayOfYear[1:indTrans]
+        # vector tail
+        dTail <- runDayOfYear[(indTrans + 1):nDay]
+
+        if (baseDayNum >= max(dTail)) {
+          ## next run day to be found in vector head
+          runDayOfYearSubset <- dHead
+        } else {
+          ## next run day to be found in vector tail
+          runDayOfYearSubset <- dTail
+        }
+      } else {
+        runDayOfYearSubset <- runDayOfYear
+      }
+
+      nextDayNum <- min(runDayOfYearSubset[runDayOfYearSubset > baseDayNum])
+    }
+
+    # if current day num larger than nextDayNum report will be run next year
+    if (as.numeric(format(Sys.Date(), "%j")) > nextDayNum) {
+      year <- year + 1
+    }
+
+    format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
+  }
 }
 
 # nolint start
@@ -828,13 +857,13 @@ makeAutoReportTab <- function(session,
 
     l <- list()
     for (i in seq_len(nrow(autoRep))) {
-      runDayOfYear <- as.vector(
-        as.integer(strsplit(autoRep[i, ]$runDayOfYear, ",")[[1]])
-      )
       nextDate <- findNextRunDate(
-        runDayOfYear = runDayOfYear,
+        runDayOfYear = NULL,
         startDate = autoRep[i, ]$startDate,
-        returnFormat = dateFormat
+        terminateDate = autoRep[i, ]$terminateDate,
+        interval = autoRep[i, ]$interval,
+        returnFormat = dateFormat,
+        target = target
       )
       if (as.Date(nextDate, format = dateFormat) > autoRep[i, ]$terminateDate) {
         nextDate <- "Utl\u00F8pt"
