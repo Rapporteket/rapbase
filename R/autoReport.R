@@ -700,16 +700,17 @@ findNextRunDate <- function(runDayOfYear,
       dateseq <- timeplyr::time_seq(
         as.Date(startDate),
         as.Date(terminateDate),
-        time_by = interval)
+        time_by = interval
+      )
       tidsdiff <- difftime(dateseq, Sys.Date(), units = "days")
       tidsdiff[tidsdiff <= 0] <- NA
-      if (length(tidsdiff) == sum(is.na(tidsdiff))){
+      if (length(tidsdiff) == sum(is.na(tidsdiff))) {
         nextDate <- as.Date(terminateDate) + 1
       } else {
-        nextDate <- dateseq[which(tidsdiff==min(tidsdiff, na.rm = TRUE))]
+        nextDate <- dateseq[which(tidsdiff == min(tidsdiff, na.rm = TRUE))]
       }
     }
-    if (Sys.Date() > terminateDate){
+    if (Sys.Date() > terminateDate) {
       nextDate <- as.Date(terminateDate) + 1
     }
 
@@ -723,7 +724,8 @@ findNextRunDate <- function(runDayOfYear,
         paste(year, baseDayNum),
         "%Y %j"
       ))) {
-        # since we pull the NEXT run day set new base day on day BEFORE star date
+        # since we pull the NEXT run day set new base day
+        # on day BEFORE start date
         baseDayNum <- as.POSIXlt(startDate)$yday
       }
     }

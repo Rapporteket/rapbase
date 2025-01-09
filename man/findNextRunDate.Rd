@@ -8,7 +8,10 @@ findNextRunDate(
   runDayOfYear,
   baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
   startDate = NULL,
-  returnFormat = "\%A \%e. \%B \%Y"
+  terminateDate = NULL,
+  interval = NULL,
+  returnFormat = "\%A \%e. \%B \%Y",
+  target = "file"
 )
 }
 \arguments{
