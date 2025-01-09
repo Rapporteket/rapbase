@@ -132,6 +132,87 @@ test_that("a start date is enforced when given", {
   ), days[4])
 })
 
+######################################
+# Test findNextRunDate with db-setup #
+######################################
+
+test_that("The next run day is a monday", {
+  expect_equal(
+    findNextRunDate(
+      startDate = "2025-01-06", # Monday
+      terminateDate = Sys.Date() + 365,
+      interval = "weeks",
+      returnFormat = "%A",
+      target = "db"
+    )
+    , "Monday")
+})
+
+test_that("The next run day is day 6 of month ", {
+  expect_equal(
+    findNextRunDate(
+      startDate = "2025-01-06",
+      terminateDate = Sys.Date() + 365,
+      interval = "months",
+      returnFormat = "%d",
+      target = "db"
+    )
+    , "06")
+})
+
+test_that("Terminate date is before today, and will return terminateDate + 1", {
+  expect_equal(
+    findNextRunDate(
+      startDate = "2023-01-06",
+      terminateDate = Sys.Date() - 10,
+      interval = "months",
+      target = "db"
+    ), format(Sys.Date() - 9, format = "%A %e. %B %Y"))
+
+  expect_equal(findNextRunDate(
+    startDate = "2025-01-06",
+    terminateDate = "2025-01-06",
+    target = "db"
+  ), "Tuesday  7. January 2025")
+})
+
+test_that("Start date is after today, and will return start date", {
+  expect_equal(
+    findNextRunDate(
+      startDate = Sys.Date() + 10,
+      terminateDate = Sys.Date() + 20,
+      interval = "months",
+      target = "db"
+    ), format(Sys.Date() + 10, format = "%A %e. %B %Y"))
+})
+
+test_that("findNextRunDate throw errors", {
+  expect_error(findNextRunDate())
+  expect_error(findNextRunDate(target = "db"))
+  expect_error(findNextRunDate(startDate = "2025-01-06", target = "db"))
+  expect_error(findNextRunDate(terminateDate = "2025-01-06", target = "db"))
+  # Wrong date format
+  expect_error(findNextRunDate(
+    startDate = "202501-06",
+    terminateDate = "2025-01-06",
+    interval = "days",
+    target = "db"
+  ))
+  expect_error(findNextRunDate(
+    startDate = "2025-01-06",
+    terminateDate = "243467853443-212",
+    interval = "days",
+    target = "db"
+  ))
+  # missing interval
+  expect_error(findNextRunDate(
+    startDate = "2025-01-06",
+    terminateDate = Sys.Date() + 10,
+    target = "db"
+  ))
+})
+
+
 shinySession <- list(user = "tester")
 shinySession$groups <- "rapbase"
 attr(shinySession, "class") <- "ShinySession"
