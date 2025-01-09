@@ -176,6 +176,17 @@ test_that("Terminate date is before today, and will return terminateDate + 1", {
   ), "Tuesday  7. January 2025")
 })
 
+test_that("Terminate date is after today but before next in range, and will return terminateDate + 1", {
+  expect_equal(
+    findNextRunDate(
+      startDate = seq(as.Date(Sys.Date()), length = 2, by = "-24 months")[2], # 24 months back in time
+      terminateDate = Sys.Date() + 14,
+      interval = "months",
+      target = "db"
+    ), format(Sys.Date() + 15, format = "%A %e. %B %Y"))
+})
+
+
 test_that("Start date is after today, and will return start date", {
   expect_equal(
     findNextRunDate(
