@@ -542,11 +542,13 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
   }
   if (target == "db") {
     reps <- reps %>%
+      # nolint start: object_usage_linter
       dplyr::summarise(
         email = list(unique(email)),
         .by = c(owner, ownerName, package, organization, type, fun,
                 params, startDate, terminateDate, interval)
       )
+    # nolint end
   }
 
   # standard text for email body
