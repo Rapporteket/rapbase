@@ -514,6 +514,7 @@ getRegs <- function(config) {
 #' sent. Default is FALSE
 #' @param dato Date-class date when report will be run first time. Default value
 #' is set to \code{Sys.Date()}
+#' @inheritParams makeAutoReportTab
 #'
 #' @return Emails with corresponding file attachment. If dryRun == TRUE just a
 #' message
@@ -528,12 +529,25 @@ getRegs <- function(config) {
 
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                           dato = Sys.Date(),
+                          group = NULL,
                           type = c("subscription", "dispatchment"),
                           target = "file", dryRun = FALSE) {
 
   # get report candidates
   reps <- readAutoReportData(target = target) %>%
     filterAutoRep(by = "type", pass = type, target = target)
+  if (!is.null(group)) {
+    reps <- reps %>%
+      filterAutoRep(by = "package", pass = group, target = target)
+  }
+  if (target == "db") {
+    reps <- reps %>%
+      dplyr::summarise(
+        email = list(unique(email)),
+        .by = c(owner, ownerName, package, organization, type, fun,
+                params, startDate, terminateDate, interval)
+      )
+  }
 
   # standard text for email body
   stdTxt <- readr::read_file(
@@ -549,7 +563,8 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
     tryCatch(
       {
         if (target == "db") {
-          rep <- reps[i, ]
+          rep <- reps[i, ] %>% as.list()
+          rep$email <- unlist(rep$email)
           params <- jsonlite::fromJSON(rep$params)
         } else {
           rep <- reps[[i]]

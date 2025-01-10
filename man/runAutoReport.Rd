@@ -7,6 +7,7 @@
 runAutoReport(
   dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
   dato = Sys.Date(),
+  group = NULL,
   type = c("subscription", "dispatchment"),
   target = "file",
   dryRun = FALSE
@@ -19,6 +20,12 @@ yday is base 0)}
 
 \item{dato}{Date-class date when report will be run first time. Default value
 is set to \code{Sys.Date()}}
+
+\item{group}{Character string defining the registry, normally corresponding
+to the R package name and the value stemming from the SHINYPROXY_GROUPS
+environment variable. Introduced as a new argument when running apps inside
+containers. Default value is set to \code{rapbase::getUserGroups(session)}
+to allow backward compatibility.}
 
 \item{type}{Character vector defining the type of reports to be processed.
 May contain one or more of
