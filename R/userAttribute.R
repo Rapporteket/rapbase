@@ -246,7 +246,7 @@ userAttribute <- function(unit = NULL) {
   tilgangstre <- jsonlite::fromJSON(tilgangstre, flatten = FALSE)[[1]]
   orgNames <- tilgangstre$TitleWithPath[match(orgs, tilgangstre$UnitId)]
 
-  name <- Sys.getenv("SHINYPROXY_USERNAME")
+  name <- Sys.getenv("FALK_USER_PHONE")
   fullName <- parse(text = paste0(
     "'",
     Sys.getenv("FALK_USER_FULLNAME"),
