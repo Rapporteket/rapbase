@@ -8,7 +8,10 @@ findNextRunDate(
   runDayOfYear,
   baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
   startDate = NULL,
-  returnFormat = "\%A \%e. \%B \%Y"
+  terminateDate = NULL,
+  interval = NULL,
+  returnFormat = "\%A \%e. \%B \%Y",
+  target = "file"
 )
 }
 \arguments{
@@ -21,10 +24,20 @@ the very first run. If set to NULL (default) or a none future date (compared
 to the date represented by \code{baseDayNum} for the current year) it will be
 disregarded.}
 
+\item{terminateDate}{Date-class date after which report is no longer run.
+Default value set to \code{NULL} in which case the function will provide an
+expiry date adding 3 years to the current date if in a PRODUCTION context
+and 1 month if not}
+
+\item{interval}{String defining a time interval as defined in
+\code{\link[base:seq.POSIXt]{seq.POSIXt}}. Default value is an empty string}
+
 \item{returnFormat}{String providing return format as described in
 \code{\link[base]{strptime}} in the current locale. Defaults to
 "\%A \%d. \%B \%Y" that will provide something like
 'Mandag 20. januar 2019' in a Norwegian locale}
+
+\item{target}{List of autoreports in file or database}
 }
 \value{
 String date for printing
