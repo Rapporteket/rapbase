@@ -52,7 +52,10 @@ be printed</p>
 <span>  <span class="va">runDayOfYear</span>,</span>
 <span>  baseDayNum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXlt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">$</span><span class="va">yday</span> <span class="op">+</span> <span class="fl">1</span>,</span>
 <span>  startDate <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  returnFormat <span class="op">=</span> <span class="st">"%A %e. %B %Y"</span></span>
+<span>  terminateDate <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  interval <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  returnFormat <span class="op">=</span> <span class="st">"%A %e. %B %Y"</span>,</span>
+<span>  target <span class="op">=</span> <span class="st">"file"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -75,11 +78,27 @@ to the date represented by <code>baseDayNum</code> for the current year) it will
 disregarded.</p></dd>
 
 
+<dt id="arg-terminatedate">terminateDate<a class="anchor" aria-label="anchor" href="#arg-terminatedate"></a></dt>
+<dd><p>Date-class date after which report is no longer run.
+Default value set to <code>NULL</code> in which case the function will provide an
+expiry date adding 3 years to the current date if in a PRODUCTION context
+and 1 month if not</p></dd>
+
+
+<dt id="arg-interval">interval<a class="anchor" aria-label="anchor" href="#arg-interval"></a></dt>
+<dd><p>String defining a time interval as defined in
+<code><a href="https://rdrr.io/r/base/seq.POSIXt.html" class="external-link">seq.POSIXt</a></code>. Default value is an empty string</p></dd>
+
+
 <dt id="arg-returnformat">returnFormat<a class="anchor" aria-label="anchor" href="#arg-returnformat"></a></dt>
 <dd><p>String providing return format as described in
 <code><a href="https://rdrr.io/r/base/strptime.html" class="external-link">strptime</a></code> in the current locale. Defaults to
 "%A %d. %B %Y" that will provide something like
 'Mandag 20. januar 2019' in a Norwegian locale</p></dd>
+
+
+<dt id="arg-target">target<a class="anchor" aria-label="anchor" href="#arg-target"></a></dt>
+<dd><p>List of autoreports in file or database</p></dd>
 
 </dl></div>
     <div class="section level2">
