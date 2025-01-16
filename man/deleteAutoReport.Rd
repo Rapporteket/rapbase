@@ -4,7 +4,7 @@
 \alias{deleteAutoReport}
 \title{Delete existing report from config/db}
 \usage{
-deleteAutoReport(autoReportId, target = "file")
+deleteAutoReport(autoReportId, target = "db")
 }
 \arguments{
 \item{autoReportId}{String providing the auto report unique id}

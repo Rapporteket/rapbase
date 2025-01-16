@@ -408,7 +408,6 @@ withr::with_envvar(
         {
           user$role <- shiny::reactive("SC")
           session$flushReact()
-          print(autoReport$tab)
           session$setInputs(report = "FirstReport")
           session$setInputs(freq = "Aarlig-year")
           session$setInputs(start = as.character(Sys.Date()))

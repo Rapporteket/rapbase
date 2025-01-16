@@ -42,6 +42,6 @@ fireInTheHole <- function(flipPeriod = FALSE) {
   }
 
   for (f in funs) {
-    do.call(what = .getFun(f), args = list())
+    do.call(what = .getFun(f), args = list(target = "file"))
   }
 }

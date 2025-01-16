@@ -4,7 +4,10 @@
 \alias{runBulletin}
 \title{Run bulletin auto reports}
 \usage{
-runBulletin()
+runBulletin(target = "file")
+}
+\arguments{
+\item{target}{file or db}
 }
 \value{
 Whatever \code{runAutoReport()} might provide

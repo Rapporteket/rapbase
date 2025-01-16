@@ -7,7 +7,7 @@
 readAutoReportData(
   fileName = "autoReport.yml",
   packageName = "rapbase",
-  target = "file"
+  target = "db"
 )
 }
 \arguments{

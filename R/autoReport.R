@@ -51,7 +51,7 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
                              startDate = as.character(Sys.Date()),
                              terminateDate = NULL, interval = "",
                              intervalName = "", dryRun = FALSE,
-                             target = "file") {
+                             target = "db") {
 
   # When NULL, set expiry date based on context
   if (is.null(terminateDate)) {
@@ -90,7 +90,7 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
     rd <- list(l)
   } else {
     # Read current autoreport data and add new entry
-    rd <- readAutoReportData()
+    rd <- readAutoReportData(target = target)
 
     rd[[eval(autoRepId)]] <- l
   }
@@ -110,14 +110,14 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
 #' @seealso \code{\link{createAutoReport}}
 #' @export
 
-deleteAutoReport <- function(autoReportId, target = "file") {
+deleteAutoReport <- function(autoReportId, target = "db") {
   if (target == "file") {
-    rd <- readAutoReportData()
+    rd <- readAutoReportData(target = target)
     # just stop with an error if report does not exist
     stopifnot(!is.null(rd[[autoReportId]]))
     ind <- names(rd) == autoReportId
     rd <- rd[!ind]
-    writeAutoReportData(config = rd)
+    writeAutoReportData(config = rd, target = target)
   } else if (target == "db") {
     query <- paste0('DELETE FROM autoreport WHERE id = "', autoReportId, '";')
     dbConnect <- rapOpenDbConnection("autoreport")
@@ -144,7 +144,7 @@ deleteAutoReport <- function(autoReportId, target = "file") {
 #' readAutoReportData()
 readAutoReportData <- function(fileName = "autoReport.yml",
                                packageName = "rapbase",
-                               target = "file") {
+                               target = "db") {
 
   if (target == "db") {
     config <- getConfig(fileName = "rapbaseConfig.yml")
@@ -268,7 +268,7 @@ upgradeAutoReportData <- function(config) {
 #'
 writeAutoReportData <- function(fileName = "autoReport.yml", config,
                                 packageName = "rapbase",
-                                target = "file") {
+                                target = "db") {
 
   if (target == "db") {
     rc <- getConfig(fileName = "rapbaseConfig.yml")
@@ -389,7 +389,7 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #' ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
 #' filterAutoRep(ar, "type", "B") # ar2
 #'
-filterAutoRep <- function(data, by, pass, target = "file") {
+filterAutoRep <- function(data, by, pass, target = "db") {
   stopifnot(by %in% c("package", "type", "owner", "organization"))
 
   if (length(data) == 0) {
@@ -531,7 +531,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                           dato = Sys.Date(),
                           group = NULL,
                           type = c("subscription", "dispatchment"),
-                          target = "file", dryRun = FALSE) {
+                          target = "db", dryRun = FALSE) {
 
   # get report candidates
   reps <- readAutoReportData(target = target) %>%
@@ -639,11 +639,13 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
 #' This is a wrapper for \code{runAutoReport()} to issue bulletins. Purpose is
 #' to ease simplify fire-in-the-hole at Rapporteket
 #'
+#' @param target file or db
+#'
 #' @return  Whatever \code{runAutoReport()} might provide
 #' @export
 
-runBulletin <- function() {
-  runAutoReport(type = c("bulletin"))
+runBulletin <- function(target = "file") {
+  runAutoReport(type = c("bulletin"), target = target)
 }
 
 ## Miscellaneous functions
@@ -708,7 +710,7 @@ findNextRunDate <- function(runDayOfYear,
                             terminateDate = NULL,
                             interval = NULL,
                             returnFormat = "%A %e. %B %Y",
-                            target = "file") {
+                            target = "db") {
 
   if (target == "db") {
     if (Sys.Date() < startDate) {
@@ -855,7 +857,7 @@ makeAutoReportTab <- function(session,
                               type = "subscription",
                               mapOrgId = NULL,
                               includeReportId = FALSE,
-                              target = "file") {
+                              target = "db") {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
   autoRep <- readAutoReportData(target = target) %>%
@@ -944,7 +946,8 @@ makeAutoReportTab <- function(session,
       nextDate <- findNextRunDate(
         runDayOfYear = autoRep[[n]]$runDayOfYear,
         startDate = autoRep[[n]]$startDate,
-        returnFormat = dateFormat
+        returnFormat = dateFormat,
+        target = target
       )
       if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
         nextDate <- "Utl\u00F8pt"

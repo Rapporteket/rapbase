@@ -251,7 +251,8 @@ autoReportServer <- function(id, registryName, type, org = NULL,
         session = session,
         namespace = id,
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        target = "file"
       ),
       report = names(reports)[1],
       org = unlist(orgs, use.names = FALSE)[1],
@@ -304,21 +305,23 @@ autoReportServer <- function(id, registryName, type, org = NULL,
         ),
         startDate = input$start,
         interval = interval,
-        intervalName = strsplit(input$freq, "-")[[1]][1]
+        intervalName = strsplit(input$freq, "-")[[1]][1],
+        target = "file"
       )
       autoReport$tab <-
         makeAutoReportTab(
           session,
           namespace = id,
           type = type,
-          mapOrgId = orgList2df(orgs)
+          mapOrgId = orgList2df(orgs),
+          target = "file"
         )
       autoReport$email <- vector()
     })
 
     shiny::observeEvent(input$edit_button, {
       repId <- strsplit(input$edit_button, "__")[[1]][2]
-      rep <- readAutoReportData()[[repId]]
+      rep <- readAutoReportData(target = "file")[[repId]]
 
       # try matching report by synopsis, fallback to currently selected
       for (i in names(reports)) {
@@ -329,12 +332,13 @@ autoReportServer <- function(id, registryName, type, org = NULL,
       autoReport$org <- rep$organization
       autoReport$freq <- paste0(rep$intervalName, "-", rep$interval)
       autoReport$email <- rep$email
-      deleteAutoReport(repId)
+      deleteAutoReport(repId, target = "file")
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        target = "file"
       )
 
       if (rep$type == "subscription") {
@@ -350,12 +354,13 @@ autoReportServer <- function(id, registryName, type, org = NULL,
 
     shiny::observeEvent(input$del_button, {
       repId <- strsplit(input$del_button, "__")[[1]][2]
-      deleteAutoReport(repId)
+      deleteAutoReport(repId, target = "file")
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        target = "file"
       )
     })
 
@@ -690,7 +695,7 @@ autoReportServer2 <- function(
           return(NULL)
         }
       } else {
-        rep <- readAutoReportData()[[repId]]
+        rep <- readAutoReportData(target = "file")[[repId]]
         # try matching report by synopsis, fallback to currently selected
         for (i in names(reports)) {
           if (reports[[i]]$synopsis == rep$synopsis) {

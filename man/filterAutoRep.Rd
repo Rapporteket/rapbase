@@ -4,7 +4,7 @@
 \alias{filterAutoRep}
 \title{Filter auto report data}
 \usage{
-filterAutoRep(data, by, pass, target = "file")
+filterAutoRep(data, by, pass, target = "db")
 }
 \arguments{
 \item{data}{List (nested) specifying auto reports to be filtered. May be

@@ -13,7 +13,7 @@ makeAutoReportTab(
   type = "subscription",
   mapOrgId = NULL,
   includeReportId = FALSE,
-  target = "file"
+  target = "db"
 )
 }
 \arguments{

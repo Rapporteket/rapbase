@@ -21,7 +21,7 @@ createAutoReport(
   interval = "",
   intervalName = "",
   dryRun = FALSE,
-  target = "file"
+  target = "db"
 )
 }
 \arguments{

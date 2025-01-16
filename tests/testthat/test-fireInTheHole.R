@@ -15,11 +15,11 @@ file.copy(
 # to run only on the none-existing day number 0 to make sure
 # no reports are scheduled for shipment on the day of testing (any day)
 
-reps <- readAutoReportData()
+reps <- readAutoReportData(target = "file")
 reps$testAutoReportFirst$runDayOfYear <- c(0)
 reps$testAutoReportSecond$runDayOfYear <- c(0)
 reps$testAutoReportThird$runDayOfYear <- c(0)
-writeAutoReportData(fileName = "autoReport.yml", reps)
+writeAutoReportData(fileName = "autoReport.yml", reps, target = "file")
 
 test_that(paste(
   "scheduler kick-off function can be run based on default",

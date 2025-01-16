@@ -11,7 +11,7 @@ findNextRunDate(
   terminateDate = NULL,
   interval = NULL,
   returnFormat = "\%A \%e. \%B \%Y",
-  target = "file"
+  target = "db"
 )
 }
 \arguments{
