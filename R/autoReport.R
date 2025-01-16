@@ -583,7 +583,7 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
           && as.Date(rep$terminateDate) > dato
           && dato %in% seq.Date(
             as.Date(rep$startDate),
-            dato,
+            as.Date(dato),
             by = rep$interval
           ) # 'days', 'weeks', 'months', 'years',
         )) {
