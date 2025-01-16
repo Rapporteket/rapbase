@@ -48,7 +48,6 @@ Imports:
     shiny,
     shinyalert,
     sship (>= 0.9.0),
-    timeplyr,
     utils,
     yaml
 RoxygenNote: 7.3.2
