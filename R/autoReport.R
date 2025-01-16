@@ -581,10 +581,10 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
           target == "db"
           && as.Date(rep$startDate) <= dato
           && as.Date(rep$terminateDate) > dato
-          && dato %in% timeplyr::time_seq(
+          && dato %in% seq.Date(
             as.Date(rep$startDate),
-            dato,
-            time_by = rep$interval
+            as.Date(dato),
+            by = rep$interval
           ) # 'days', 'weeks', 'months', 'years',
         )) {
           # get explicit referenced function and call it
@@ -717,10 +717,10 @@ findNextRunDate <- function(runDayOfYear,
       nextDate <- as.Date(startDate)
     }
     if (Sys.Date() >= startDate && Sys.Date() <= terminateDate) {
-      dateseq <- timeplyr::time_seq(
+      dateseq <- seq.Date(
         as.Date(startDate),
         as.Date(terminateDate),
-        time_by = interval
+        by = interval
       )
       tidsdiff <- difftime(dateseq, Sys.Date(), units = "days")
       tidsdiff[tidsdiff <= 0] <- NA
