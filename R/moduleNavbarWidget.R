@@ -108,16 +108,22 @@ navbarWidgetServer <- function(id, orgName,
 
 
 #' @rdname navbarWidget
+#' @param map_orgname A data.frame containing two columns:
+#'   \describe{
+#'    \item{UnitId}{unit ids}
+#'    \item{orgname}{corresponding organization names}
+#'    }
 #' @export
 navbarWidgetServer2 <- function(
   id,
   orgName,
+  map_orgname = NULL,
   caller = environmentName(topenv(parent.frame()))
 ) {
 
   shiny::moduleServer(id, function(input, output, session) {
 
-    user <- userAttribute()
+    user <- userAttribute(map_orgname = map_orgname)
     stopifnot(length(user$name) > 0)
 
     # Initial privileges and affiliation will be first in list

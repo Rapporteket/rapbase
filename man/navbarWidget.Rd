@@ -15,6 +15,7 @@ navbarWidgetServer(id, orgName, caller = environmentName(rlang::caller_env()))
 navbarWidgetServer2(
   id,
   orgName,
+  map_orgname = NULL,
   caller = environmentName(topenv(parent.frame()))
 )
 
@@ -38,6 +39,12 @@ Rapporteket. If this module is called from exported functions in the
 registry R package the default value should be applied. If the module is
 called from outside the registry environment \code{caller} must be set to
 the actual name of the R package.}
+
+\item{map_orgname}{A data.frame containing two columns:
+\describe{
+ \item{UnitId}{unit ids}
+ \item{orgname}{corresponding organization names}
+ }}
 }
 \value{
 Shiny objects, mostly. \code{navbarWidgetServer2()} invisibly returns
