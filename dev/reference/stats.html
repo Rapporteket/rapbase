@@ -64,7 +64,7 @@ functions that make up the registry application at Rapporteket.</p>
 <span></span>
 <span><span class="fu">statsUI</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">statsServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">registryName</span>, eligible <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">statsServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">registryName</span>, app_id <span class="op">=</span> <span class="cn">NULL</span>, eligible <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">statsApp</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -83,6 +83,12 @@ functions that make up the registry application at Rapporteket.</p>
 
 <dt id="arg-registryname">registryName<a class="anchor" aria-label="anchor" href="#arg-registryname"></a></dt>
 <dd><p>Character string registry name key</p></dd>
+
+
+<dt id="arg-app-id">app_id<a class="anchor" aria-label="anchor" href="#arg-app-id"></a></dt>
+<dd><p>An identifier for a particular registry. Default value is NULL,
+in which case no action is taken. If value is provided, the log is filtered
+to show only entries matching chosen app_id.</p></dd>
 
 
 <dt id="arg-eligible">eligible<a class="anchor" aria-label="anchor" href="#arg-eligible"></a></dt>
