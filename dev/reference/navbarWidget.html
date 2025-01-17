@@ -55,6 +55,7 @@ number of code lines for each registry.</p>
 <span><span class="fu">navbarWidgetServer2</span><span class="op">(</span></span>
 <span>  <span class="va">id</span>,</span>
 <span>  <span class="va">orgName</span>,</span>
+<span>  map_orgname <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  caller <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environmentName</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-topenv.html" class="external-link">topenv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -91,6 +92,17 @@ Rapporteket. If this module is called from exported functions in the
 registry R package the default value should be applied. If the module is
 called from outside the registry environment <code>caller</code> must be set to
 the actual name of the R package.</p></dd>
+
+
+<dt id="arg-map-orgname">map_orgname<a class="anchor" aria-label="anchor" href="#arg-map-orgname"></a></dt>
+<dd><p>A data.frame containing two columns:</p><dl><dt>UnitId</dt>
+<dd><p>unit ids</p></dd>
+
+ <dt>orgname</dt>
+<dd><p>corresponding organization names</p></dd>
+
+
+</dl></dd>
 
 </dl></div>
     <div class="section level2">

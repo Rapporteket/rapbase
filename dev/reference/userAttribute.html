@@ -60,7 +60,7 @@ If redefining contexts is needed, please use <code><a href="userInfo.html">userI
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">userAttribute</span><span class="op">(</span>unit <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">userAttribute</span><span class="op">(</span>unit <span class="op">=</span> <span class="cn">NULL</span>, map_orgname <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">getUserEmail</span><span class="op">(</span>shinySession <span class="op">=</span> <span class="cn">NULL</span>, group <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
@@ -84,6 +84,17 @@ If redefining contexts is needed, please use <code><a href="userInfo.html">userI
 <dl><dt id="arg-unit">unit<a class="anchor" aria-label="anchor" href="#arg-unit"></a></dt>
 <dd><p>Integer providing the look-up unit id. Default value is NULL in
 which case all privileges for <code>group</code> are returned.</p></dd>
+
+
+<dt id="arg-map-orgname">map_orgname<a class="anchor" aria-label="anchor" href="#arg-map-orgname"></a></dt>
+<dd><p>A data.frame containing two columns:</p><dl><dt>UnitId</dt>
+<dd><p>unit ids</p></dd>
+
+ <dt>orgname</dt>
+<dd><p>corresponding organization names</p></dd>
+
+
+</dl></dd>
 
 
 <dt id="arg-shinysession">shinySession<a class="anchor" aria-label="anchor" href="#arg-shinysession"></a></dt>
