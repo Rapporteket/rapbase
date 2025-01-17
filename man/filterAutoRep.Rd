@@ -27,6 +27,6 @@ Generic function to filter various entities from auto report data
 }
 \examples{
 ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
-filterAutoRep(ar, "type", "B") # ar2
+filterAutoRep(ar, "type", "B", target = "file") # ar2
 
 }

@@ -28,5 +28,5 @@ a list of yaml data
 Read automated report metadata
 }
 \examples{
-readAutoReportData()
+readAutoReportData(target = "file")
 }
