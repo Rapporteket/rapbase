@@ -49,5 +49,5 @@ be printed
 }
 \examples{
 # Will return Jan 30 in the current year and locale with default formatting
-findNextRunDate(c(10, 20, 30), 20)
+findNextRunDate(c(10, 20, 30), 20, target = "file")
 }
