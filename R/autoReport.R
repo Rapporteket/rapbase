@@ -141,7 +141,7 @@ deleteAutoReport <- function(autoReportId, target = "db") {
 #' @export
 #'
 #' @examples
-#' readAutoReportData()
+#' readAutoReportData(target = "file")
 readAutoReportData <- function(fileName = "autoReport.yml",
                                packageName = "rapbase",
                                target = "db") {
@@ -387,7 +387,7 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #'
 #' @examples
 #' ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
-#' filterAutoRep(ar, "type", "B") # ar2
+#' filterAutoRep(ar, "type", "B", target = "file") # ar2
 #'
 filterAutoRep <- function(data, by, pass, target = "db") {
   stopifnot(by %in% c("package", "type", "owner", "organization"))
