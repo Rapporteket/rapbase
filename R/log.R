@@ -356,13 +356,16 @@ createLogDbTabs <- function() {
 #' @param name Character string with registry filter. Default value is an empty
 #' string that will return all log entries. If not empty its value must
 #' correspond to an existing registry (\emph{i.e.} R package) name.
+#' @param app_id An identifier for a particular registry. Default value is NULL,
+#' in which case no action is taken. If value is provided, the log is filtered
+#' to show only entries matching chosen app_id.
 #'
 #' @return A data frame of log entries
 #' @keywords internal
-readLog <- function(type, name = "") {
+readLog <- function(type, name = "", app_id = NULL) {
   stopifnot(type == "report" | type == "app")
 
-  config <- getConfig(fileName = "rapbaseConfig.yml")
+  config <- rapbase::getConfig(fileName = "rapbaseConfig.yml")
   target <- config$r$raplog$target
 
   if (target == "file") {
@@ -393,11 +396,11 @@ readLog <- function(type, name = "") {
     }
   } else if (target == "db") {
     query <- paste0("SELECT * FROM ", type, "Log")
-    if (name != "") {
-      paste0(query, " WHERE group = ", name)
-    }
     query <- paste0(query, ";")
-    log <- loadRegData(config$r$raplog$key, query)
+    log <- rapbase::loadRegData(config$r$raplog$key, query)
+    if (!is.null(app_id)) {
+      log <- log[which(log$group == app_id), ]
+    }
     log <- log %>%
       dplyr::select(-"id")
   } else {

@@ -4,10 +4,6 @@ params:
 title: '`r paste0("Bruksstatistikk for ", params$registryName)`'
 ---
 
-```{r dbName, echo=FALSE}
-dbName <- rapbase::getConfig()[[params$registryName]]$name
-```
-
 ## Innledning
 Her kan du se på og hente ut informasjon om hvordan Rapporteket for `r params$registryName` brukes. I korte trekk vil det si _hvem_, _hva_ og _når_. Formålet med verktøyet er å kunne gi registeransvarlige informasjon som kan brukes til endring og forbedring av eget innhold på Rapporteket. Videre kan informasjonen også benyttes som del av registerets revisjon av tilganger (til registerdata), men det forutsetter at underliggende registrering av bruk har tatt høyde for slik anvendelse av bruksdata.
 
