@@ -10,6 +10,9 @@
 #'
 #' @param id Character string shiny module id
 #' @param registryName Character string registry name key
+#' @param app_id An identifier for a particular registry. Default value is NULL,
+#' in which case no action is taken. If value is provided, the log is filtered
+#' to show only entries matching chosen app_id.
 #' @param eligible Logical defining if the module should be allowed to work at
 #' full capacity. This might be useful when access to module products should be
 #' restricted. Default is TRUE, \emph{i.e.} no restrictions.
@@ -78,10 +81,13 @@ statsUI <- function(id) {
 
 #' @rdname stats
 #' @export
-statsServer <- function(id, registryName, eligible = TRUE) {
+statsServer <- function(id,
+                        registryName,
+                        app_id = NULL,
+                        eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
     log <- shiny::reactive({
-      readLog(input$type, registryName) %>%
+      readLog(input$type, registryName, app_id) %>%
         logFormat()
     })
 
