@@ -39,10 +39,10 @@ loggerSetup <- function(
 
 #' Wrapper around logger::log_shiny_input_changes
 #'
-#' @param input passed from Shiny's server
+#' @param ... Arguments passed to logger::log_shiny_input_changes function
 #'
 #' @export
 #'
-logShinyInputChanges <- function(input) {
-  logger::log_shiny_input_changes(input)
+logShinyInputChanges <- function(...) {
+  logger::log_shiny_input_changes(...)
 }
