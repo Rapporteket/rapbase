@@ -45,13 +45,25 @@
 #' @seealso \code{\link{deleteAutoReport}}
 #' @export
 
-createAutoReport <- function(synopsis, package, type = "subscription", fun,
-                             paramNames, paramValues, owner, ownerName = "",
-                             email, organization, runDayOfYear,
-                             startDate = as.character(Sys.Date()),
-                             terminateDate = NULL, interval = "",
-                             intervalName = "", dryRun = FALSE,
-                             target = "file") {
+createAutoReport <- function(
+  synopsis,
+  package,
+  type = "subscription",
+  fun,
+  paramNames,
+  paramValues,
+  owner,
+  ownerName = "",
+  email,
+  organization,
+  runDayOfYear,
+  startDate = as.character(Sys.Date()),
+  terminateDate = NULL,
+  interval = "",
+  intervalName = "",
+  dryRun = FALSE,
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
 
   # When NULL, set expiry date based on context
   if (is.null(terminateDate)) {
@@ -110,7 +122,10 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
 #' @seealso \code{\link{createAutoReport}}
 #' @export
 
-deleteAutoReport <- function(autoReportId, target = "file") {
+deleteAutoReport <- function(
+  autoReportId,
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
   if (target == "file") {
     rd <- readAutoReportData()
     # just stop with an error if report does not exist
@@ -142,9 +157,11 @@ deleteAutoReport <- function(autoReportId, target = "file") {
 #'
 #' @examples
 #' readAutoReportData()
-readAutoReportData <- function(fileName = "autoReport.yml",
-                               packageName = "rapbase",
-                               target = "file") {
+readAutoReportData <- function(
+  fileName = "autoReport.yml",
+  packageName = "rapbase",
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
 
   if (target == "db") {
     config <- getConfig(fileName = "rapbaseConfig.yml")
@@ -266,9 +283,11 @@ upgradeAutoReportData <- function(config) {
 #' try(writeAutoReportData(config = config))
 #' }
 #'
-writeAutoReportData <- function(fileName = "autoReport.yml", config,
-                                packageName = "rapbase",
-                                target = "file") {
+writeAutoReportData <- function(
+  fileName = "autoReport.yml", config,
+  packageName = "rapbase",
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
 
   if (target == "db") {
     rc <- getConfig(fileName = "rapbaseConfig.yml")
@@ -389,7 +408,12 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #' ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
 #' filterAutoRep(ar, "type", "B") # ar2
 #'
-filterAutoRep <- function(data, by, pass, target = "file") {
+filterAutoRep <- function(
+  data,
+  by,
+  pass,
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
   stopifnot(by %in% c("package", "type", "owner", "organization"))
 
   if (length(data) == 0) {
@@ -527,11 +551,14 @@ getRegs <- function(config) {
 #' }
 #'
 
-runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
-                          dato = Sys.Date(),
-                          group = NULL,
-                          type = c("subscription", "dispatchment"),
-                          target = "file", dryRun = FALSE) {
+runAutoReport <- function(
+  dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
+  dato = Sys.Date(),
+  group = NULL,
+  type = c("subscription", "dispatchment"),
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target,
+  dryRun = FALSE
+) {
 
   # get report candidates
   reps <- readAutoReportData(target = target) %>%
@@ -702,13 +729,15 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 #' findNextRunDate(c(10, 20, 30), 20)
 #' @export
 
-findNextRunDate <- function(runDayOfYear,
-                            baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
-                            startDate = NULL,
-                            terminateDate = NULL,
-                            interval = NULL,
-                            returnFormat = "%A %e. %B %Y",
-                            target = "file") {
+findNextRunDate <- function(
+  runDayOfYear,
+  baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
+  startDate = NULL,
+  terminateDate = NULL,
+  interval = NULL,
+  returnFormat = "%A %e. %B %Y",
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
 
   if (target == "db") {
     if (Sys.Date() < startDate) {
@@ -847,15 +876,17 @@ findNextRunDate <- function(runDayOfYear,
 #' @export
 # nolint end
 
-makeAutoReportTab <- function(session,
-                              namespace = character(),
-                              user = rapbase::getUserName(session),
-                              group = rapbase::getUserGroups(session),
-                              orgId = rapbase::getUserReshId(session),
-                              type = "subscription",
-                              mapOrgId = NULL,
-                              includeReportId = FALSE,
-                              target = "file") {
+makeAutoReportTab <- function(
+  session,
+  namespace = character(),
+  user = rapbase::getUserName(session),
+  group = rapbase::getUserGroups(session),
+  orgId = rapbase::getUserReshId(session),
+  type = "subscription",
+  mapOrgId = NULL,
+  includeReportId = FALSE,
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
   autoRep <- readAutoReportData(target = target) %>%

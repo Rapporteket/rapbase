@@ -8,7 +8,7 @@ writeAutoReportData(
   fileName = "autoReport.yml",
   config,
   packageName = "rapbase",
-  target = "file"
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
 )
 }
 \arguments{
