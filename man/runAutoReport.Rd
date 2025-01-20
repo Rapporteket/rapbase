@@ -50,10 +50,3 @@ providing a path to a file that can be attached to an email or, in case of a
 bulletin, the email body itself. For bulletins, files cannot be attached.
 The email itself is prepared and sent to recipients defined in the config
 }
-\examples{
-\donttest{
-# Example depend on environment variable R_RAP_CONFIG_PATH being set
-runAutoReport()
-}
-
-}

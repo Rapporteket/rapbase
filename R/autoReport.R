@@ -520,12 +520,6 @@ getRegs <- function(config) {
 #' message
 #' @export
 #'
-#' @examples
-#' \donttest{
-#' # Example depend on environment variable R_RAP_CONFIG_PATH being set
-#' runAutoReport()
-#' }
-#'
 
 runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
                           dato = Sys.Date(),
