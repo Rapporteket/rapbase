@@ -21,7 +21,7 @@ createAutoReport(
   interval = "",
   intervalName = "",
   dryRun = FALSE,
-  target = "file"
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
 )
 }
 \arguments{

@@ -9,7 +9,7 @@ runAutoReport(
   dato = Sys.Date(),
   group = NULL,
   type = c("subscription", "dispatchment"),
-  target = "file",
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target,
   dryRun = FALSE
 )
 }

@@ -4,7 +4,10 @@
 \alias{deleteAutoReport}
 \title{Delete existing report from config/db}
 \usage{
-deleteAutoReport(autoReportId, target = "file")
+deleteAutoReport(
+  autoReportId,
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+)
 }
 \arguments{
 \item{autoReportId}{String providing the auto report unique id}
