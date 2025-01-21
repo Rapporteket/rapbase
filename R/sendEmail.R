@@ -23,7 +23,7 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
 
   # nocov start
 
-  from <- conf$network$sender
+  from <- conf$sender
   # escape spaces (e.g. when full name is added to <email>)
   to <- gsub(" ", "\\ ", to, fixed = TRUE)
 
@@ -36,8 +36,8 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
   sendmailR::sendmail(
     from, to, subject, body,
     control = list(
-      smtpServer = conf$network$smtp$server,
-      smtpPortSMTP = conf$network$smtp$port
+      smtpServer = conf$smtp$server,
+      smtpPortSMTP = conf$smtp$port
     )
   )
 
