@@ -45,13 +45,25 @@
 #' @seealso \code{\link{deleteAutoReport}}
 #' @export
 
-createAutoReport <- function(synopsis, package, type = "subscription", fun,
-                             paramNames, paramValues, owner, ownerName = "",
-                             email, organization, runDayOfYear,
-                             startDate = as.character(Sys.Date()),
-                             terminateDate = NULL, interval = "",
-                             intervalName = "", dryRun = FALSE,
-                             target = "file") {
+createAutoReport <- function(
+  synopsis,
+  package,
+  type = "subscription",
+  fun,
+  paramNames,
+  paramValues,
+  owner,
+  ownerName = "",
+  email,
+  organization,
+  runDayOfYear,
+  startDate = as.character(Sys.Date()),
+  terminateDate = NULL,
+  interval = "",
+  intervalName = "",
+  dryRun = FALSE,
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
 
   # When NULL, set expiry date based on context
   if (is.null(terminateDate)) {
@@ -110,7 +122,10 @@ createAutoReport <- function(synopsis, package, type = "subscription", fun,
 #' @seealso \code{\link{createAutoReport}}
 #' @export
 
-deleteAutoReport <- function(autoReportId, target = "file") {
+deleteAutoReport <- function(
+  autoReportId,
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
   if (target == "file") {
     rd <- readAutoReportData()
     # just stop with an error if report does not exist
@@ -142,9 +157,11 @@ deleteAutoReport <- function(autoReportId, target = "file") {
 #'
 #' @examples
 #' readAutoReportData()
-readAutoReportData <- function(fileName = "autoReport.yml",
-                               packageName = "rapbase",
-                               target = "file") {
+readAutoReportData <- function(
+  fileName = "autoReport.yml",
+  packageName = "rapbase",
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
 
   if (target == "db") {
     config <- getConfig(fileName = "rapbaseConfig.yml")
@@ -266,9 +283,11 @@ upgradeAutoReportData <- function(config) {
 #' try(writeAutoReportData(config = config))
 #' }
 #'
-writeAutoReportData <- function(fileName = "autoReport.yml", config,
-                                packageName = "rapbase",
-                                target = "file") {
+writeAutoReportData <- function(
+  fileName = "autoReport.yml", config,
+  packageName = "rapbase",
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
 
   if (target == "db") {
     rc <- getConfig(fileName = "rapbaseConfig.yml")
@@ -389,7 +408,12 @@ writeAutoReportData <- function(fileName = "autoReport.yml", config,
 #' ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
 #' filterAutoRep(ar, "type", "B") # ar2
 #'
-filterAutoRep <- function(data, by, pass, target = "file") {
+filterAutoRep <- function(
+  data,
+  by,
+  pass,
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
   stopifnot(by %in% c("package", "type", "owner", "organization"))
 
   if (length(data) == 0) {
@@ -514,6 +538,7 @@ getRegs <- function(config) {
 #' sent. Default is FALSE
 #' @param dato Date-class date when report will be run first time. Default value
 #' is set to \code{Sys.Date()}
+#' @inheritParams makeAutoReportTab
 #'
 #' @return Emails with corresponding file attachment. If dryRun == TRUE just a
 #' message
@@ -526,14 +551,32 @@ getRegs <- function(config) {
 #' }
 #'
 
-runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
-                          dato = Sys.Date(),
-                          type = c("subscription", "dispatchment"),
-                          target = "file", dryRun = FALSE) {
+runAutoReport <- function(
+  dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
+  dato = Sys.Date(),
+  group = NULL,
+  type = c("subscription", "dispatchment"),
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target,
+  dryRun = FALSE
+) {
 
   # get report candidates
   reps <- readAutoReportData(target = target) %>%
     filterAutoRep(by = "type", pass = type, target = target)
+  if (!is.null(group)) {
+    reps <- reps %>%
+      filterAutoRep(by = "package", pass = group, target = target)
+  }
+  if (target == "db") {
+    reps <- reps %>%
+      # nolint start: object_usage_linter
+      dplyr::summarise(
+        email = list(unique(email)),
+        .by = c(owner, ownerName, package, organization, type, fun,
+                params, startDate, terminateDate, interval)
+      )
+    # nolint end
+  }
 
   # standard text for email body
   stdTxt <- readr::read_file(
@@ -549,7 +592,8 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
     tryCatch(
       {
         if (target == "db") {
-          rep <- reps[i, ]
+          rep <- reps[i, ] %>% as.list()
+          rep$email <- unlist(rep$email)
           params <- jsonlite::fromJSON(rep$params)
         } else {
           rep <- reps[[i]]
@@ -564,10 +608,10 @@ runAutoReport <- function(dayNumber = as.POSIXlt(Sys.Date())$yday + 1,
           target == "db"
           && as.Date(rep$startDate) <= dato
           && as.Date(rep$terminateDate) > dato
-          && dato %in% timeplyr::time_seq(
+          && dato %in% seq.Date(
             as.Date(rep$startDate),
-            dato,
-            time_by = rep$interval
+            as.Date(dato),
+            by = rep$interval
           ) # 'days', 'weeks', 'months', 'years',
         )) {
           # get explicit referenced function and call it
@@ -678,64 +722,98 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 #' \code{\link[base]{strptime}} in the current locale. Defaults to
 #' "\%A \%d. \%B \%Y" that will provide something like
 #' 'Mandag 20. januar 2019' in a Norwegian locale
+#' @inheritParams createAutoReport
 #' @return String date for printing
 #' @examples
 #' # Will return Jan 30 in the current year and locale with default formatting
 #' findNextRunDate(c(10, 20, 30), 20)
 #' @export
 
-findNextRunDate <- function(runDayOfYear,
-                            baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
-                            startDate = NULL,
-                            returnFormat = "%A %e. %B %Y") {
-  year <- as.POSIXlt(Sys.Date())$year + 1900
+findNextRunDate <- function(
+  runDayOfYear,
+  baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
+  startDate = NULL,
+  terminateDate = NULL,
+  interval = NULL,
+  returnFormat = "%A %e. %B %Y",
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
 
-  if (!is.null(startDate)) {
-    if (as.Date(startDate) > as.Date(strptime(
-      paste(year, baseDayNum),
-      "%Y %j"
-    ))) {
-      # since we pull the NEXT run day set new base day on day BEFORE star date
-      baseDayNum <- as.POSIXlt(startDate)$yday
+  if (target == "db") {
+    if (Sys.Date() < startDate) {
+      nextDate <- as.Date(startDate)
     }
-  }
-
-  # special case if out of max range and only one run day defined (yearly)
-  if (baseDayNum >= max(runDayOfYear) || length(runDayOfYear) == 1) {
-    # next run will be first run in day num vector
-    nextDayNum <- min(runDayOfYear)
-  } else {
-    # find year transition, if any
-    nDay <- length(runDayOfYear)
-    deltaDay <- runDayOfYear[2:nDay] - runDayOfYear[1:(nDay - 1)]
-    trans <- deltaDay < 0
-    if (any(trans)) {
-      indTrans <- match(TRUE, trans)
-      # vector head
-      dHead <- runDayOfYear[1:indTrans]
-      # vector tail
-      dTail <- runDayOfYear[(indTrans + 1):nDay]
-
-      if (baseDayNum >= max(dTail)) {
-        ## next run day to be found in vector head
-        runDayOfYearSubset <- dHead
+    if (Sys.Date() >= startDate && Sys.Date() <= terminateDate) {
+      dateseq <- seq.Date(
+        as.Date(startDate),
+        as.Date(terminateDate),
+        by = interval
+      )
+      tidsdiff <- difftime(dateseq, Sys.Date(), units = "days")
+      tidsdiff[tidsdiff <= 0] <- NA
+      if (length(tidsdiff) == sum(is.na(tidsdiff))) {
+        nextDate <- as.Date(terminateDate) + 1
       } else {
-        ## next run day to be found in vector tail
-        runDayOfYearSubset <- dTail
+        nextDate <- dateseq[which(tidsdiff == min(tidsdiff, na.rm = TRUE))]
       }
-    } else {
-      runDayOfYearSubset <- runDayOfYear
+    }
+    if (Sys.Date() > terminateDate) {
+      nextDate <- as.Date(terminateDate) + 1
     }
 
-    nextDayNum <- min(runDayOfYearSubset[runDayOfYearSubset > baseDayNum])
-  }
+    return(format(nextDate, format = returnFormat))
+  } else {
 
-  # if current day num larger than nextDayNum report will be run next year
-  if (as.numeric(format(Sys.Date(), "%j")) > nextDayNum) {
-    year <- year + 1
-  }
+    year <- as.POSIXlt(Sys.Date())$year + 1900
 
-  format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
+    if (!is.null(startDate)) {
+      if (as.Date(startDate) > as.Date(strptime(
+        paste(year, baseDayNum),
+        "%Y %j"
+      ))) {
+        # since we pull the NEXT run day set new base day
+        # on day BEFORE start date
+        baseDayNum <- as.POSIXlt(startDate)$yday
+      }
+    }
+
+    # special case if out of max range and only one run day defined (yearly)
+    if (baseDayNum >= max(runDayOfYear) || length(runDayOfYear) == 1) {
+      # next run will be first run in day num vector
+      nextDayNum <- min(runDayOfYear)
+    } else {
+      # find year transition, if any
+      nDay <- length(runDayOfYear)
+      deltaDay <- runDayOfYear[2:nDay] - runDayOfYear[1:(nDay - 1)]
+      trans <- deltaDay < 0
+      if (any(trans)) {
+        indTrans <- match(TRUE, trans)
+        # vector head
+        dHead <- runDayOfYear[1:indTrans]
+        # vector tail
+        dTail <- runDayOfYear[(indTrans + 1):nDay]
+
+        if (baseDayNum >= max(dTail)) {
+          ## next run day to be found in vector head
+          runDayOfYearSubset <- dHead
+        } else {
+          ## next run day to be found in vector tail
+          runDayOfYearSubset <- dTail
+        }
+      } else {
+        runDayOfYearSubset <- runDayOfYear
+      }
+
+      nextDayNum <- min(runDayOfYearSubset[runDayOfYearSubset > baseDayNum])
+    }
+
+    # if current day num larger than nextDayNum report will be run next year
+    if (as.numeric(format(Sys.Date(), "%j")) > nextDayNum) {
+      year <- year + 1
+    }
+
+    format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
+  }
 }
 
 # nolint start
@@ -798,15 +876,17 @@ findNextRunDate <- function(runDayOfYear,
 #' @export
 # nolint end
 
-makeAutoReportTab <- function(session,
-                              namespace = character(),
-                              user = rapbase::getUserName(session),
-                              group = rapbase::getUserGroups(session),
-                              orgId = rapbase::getUserReshId(session),
-                              type = "subscription",
-                              mapOrgId = NULL,
-                              includeReportId = FALSE,
-                              target = "file") {
+makeAutoReportTab <- function(
+  session,
+  namespace = character(),
+  user = rapbase::getUserName(session),
+  group = rapbase::getUserGroups(session),
+  orgId = rapbase::getUserReshId(session),
+  type = "subscription",
+  mapOrgId = NULL,
+  includeReportId = FALSE,
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
   autoRep <- readAutoReportData(target = target) %>%
@@ -828,13 +908,13 @@ makeAutoReportTab <- function(session,
 
     l <- list()
     for (i in seq_len(nrow(autoRep))) {
-      runDayOfYear <- as.vector(
-        as.integer(strsplit(autoRep[i, ]$runDayOfYear, ",")[[1]])
-      )
       nextDate <- findNextRunDate(
-        runDayOfYear = runDayOfYear,
+        runDayOfYear = NULL,
         startDate = autoRep[i, ]$startDate,
-        returnFormat = dateFormat
+        terminateDate = autoRep[i, ]$terminateDate,
+        interval = autoRep[i, ]$interval,
+        returnFormat = dateFormat,
+        target = target
       )
       if (as.Date(nextDate, format = dateFormat) > autoRep[i, ]$terminateDate) {
         nextDate <- "Utl\u00F8pt"

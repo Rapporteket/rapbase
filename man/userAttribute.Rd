@@ -11,7 +11,7 @@
 \alias{getUserRole}
 \title{User attributes in container apps running behind shinyproxy}
 \usage{
-userAttribute(unit = NULL)
+userAttribute(unit = NULL, map_orgname = NULL)
 
 getUserEmail(shinySession = NULL, group = NULL)
 
@@ -30,6 +30,12 @@ getUserRole(shinySession = NULL, group = NULL)
 \arguments{
 \item{unit}{Integer providing the look-up unit id. Default value is NULL in
 which case all privileges for \code{group} are returned.}
+
+\item{map_orgname}{A data.frame containing two columns:
+\describe{
+ \item{UnitId}{unit ids}
+ \item{orgname}{corresponding organization names}
+ }}
 
 \item{shinySession}{A shiny session object. Default value is NULL}
 

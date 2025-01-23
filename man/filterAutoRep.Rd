@@ -4,7 +4,12 @@
 \alias{filterAutoRep}
 \title{Filter auto report data}
 \usage{
-filterAutoRep(data, by, pass, target = "file")
+filterAutoRep(
+  data,
+  by,
+  pass,
+  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+)
 }
 \arguments{
 \item{data}{List (nested) specifying auto reports to be filtered. May be

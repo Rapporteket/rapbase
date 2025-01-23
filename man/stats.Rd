@@ -14,7 +14,7 @@ statsInput(id)
 
 statsUI(id)
 
-statsServer(id, registryName, eligible = TRUE)
+statsServer(id, registryName, app_id = NULL, eligible = TRUE)
 
 statsApp()
 
@@ -26,6 +26,10 @@ logTimeFrame(log, startDate, endDate)
 \item{id}{Character string shiny module id}
 
 \item{registryName}{Character string registry name key}
+
+\item{app_id}{An identifier for a particular registry. Default value is NULL,
+in which case no action is taken. If value is provided, the log is filtered
+to show only entries matching chosen app_id.}
 
 \item{eligible}{Logical defining if the module should be allowed to work at
 full capacity. This might be useful when access to module products should be

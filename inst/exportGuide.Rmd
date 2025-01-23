@@ -4,10 +4,6 @@ params:
 title: '`r paste0("Veiledning for eksport av ", params$registryName, "-data")`'
 ---
 
-```{r dbName, echo=FALSE}
-dbName <- rapbase::getConfig()[[params$registryName]]$name
-```
-
 ## Eksport av `r params$registryName`-databasen
 Her kan statistikere som jobber med Rapporteket laste ned hele databasen. Formatet som benyttes gjør det enkelt å sette opp en egen database for analyse- og utviklingsformål. Nedlastet fil er kryptert og innholdet er utilgjengelig for alle andre enn definert mottaker. Filen slik den lastes ned kan derfor trygt transporteres og eksponeres offentlig uten fare for at innholdet (registerdata) blir tilgjengelig for andre.
 

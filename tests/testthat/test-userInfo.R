@@ -186,15 +186,7 @@ withr::with_envvar(
       expect_true(userAttribute()$unit[1] == "1")
       expect_true(userAttribute()$unit[2] == "2")
     })
-  }
-)
 
-withr::with_envvar(
-  new = c(
-    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
-    "FALK_APP_ID" = "80"
-  ),
-  code = {
     test_that("group and unit returned correspondingly when unit is given", {
       expect_equal(class(userAttribute()), "list")
       expect_equal(
@@ -206,24 +198,28 @@ withr::with_envvar(
       )
       expect_equal(userAttribute(unit = 3)$unit, integer(0))
     })
-  }
-)
 
-withr::with_envvar(
-  new = c(
-    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
-    "FALK_APP_ID" = "80"
-  ),
-  code = {
     test_that("correct lookup values are provided", {
       expect_equal(
-        userAttribute(unit = 2)$org, 2
+        length(userAttribute(unit = 2)$group),
+        length(userAttribute(unit = 2)$unit)
       )
       expect_equal(
-        userAttribute(unit = 2)$role, "SC"
+        userAttribute(unit = 2)$unit, 2
+      )
+      expect_equal(userAttribute(unit = 3)$unit, integer(0))
+    })
+
+    test_that("orgname-mapping is working", {
+      maporg <- data.frame(orgname = c("qwerty", "asdfgh"), UnitId = c(1, 2))
+      expect_equal(
+        userAttribute(unit = 2)$orgName, "Ukjent"
       )
       expect_equal(
-        userAttribute(unit = 1)$role, "LC"
+        userAttribute(unit = 2, map_orgname = maporg)$orgName, "asdfgh"
+      )
+      expect_equal(
+        userAttribute(unit = 1, map_orgname = maporg)$orgName, "qwerty"
       )
     })
   }
