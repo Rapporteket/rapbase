@@ -556,16 +556,16 @@ runAutoReport <- function(
   dato = Sys.Date(),
   group = NULL,
   type = c("subscription", "dispatchment"),
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target,
+  target = rapbase::getConfig("rapbaseConfig.yml")$r$autoReport$target,
   dryRun = FALSE
 ) {
 
   # get report candidates
-  reps <- readAutoReportData(target = target) %>%
-    filterAutoRep(by = "type", pass = type, target = target)
+  reps <- rapbase::readAutoReportData(target = target) %>%
+    rapbase::filterAutoRep(by = "type", pass = type, target = target)
   if (!is.null(group)) {
     reps <- reps %>%
-      filterAutoRep(by = "package", pass = group, target = target)
+      rapbase::filterAutoRep(by = "package", pass = group, target = target)
   }
   if (target == "db") {
     reps <- reps %>%
@@ -573,7 +573,7 @@ runAutoReport <- function(
       dplyr::summarise(
         email = list(unique(email)),
         .by = c(owner, ownerName, package, organization, type, fun,
-                params, startDate, terminateDate, interval)
+                params, startDate, terminateDate, interval, synopsis)
       )
     # nolint end
   }
@@ -615,7 +615,7 @@ runAutoReport <- function(
           ) # 'days', 'weeks', 'months', 'years',
         )) {
           # get explicit referenced function and call it
-          f <- .getFun(paste0(rep$package, "::", rep$fun))
+          f <- rapbase::.getFun(paste0(rep$package, "::", rep$fun))
           content <- do.call(what = f, args = params)
           if (rep$type == "bulletin") {
             text <- content
@@ -627,7 +627,7 @@ runAutoReport <- function(
           if (dryRun) {
             message(paste("No emails sent. Content is:", content))
           } else {
-            autLogger(
+            rapbase::autLogger(
               user = rep$owner,
               name = rep$ownerName,
               registryName = rep$package,
@@ -644,7 +644,7 @@ runAutoReport <- function(
                 )
               )
             )
-            sendEmail(
+            rapbase::sendEmail(
               conf = conf, to = rep$email, subject = rep$synopsis,
               text = text, attFile = attFile
             )
