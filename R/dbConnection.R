@@ -52,6 +52,13 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
   } else if (dbType == "mssql") {
     stop("Use of MSSQL is no longer supported. Exiting")
+  } else if (dbType == "sqlite") {
+    drv <- RSQLite::SQLite()
+    con <- DBI::dbConnect(
+      drv,
+      dbname = conf$name
+    )
+    invisible(DBI::dbExecute(con))
   }
 
   list(con = con, drv = drv)
