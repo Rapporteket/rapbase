@@ -140,7 +140,7 @@ navbarWidgetServer2 <- function(
     )
 
     output$name <- shiny::renderText(rv$fullName)
-    output$affiliation <- shiny::renderText(paste(orgName, rv$role, sep = ", "))
+    output$affiliation <- shiny::renderText(paste(rv$orgName, rv$role, sep = ", "))
 
     # User info in widget
     userInfo <- howWeDealWithPersonalData(session, callerPkg = caller)
