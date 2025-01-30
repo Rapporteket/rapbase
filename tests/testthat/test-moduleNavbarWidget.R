@@ -69,6 +69,7 @@ with_envvar(
         expect_equal(rv$org, 1)
         expect_equal(rv$role, "LU")
 
+        session$setInputs(selectOrganization = 2)
         session$setInputs(unit = paste0("Ukjent", " (", "2", ") - ", "SC"))
         expect_equal(rv$unit, 2)
         expect_equal(rv$org, 2)
