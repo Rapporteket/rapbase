@@ -61,6 +61,7 @@ with_envvar(
         orgName = registryName,
         caller = "rapbase"
       ), {
+        session$setInputs(unit = NULL)
         expect_equal(class(output$affiliation), "character")
         expect_equal(rv$name, "ttesterc")
         expect_equal(rv$fullName, "Tore Tester Container")
@@ -71,6 +72,15 @@ with_envvar(
 
         session$setInputs(selectOrganization = 3,
                           unit = paste0("Ukjent", " (", "2", ") - ", "SC"))
+        expect_equal(rv$unit, 2)
+        expect_equal(rv$org, 2)
+        expect_equal(rv$role, "SC")
+        session$setInputs(unit = NULL)
+        expect_equal(rv$unit, 2)
+        expect_equal(rv$org, 2)
+        expect_equal(rv$role, "SC")
+        session$setInputs(selectOrganization = 4,
+                          unit = NULL)
         expect_equal(rv$unit, 2)
         expect_equal(rv$org, 2)
         expect_equal(rv$role, "SC")
