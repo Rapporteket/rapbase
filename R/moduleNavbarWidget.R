@@ -159,7 +159,11 @@ navbarWidgetServer2 <- function(
     # Select organization in widget (for container apps only)
     shiny::observeEvent(input$selectOrganization, {
       choices <- paste0(user$orgName, " (", user$org, ") - ", user$role)
-      lastchoice <- if (is.null(input$unit)) {NA} else {choices[choices == input$unit]}
+      lastchoice <- if (is.null(input$unit)) {
+        NA
+      } else {
+        choices[choices == input$unit]
+      }
 
       shinyalert::shinyalert(
         html = TRUE,
@@ -178,7 +182,11 @@ navbarWidgetServer2 <- function(
             session$ns("unit"),
             "",
             choices,
-            selected = if (is.na(lastchoice)) {choices[1]} else {lastchoice}
+            selected = if (is.na(lastchoice)) {
+              choices[1]
+            } else {
+              lastchoice
+            }
           )
         )),
         type = "", imageUrl = "rap/logo.svg",
