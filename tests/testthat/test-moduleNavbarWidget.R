@@ -61,31 +61,15 @@ with_envvar(
         orgName = registryName,
         caller = "rapbase"
       ), {
-        # expect_equal(output$name, "Tore Tester Container")
         expect_equal(class(output$affiliation), "character")
-        # session$setInputs(userInfo = 1)
-        # session$setInputs(selectOrganization = 1, unit = 1)
         expect_equal(rv$name, "ttesterc")
         expect_equal(rv$fullName, "Tore Tester Container")
         expect_equal(rv$group, 80)
         expect_equal(rv$unit, 1)
         expect_equal(rv$org, 1)
         expect_equal(rv$role, "LU")
-      })
-    })
-    test_that("shinyproxy-like module navbar widget server returns output", {
-      shiny::testServer(navbarWidgetServer2, args = list(
-        orgName = registryName,
-        caller = "rapbase"
-      ), {
+
         session$setInputs(unit = paste0("Ukjent", " (", "2", ") - ", "SC"))
-        # expect_equal(output$name, "Tore Tester Container")
-        expect_equal(class(output$affiliation), "character")
-        # session$setInputs(userInfo = 1)
-        # session$setInputs(selectOrganization = 1, unit = 1)
-        expect_equal(rv$name, "ttesterc")
-        expect_equal(rv$fullName, "Tore Tester Container")
-        expect_equal(rv$group, 80)
         expect_equal(rv$unit, 2)
         expect_equal(rv$org, 2)
         expect_equal(rv$role, "SC")
