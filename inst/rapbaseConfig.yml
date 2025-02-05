@@ -12,43 +12,18 @@ r :
   raplog:
     archiveDir: logArchive
     eolDays: 730
-    target: file
-    key: raplogTest
+    target: db
+    key: raplog
 
   # Automated report data
   autoReport:
-    target: file
+    target: db
     key: autoreport
 
   # Staging data
   staging:
-    target: file
+    target: db
     key: staging
-
-  # User data for testing purposes
-  testUser :
-    user : ttester
-    groups : rapbase
-    role : accessLevel
-    resh_id : '999999'
-    email: rapporteket@skde.no
-    full_name: Tore Tester
-    phone: '04050607'
-
-
-  # Scedule
-  schedule :
-    nocturnal :
-      startHour: 0
-      endHour: 8
-      funs :
-      - rapbase::runAutoReport
-    diurnal:
-      startHour: 8
-      endHour: 24
-      funs:
-      - rapbase::runBulletin
-
 
 ## Network
 network :
@@ -73,44 +48,6 @@ github :
   # Github organization
   organization : Rapporteket
 
-  # Dummy gist
-  gistId :
-    reportName : reportNameGistId
-
   # Dummy PAT
   PAT :
     githubUserName : PAT
-
-
-## Database
-db :
-  # Dummy config entry
-  nordummy:
-    host : dummy_db_hostname.no
-    name : dummy_db_name
-    user : dummy_db_username
-    pass : dummy_db_password
-    disp : dummy_display_name
-
-  # For testing, on localhost
-  rapbase:
-    host : 127.0.0.1
-    name : rapbase
-    user : rapbase
-    pass : rapbase
-    disp : ForTestingOnly
-
-## Access tree
-accesstree:
-  file: accesstree.json
-  list:
-    unit: AccessUnits.UnitId
-    resh: AccessUnits.HealthUnitId
-    role: AccessUnits.ExtraData
-    parent: AccessUnits.ParentUnitId
-    database: AccessUnits.HasDatabase
-    external: AccessUnits.ExternalId
-    title: AccessUnits.Title
-    titlewithpath: AccessUnits.TitleWithPath
-    validfrom: AccessUnits.ValidFrom
-    validto: AccessUnits.ValidTo
