@@ -8,8 +8,6 @@
 \alias{autoReportFormatInput}
 \alias{autoReportFormatSercer}
 \alias{autoReportInput}
-\alias{autoReportServer}
-\alias{autoReportApp}
 \alias{orgList2df}
 \alias{autoReportFormatServer}
 \alias{autoReportServer2}
@@ -27,19 +25,6 @@ autoReportFormatServer(id)
 
 autoReportInput(id)
 
-autoReportServer(
-  id,
-  registryName,
-  type,
-  org = NULL,
-  paramNames = shiny::reactiveVal(c("")),
-  paramValues = shiny::reactiveVal(c("")),
-  reports = NULL,
-  orgs = NULL,
-  eligible = TRUE,
-  freq = "month"
-)
-
 autoReportServer2(
   id,
   registryName,
@@ -52,14 +37,6 @@ autoReportServer2(
   eligible = TRUE,
   freq = "month",
   user
-)
-
-autoReportApp(
-  registryName = "rapbase",
-  type = "subscription",
-  reports = NULL,
-  paramNames = shiny::reactive(c("")),
-  orgs = NULL
 )
 
 orgList2df(orgs)
@@ -195,10 +172,10 @@ server <- function(input, output, session) {
   paramNames <- shiny::reactive(c("organization", "outputFormat"))
   paramValues <- shiny::reactive(c(org$value(), format()))
 
-  autoReportServer(
+  autoReportServer2(
     id = "test", registryName = "rapbase", type = "dispatchment",
     org = org$value, paramNames = paramNames, paramValues = paramValues,
-    reports = reports, orgs = orgs, eligible = TRUE
+    reports = reports, orgs = orgs, eligible = TRUE, freq = "month", user
   )
 }
 
