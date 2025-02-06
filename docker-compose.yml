@@ -1,6 +1,6 @@
 services:
   db:
-    image: mysql:8
+    image: mysql:9
     command: --innodb-log-file-size=500M --innodb_strict_mode=0
     restart: "no"
     environment:
