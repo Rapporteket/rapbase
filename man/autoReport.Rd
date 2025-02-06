@@ -8,10 +8,10 @@
 \alias{autoReportFormatInput}
 \alias{autoReportFormatSercer}
 \alias{autoReportInput}
-\alias{orgList2df}
-\alias{autoReportFormatServer}
 \alias{autoReportServer}
 \alias{autoReportServer2}
+\alias{orgList2df}
+\alias{autoReportFormatServer}
 \title{Shiny modules and helper functions for registry auto reports}
 \usage{
 autoReportUI(id)

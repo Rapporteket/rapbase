@@ -73,7 +73,7 @@
 #' @name autoReport
 #' @aliases autoReportUI autoReportOrgInput autoReportOrgServer
 #'   autoReportFormatInput autoReportFormatSercer autoReportInput
-#'   orgList2df
+#'   autoReportServer autoReportServer2 orgList2df
 #' @examples
 #' ## make a list for report metadata
 #' reports <- list(
