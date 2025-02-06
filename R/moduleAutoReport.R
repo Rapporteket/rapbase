@@ -223,7 +223,7 @@ autoReportInput <- function(id) {
 
 #' @rdname autoReport
 #' @export
-autoReportServer2 <- function(
+autoReportServer <- function(
   id,
   registryName,
   type,
@@ -598,6 +598,13 @@ autoReportServer2 <- function(
       )
     })
   })
+}
+
+#' @rdname autoReport
+#' @param ... Arguments passed to autoReportServer function
+#' @export
+autoReportServer2 <- function(...) {
+  autoReportServer(...)
 }
 
 #' @rdname autoReport

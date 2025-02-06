@@ -10,6 +10,7 @@
 \alias{autoReportInput}
 \alias{orgList2df}
 \alias{autoReportFormatServer}
+\alias{autoReportServer}
 \alias{autoReportServer2}
 \title{Shiny modules and helper functions for registry auto reports}
 \usage{
@@ -25,7 +26,7 @@ autoReportFormatServer(id)
 
 autoReportInput(id)
 
-autoReportServer2(
+autoReportServer(
   id,
   registryName,
   type,
@@ -38,6 +39,8 @@ autoReportServer2(
   freq = "month",
   user
 )
+
+autoReportServer2(...)
 
 orgList2df(orgs)
 }
@@ -91,6 +94,8 @@ report GUI. Must be one of
 \item{user}{List of shiny reactive values providing user metadata and
 privileges corresponding to the return value of
 \code{\link{navbarWidgetServer}}.}
+
+\item{...}{Arguments passed to autoReportServer function}
 }
 \value{
 In general, shiny objects. In particular, \code{autoreportOrgServer}
