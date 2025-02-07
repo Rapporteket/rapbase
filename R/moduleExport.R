@@ -60,7 +60,6 @@ exportUCInput <- function(id) {
 exportUCServer <- function(id, registryName, repoName = registryName,
                            eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
-    conf <- getConfig("rapbaseConfig.yml")
 
     pubkey <- shiny::reactive({
       shiny::req(input$exportPid)
@@ -251,7 +250,7 @@ exportDb <- function(registryName, compress = FALSE, session) {
   } else {
     conf <- getConfig()[[registryName]]
   }
-  
+
   cmd <- paste0(
     "mysqldump ",
     "--no-tablespaces --single-transaction --add-drop-database "
