@@ -12,31 +12,8 @@
 #' @export
 
 rapOpenDbConnection <- function(registryName, dbType = "mysql") {
-  if (Sys.getenv("R_RAP_INSTANCE") %in% c("QAC", "PRODUCTIONC")) {
-    conf <- data.frame(
-      host = Sys.getenv("MYSQL_HOST"),
-      user = Sys.getenv("MYSQL_USER"),
-      password = Sys.getenv("MYSQL_PASSWORD"),
-      port = as.numeric(Sys.getenv("MYSQL_PORT", "3306"))
-    )
-    conf$name <- switch(
-      registryName,
-      "raplog" = Sys.getenv("MYSQL_DB_LOG"),
-      "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
-      "data" = Sys.getenv("MYSQL_DB_DATA"),
-      Sys.getenv(registryName)
-    )
-  } else {
-    conf <- getConfig()
-    conf <- conf[[registryName]]
-    if (is.null(conf)) {
-      stop(paste0(
-        "Could not connect to database because there is no
-                configuration corresponding to key '", registryName,
-        "'. Please check key and/or configuration."
-      ))
-    }
-  }
+
+  conf <- getDbConfig(registryName)
 
   if (dbType == "mysql") {
     drv <- RMariaDB::MariaDB()
@@ -66,4 +43,42 @@ rapOpenDbConnection <- function(registryName, dbType = "mysql") {
 rapCloseDbConnection <- function(con) {
   con <- DBI::dbDisconnect(con)
   con <- NULL
+}
+
+#' Get database connection configuration
+#'
+#' @param registryName String id used for the registry in global configuration
+#'   file from which information on the database connection is provided
+#'
+#' @return A list with name, user, password and host of the db connection.
+#'
+#' @keywords internal
+#'
+getDbConfig <- function(registryName = "MYSQL_DB_DATA") {
+  if (Sys.getenv("R_RAP_INSTANCE") %in% c("QAC", "PRODUCTIONC")) {
+    conf <- data.frame(
+      host = Sys.getenv("MYSQL_HOST"),
+      user = Sys.getenv("MYSQL_USER"),
+      pass = Sys.getenv("MYSQL_PASSWORD"),
+      port = as.numeric(Sys.getenv("MYSQL_PORT", "3306"))
+    )
+    conf$name <- switch(
+      registryName,
+      "raplog" = Sys.getenv("MYSQL_DB_LOG"),
+      "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
+      "data" = Sys.getenv("MYSQL_DB_DATA"),
+      Sys.getenv(registryName)
+    )
+  } else {
+    conf <- getConfig()
+    conf <- conf[[registryName]]
+    if (is.null(conf)) {
+      stop(paste0(
+        "Could not connect to database because there is no
+                configuration corresponding to key '", registryName,
+        "'. Please check key and/or configuration."
+      ))
+    }
+  }
+  return(conf)
 }
