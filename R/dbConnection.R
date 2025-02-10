@@ -51,9 +51,9 @@ rapCloseDbConnection <- function(con) {
 #'   file from which information on the database connection is provided
 #'
 #' @return A list with name, user, password and host of the db connection.
-#' 
+#'
 #' @keywords internal
-#' 
+#'
 getDbConfig <- function(registryName = "MYSQL_DB_DATA") {
   if (Sys.getenv("R_RAP_INSTANCE") %in% c("QAC", "PRODUCTIONC")) {
     conf <- data.frame(
