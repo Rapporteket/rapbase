@@ -233,23 +233,7 @@ exportDb <- function(registryName, compress = FALSE, session) {
   stopifnot(Sys.which("gzip") != "")
 
   f <- tempfile(pattern = registryName, fileext = ".sql")
-  if (Sys.getenv("R_RAP_INSTANCE") %in% c("QAC", "PRODUCTIONC")) {
-    conf <- data.frame(
-      host = Sys.getenv("MYSQL_HOST"),
-      user = Sys.getenv("MYSQL_USER"),
-      pass = Sys.getenv("MYSQL_PASSWORD"),
-      port = as.numeric(Sys.getenv("MYSQL_PORT", "3306"))
-    )
-    conf$name <- switch(
-      registryName,
-      "raplog" = Sys.getenv("MYSQL_DB_LOG"),
-      "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
-      "data" = Sys.getenv("MYSQL_DB_DATA"),
-      Sys.getenv(registryName)
-    )
-  } else {
-    conf <- getConfig()[[registryName]]
-  }
+  conf <- getDbConfig(registryName)
 
   cmd <- paste0(
     "mysqldump ",
