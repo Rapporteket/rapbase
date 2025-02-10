@@ -16,3 +16,4 @@ A list with name, user, password and host of the db connection.
 \description{
 Get database connection configuration
 }
+\keyword{internal}
