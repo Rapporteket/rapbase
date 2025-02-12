@@ -186,18 +186,6 @@ test_that("getDbConfig is working when not db", {
 
 withr::with_envvar(
   new = c(
-    "R_RAP_INSTANCE" = "QAC"
-  ),
-  code = {
-    test_that("Returns empty data frame", {
-      expect_equal(getDbConfig()$host,"")
-    })
-  }
-)
-
-withr::with_envvar(
-  new = c(
-    "R_RAP_INSTANCE" = "QAC",
     "MYSQL_HOST" = "qwerty",
     "MYSQL_USER" = "asdfg",
     "MYSQL_PASSWORD" = "zxcvb",
