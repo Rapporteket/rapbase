@@ -55,7 +55,11 @@ rapCloseDbConnection <- function(con) {
 #' @keywords internal
 #'
 getDbConfig <- function(registryName = "MYSQL_DB_DATA") {
-  if (Sys.getenv("R_RAP_INSTANCE") %in% c("QAC", "PRODUCTIONC")) {
+  if (
+    ("MYSQL_HOST" %in% names(Sys.getenv())) &
+    ("MYSQL_USER" %in% names(Sys.getenv())) &
+    ("MYSQL_PASSWORD" %in% names(Sys.getenv()))
+  ) {
     conf <- data.frame(
       host = Sys.getenv("MYSQL_HOST"),
       user = Sys.getenv("MYSQL_USER"),
