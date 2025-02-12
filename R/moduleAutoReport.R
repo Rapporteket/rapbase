@@ -332,10 +332,7 @@ autoReportServer <- function(
         ownerName = user$fullName(),
         email = email,
         organization = organization,
-        runDayOfYear = makeRunDayOfYearSequence(
-          interval = interval,
-          startDay = input$start
-        ),
+        runDayOfYear = as.integer(c(10, 42, 100)), # Not in use anymore
         startDate = input$start,
         interval = interval,
         intervalName = strsplit(input$freq, "-")[[1]][1],
