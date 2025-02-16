@@ -67,7 +67,7 @@ getDbConfig <- function(registryName = "MYSQL_DB_DATA") {
       "raplog" = Sys.getenv("MYSQL_DB_LOG"),
       "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
       "data" = Sys.getenv("MYSQL_DB_DATA"),
-      Sys.getenv(registryName)
+      registryName
     )
   } else {
     conf <- getConfig()
