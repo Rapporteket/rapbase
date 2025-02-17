@@ -54,7 +54,7 @@ rapCloseDbConnection <- function(con) {
 #'
 #' @keywords internal
 #'
-getDbConfig <- function(registryName = "MYSQL_DB_DATA") {
+getDbConfig <- function(registryName = "data") {
   if (
     ("MYSQL_HOST" %in% names(Sys.getenv())) &&
       ("MYSQL_USER" %in% names(Sys.getenv())) &&
@@ -71,7 +71,7 @@ getDbConfig <- function(registryName = "MYSQL_DB_DATA") {
       "raplog" = Sys.getenv("MYSQL_DB_LOG"),
       "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
       "data" = Sys.getenv("MYSQL_DB_DATA"),
-      Sys.getenv(registryName)
+      registryName
     )
   } else {
     conf <- getConfig()
