@@ -171,7 +171,7 @@ test_that(paste(
 test_that("getDbConfig is working when not db", {
   expect_error(
     getDbConfig(),
-    regexp = "configuration corresponding to key 'MYSQL_DB_DATA'."
+    regexp = "configuration corresponding to key 'data'."
   )
   expect_error(
     getDbConfig(registryName = "dev"),
@@ -204,7 +204,7 @@ withr::with_envvar(
       expect_equal(conf$port, 3306)
 
       conf <- getDbConfig(registryName = "rapbase")
-      expect_equal(conf$name, "data_db_rapbase")
+      expect_equal(conf$name, "rapbase")
 
       conf <- getDbConfig(registryName = "raplog")
       expect_equal(conf$name, "log_db")
@@ -216,7 +216,7 @@ withr::with_envvar(
       expect_equal(conf$name, "data_db")
 
       conf <- getDbConfig(registryName = "qwerty123")
-      expect_equal(conf$name, "")
+      expect_equal(conf$name, "qwerty123")
       expect_equal(conf$host, "qwerty")
       expect_equal(conf$user, "asdfg")
       expect_equal(conf$pass, "zxcvb")

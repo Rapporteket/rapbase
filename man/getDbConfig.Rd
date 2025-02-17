@@ -4,7 +4,7 @@
 \alias{getDbConfig}
 \title{Get database connection configuration}
 \usage{
-getDbConfig(registryName = "MYSQL_DB_DATA")
+getDbConfig(registryName = "data")
 }
 \arguments{
 \item{registryName}{String id used for the registry in global configuration
