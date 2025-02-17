@@ -63,9 +63,9 @@ getRapPackages <- function() {
 isRapContext <- function() {
   if (Sys.getenv("R_RAP_INSTANCE") %in%
         c("DEV", "TEST", "QA", "QAC", "PRODUCTION", "PRODUCTIONC")) {
-    return(TRUE)
+    TRUE
   } else {
-    return(FALSE)
+    FALSE
   }
 }
 
