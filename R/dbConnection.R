@@ -54,7 +54,7 @@ rapCloseDbConnection <- function(con) {
 #'
 #' @keywords internal
 #'
-getDbConfig <- function(registryName = "MYSQL_DB_DATA") {
+getDbConfig <- function(registryName = "data") {
   if (
     ("MYSQL_HOST" %in% names(Sys.getenv())) &&
       ("MYSQL_USER" %in% names(Sys.getenv())) &&
