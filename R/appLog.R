@@ -17,7 +17,7 @@ loggerSetup <- function(
   formatterJson <- function(level, message, ...) {
     username <- Sys.getenv(usernameEnv, unset = "unknown")
     appid <- Sys.getenv(appidEnv, unset = "unknown")
-    return(jsonlite::toJSON(
+    jsonlite::toJSON(
       list(
         time = format(Sys.time(), "%Y-%m-%d %H:%M:%OS3"),
         level = attr(level, "level"),
@@ -26,7 +26,6 @@ loggerSetup <- function(
         message = message
       ),
       auto_unbox = TRUE
-    )
     )
   }
   logger::log_layout(formatterJson)

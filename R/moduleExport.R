@@ -60,7 +60,6 @@ exportUCInput <- function(id) {
 exportUCServer <- function(id, registryName, repoName = registryName,
                            eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
-    conf <- getConfig("rapbaseConfig.yml")
 
     pubkey <- shiny::reactive({
       shiny::req(input$exportPid)
@@ -107,7 +106,7 @@ exportUCServer <- function(id, registryName, repoName = registryName,
         choices = getGithub(
           "members",
           repoName,
-          .token = conf$github$PAT$rapmaskin
+          .token = Sys.getenv("GITHUB_PAT")
         )
       )
     })
@@ -234,7 +233,8 @@ exportDb <- function(registryName, compress = FALSE, session) {
   stopifnot(Sys.which("gzip") != "")
 
   f <- tempfile(pattern = registryName, fileext = ".sql")
-  conf <- rapbase::getConfig()[[registryName]]
+  conf <- getDbConfig(registryName)
+
   cmd <- paste0(
     "mysqldump ",
     "--no-tablespaces --single-transaction --add-drop-database "
