@@ -233,7 +233,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
       }
 
       test_that("module server provides sensible output", {
-        shiny::testServer(autoReportServer2,
+        shiny::testServer(autoReportServer,
                           args = list(
                             registryName = registryName, type = type,
                             reports = reports, orgs = orgs, user = user
@@ -247,7 +247,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
 
       test_that("no report select list created when no reports available", {
         shiny::testServer(
-          autoReportServer2,
+          autoReportServer,
           args = list(
             registryName = registryName, type = type,
             reports = NULL, orgs = orgs, user = user
@@ -260,7 +260,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
       type <- "dispatchment"
       test_that("email can be added and deleted for dispatchment", {
         shiny::testServer(
-          autoReportServer2,
+          autoReportServer,
           args = list(
             registryName = registryName, type = type,
             org = shiny::reactive(100082),
@@ -280,7 +280,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
 
       test_that("add email button is not created if email is not valid", {
         shiny::testServer(
-          autoReportServer2,
+          autoReportServer,
           args = list(
             registryName = registryName, type = type,
             org = shiny::reactive(100082),
@@ -299,7 +299,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
 
       test_that("no submit button is provided when module is not eligible", {
         shiny::testServer(
-          autoReportServer2,
+          autoReportServer,
           args = list(
             registryName = registryName, type = "subscription",
             reports = reports, orgs = orgs, eligible = FALSE, user = user
