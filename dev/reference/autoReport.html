@@ -67,30 +67,11 @@ Rapporteket.</p>
 <span>  reports <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  orgs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  eligible <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  freq <span class="op">=</span> <span class="st">"month"</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">autoReportServer2</span><span class="op">(</span></span>
-<span>  <span class="va">id</span>,</span>
-<span>  <span class="va">registryName</span>,</span>
-<span>  <span class="va">type</span>,</span>
-<span>  org <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  paramNames <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  paramValues <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  reports <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  orgs <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  eligible <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  freq <span class="op">=</span> <span class="st">"month"</span>,</span>
 <span>  <span class="va">user</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">autoReportApp</span><span class="op">(</span></span>
-<span>  registryName <span class="op">=</span> <span class="st">"rapbase"</span>,</span>
-<span>  type <span class="op">=</span> <span class="st">"subscription"</span>,</span>
-<span>  reports <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  paramNames <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>  orgs <span class="op">=</span> <span class="cn">NULL</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">autoReportServer2</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">orgList2df</span><span class="op">(</span><span class="va">orgs</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -169,6 +150,10 @@ report GUI. Must be one of
 <dd><p>List of shiny reactive values providing user metadata and
 privileges corresponding to the return value of
 <code><a href="navbarWidget.html">navbarWidgetServer</a></code>.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Arguments passed to autoReportServer function</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -257,10 +242,10 @@ in an application.</p>
 <span class="r-in"><span>  <span class="va">paramNames</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"organization"</span>, <span class="st">"outputFormat"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">paramValues</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">org</span><span class="op">$</span><span class="fu">value</span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>  <span class="fu">autoReportServer</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu">autoReportServer2</span><span class="op">(</span></span></span>
 <span class="r-in"><span>    id <span class="op">=</span> <span class="st">"test"</span>, registryName <span class="op">=</span> <span class="st">"rapbase"</span>, type <span class="op">=</span> <span class="st">"dispatchment"</span>,</span></span>
 <span class="r-in"><span>    org <span class="op">=</span> <span class="va">org</span><span class="op">$</span><span class="va">value</span>, paramNames <span class="op">=</span> <span class="va">paramNames</span>, paramValues <span class="op">=</span> <span class="va">paramValues</span>,</span></span>
-<span class="r-in"><span>    reports <span class="op">=</span> <span class="va">reports</span>, orgs <span class="op">=</span> <span class="va">orgs</span>, eligible <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>    reports <span class="op">=</span> <span class="va">reports</span>, orgs <span class="op">=</span> <span class="va">orgs</span>, eligible <span class="op">=</span> <span class="cn">TRUE</span>, freq <span class="op">=</span> <span class="st">"month"</span>, <span class="va">user</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
