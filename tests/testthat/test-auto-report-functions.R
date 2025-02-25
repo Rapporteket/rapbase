@@ -137,15 +137,14 @@ test_that("a start date is enforced when given", {
 ######################################
 
 test_that("The next run day is a monday", {
-  expect_equal(
+  expect_true(
     findNextRunDate(
       startDate = "2025-01-06", # Monday
       terminateDate = Sys.Date() + 365,
       interval = "weeks",
       returnFormat = "%A",
       target = "db"
-    )
-    , "Monday")
+    ) %in% c("Monday", "mandag"))
 })
 
 test_that("The next run day is day 6 of month ", {
@@ -169,11 +168,11 @@ test_that("Terminate date is before today, and will return terminateDate + 1", {
       target = "db"
     ), format(Sys.Date() - 9, format = "%A %e. %B %Y"))
 
-  expect_equal(findNextRunDate(
+  expect_true(findNextRunDate(
     startDate = "2025-01-06",
     terminateDate = "2025-01-06",
     target = "db"
-  ), "Tuesday  7. January 2025")
+  ) %in% c("Tuesday  7. January 2025", "tirsdag  7. januar 2025"))
 })
 
 test_that("Terminate date is after today but before next in range, and will return terminateDate + 1", {
