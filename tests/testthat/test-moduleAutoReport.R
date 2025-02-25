@@ -271,7 +271,7 @@ withr::with_envvar(
         autoReportServer,
         args = list(
           registryName = registryName, type = "subscription",
-          reports = reports, orgs = orgs, eligible = FALSE, user = user
+          reports = reports, orgs = orgs, eligible = shiny::reactiveVal(FALSE), user = user
         ),
         {
           session$setInputs(email = "valid.email@format.no")

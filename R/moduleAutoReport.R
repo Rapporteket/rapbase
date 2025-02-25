@@ -232,7 +232,7 @@ autoReportServer <- function(
   paramValues = shiny::reactiveVal(c("")),
   reports = NULL,
   orgs = NULL,
-  eligible = TRUE,
+  eligible = shiny::reactiveVal(TRUE),
   freq = "month",
   user
 ) {
@@ -523,7 +523,7 @@ autoReportServer <- function(
     })
 
     output$makeAutoReport <- shiny::renderUI({
-      if (is.null(autoReport$report) || !eligible) {
+      if (is.null(autoReport$report) || !eligible()) {
         NULL
       } else {
         if (type %in% c("subscription")) {
@@ -563,7 +563,7 @@ autoReportServer <- function(
     )
 
     output$autoReportTable <- shiny::renderUI({
-      if (!eligible) {
+      if (!eligible()) {
         shiny::tagList(
           shiny::h2(paste0("Funksjonen ('", type, "') er utilgjengelig")),
           shiny::p("Ved sp\u00F8rsm\u00E5l ta gjerne kontakt med registeret."),
