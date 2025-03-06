@@ -7,11 +7,19 @@
 \alias{exportUCApp}
 \alias{selectListPubkey}
 \alias{exportDb}
+\alias{exportUCServer2}
 \title{Shiny modules providing GUI and server logic for Export}
 \usage{
 exportUCInput(id)
 
 exportUCServer(id, registryName, repoName = registryName, eligible = TRUE)
+
+exportUCServer2(
+  id,
+  registryName,
+  repoName = registryName,
+  eligible = shiny::reactiveVal(TRUE)
+)
 
 exportUCApp(registryName = "rapbase")
 
