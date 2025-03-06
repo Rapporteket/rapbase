@@ -9,10 +9,9 @@
 \alias{autoReportFormatSercer}
 \alias{autoReportInput}
 \alias{autoReportServer}
-\alias{autoReportApp}
+\alias{autoReportServer2}
 \alias{orgList2df}
 \alias{autoReportFormatServer}
-\alias{autoReportServer2}
 \title{Shiny modules and helper functions for registry auto reports}
 \usage{
 autoReportUI(id)
@@ -36,31 +35,12 @@ autoReportServer(
   paramValues = shiny::reactiveVal(c("")),
   reports = NULL,
   orgs = NULL,
-  eligible = TRUE,
-  freq = "month"
-)
-
-autoReportServer2(
-  id,
-  registryName,
-  type,
-  org = NULL,
-  paramNames = shiny::reactiveVal(c("")),
-  paramValues = shiny::reactiveVal(c("")),
-  reports = NULL,
-  orgs = NULL,
-  eligible = TRUE,
+  eligible = shiny::reactiveVal(TRUE),
   freq = "month",
   user
 )
 
-autoReportApp(
-  registryName = "rapbase",
-  type = "subscription",
-  reports = NULL,
-  paramNames = shiny::reactive(c("")),
-  orgs = NULL
-)
+autoReportServer2(...)
 
 orgList2df(orgs)
 }
@@ -114,6 +94,8 @@ report GUI. Must be one of
 \item{user}{List of shiny reactive values providing user metadata and
 privileges corresponding to the return value of
 \code{\link{navbarWidgetServer}}.}
+
+\item{...}{Arguments passed to autoReportServer function}
 }
 \value{
 In general, shiny objects. In particular, \code{autoreportOrgServer}
@@ -195,10 +177,10 @@ server <- function(input, output, session) {
   paramNames <- shiny::reactive(c("organization", "outputFormat"))
   paramValues <- shiny::reactive(c(org$value(), format()))
 
-  autoReportServer(
+  autoReportServer2(
     id = "test", registryName = "rapbase", type = "dispatchment",
     org = org$value, paramNames = paramNames, paramValues = paramValues,
-    reports = reports, orgs = orgs, eligible = TRUE
+    reports = reports, orgs = orgs, eligible = TRUE, freq = "month", user
   )
 }
 

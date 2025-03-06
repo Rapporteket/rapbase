@@ -3,7 +3,7 @@
 <!-- badges: start -->
 [![Version](https://img.shields.io/github/v/release/rapporteket/rapbase?sort=semver)](https://github.com/rapporteket/rapbase/releases)
 [![R build status](https://github.com/Rapporteket/rapbase/workflows/R-CMD-check/badge.svg)](https://github.com/Rapporteket/rapbase/actions)
-[![codecov.io](https://codecov.io/gh/Rapporteket/rapbase/branch/master/graph/badge.svg)](https://app.codecov.io/gh/rapporteket/rapbase?branch=master)
+[![codecov.io](https://codecov.io/gh/Rapporteket/rapbase/branch/main/graph/badge.svg)](https://app.codecov.io/gh/rapporteket/rapbase?branch=main)
 [![CRAN status](https://www.r-pkg.org/badges/version/rapbase)](https://CRAN.R-project.org/package=rapbase)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 [![Doc](https://img.shields.io/badge/Doc--grey.svg)](https://rapporteket.github.io/rapbase/)
