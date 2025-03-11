@@ -146,10 +146,11 @@ statsServer <- function(id,
     })
     output$pivot <- rpivotTable::renderRpivotTable(
       if (eligible) {
-        rpivotTable::rpivotTable(logFrame(),
-                                 rows = c("name"),
-                                 cols = c("year", "month"),
-                                 rendererName = "Heatmap"
+        rpivotTable::rpivotTable(
+          logFrame(),
+          rows = c("name"),
+          cols = c("year", "month"),
+          rendererName = "Heatmap"
         )
       } else {
         rpivotTable::rpivotTable(data.frame())
@@ -228,10 +229,11 @@ statsServer2 <- function(id,
     })
     output$pivot <- rpivotTable::renderRpivotTable(
       if (eligible()) {
-        rpivotTable::rpivotTable(logFrame(),
-                                 rows = c("name"),
-                                 cols = c("year", "month"),
-                                 rendererName = "Heatmap"
+        rpivotTable::rpivotTable(
+          logFrame(),
+          rows = c("name"),
+          cols = c("year", "month"),
+          rendererName = "Heatmap"
         )
       } else {
         rpivotTable::rpivotTable(data.frame())
@@ -326,8 +328,9 @@ logFormat <- function(log) {
       year = as.POSIXlt(.data$datetime)$year + 1900,
       month = as.POSIXlt(.data$datetime)$mon + 1,
       day = as.POSIXlt(.data$datetime)$mday,
-      weekday = ifelse(as.POSIXlt(.data$datetime)$wday == 0, 7,
-                       as.POSIXlt(.data$datetime)$wday
+      weekday = ifelse(
+        as.POSIXlt(.data$datetime)$wday == 0, 7,
+        as.POSIXlt(.data$datetime)$wday
       )
     )
 

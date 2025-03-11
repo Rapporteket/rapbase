@@ -74,9 +74,11 @@ exportUCServer <- function(id, registryName, repoName = registryName,
         session = session
       )
       message(paste("Dump file size:", file.size(f)))
-      ef <- sship::enc(f,
-                       pid = NULL, pubkey_holder = NULL,
-                       pubkey = input$exportKey
+      ef <- sship::enc(
+        f,
+        pid = NULL,
+        pubkey_holder = NULL,
+        pubkey = input$exportKey
       )
       ef
     })
@@ -163,14 +165,16 @@ exportUCServer2 <- function(id, registryName, repoName = registryName,
         session = session
       )
       message(paste("Dump file size:", file.size(f)))
-      ef <- sship::enc(f,
-                       pid = NULL, pubkey_holder = NULL,
-                       pubkey = input$exportKey
+      ef <- sship::enc(
+        f,
+        pid = NULL,
+        pubkey_holder = NULL,
+        pubkey = input$exportKey
       )
       ef
     })
 
-    observeEvent(eligible(), {
+    shiny::observeEvent(eligible(), {
       if (eligible()) {
         output$exportDownload <- shiny::downloadHandler(
           filename = function() {
