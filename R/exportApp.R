@@ -24,7 +24,6 @@ exportApp <- function(registryName = "") {
     shiny::tabPanel(
       title = "Eksport",
       value = "exportPanel",
-      shinyjs::useShinyjs(),
       shiny::sidebarLayout(
         shiny::sidebarPanel(
           shiny::uiOutput("exportSidebarPanel")
