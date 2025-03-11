@@ -22,6 +22,7 @@ reference:
     - loadRegData
     - rapOpenDbConnection
     - rapCloseDbConnection
+    - exportApp
 
   - title: Staging data
     desc: >

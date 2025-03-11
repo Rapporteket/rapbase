@@ -1,19 +1,20 @@
 #' Shiny app with database export functionality
-#' 
-#' @param registryName Character string registry name key
+#'
+#' @param registryName Character string registry name key, corresponding to
+#' github team name
 #'
 #' @export
 exportApp <- function(registryName = "") {
   ui <- shiny::navbarPage(
-    title = shiny::div(
-      shiny::a(shiny::includeHTML(
-        system.file(
-          'www/logo.svg',
-          package='rapbase'
-        )
+    id = "navbarpage",
+    title = shiny::div(shiny::a(shiny::includeHTML(
+      system.file(
+        "www/logo.svg",
+        package = "rapbase"
       )
-      ),
-      "Simple export app"),
+    )
+    ),
+    "Simple export app"),
     windowTitle = "Simple export app",
     theme = "rap/bootstrap.css",
     shiny::tabPanel(
@@ -22,6 +23,7 @@ exportApp <- function(registryName = "") {
     ),
     shiny::tabPanel(
       title = "Eksport",
+      value = "exportPanel",
       shinyjs::useShinyjs(),
       shiny::sidebarLayout(
         shiny::sidebarPanel(
@@ -40,6 +42,14 @@ exportApp <- function(registryName = "") {
       orgName = registryName,
       caller = registryName
     )
+
+    shiny::observeEvent(user$role(), {
+      if (user$role() == "SC") {
+        shiny::showTab(inputId = "navbarpage", target = "exportPanel")
+      } else {
+        shiny::hideTab(inputId = "navbarpage", target = "exportPanel")
+      }
+    })
 
     # User control
     output$exportSidebarPanel <- shiny::renderUI({
