@@ -22,18 +22,18 @@ attr(session, "class") <- "ShinySession"
 ## db
 test_that("env vars needed for testing is present", {
   check_db()
-  expect_true("DB_HOST" %in% names(Sys.getenv()))
-  expect_true("DB_USER" %in% names(Sys.getenv()))
-  expect_true("DB_PASS" %in% names(Sys.getenv()))
+  expect_true("MYSQL_HOST" %in% names(Sys.getenv()))
+  expect_true("MYSQL_USER" %in% names(Sys.getenv()))
+  expect_true("MYSQL_PASSWORD" %in% names(Sys.getenv()))
 })
 
 # prep db for testing
 if (is.null(check_db(is_test_that = FALSE))) {
   con <- RMariaDB::dbConnect(
     RMariaDB::MariaDB(),
-    host = Sys.getenv("DB_HOST"),
-    user = Sys.getenv("DB_USER"),
-    password = Sys.getenv("DB_PASS"),
+    host = Sys.getenv("MYSQL_HOST"),
+    user = Sys.getenv("MYSQL_USER"),
+    password = Sys.getenv("MYSQL_PASSWORD"),
     bigint = "integer"
   )
   RMariaDB::dbExecute(con, "CREATE DATABASE rapbase;")
@@ -52,9 +52,9 @@ if (is.null(check_db(is_test_that = FALSE))) {
   drv <- RMariaDB::MariaDB()
   con <- RMariaDB::dbConnect(
     RMariaDB::MariaDB(),
-    host = Sys.getenv("DB_HOST"),
-    user = Sys.getenv("DB_USER"),
-    password = Sys.getenv("DB_PASS"),
+    host = Sys.getenv("MYSQL_HOST"),
+    user = Sys.getenv("MYSQL_USER"),
+    password = Sys.getenv("MYSQL_PASSWORD"),
     bigint = "integer"
   )
   for (q in query) {
@@ -67,10 +67,10 @@ if (is.null(check_db(is_test_that = FALSE))) {
 regName <- "rapbase"
 test_config <- paste0(
   "rapbase:",
-  "\n  host : ", Sys.getenv("DB_HOST"),
+  "\n  host : ", Sys.getenv("MYSQL_HOST"),
   "\n  name : rapbase",
-  "\n  user : ", Sys.getenv("DB_USER"),
-  "\n  pass : ", Sys.getenv("DB_PASS"),
+  "\n  user : ", Sys.getenv("MYSQL_USER"),
+  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
   "\n  disp : ephemaralUnitTesting\n"
 )
 # preserve initial state

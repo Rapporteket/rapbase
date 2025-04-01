@@ -27,16 +27,16 @@ close(cf)
 # make proper dbConfig
 test_config <- paste0(
   registryName, ":",
-  "\n  host : ", Sys.getenv("DB_HOST"),
+  "\n  host : ", Sys.getenv("MYSQL_HOST"),
   "\n  name : test_staging",
-  "\n  user : ", Sys.getenv("DB_USER"),
-  "\n  pass : ", Sys.getenv("DB_PASS"),
+  "\n  user : ", Sys.getenv("MYSQL_USER"),
+  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
   "\n  disp : registryEphemaralUnitTesting\n",
   "staging:",
-  "\n  host : ", Sys.getenv("DB_HOST"),
+  "\n  host : ", Sys.getenv("MYSQL_HOST"),
   "\n  name : test_staging",
-  "\n  user : ", Sys.getenv("DB_USER"),
-  "\n  pass : ", Sys.getenv("DB_PASS"),
+  "\n  user : ", Sys.getenv("MYSQL_USER"),
+  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
   "\n  disp : dbBackendEphemaralUnitTesting\n"
 )
 cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
@@ -112,9 +112,9 @@ Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 
 test_that("env vars needed for db testing is present", {
   check_db()
-  expect_true("DB_HOST" %in% names(Sys.getenv()))
-  expect_true("DB_USER" %in% names(Sys.getenv()))
-  expect_true("DB_PASS" %in% names(Sys.getenv()))
+  expect_true("MYSQL_HOST" %in% names(Sys.getenv()))
+  expect_true("MYSQL_USER" %in% names(Sys.getenv()))
+  expect_true("MYSQL_PASSWORD" %in% names(Sys.getenv()))
 })
 
 test_config <- paste0(
@@ -130,16 +130,16 @@ close(cf)
 # make proper dbConfig
 test_config <- paste0(
   registryName, ":",
-  "\n  host : ", Sys.getenv("DB_HOST"),
+  "\n  host : ", Sys.getenv("MYSQL_HOST"),
   "\n  name : test_staging",
-  "\n  user : ", Sys.getenv("DB_USER"),
-  "\n  pass : ", Sys.getenv("DB_PASS"),
+  "\n  user : ", Sys.getenv("MYSQL_USER"),
+  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
   "\n  disp : registryEphemaralUnitTesting\n",
   "staging:",
-  "\n  host : ", Sys.getenv("DB_HOST"),
+  "\n  host : ", Sys.getenv("MYSQL_HOST"),
   "\n  name : test_staging",
-  "\n  user : ", Sys.getenv("DB_USER"),
-  "\n  pass : ", Sys.getenv("DB_PASS"),
+  "\n  user : ", Sys.getenv("MYSQL_USER"),
+  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
   "\n  disp : dbBackendEphemaralUnitTesting\n"
 )
 cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))

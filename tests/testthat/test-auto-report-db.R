@@ -28,18 +28,18 @@ nameAutoReportDb <- "autoreportTest"
 
 test_that("env vars needed for testing is present", {
   check_db()
-  expect_true("DB_HOST" %in% names(Sys.getenv()))
-  expect_true("DB_USER" %in% names(Sys.getenv()))
-  expect_true("DB_PASS" %in% names(Sys.getenv()))
+  expect_true("MYSQL_HOST" %in% names(Sys.getenv()))
+  expect_true("MYSQL_USER" %in% names(Sys.getenv()))
+  expect_true("MYSQL_PASSWORD" %in% names(Sys.getenv()))
 })
 
 # make temporary config
 test_config <- paste0(
   config$r$autoReport$key, ":",
-  "\n  host : ", Sys.getenv("DB_HOST"),
+  "\n  host : ", Sys.getenv("MYSQL_HOST"),
   "\n  name : ", nameAutoReportDb,
-  "\n  user : ", Sys.getenv("DB_USER"),
-  "\n  pass : ", Sys.getenv("DB_PASS"),
+  "\n  user : ", Sys.getenv("MYSQL_USER"),
+  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
   "\n  disp : ephemaralUnitTesting\n"
 )
 
@@ -302,9 +302,9 @@ if (is.null(check_db(is_test_that = FALSE))) {
 if (is.null(check_db(is_test_that = FALSE))) {
   con <- RMariaDB::dbConnect(
     RMariaDB::MariaDB(),
-    host = Sys.getenv("DB_HOST"),
-    user = Sys.getenv("DB_USER"),
-    password = Sys.getenv("DB_PASS"),
+    host = Sys.getenv("MYSQL_HOST"),
+    user = Sys.getenv("MYSQL_USER"),
+    password = Sys.getenv("MYSQL_PASSWORD"),
     bigint = "integer"
   )
   RMariaDB::dbExecute(con, paste("DROP DATABASE", nameAutoReportDb))
