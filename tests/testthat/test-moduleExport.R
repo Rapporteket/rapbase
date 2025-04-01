@@ -20,31 +20,15 @@ session <- list()
 attr(session, "class") <- "ShinySession"
 
 ## db
-# Database infrastructure is only available at gh actions and our own dev env.
-# Tests running on other environments should be skipped
-checkDb <- function(is_test_that = TRUE) {
-  if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
-    NULL
-  } else if (Sys.getenv("GITHUB_ACTIONS_RUN_DB_UNIT_TESTS") == "true") {
-    NULL
-  } else {
-    if (is_test_that) {
-      testthat::skip("Possible lack of database infrastructure")
-    } else {
-      1
-    }
-  }
-}
-
 test_that("env vars needed for testing is present", {
-  checkDb()
+  check_db()
   expect_true("DB_HOST" %in% names(Sys.getenv()))
   expect_true("DB_USER" %in% names(Sys.getenv()))
   expect_true("DB_PASS" %in% names(Sys.getenv()))
 })
 
 # prep db for testing
-if (is.null(checkDb(is_test_that = FALSE))) {
+if (is.null(check_db(is_test_that = FALSE))) {
   con <- RMariaDB::dbConnect(
     RMariaDB::MariaDB(),
     host = Sys.getenv("DB_HOST"),
@@ -56,7 +40,7 @@ if (is.null(checkDb(is_test_that = FALSE))) {
   RMariaDB::dbDisconnect(con)
 }
 
-if (is.null(checkDb(is_test_that = FALSE))) {
+if (is.null(check_db(is_test_that = FALSE))) {
   query <- c(
     "USE rapbase;",
     paste(
@@ -96,7 +80,7 @@ close(cf)
 
 
 test_that("an existing file name is provided", {
-  checkDb()
+  check_db()
   f <- exportDb(regName, compress = TRUE, session = session)
   expect_true(file.exists(f))
 })
@@ -112,7 +96,7 @@ test_that("export UC input returns a shiny tag list", {
 
 with_mock_dir("gh_api_response", {
   test_that("module server provides sensible output", {
-    checkDb()
+    check_db()
     shiny::testServer(exportUCServer, args = list(registryName = "rapbase"), {
       expect_equal(class(output$exportPidUI), "list")
       session$setInputs(exportPid = "areedv")
@@ -127,7 +111,7 @@ with_mock_dir("gh_api_response", {
   })
 
   test_that("download is prevented when module is not eligible", {
-    checkDb()
+    check_db()
     shiny::testServer(
       exportUCServer,
       args = list(registryName = regName, eligible = FALSE),
@@ -147,7 +131,7 @@ test_that("guide test app returns an app object", {
 })
 
 # remove test db
-if (is.null(checkDb(is_test_that = FALSE))) {
+if (is.null(check_db(is_test_that = FALSE))) {
   con <- rapbase::rapOpenDbConnection(regName)$con
   RMariaDB::dbExecute(con, "DROP DATABASE rapbase;")
   rapbase::rapCloseDbConnection(con)

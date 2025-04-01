@@ -9,22 +9,6 @@ context("Handling db connections")
 # an empty password (as also assumed in the above localhost example). See also
 # .travis.yml
 
-# Database infrastructure is only available at GA and our own dev env.
-# Tests running on other environments should be skipped
-checkDb <- function(is_test_that = TRUE) {
-  if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
-    NULL
-  } else if (Sys.getenv("GITHUB_ACTIONS_RUN_DB_UNIT_TESTS") == "true") {
-    NULL
-  } else {
-    if (is_test_that) {
-      testthat::skip("Possible lack of database infrastructure")
-    } else {
-      1
-    }
-  }
-}
-
 test_that("Error provided when key has no corresponding config", {
   NULL
   expect_error(rapOpenDbConnection(registryName = "aNoneExistingRegistryKey"))
@@ -32,14 +16,14 @@ test_that("Error provided when key has no corresponding config", {
 
 
 test_that("env vars needed for testing is present", {
-  checkDb()
+  check_db()
   expect_true("DB_HOST" %in% names(Sys.getenv()))
   expect_true("DB_USER" %in% names(Sys.getenv()))
   expect_true("DB_PASS" %in% names(Sys.getenv()))
 })
 
 # prep db for testing
-if (is.null(checkDb(is_test_that = FALSE))) {
+if (is.null(check_db(is_test_that = FALSE))) {
   con <- RMariaDB::dbConnect(
     RMariaDB::MariaDB(),
     host = Sys.getenv("DB_HOST"),
@@ -51,7 +35,7 @@ if (is.null(checkDb(is_test_that = FALSE))) {
   RMariaDB::dbDisconnect(con)
 }
 
-if (is.null(checkDb(is_test_that = FALSE))) {
+if (is.null(check_db(is_test_that = FALSE))) {
   regName <- "dev"
   query <- c(
     "USE rapbase;",
@@ -93,7 +77,7 @@ writeLines(test_config, cf)
 close(cf)
 
 test_that("A mysql db connection and driver can be provided and cleaned", {
-  checkDb()
+  check_db()
   l <- rapOpenDbConnection(registryName = regName)
   expect_output(str(l), "List of 2")
   expect_is(l[[1]], "MariaDBConnection")
@@ -105,13 +89,13 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
 })
 
 test_that("Deprecated defunct interface provides an error", {
-  checkDb()
+  check_db()
   query <- "SELECT * FROM testTable"
   expect_error(LoadRegData(regName, query, dbType = "mysql"))
 })
 
 test_that("Data can be queried from (MySQL) db", {
-  checkDb()
+  check_db()
   query <- "SELECT * FROM testTable"
   expect_output(
     str(loadRegData(regName, query, dbType = "mysql")),
@@ -120,7 +104,7 @@ test_that("Data can be queried from (MySQL) db", {
 })
 
 test_that("metadata can be queried from db", {
-  checkDb()
+  check_db()
   expect_equal(
     class(describeRegistryDb(regName)),
     "list"
@@ -128,7 +112,7 @@ test_that("metadata can be queried from db", {
 })
 
 test_that("metadata can be queried from some tabs in db", {
-  checkDb()
+  check_db()
   expect_equal(
     class(describeRegistryDb(regName, tabs = c("testTable"))),
     "list"
@@ -136,7 +120,7 @@ test_that("metadata can be queried from some tabs in db", {
 })
 
 test_that("Bigints are returned as integers (not bit64::integer64)", {
-  checkDb()
+  check_db()
   query <- c(
     "DROP DATABASE IF EXISTS rapbase;",
     "CREATE DATABASE rapbase;",
@@ -226,7 +210,7 @@ withr::with_envvar(
 )
 
 # remove test db
-if (is.null(checkDb(is_test_that = FALSE))) {
+if (is.null(check_db(is_test_that = FALSE))) {
   con <- rapbase::rapOpenDbConnection(regName)$con
   RMariaDB::dbExecute(con, "DROP DATABASE rapbase;")
   rapbase::rapCloseDbConnection(con)
