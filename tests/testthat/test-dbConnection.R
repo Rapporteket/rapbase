@@ -2,8 +2,9 @@ context("Handling db connections")
 
 # For these test to work locally make sure an instance of mysql server is
 # running and that the necessary user privileges are provided, e.g. as SQL:
-#   grant all privileges on [DATABASE].* to '[USER]'@'localhost';
-# where [DATABASE] and [USER] correspond to whatever given in rapbase config.
+#   grant all privileges on [DATABASE].* to '[USER]'@'[HOST]';
+# where [DATABASE], [USER] and [HOST] correspond to whatever given in 
+# environment variables MYSQL_NAME, MYSQL_USER and MYSQL_HOST.
 #
 
 test_that("Error provided when key has no corresponding config", {
@@ -21,7 +22,11 @@ test_that("env vars needed for testing is present", {
 })
 
 # prep db for testing
-query_db(query = c(paste0("DROP DATABASE IF EXISTS ", regName, ";"), paste0("CREATE DATABASE ", regName, ";")))
+query <- c(
+  paste0("DROP DATABASE IF EXISTS ", regName, ";"),
+  paste0("CREATE DATABASE ", regName, ";")
+)
+query_db(query = query)
 
 # Create simple test table
 query <- c(
@@ -44,12 +49,6 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
   rapCloseDbConnection(l$con)
   expect_false(RMariaDB::dbIsValid(l$con))
   l <- NULL
-})
-
-test_that("Deprecated defunct interface provides an error", {
-  check_db()
-  query <- "SELECT * FROM testTable"
-  expect_error(LoadRegData(regName, query, dbType = "mysql"))
 })
 
 test_that("Data can be queried from (MySQL) db", {
