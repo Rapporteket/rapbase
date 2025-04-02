@@ -2,24 +2,6 @@
 currentInstance <- Sys.getenv("R_RAP_INSTANCE")
 currentConfig <- Sys.getenv("R_RAP_CONFIG_PATH")
 
-# Database infrastructure is only guaranteed at Github Actions and our own
-# dev env.
-# Tests running on other environments should be skipped:
-check_db <- function(is_test_that = TRUE) {
-  if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
-    NULL
-  } else if (Sys.getenv("GITHUB_ACTIONS_RUN_DB_UNIT_TESTS") == "true") {
-    NULL
-  } else {
-    if (is_test_that) {
-      testthat::skip("Possible lack of database infrastructure")
-    } else {
-      1
-    }
-  }
-}
-
-
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 
 file.copy(
@@ -46,18 +28,18 @@ nameAutoReportDb <- "autoreportTest"
 
 test_that("env vars needed for testing is present", {
   check_db()
-  expect_true("DB_HOST" %in% names(Sys.getenv()))
-  expect_true("DB_USER" %in% names(Sys.getenv()))
-  expect_true("DB_PASS" %in% names(Sys.getenv()))
+  expect_true("MYSQL_HOST" %in% names(Sys.getenv()))
+  expect_true("MYSQL_USER" %in% names(Sys.getenv()))
+  expect_true("MYSQL_PASSWORD" %in% names(Sys.getenv()))
 })
 
 # make temporary config
 test_config <- paste0(
   config$r$autoReport$key, ":",
-  "\n  host : ", Sys.getenv("DB_HOST"),
+  "\n  host : ", Sys.getenv("MYSQL_HOST"),
   "\n  name : ", nameAutoReportDb,
-  "\n  user : ", Sys.getenv("DB_USER"),
-  "\n  pass : ", Sys.getenv("DB_PASS"),
+  "\n  user : ", Sys.getenv("MYSQL_USER"),
+  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
   "\n  disp : ephemaralUnitTesting\n"
 )
 
@@ -320,9 +302,9 @@ if (is.null(check_db(is_test_that = FALSE))) {
 if (is.null(check_db(is_test_that = FALSE))) {
   con <- RMariaDB::dbConnect(
     RMariaDB::MariaDB(),
-    host = Sys.getenv("DB_HOST"),
-    user = Sys.getenv("DB_USER"),
-    password = Sys.getenv("DB_PASS"),
+    host = Sys.getenv("MYSQL_HOST"),
+    user = Sys.getenv("MYSQL_USER"),
+    password = Sys.getenv("MYSQL_PASSWORD"),
     bigint = "integer"
   )
   RMariaDB::dbExecute(con, paste("DROP DATABASE", nameAutoReportDb))
