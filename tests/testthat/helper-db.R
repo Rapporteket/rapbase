@@ -14,3 +14,21 @@ check_db <- function(is_test_that = TRUE) {
     }
   }
 }
+
+# Send a query to db
+query_db <- function(query) {
+  if (is.null(check_db(is_test_that = FALSE))) {
+    con <- RMariaDB::dbConnect(
+      RMariaDB::MariaDB(),
+      host = Sys.getenv("MYSQL_HOST"),
+      user = Sys.getenv("MYSQL_USER"),
+      password = Sys.getenv("MYSQL_PASSWORD"),
+      bigint = "integer"
+    )
+    for (q in query) {
+      RMariaDB::dbExecute(con, q)
+    }
+    RMariaDB::dbDisconnect(con)
+    con <- NULL
+  }
+}

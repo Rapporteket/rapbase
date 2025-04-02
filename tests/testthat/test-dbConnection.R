@@ -2,18 +2,17 @@ context("Handling db connections")
 
 # For these test to work locally make sure an instance of mysql server is
 # running and that the necessary user privileges are provided, e.g. as SQL:
-#   grant all privileges on [DATABASE].* to '[USER]'@'localhost';
-# where [DATABASE] and [USER] correspond to whatever given in rapbase config.
+#   grant all privileges on [DATABASE].* to '[USER]'@'[HOST]';
+# where [DATABASE], [USER] and [HOST] correspond to whatever given in 
+# environment variables MYSQL_NAME, MYSQL_USER and MYSQL_HOST.
 #
-# When run at Travis build servers [USER] must be set to 'travis' and with
-# an empty password (as also assumed in the above localhost example). See also
-# .travis.yml
 
 test_that("Error provided when key has no corresponding config", {
   NULL
   expect_error(rapOpenDbConnection(registryName = "aNoneExistingRegistryKey"))
 })
 
+regName <- "rapbase"
 
 test_that("env vars needed for testing is present", {
   check_db()
@@ -23,58 +22,22 @@ test_that("env vars needed for testing is present", {
 })
 
 # prep db for testing
-if (is.null(check_db(is_test_that = FALSE))) {
-  con <- RMariaDB::dbConnect(
-    RMariaDB::MariaDB(),
-    host = Sys.getenv("MYSQL_HOST"),
-    user = Sys.getenv("MYSQL_USER"),
-    password = Sys.getenv("MYSQL_PASSWORD"),
-    bigint = "integer"
-  )
-  RMariaDB::dbExecute(con, "CREATE DATABASE rapbase;")
-  RMariaDB::dbDisconnect(con)
-}
-
-if (is.null(check_db(is_test_that = FALSE))) {
-  regName <- "dev"
-  query <- c(
-    "USE rapbase;",
-    paste(
-      "CREATE TABLE testTable (id int, someText varchar(50),",
-      "someInt INT, someBigInt BIGINT, someFloat DOUBLE,",
-      "someTime DATETIME);"
-    )
-  )
-  drv <- RMariaDB::MariaDB()
-  con <- RMariaDB::dbConnect(
-    RMariaDB::MariaDB(),
-    host = Sys.getenv("MYSQL_HOST"),
-    user = Sys.getenv("MYSQL_USER"),
-    password = Sys.getenv("MYSQL_PASSWORD"),
-    bigint = "integer"
-  )
-  for (q in query) {
-    tmp <- DBI::dbExecute(con, q)
-  }
-  DBI::dbDisconnect(con)
-}
-
-# make temporary config
-regName <- "rapbase"
-test_config <- paste0(
-  "rapbase:",
-  "\n  host : ", Sys.getenv("MYSQL_HOST"),
-  "\n  name : rapbase",
-  "\n  user : ", Sys.getenv("MYSQL_USER"),
-  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
-  "\n  disp : ephemaralUnitTesting\n"
+query <- c(
+  paste0("DROP DATABASE IF EXISTS ", regName, ";"),
+  paste0("CREATE DATABASE ", regName, ";")
 )
-# preserve initial state
-config_path <- Sys.getenv("R_RAP_CONFIG_PATH")
-Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
-cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
-writeLines(test_config, cf)
-close(cf)
+query_db(query = query)
+
+# Create simple test table
+query <- c(
+  paste0("USE ", regName, ";"),
+  paste(
+    "CREATE TABLE testTable (id int, someText varchar(50),",
+    "someInt INT, someBigInt BIGINT, someFloat DOUBLE,",
+    "someTime DATETIME);"
+  )
+)
+query_db(query = query)
 
 test_that("A mysql db connection and driver can be provided and cleaned", {
   check_db()
@@ -86,12 +49,6 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
   rapCloseDbConnection(l$con)
   expect_false(RMariaDB::dbIsValid(l$con))
   l <- NULL
-})
-
-test_that("Deprecated defunct interface provides an error", {
-  check_db()
-  query <- "SELECT * FROM testTable"
-  expect_error(LoadRegData(regName, query, dbType = "mysql"))
 })
 
 test_that("Data can be queried from (MySQL) db", {
@@ -162,15 +119,15 @@ withr::with_envvar(
     test_that("getDbConfig is working when not db", {
       expect_error(
         getDbConfig(),
-        regexp = "configuration corresponding to key 'data'."
+        regexp = "Could not connect to database because the enviroment"
       )
       expect_error(
         getDbConfig(registryName = "dev"),
-        regexp = "configuration corresponding to key 'dev'."
+        regexp = "Could not connect to database because the enviroment"
       )
-      expect_equal(
+      expect_error(
         getDbConfig(registryName = "rapbase")$name,
-        "rapbase"
+        regexp = "Could not connect to database because the enviroment"
       )
     })
   }
@@ -225,6 +182,3 @@ if (is.null(check_db(is_test_that = FALSE))) {
   rapbase::rapCloseDbConnection(con)
   con <- NULL
 }
-
-# restore initial state
-Sys.setenv(R_RAP_CONFIG_PATH = config_path)
