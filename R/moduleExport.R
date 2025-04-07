@@ -74,8 +74,10 @@ exportUCServer <- function(id, registryName, repoName = registryName,
         session = session
       )
       message(paste("Dump file size:", file.size(f)))
-      ef <- sship::enc(f,
-        pid = NULL, pubkey_holder = NULL,
+      ef <- sship::enc(
+        f,
+        pid = NULL,
+        pubkey_holder = NULL,
         pubkey = input$exportKey
       )
       ef
@@ -145,6 +147,100 @@ exportUCServer <- function(id, registryName, repoName = registryName,
 
 #' @rdname export
 #' @export
+exportUCServer2 <- function(id, registryName, repoName = registryName,
+                            eligible = shiny::reactiveVal(TRUE)) {
+  shiny::moduleServer(id, function(input, output, session) {
+
+    pubkey <- shiny::reactive({
+      shiny::req(input$exportPid)
+      keys <- getGithub("keys", input$exportPid)
+      sship::pubkey_filter(keys, "rsa")
+    })
+
+
+    encFile <- shiny::reactive({
+      f <- exportDb(
+        registryName(),
+        compress = input$exportCompress,
+        session = session
+      )
+      message(paste("Dump file size:", file.size(f)))
+      ef <- sship::enc(
+        f,
+        pid = NULL,
+        pubkey_holder = NULL,
+        pubkey = input$exportKey
+      )
+      ef
+    })
+
+    shiny::observeEvent(eligible(), {
+      if (eligible()) {
+        output$exportDownload <- shiny::downloadHandler(
+          filename = function() {
+            basename(encFile())
+          },
+          content = function(file) {
+            file.copy(encFile(), file)
+            repLogger(
+              session,
+              msg = paste("Db export file", basename(encFile()), "downloaded.")
+            )
+          }
+        )
+      }
+    }
+    )
+
+    ## UC
+    output$exportPidUI <- shiny::renderUI({
+      shiny::selectInput(
+        shiny::NS(id, "exportPid"),
+        label = shiny::tags$div(
+          shiny::HTML(as.character(shiny::icon("user")), "Velg mottaker:")
+        ),
+        choices = getGithub(
+          "members",
+          repoName,
+          .token = Sys.getenv("GITHUB_PAT")
+        )
+      )
+    })
+    output$exportKeyUI <- shiny::renderUI({
+      if (length(pubkey()) == 0) {
+        shiny::p("No keys found!")
+      } else {
+        shiny::selectInput(
+          shiny::NS(id, "exportKey"),
+          label = shiny::tags$div(
+            shiny::HTML(as.character(shiny::icon("key")), "Velg n\u00f8kkel:")
+          ),
+          choices = selectListPubkey(pubkey())
+        )
+      }
+    })
+    output$exportDownloadUI <- shiny::renderUI({
+      if (!eligible() | length(pubkey()) == 0) {
+        shiny::tagList(
+          shiny::hr(),
+          shiny::h4("Funksjon utilgjengelig"),
+          shiny::p("Kontakt registeret")
+        )
+      } else {
+        shiny::tagList(
+          shiny::hr(),
+          shiny::downloadButton(
+            shiny::NS(id, "exportDownload"),
+            label = "Last ned!"
+          )
+        )
+      }
+    })
+  })
+}
+
+#' @rdname export
+#' @export
 exportUCApp <- function(registryName = "rapbase") {
   ui <- shiny::fluidPage(
     exportUCInput("rapbaseExport")
@@ -194,6 +290,20 @@ exportGuideServer <- function(id, registryName) {
         sourceFile = system.file("exportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
         params = list(registryName = registryName)
+      )
+    })
+  })
+}
+
+#' @rdname exportGuide
+#' @export
+exportGuideServer2 <- function(id, registryName) {
+  shiny::moduleServer(id, function(input, output, session) {
+    output$exportGuide <- shiny::renderUI({
+      renderRmd(
+        sourceFile = system.file("exportGuide.Rmd", package = "rapbase"),
+        outputType = "html_fragment",
+        params = list(registryName = registryName())
       )
     })
   })

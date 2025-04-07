@@ -5,11 +5,14 @@
 \alias{exportGuideUI}
 \alias{exportGuideServer}
 \alias{exportGuideApp}
+\alias{exportGuideServer2}
 \title{Shiny modules providing the Export Guide}
 \usage{
 exportGuideUI(id)
 
 exportGuideServer(id, registryName)
+
+exportGuideServer2(id, registryName)
 
 exportGuideApp()
 }
