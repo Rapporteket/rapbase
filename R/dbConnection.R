@@ -13,9 +13,8 @@
 
 rapOpenDbConnection <- function(registryName, dbType = "mysql") {
 
-  conf <- getDbConfig(registryName)
-
   if (dbType == "mysql") {
+    conf <- getDbConfig(registryName)
     drv <- RMariaDB::MariaDB()
     con <- DBI::dbConnect(
       drv,
@@ -74,15 +73,11 @@ getDbConfig <- function(registryName = "data") {
       registryName
     )
   } else {
-    conf <- getConfig()
-    conf <- conf[[registryName]]
-    if (is.null(conf)) {
-      stop(paste0(
-        "Could not connect to database because there is no
-                configuration corresponding to key '", registryName,
-        "'. Please check key and/or configuration."
-      ))
-    }
+    stop(paste0(
+      "Could not connect to database because the enviroment
+       variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD
+       are not defined. Please check configuration."
+    ))
   }
   return(conf)
 }

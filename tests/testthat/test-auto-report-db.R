@@ -33,35 +33,10 @@ test_that("env vars needed for testing is present", {
   expect_true("MYSQL_PASSWORD" %in% names(Sys.getenv()))
 })
 
-# make temporary config
-test_config <- paste0(
-  config$r$autoReport$key, ":",
-  "\n  host : ", Sys.getenv("MYSQL_HOST"),
-  "\n  name : ", nameAutoReportDb,
-  "\n  user : ", Sys.getenv("MYSQL_USER"),
-  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
-  "\n  disp : ephemaralUnitTesting\n"
-)
-
-cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
-writeLines(test_config, cf)
-close(cf)
-
 # helper funs
-createAutoReportDb <- function(key) {
-  conf <- rapbase::getConfig()
-  conf <- conf[[key]]
-
-  query <- paste0("CREATE DATABASE ", conf[["name"]], ";")
-
-  con <- RMariaDB::dbConnect(
-    RMariaDB::MariaDB(),
-    host = conf$host,
-    user = conf$user,
-    password = conf$pass
-  )
-  RMariaDB::dbExecute(con, query)
-  RMariaDB::dbDisconnect(con)
+createAutoReportDb <- function() {
+  query <- paste0("CREATE DATABASE ", nameAutoReportDb, ";")
+  query_db(query = query)
 }
 
 createAutoReportTab <- function() {
@@ -83,7 +58,7 @@ createAutoReportTab <- function() {
 
 test_that("a db for auto report defs can be created", {
   check_db()
-  expect_true(createAutoReportDb(nameAutoReportDb))
+  expect_null(query_db(query =  paste0("CREATE DATABASE ", nameAutoReportDb, ";")))
 })
 
 test_that("table can be created in auto report db", {
