@@ -19,7 +19,11 @@ exportApp <- function(registryName = "") {
     theme = "rap/bootstrap.css",
     shiny::tabPanel(
       title = "Info",
-      rapbase::navbarWidgetInput("navbar-widget", selectOrganization = TRUE)
+      rapbase::navbarWidgetInput("navbar-widget", selectOrganization = TRUE),
+      shiny::sidebarLayout(
+        shiny::sidebarPanel(shiny::uiOutput("metaControl")),
+        shiny::mainPanel(shiny::htmlOutput("metaData"))
+      )
     ),
     shiny::tabPanel(
       title = "Eksport",
@@ -71,6 +75,26 @@ exportApp <- function(registryName = "") {
     })
 
     rapbase::exportGuideServer("exportGuide", registryName)
+
+    ## Metadata
+    meta <- shiny::reactive({
+      rapbase::describeRegistryDb(registryName)
+    })
+
+    output$metaControl <- shiny::renderUI({
+      tabs <- names(meta())
+      selectInput("metaTab", "Velg tabell:", tabs)
+    })
+
+
+    output$metaDataTable <- DT::renderDataTable(
+      meta()[[input$metaTab]], rownames = FALSE,
+      options = list(lengthMenu=c(25, 50, 100, 200, 400))
+    )
+
+    output$metaData <- shiny::renderUI({
+      DT::dataTableOutput("metaDataTable")
+    })
 
   }
   shiny::shinyApp(ui, server)

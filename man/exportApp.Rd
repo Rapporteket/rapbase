@@ -7,7 +7,8 @@
 exportApp(registryName = "")
 }
 \arguments{
-\item{registryName}{Character string registry name key}
+\item{registryName}{Character string registry name key, corresponding to
+github team name}
 }
 \description{
 Shiny app with database export functionality
