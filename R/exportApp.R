@@ -1,10 +1,11 @@
 #' Shiny app with database export functionality
 #'
-#' @param registryName Character string registry name key, corresponding to
+#' @param repoName Character string registry name key, corresponding to
 #' github team name
-#'
+#' @param registryName Character string registry name key, can be used to
+#' specify name of database if needed.
 #' @export
-exportApp <- function(registryName = "") {
+exportApp <- function(repoName = "", registryName = "data") {
   ui <- shiny::navbarPage(
     id = "navbarpage",
     title = shiny::div(shiny::a(shiny::includeHTML(
@@ -44,8 +45,8 @@ exportApp <- function(registryName = "") {
   server <- function(input, output, session) {
     user <- rapbase::navbarWidgetServer2(
       id = "navbar-widget",
-      orgName = registryName,
-      caller = registryName
+      orgName = repoName,
+      caller = repoName
     )
 
     shiny::observeEvent(user$role(), {
@@ -65,7 +66,8 @@ exportApp <- function(registryName = "") {
       }
     })
 
-    rapbase::exportUCServer("export", registryName)
+    rapbase::exportUCServer("export", registryName = registryName,
+                            repoName = repoName)
 
     # User guide
     output$exportMainPanel <- shiny::renderUI({
@@ -76,15 +78,15 @@ exportApp <- function(registryName = "") {
       }
     })
 
-    rapbase::exportGuideServer("exportGuide", registryName)
+    rapbase::exportGuideServer("exportGuide", repoName)
 
     ## Metadata
     meta <- shiny::reactive({
-      rapbase::describeRegistryDb(registryName)
+      rapbase::describeRegistryDb(registryName = registryName)
     })
 
     meta2 <- shiny::reactive({
-      rapbase::nlinesRegistryDb(registryName)
+      rapbase::nlinesRegistryDb(registryName = registryName)
     })
 
     output$metaControl <- shiny::renderUI({
