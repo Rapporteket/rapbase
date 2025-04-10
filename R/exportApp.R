@@ -22,7 +22,9 @@ exportApp <- function(registryName = "") {
       rapbase::navbarWidgetInput("navbar-widget", selectOrganization = TRUE),
       shiny::sidebarLayout(
         shiny::sidebarPanel(shiny::uiOutput("metaControl")),
-        shiny::mainPanel(shiny::htmlOutput("metaData"))
+        shiny::mainPanel(
+          shiny::uiOutput("n_lines"),
+          shiny::htmlOutput("metaData"))
       )
     ),
     shiny::tabPanel(
@@ -81,11 +83,14 @@ exportApp <- function(registryName = "") {
       rapbase::describeRegistryDb(registryName)
     })
 
+    meta2 <- shiny::reactive({
+      rapbase::nlinesRegistryDb(registryName)
+    })
+
     output$metaControl <- shiny::renderUI({
       tabs <- names(meta())
       selectInput("metaTab", "Velg tabell:", tabs)
     })
-
 
     output$metaDataTable <- DT::renderDataTable(
       meta()[[input$metaTab]], rownames = FALSE,
@@ -94,6 +99,11 @@ exportApp <- function(registryName = "") {
 
     output$metaData <- shiny::renderUI({
       DT::dataTableOutput("metaDataTable")
+    })
+
+    output$n_lines <- shiny::renderUI({
+      h4(paste0(input$metaTab, " har ",
+                meta2()[[shiny::req(input$metaTab)]]$n_lines, " linjer"))
     })
 
   }

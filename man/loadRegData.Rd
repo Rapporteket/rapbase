@@ -3,11 +3,14 @@
 \name{loadRegData}
 \alias{loadRegData}
 \alias{describeRegistryDb}
+\alias{nlinesRegistryDb}
 \title{Provider of data for registries at Rapporteket}
 \usage{
 loadRegData(registryName, query, dbType = "mysql")
 
 describeRegistryDb(registryName, tabs = c())
+
+nlinesRegistryDb(registryName, tabs = c())
 }
 \arguments{
 \item{registryName}{String Name of the registry as defined in dbConfig.yml}

@@ -49,3 +49,26 @@ describeRegistryDb <- function(registryName, tabs = c()) {
 
   desc
 }
+
+#' @rdname loadRegData
+#' @export
+nlinesRegistryDb <- function(registryName, tabs = c()) {
+  qGetTabs <- "SHOW TABLES;"
+  qGetNlines <- "SELECT COUNT(*) AS n_lines FROM "
+
+  desc <- list()
+
+  if (length(tabs) == 0) {
+    tabs <- rapbase::loadRegData(
+      registryName = registryName,
+      query = qGetTabs
+    )[[1]]
+  }
+
+  for (tab in tabs) {
+    query <- paste0(qGetNlines, tab, ";")
+    desc[[tab]] <- loadRegData(registryName, query)
+  }
+
+  desc
+}
