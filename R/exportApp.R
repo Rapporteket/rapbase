@@ -25,7 +25,8 @@ exportApp <- function(repoName = "", registryName = "data") {
         shiny::sidebarPanel(shiny::uiOutput("metaControl")),
         shiny::mainPanel(
           shiny::uiOutput("n_lines"),
-          shiny::htmlOutput("metaData"))
+          shiny::htmlOutput("metaData")
+        )
       )
     ),
     shiny::tabPanel(
@@ -91,12 +92,12 @@ exportApp <- function(repoName = "", registryName = "data") {
 
     output$metaControl <- shiny::renderUI({
       tabs <- names(meta())
-      selectInput("metaTab", "Velg tabell:", tabs)
+      shiny::selectInput("metaTab", "Velg tabell:", tabs)
     })
 
     output$metaDataTable <- DT::renderDataTable(
       meta()[[input$metaTab]], rownames = FALSE,
-      options = list(lengthMenu=c(25, 50, 100, 200, 400))
+      options = list(lengthMenu = c(25, 50, 100, 200, 400))
     )
 
     output$metaData <- shiny::renderUI({
@@ -104,8 +105,13 @@ exportApp <- function(repoName = "", registryName = "data") {
     })
 
     output$n_lines <- shiny::renderUI({
-      h4(paste0(input$metaTab, " har ",
-                meta2()[[shiny::req(input$metaTab)]]$n_lines, " linjer"))
+      shiny::h4(paste0(
+        input$metaTab,
+        " har ",
+        meta2()[[shiny::req(input$metaTab)]]$n_lines,
+        " linjer"
+      )
+      )
     })
 
   }
