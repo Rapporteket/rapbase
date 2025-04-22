@@ -10,8 +10,7 @@ findNextRunDate(
   startDate = NULL,
   terminateDate = NULL,
   interval = NULL,
-  returnFormat = "\%A \%e. \%B \%Y",
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+  returnFormat = "\%A \%e. \%B \%Y"
 )
 }
 \arguments{
@@ -36,8 +35,6 @@ and 1 month if not}
 \code{\link[base]{strptime}} in the current locale. Defaults to
 "\%A \%d. \%B \%Y" that will provide something like
 'Mandag 20. januar 2019' in a Norwegian locale}
-
-\item{target}{List of autoreports in file or database}
 }
 \value{
 String date for printing

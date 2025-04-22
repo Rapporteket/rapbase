@@ -4,25 +4,10 @@
 \alias{writeAutoReportData}
 \title{Write automated report metadata}
 \usage{
-writeAutoReportData(
-  fileName = "autoReport.yml",
-  config,
-  packageName = "rapbase",
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
-)
+writeAutoReportData(config)
 }
 \arguments{
-\item{fileName}{String defining name of the yaml configuration file. Default
-'autoReport.yml'}
-
 \item{config}{a list of yaml configuration}
-
-\item{packageName}{String defining the package in which the above
-configuration file resides. A configuration file within an R-package is
-only used in case the environmental variable 'R_RAP_CONFIG_PATH' is not
-defined (empty)}
-
-\item{target}{List of autoreports in file or database}
 }
 \description{
 Write automated report metadata

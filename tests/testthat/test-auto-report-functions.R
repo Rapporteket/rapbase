@@ -20,18 +20,6 @@ organization <- "000000"
 runDayOfYear <- as.POSIXlt(Sys.Date())$yday + 1
 dryRun <- FALSE
 
-test_that("auto report config can be upgraded", {
-  expect_message(upgradeAutoReportData(list(list(synopsis = "test"))))
-})
-
-test_that("already upgraded auto report config is left as is", {
-  c <- list(list(
-    type = "subscription", ownerName = "Tore Tester",
-    startDate = "2021-11-19"
-  ))
-  expect_equal(c, upgradeAutoReportData(c))
-})
-
 test_that("error is provided when filtering on unknown entity", {
   expect_error(filterAutoRep(list(), "unknown_entity", c("test")))
 })
