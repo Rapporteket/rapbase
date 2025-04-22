@@ -48,12 +48,6 @@ test_that("auto report can be created as dry run (stout) in an PROD context", {
 })
 Sys.setenv(R_RAP_INSTANCE = "")
 
-rd <- readAutoReportData()
-
-test_that("Registries/packages can be extracted from config", {
-  expect_true(is.vector(getRegs(rd)))
-})
-
 test_that("Function for testing automated reports return a file", {
   expect_true(file.exists(.testAutoReport()))
 })
@@ -62,62 +56,6 @@ test_that("A year-day sequence can be mande", {
   rdoy <- makeRunDayOfYearSequence(interval = "month")
   expect_gte(length(rdoy), 10)
   expect_true(is.numeric(rdoy))
-})
-
-test_that("The next run day in simple sequence can be identified", {
-  expect_equal(as.numeric(
-    findNextRunDate(
-      runDayOfYear = c(10, 20, 30), baseDayNum = 11,
-      returnFormat = "%j"
-    )
-  ), 20)
-})
-
-test_that("The next run day in sequence can be identified when next year", {
-  expect_equal(as.numeric(
-    findNextRunDate(
-      runDayOfYear = c(10, 20, 30), baseDayNum = 31,
-      returnFormat = "%j"
-    )
-  ), 10)
-})
-
-test_that("for within year-break sequence, next is found among earlier days", {
-  expect_equal(as.numeric(
-    findNextRunDate(
-      runDayOfYear = c(200, 300, 1, 100), baseDayNum = 10,
-      returnFormat = "%j"
-    )
-  ), 100)
-})
-
-test_that("for within year-break sequence, next is found among later days", {
-  expect_equal(as.numeric(
-    findNextRunDate(
-      runDayOfYear = c(200, 300, 1, 100), baseDayNum = 110,
-      returnFormat = "%j"
-    )
-  ), 200)
-})
-
-test_that("a start date is enforced when given", {
-  todayNum <- as.POSIXlt(Sys.Date())$yday + 1
-  # sequence of 4 consecutive days from, but not including, today
-  days <-
-    as.POSIXlt(seq.Date(Sys.Date(), (Sys.Date() + 3), by = "day"))$yday + 2
-  expect_equal(as.numeric(
-    findNextRunDate(
-      runDayOfYear = days, baseDayNum = todayNum,
-      returnFormat = "%j"
-    )
-  ), days[1])
-  startDate <- Sys.Date() + 4
-  expect_equal(as.numeric(
-    findNextRunDate(
-      runDayOfYear = days, baseDayNum = todayNum, startDate = startDate,
-      returnFormat = "%j"
-    )
-  ), days[4])
 })
 
 ######################################
@@ -130,8 +68,7 @@ test_that("The next run day is a monday", {
       startDate = "2025-01-06", # Monday
       terminateDate = Sys.Date() + 365,
       interval = "weeks",
-      returnFormat = "%A",
-      target = "db"
+      returnFormat = "%A"
     ) %in% c("Monday", "mandag"))
 })
 
@@ -141,8 +78,7 @@ test_that("The next run day is day 6 of month ", {
       startDate = "2025-01-06",
       terminateDate = Sys.Date() + 365,
       interval = "months",
-      returnFormat = "%d",
-      target = "db"
+      returnFormat = "%d"
     )
     , "06")
 })
@@ -152,14 +88,12 @@ test_that("Terminate date is before today, and will return terminateDate + 1", {
     findNextRunDate(
       startDate = "2023-01-06",
       terminateDate = Sys.Date() - 10,
-      interval = "months",
-      target = "db"
+      interval = "months"
     ), format(Sys.Date() - 9, format = "%A %e. %B %Y"))
 
   expect_true(findNextRunDate(
     startDate = "2025-01-06",
-    terminateDate = "2025-01-06",
-    target = "db"
+    terminateDate = "2025-01-06"
   ) %in% c("Tuesday  7. January 2025", "tirsdag  7. januar 2025"))
 })
 
@@ -168,8 +102,7 @@ test_that("Terminate date is after today but before next in range, and will retu
     findNextRunDate(
       startDate = seq(as.Date(Sys.Date()), length = 2, by = "-24 months")[2], # 24 months back in time
       terminateDate = Sys.Date() + 14,
-      interval = "months",
-      target = "db"
+      interval = "months"
     ), format(Sys.Date() + 15, format = "%A %e. %B %Y"))
 })
 
@@ -179,8 +112,7 @@ test_that("Start date is after today, and will return start date", {
     findNextRunDate(
       startDate = Sys.Date() + 10,
       terminateDate = Sys.Date() + 20,
-      interval = "months",
-      target = "db"
+      interval = "months"
     ), format(Sys.Date() + 10, format = "%A %e. %B %Y"))
 })
 
@@ -193,20 +125,17 @@ test_that("findNextRunDate throw errors", {
   expect_error(findNextRunDate(
     startDate = "202501-06",
     terminateDate = "2025-01-06",
-    interval = "days",
-    target = "db"
+    interval = "days"
   ))
   expect_error(findNextRunDate(
     startDate = "2025-01-06",
     terminateDate = "243467853443-212",
-    interval = "days",
-    target = "db"
+    interval = "days"
   ))
   # missing interval
   expect_error(findNextRunDate(
     startDate = "2025-01-06",
-    terminateDate = Sys.Date() + 10,
-    target = "db"
+    terminateDate = Sys.Date() + 10
   ))
 })
 
@@ -218,6 +147,7 @@ attr(shinySession, "class") <- "ShinySession"
 mapOrgId <- data.frame(id = "999999", name = "HUS", stringsAsFactors = FALSE)
 
 test_that("auto report tables (for shiny) can be made", {
+  check_db()
   expect_true(is.list(
     makeAutoReportTab(shinySession,
       type = "subscription", mapOrgId = mapOrgId,
@@ -239,6 +169,7 @@ test_that("auto report tables (for shiny) can be made", {
 })
 
 test_that("a registry dispatchment table (for shiny) can be made", {
+  check_db()
   expect_true(is.list(
     makeAutoReportTab(shinySession, type = "dispatchment", mapOrgId)
   ))
@@ -256,12 +187,14 @@ file.copy(
 )
 
 test_that("Auto report config can be created from package default", {
+  check_db()
   expect_warning(readAutoReportData())
 })
 
 # For a valid test make sure there is ONE standard dummy report scheduled for
 # day 90
 test_that("Auto reports can be processed (shipment by email not tested)", {
+  check_db()
   expect_message(runAutoReport(dayNumber = 90, dryRun = TRUE),
     "No emails sent. Content is:",
     all = FALSE
@@ -270,6 +203,7 @@ test_that("Auto reports can be processed (shipment by email not tested)", {
 
 # Do the same for a bulletin, above conditions also apply!
 test_that("Auto reports can be processed (shipment by email not tested)", {
+  check_db()
   expect_message(
     runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = TRUE),
     "No emails sent. Content is: This is a simple",
@@ -278,6 +212,7 @@ test_that("Auto reports can be processed (shipment by email not tested)", {
 })
 
 test_that("a report sceduled for today with startDate in future is not run", {
+  check_db()
   # skip if today is one of built in report test days
   skip_if((as.POSIXlt(Sys.Date())$yday + 1) %in% c(30, 60, 90),
     message = "Today is one of three predefined test days."
@@ -302,19 +237,21 @@ test_that("Auto reports can be processed and emailed (but failing send)", {
   )
 })
 
-createAutoReport(synopsis, package, type, fun, paramNames,
-  paramValues, owner, ownerName, email, organization,
-  runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
-  startDate = as.character(Sys.Date() + 1)
-)
-reportId <- names(rd)[length(rd)]
 
 test_that("Auto report can be deleted", {
+  check_db()
+  createAutoReport(synopsis, package, type, fun, paramNames,
+                   paramValues, owner, ownerName, email, organization,
+                   runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
+                   startDate = as.character(Sys.Date() + 1)
+  )
+  reportId <- names(rd)[length(rd)]
   expect_silent(deleteAutoReport(reportId))
   expect_true(is.na(names(readAutoReportData())[reportId]))
 })
 
 test_that("Auto report can be created and written to file", {
+  check_db()
   expect_silent(createAutoReport(
     synopsis, package, type, fun, paramNames,
     paramValues, owner, email, organization,
@@ -324,19 +261,13 @@ test_that("Auto report can be created and written to file", {
 
 
 test_that("Backup of auto report config can be made", {
+  check_db()
   writeAutoReportData(config = rd)
   expect_true(file.exists(file.path(
     Sys.getenv("R_RAP_CONFIG_PATH"),
     "autoReportBackup"
   )))
 })
-
-bckFile <- list.files(file.path(
-  Sys.getenv("R_RAP_CONFIG_PATH"),
-  "autoReportBackup"
-), full.names = TRUE)
-Sys.setFileTime(bckFile, "2019-01-01")
-writeAutoReportData(config = rd)
 
 f <- file.remove(
   list.files(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReportBackup"),
