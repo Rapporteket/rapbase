@@ -75,10 +75,6 @@ createAutoReport <- function(
     terminateDate <- as.Date(terminateDate)
   }
 
-  # make unique id by (hashing) combination of owner and timestamp
-  ts <- as.character(as.integer(as.POSIXct(Sys.time())))
-  autoRepId <- digest::digest(paste0(owner, ts))
-
   l <- list()
 
   l$synopsis <- synopsis
@@ -114,11 +110,10 @@ createAutoReport <- function(
 
 deleteAutoReport <- function(autoReportId) {
   query <- paste0(
-    'DELETE FROM ',
-    Sys.getenv("MYSQL_DB_AUTOREPORT"),
-    ' WHERE id = "',
+    "DELETE FROM autoreport ",
+    " WHERE id = ",
     autoReportId,
-    '";'
+    ";"
   )
   dbConnect <- rapOpenDbConnection("autoreport")
   DBI::dbExecute(dbConnect$con, query)
@@ -137,7 +132,7 @@ deleteAutoReport <- function(autoReportId) {
 readAutoReportData <- function() {
   query <- paste0("SELECT * FROM autoreport;")
   res <- rapbase::loadRegData("autoreport", query)
-  return(res)
+  res
 }
 
 
