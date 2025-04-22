@@ -1,6 +1,7 @@
 # store current instance and prepare
 currentInstance <- Sys.getenv("R_RAP_INSTANCE")
 currentConfig <- Sys.getenv("R_RAP_CONFIG_PATH")
+currentDb <- Sys.getenv("MYSQL_DB_AUTOREPORT")
 
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 
@@ -25,6 +26,7 @@ yaml::write_yaml(config, configFile)
 config$r$autoReport$target <- "db"
 yaml::write_yaml(config, configFile)
 nameAutoReportDb <- "autoreportTest"
+Sys.setenv(MYSQL_DB_AUTOREPORT = nameAutoReportDb)
 
 test_that("env vars needed for testing is present", {
   check_db()
@@ -68,15 +70,15 @@ test_that("table can be created in auto report db", {
 
 test_that("a sample of auto report data can be written to db", {
   check_db()
-  expect_null(writeAutoReportData(config = arSample, target = "db"))
+  expect_null(writeAutoReportData(config = arSample))
 })
 
 test_that("sample auto report data can be read from db", {
   check_db()
-  expect_equal(nrow(readAutoReportData(target = "db")), 7)
-  expect_equal(class(readAutoReportData(target = "db")), "data.frame")
-  writeAutoReportData(config = arSample, target = "db")
-  expect_equal(nrow(readAutoReportData(target = "db")), 14)
+  expect_equal(nrow(readAutoReportData()), 7)
+  expect_equal(class(readAutoReportData()), "data.frame")
+  writeAutoReportData(config = arSample)
+  expect_equal(nrow(readAutoReportData()), 14)
 })
 
 # For a valid test make sure there is ONE standard dummy report scheduled
@@ -87,8 +89,7 @@ test_that("Auto reports can be processed monthly", {
   check_db()
   expect_message(runAutoReport(
     dato = "2024-12-01",
-    dryRun = TRUE,
-    target = "db"
+    dryRun = TRUE
     ),
     "No emails sent. Content is:",
     all = FALSE
@@ -101,8 +102,7 @@ test_that("Auto reports can be processed weekly", {
   check_db()
   expect_message(runAutoReport(
     dato = "2024-12-02",
-    dryRun = TRUE,
-    target = "db"
+    dryRun = TRUE
     ),
     "No emails sent. Content is:",
     all = FALSE
@@ -116,8 +116,7 @@ test_that("Bulletin reports can be processed (monthly)", {
     runAutoReport(
       dato = "2024-12-01",
       type = c("bulletin"),
-      dryRun = TRUE,
-      target = "db"
+      dryRun = TRUE
       ),
     "No emails sent. Content is: This is a simple",
     all = FALSE
@@ -128,8 +127,7 @@ test_that("Auto reports not sent because of no reports this date", {
   check_db()
   expect_silent(runAutoReport(
     dato = "2024-12-03",
-    dryRun = TRUE,
-    target = "db"
+    dryRun = TRUE
     ))
 })
 
@@ -137,8 +135,7 @@ test_that("Auto reports not sent if before start date", {
   check_db()
   expect_silent(runAutoReport(
     dato = "1800-01-01",
-    dryRun = TRUE,
-    target = "db"
+    dryRun = TRUE
     ))
 })
 
@@ -146,8 +143,7 @@ test_that("Auto reports not sent if after start date", {
   check_db()
   expect_silent(runAutoReport(
     dato = "3000-01-01",
-    dryRun = TRUE,
-    target = "db"
+    dryRun = TRUE
     ))
 })
 
@@ -289,3 +285,5 @@ if (is.null(check_db(is_test_that = FALSE))) {
 # Restore instance
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfig)
 Sys.setenv(R_RAP_INSTANCE = currentInstance)
+Sys.setenv(MYSQL_DB_AUTOREPORT = currentDb)
+
