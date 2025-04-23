@@ -350,7 +350,7 @@ getRegs <- function(config) {
 #' @examples
 #' \donttest{
 #' # Example depend on environment variable R_RAP_CONFIG_PATH being set
-#' runAutoReport()
+#' try(runAutoReport())
 #' }
 #'
 

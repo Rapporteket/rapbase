@@ -50,7 +50,7 @@ The email itself is prepared and sent to recipients defined in the config
 \examples{
 \donttest{
 # Example depend on environment variable R_RAP_CONFIG_PATH being set
-runAutoReport()
+try(runAutoReport())
 }
 
 }
