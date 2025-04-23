@@ -218,7 +218,7 @@ writeAutoReportData <- function(config) {
 #' @export
 #'
 #' @examples
-#' ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
+#' ar <- data.frame(type = c("A", "B"))
 #' filterAutoRep(ar, "type", "B") # ar2
 #'
 filterAutoRep <- function(
@@ -513,14 +513,15 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 #' @return String date for printing
 #' @examples
 #' # Will return Jan 30 in the current year and locale with default formatting
-#' findNextRunDate(c(10, 20, 30), 20)
+#' findNextRunDate(runDayOfYear = c(10, 20, 30),
+#'  baseDayNum = 20, startDate = 1, terminateDate = 50)
 #' @export
 
 findNextRunDate <- function(
   runDayOfYear,
   baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
-  startDate = NULL,
-  terminateDate = NULL,
+  startDate,
+  terminateDate,
   interval = NULL,
   returnFormat = "%A %e. %B %Y"
 ) {

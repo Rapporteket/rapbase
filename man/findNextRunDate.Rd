@@ -7,8 +7,8 @@
 findNextRunDate(
   runDayOfYear,
   baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
-  startDate = NULL,
-  terminateDate = NULL,
+  startDate,
+  terminateDate,
   interval = NULL,
   returnFormat = "\%A \%e. \%B \%Y"
 )
@@ -46,5 +46,6 @@ be printed
 }
 \examples{
 # Will return Jan 30 in the current year and locale with default formatting
-findNextRunDate(c(10, 20, 30), 20)
+findNextRunDate(runDayOfYear = c(10, 20, 30),
+ baseDayNum = 20, startDate = 1, terminateDate = 50)
 }

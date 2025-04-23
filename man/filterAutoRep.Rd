@@ -24,7 +24,7 @@ List of auto reports matching the filtering criteria
 Generic function to filter various entities from auto report data
 }
 \examples{
-ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
+ar <- data.frame(type = c("A", "B"))
 filterAutoRep(ar, "type", "B") # ar2
 
 }
