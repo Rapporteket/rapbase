@@ -408,6 +408,7 @@ withr::with_envvar(
     }
 
     test_that("module server provides sensible output", {
+      check_db()
       shiny::testServer(autoReportServer,
                         args = list(
                           registryName = registryName, type = type,
@@ -421,6 +422,7 @@ withr::with_envvar(
     })
 
     test_that("no report select list created when no reports available", {
+      check_db()
       shiny::testServer(
         autoReportServer,
         args = list(
@@ -435,6 +437,7 @@ withr::with_envvar(
 
     type <- "dispatchment"
     test_that("email can be added and deleted for dispatchment", {
+      check_db()
       shiny::testServer(
         autoReportServer,
         args = list(
@@ -454,6 +457,7 @@ withr::with_envvar(
     })
 
     test_that("add email button is not created if email is not valid", {
+      check_db()
       shiny::testServer(
         autoReportServer,
         args = list(
@@ -473,6 +477,7 @@ withr::with_envvar(
     })
 
     test_that("no submit button is provided when module is not eligible", {
+      check_db()
       shiny::testServer(
         autoReportServer,
         args = list(
