@@ -13,5 +13,7 @@ a table of autoreport data
 Read automated report metadata
 }
 \examples{
-readAutoReportData()
+\donttest{
+try(readAutoReportData())
+}
 }

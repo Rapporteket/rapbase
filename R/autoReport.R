@@ -128,7 +128,9 @@ deleteAutoReport <- function(autoReportId) {
 #' @export
 #'
 #' @examples
-#' readAutoReportData()
+#' \donttest{
+#' try(readAutoReportData())
+#' }
 readAutoReportData <- function() {
   query <- paste0("SELECT * FROM autoreport;")
   res <- rapbase::loadRegData("autoreport", query)
