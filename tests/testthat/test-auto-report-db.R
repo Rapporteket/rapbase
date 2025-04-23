@@ -268,6 +268,79 @@ if (is.null(check_db(is_test_that = FALSE))) {
   )
 }
 
+#########################################
+# Tests from test-auto-report-functions #
+# Spring 2025                           #
+#########################################
+
+# make test data
+synopsis <- "Test of auto report"
+package <- "rapbase"
+type <- "subscription"
+fun <- ".testAutoReport"
+paramNames <- c("aNum", "aChar", "anExp")
+paramValues <- c(1, "someString", "Sys.Date()")
+owner <- "tester"
+ownerName <- "Tore Tester"
+email <- "tester@skde.no"
+organization <- "000000"
+runDayOfYear <- as.POSIXlt(Sys.Date())$yday + 1
+dryRun <- FALSE
+
+test_that("Auto report can be created and written to file", {
+  check_db()
+  expect_silent(createAutoReport(
+    synopsis, package, type, fun, paramNames,
+    paramValues, owner, email, organization,
+    runDayOfYear, dryRun
+  ))
+})
+
+test_that("auto report tables (for shiny) can be made", {
+  shinySession <- list(user = "tester")
+  shinySession$groups <- "rapbase"
+  attr(shinySession, "class") <- "ShinySession"
+  mapOrgId <- data.frame(id = "999999", name = "HUS", stringsAsFactors = FALSE)
+
+  check_db()
+  expect_true(is.list(
+    makeAutoReportTab(shinySession,
+      type = "subscription", mapOrgId = mapOrgId,
+      includeReportId = TRUE
+    )
+  ))
+  expect_true(is.list(
+    makeAutoReportTab(shinySession,
+      type = "dispatchment", mapOrgId = mapOrgId,
+      includeReportId = TRUE
+    )
+  ))
+  expect_true(is.list(
+    makeAutoReportTab(shinySession,
+      type = "bulletin", mapOrgId = mapOrgId,
+      includeReportId = TRUE
+    )
+  ))
+
+  expect_true(is.list(
+    makeAutoReportTab(shinySession, type = "dispatchment", mapOrgId)
+  ))
+
+})
+
+
+test_that("Auto report can be deleted", {
+  check_db()
+  createAutoReport(synopsis, package, type, fun, paramNames,
+                   paramValues, owner, ownerName, email, organization,
+                   runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
+                   startDate = as.character(Sys.Date() + 1)
+  )
+  rd <- readAutoReportData()
+  reportId <- names(rd)[length(rd)]
+  expect_silent(deleteAutoReport(reportId))
+  expect_true(is.na(names(readAutoReportData())[reportId]))
+})
 
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {

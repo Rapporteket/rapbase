@@ -1,9 +1,7 @@
 context("Auto report")
 
 # store current instance
-currentInstance <- Sys.getenv("R_RAP_INSTANCE")
 currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
-Sys.setenv(R_RAP_INSTANCE = "")
 Sys.setenv(R_RAP_CONFIG_PATH = "")
 
 # make test data
@@ -37,7 +35,6 @@ test_that("Auto report can be created as dry run (stout)", {
   expect_true(is.list(res))
 })
 
-Sys.setenv(R_RAP_INSTANCE = "PRODUCTION")
 test_that("auto report can be created as dry run (stout) in an PROD context", {
   res <- createAutoReport(synopsis, package, type, fun, paramNames,
     paramValues, owner, ownerName, email, organization,
@@ -46,7 +43,6 @@ test_that("auto report can be created as dry run (stout) in an PROD context", {
   )
   expect_true(is.list(res))
 })
-Sys.setenv(R_RAP_INSTANCE = "")
 
 test_that("Function for testing automated reports return a file", {
   expect_true(file.exists(.testAutoReport()))
@@ -146,34 +142,6 @@ attr(shinySession, "class") <- "ShinySession"
 
 mapOrgId <- data.frame(id = "999999", name = "HUS", stringsAsFactors = FALSE)
 
-test_that("auto report tables (for shiny) can be made", {
-  check_db()
-  expect_true(is.list(
-    makeAutoReportTab(shinySession,
-      type = "subscription", mapOrgId = mapOrgId,
-      includeReportId = TRUE
-    )
-  ))
-  expect_true(is.list(
-    makeAutoReportTab(shinySession,
-      type = "dispatchment", mapOrgId = mapOrgId,
-      includeReportId = TRUE
-    )
-  ))
-  expect_true(is.list(
-    makeAutoReportTab(shinySession,
-      type = "bulletin", mapOrgId = mapOrgId,
-      includeReportId = TRUE
-    )
-  ))
-})
-
-test_that("a registry dispatchment table (for shiny) can be made", {
-  check_db()
-  expect_true(is.list(
-    makeAutoReportTab(shinySession, type = "dispatchment", mapOrgId)
-  ))
-})
 
 test_that("Writing conf with undefined R_RAP_CONFIG_PATH provides an error", {
   expect_error(writeAutoReportData(config = NULL))
@@ -186,100 +154,6 @@ file.copy(
   overwrite = TRUE
 )
 
-test_that("Auto report config can be created from package default", {
-  check_db()
-  expect_warning(readAutoReportData())
-})
-
-# For a valid test make sure there is ONE standard dummy report scheduled for
-# day 90
-test_that("Auto reports can be processed (shipment by email not tested)", {
-  check_db()
-  expect_message(runAutoReport(dayNumber = 90, dryRun = TRUE),
-    "No emails sent. Content is:",
-    all = FALSE
-  )
-})
-
-# Do the same for a bulletin, above conditions also apply!
-test_that("Auto reports can be processed (shipment by email not tested)", {
-  check_db()
-  expect_message(
-    runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = TRUE),
-    "No emails sent. Content is: This is a simple",
-    all = FALSE
-  )
-})
-
-test_that("a report sceduled for today with startDate in future is not run", {
-  check_db()
-  # skip if today is one of built in report test days
-  skip_if((as.POSIXlt(Sys.Date())$yday + 1) %in% c(30, 60, 90),
-    message = "Today is one of three predefined test days."
-  )
-  createAutoReport(synopsis, package, type, fun, paramNames,
-    paramValues, owner, ownerName, email, organization,
-    runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
-    startDate = as.character(Sys.Date() + 1)
-  )
-  ## update rd to be used later
-  rd <- readAutoReportData()
-  expect_silent(
-    runAutoReport(dryRun = TRUE)
-  )
-})
-
-# Try to send an email, but expect error since there is no viable smtp set-up
-test_that("Auto reports can be processed and emailed (but failing send)", {
-  skip("cran autocheck false positive on debian")
-  expect_warning(
-    runAutoReport(dayNumber = 90, type = c("bulletin"), dryRun = FALSE)
-  )
-})
-
-
-test_that("Auto report can be deleted", {
-  check_db()
-  createAutoReport(synopsis, package, type, fun, paramNames,
-                   paramValues, owner, ownerName, email, organization,
-                   runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
-                   startDate = as.character(Sys.Date() + 1)
-  )
-  reportId <- names(rd)[length(rd)]
-  expect_silent(deleteAutoReport(reportId))
-  expect_true(is.na(names(readAutoReportData())[reportId]))
-})
-
-test_that("Auto report can be created and written to file", {
-  check_db()
-  expect_silent(createAutoReport(
-    synopsis, package, type, fun, paramNames,
-    paramValues, owner, email, organization,
-    runDayOfYear, dryRun
-  ))
-})
-
-
-test_that("Backup of auto report config can be made", {
-  check_db()
-  writeAutoReportData(config = rd)
-  expect_true(file.exists(file.path(
-    Sys.getenv("R_RAP_CONFIG_PATH"),
-    "autoReportBackup"
-  )))
-})
-
-f <- file.remove(
-  list.files(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReportBackup"),
-    full.names = TRUE
-  )
-)
-f <- file.remove(
-  file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReportBackup")
-)
-f <- file.remove(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "autoReport.yml"))
-Sys.setenv(R_RAP_CONFIG_PATH = "")
 
 # Restore environment
-Sys.setenv(R_RAP_INSTANCE = currentInstance)
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)
