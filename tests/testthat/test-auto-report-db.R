@@ -11,7 +11,7 @@ file.copy(
 )
 configFile <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
 
-nameAutoReportDb <- "autoreportTest"
+nameAutoReportDb <- "autoreporttest"
 
 # get some auto report data to work on, i.e. default rapbase
 arSample <- yaml::read_yaml(system.file("autoReport.yml", package = "rapbase"))
@@ -25,7 +25,7 @@ yaml::write_yaml(config, configFile)
 # adjust config and get whatever name of logging database define there
 config$r$autoReport$target <- "db"
 yaml::write_yaml(config, configFile)
-nameAutoReportDb <- "autoreportTest"
+nameAutoReportDb <- "autoreporttest"
 Sys.setenv(MYSQL_DB_AUTOREPORT = nameAutoReportDb)
 
 test_that("env vars needed for testing is present", {
@@ -158,7 +158,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
       "FALK_APP_ID" = "80"
     ),
     code = {
-      registryName <- "autoreportTest"
+      registryName <- "autoreporttest"
       ## make a list for report metadata
       reports <- list(
         FirstReport = list(
@@ -341,6 +341,155 @@ test_that("Auto report can be deleted", {
   expect_silent(deleteAutoReport(reportId))
   expect_true(is.na(names(readAutoReportData())[reportId]))
 })
+
+
+
+withr::with_envvar(
+  new = c(
+    "R_RAP_INSTANCE" = "QAC",
+    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
+    "FALK_APP_ID" = "80",
+    "SHINYPROXY_USERNAME" = "ttesterc",
+    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
+    "USERORGID" = "[1, 2, 3, 4]",
+    "USERFULLNAME" = "Tore Tester Container",
+    "USEREMAIL" = "ttesterc@rapporteket.no"
+  ),
+  code = {
+    registryName <- "rapbase"
+
+    # prep arguments
+    ## make a list for report metadata
+    reports <- list(
+      FirstReport = list(
+        synopsis = "First example report",
+        fun = "fun1",
+        paramNames = c("organization", "outputFormat"),
+        paramValues = c(111111, "html")
+      ),
+      SecondReport = list(
+        synopsis = "Second example report",
+        fun = "fun2",
+        paramNames = c("organization", "outputFormat"),
+        paramValues = c(111111, "pdf")
+      )
+    )
+
+    ## make a list of organization names and numbers
+    orgs <- list(
+      OrgOne = 111111,
+      OrgTwo = 222222
+    )
+
+    ## make a list for report metadata
+    reports <- list(
+      FirstReport = list(
+        synopsis = "First example report",
+        fun = "fun1",
+        paramNames = c("organization", "outputFormat"),
+        paramValues = c(100082, "html")
+      ),
+      SecondReport = list(
+        synopsis = "Second example report",
+        fun = "fun2",
+        paramNames = c("organization", "outputFormat"),
+        paramValues = c(102966, "pdf")
+      )
+    )
+    ## make a list of organization names and numbers
+    orgs <- list(
+      OrgOne = 100082,
+      OrgTwo = 102966
+    )
+    type <- "subscription"
+    user <- userAttribute(unit = 1)
+    for (n in names(user)) {
+      user[[n]] <- shiny::reactiveVal(user[[n]])
+    }
+
+    test_that("module server provides sensible output", {
+      shiny::testServer(autoReportServer,
+                        args = list(
+                          registryName = registryName, type = type,
+                          reports = reports, orgs = orgs, user = user
+                        ),
+                        {
+                          session$setInputs(report = "FirstReport")
+                          expect_equal(class(output$reports), "list")
+                        }
+      )
+    })
+
+    test_that("no report select list created when no reports available", {
+      shiny::testServer(
+        autoReportServer,
+        args = list(
+          registryName = registryName, type = type,
+          reports = NULL, orgs = orgs, user = user
+        ),
+        {
+          expect_true(is.null(output$reports))
+        }
+      )
+    })
+
+    type <- "dispatchment"
+    test_that("email can be added and deleted for dispatchment", {
+      shiny::testServer(
+        autoReportServer,
+        args = list(
+          registryName = registryName, type = type,
+          org = shiny::reactive(100082),
+          reports = reports, orgs = orgs, user = user
+        ),
+        {
+          session$setInputs(email = "true@email.no")
+          expect_equal(length(autoReport$email), 0)
+          session$setInputs(addEmail = 1)
+          expect_equal(autoReport$email[1], "true@email.no")
+          session$setInputs(delEmail = 1)
+          expect_equal(length(autoReport$email), 0)
+        }
+      )
+    })
+
+    test_that("add email button is not created if email is not valid", {
+      shiny::testServer(
+        autoReportServer,
+        args = list(
+          registryName = registryName, type = type,
+          org = shiny::reactive(100082),
+          reports = reports, orgs = orgs, user = user
+        ),
+        {
+          session$setInputs(email = "invalid@email-format")
+          expect_true(is.null(output$editEmail))
+          session$setInputs(email = "invalid@email-format.o")
+          expect_true(is.null(output$editEmail))
+          session$setInputs(email = "invalid.email-format.on")
+          expect_true(is.null(output$editEmail))
+        }
+      )
+    })
+
+    test_that("no submit button is provided when module is not eligible", {
+      shiny::testServer(
+        autoReportServer,
+        args = list(
+          registryName = registryName, type = "subscription",
+          reports = reports, orgs = orgs, eligible = shiny::reactiveVal(FALSE), user = user
+        ),
+        {
+          session$setInputs(email = "valid.email@format.no")
+          expect_true(is.null(output$makeAutoReport))
+        }
+      )
+    })
+
+  }
+)
+
+
 
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
