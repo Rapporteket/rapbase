@@ -111,9 +111,9 @@ createAutoReport <- function(
 deleteAutoReport <- function(autoReportId) {
   query <- paste0(
     "DELETE FROM autoreport ",
-    " WHERE id = ",
+    " WHERE id = '",
     autoReportId,
-    ";"
+    "';"
   )
   dbConnect <- rapOpenDbConnection("autoreport")
   DBI::dbExecute(dbConnect$con, query)
