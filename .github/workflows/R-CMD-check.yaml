@@ -63,6 +63,11 @@ jobs:
         run: |
           sudo /etc/init.d/mysql start
 
+      - name: Debug MySQL
+        run: |
+          sudo service mysql status
+          cat /var/log/mysql/error.log
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
