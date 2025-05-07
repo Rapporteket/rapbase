@@ -128,6 +128,11 @@ test_that("env vars needed for testing is present", {
   expect_true("MYSQL_PASSWORD" %in% names(Sys.getenv()))
 })
 
+test_that("a db for logging can be created", {
+  check_db()
+  expect_null(query_db(query =  paste0("CREATE DATABASE ", nameLogDb, ";")))
+})
+
 test_that("tables can be created in logging db", {
   check_db()
   expect_null(rapbase:::createLogDbTabs())
