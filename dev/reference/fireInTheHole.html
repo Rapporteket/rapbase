@@ -71,8 +71,11 @@ Monday through Friday and with emails suppressed:</p><div class="sourceCode"><pr
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># Depends on the env var R_RAP_CONFIG_PATH being properly set</span></span></span>
-<span class="r-in"><span><span class="fu">fireInTheHole</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Auto report data were upgraded: auto reports with no type defined now set to 'subscription'.</span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">fireInTheHole</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in getDbConfig(registryName) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        are not defined. Please check configuration.</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
