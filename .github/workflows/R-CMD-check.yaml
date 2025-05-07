@@ -61,9 +61,12 @@ jobs:
       - name: Set up MySQL, ubuntu only
         if: runner.os == 'Linux'
         run: |
-          sudo /etc/init.d/mysql start
+          sudo apt-get update
+          sudo apt-get install -y mysql-server
+          sudo service mysql start
 
       - name: Debug MySQL
+        if: runner.os == 'Linux'
         run: |
           sudo service mysql status
           cat /var/log/mysql/error.log
