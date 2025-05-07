@@ -30,14 +30,6 @@ autoreport:
   pass : root
   disp : ForAutoReportDevOnly
 
-# for staging data tests with database as target
-staging:
-  host : db
-  name : staging
-  user : root
-  pass : root
-  disp : ForStagingDataDevOnly
-
 # for testing, in dev container
 dev:
   host : db
