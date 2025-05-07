@@ -65,12 +65,6 @@ jobs:
           sudo apt-get install -y mysql-server
           sudo service mysql start
 
-      - name: Debug MySQL
-        if: runner.os == 'Linux'
-        run: |
-          sudo service mysql status
-          cat /var/log/mysql/error.log
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck
