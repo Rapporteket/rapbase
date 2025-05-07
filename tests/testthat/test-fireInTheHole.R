@@ -4,7 +4,7 @@ tempdir <- tempdir()
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 Sys.setenv(R_RAP_INSTANCE = "")
 file.copy(
-  system.file(c("rapbaseConfig.yml", "dbConfig.yml", "autoReport.yml"),
+  system.file(c("rapbaseConfig.yml", "autoReport.yml"),
     package = "rapbase"
   ),
   tempdir

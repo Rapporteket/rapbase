@@ -4,14 +4,18 @@
 \alias{rapOpenDbConnection}
 \title{Provide connection handle for data source at Rapporteket}
 \usage{
-rapOpenDbConnection(registryName, dbType = "mysql")
+rapOpenDbConnection(dbName, dbType = "mysql")
 }
 \arguments{
-\item{registryName}{String id used for the registry in global configuration
-file from which information on the database connection is provided}
+\item{dbName}{String providing the name of the database to connect to. If it
+is "data" it will use the MYSQL_DB_DATA environment variable, if it is
+"autoreport" it will use the MYSQL_DB_AUTOREPORT environment variable, and
+if it is "raplog" it will use the MYSQL_DB_LOG environment variable. If
+none of these are set, it will use the name provided.}
 
 \item{dbType}{String providing type of data source, one of
-"mysql" and "mssql". Defaults to "mysql"}
+  "mysql" and "mssql". Defaults to "mysql". "mssql" is not supported
+anymore.}
 }
 \value{
 A named list of con and drv representing the db connection handle and

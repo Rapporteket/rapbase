@@ -4,7 +4,7 @@
 \alias{getConfig}
 \title{Get configuration for package, if any}
 \usage{
-getConfig(fileName = "dbConfig.yml", packageName = "rapbase")
+getConfig(fileName, packageName = "rapbase")
 }
 \arguments{
 \item{fileName}{String providing configuration file base name}

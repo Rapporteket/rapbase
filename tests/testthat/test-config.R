@@ -8,11 +8,6 @@ test_that("Error is provided if configuration is not present in package", {
   expect_error(getConfig(fileName = "iDoNotExist.yml"))
 })
 
-test_that("Configuration is read from package", {
-  expect_true(file.exists(system.file("dbConfig.yml", package = "rapbase")))
-  expect_output(str(getConfig()), "List of")
-})
-
 sample_config_file <- tempfile()
 Sys.setenv(R_RAP_CONFIG_PATH = dirname(sample_config_file))
 
