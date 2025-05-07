@@ -24,15 +24,6 @@ reference:
     - rapCloseDbConnection
     - exportApp
 
-  - title: Staging data
-    desc: >
-      Handle staging data
-    contents:
-    - saveStagingData
-    - loadStagingData
-    - deleteStagingData
-    - cleanStagingData
-
   - title: User information
     desc: >
       Provides information on the logged in user in a shiny session
