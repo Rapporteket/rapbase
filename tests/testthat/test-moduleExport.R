@@ -63,6 +63,8 @@ if (is.null(check_db(is_test_that = FALSE))) {
   DBI::dbDisconnect(con)
 }
 
+regName <- "rapbase"
+
 test_that("an existing file name is provided", {
   check_db()
   f <- exportDb(regName, compress = TRUE, session = session)
