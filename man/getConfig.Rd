@@ -20,5 +20,5 @@ environment variable R_RAP_CONFIG_PATH or as provided by the package itself.
 If none can be found the function exits with an error
 }
 \examples{
-getConfig()
+getConfig(fileName = "rapbaseConfig.yaml")
 }

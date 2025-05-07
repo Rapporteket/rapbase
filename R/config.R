@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-#' getConfig()
+#' getConfig(fileName = "rapbaseConfig.yaml")
 getConfig <- function(fileName, packageName = "rapbase") {
   path <- Sys.getenv("R_RAP_CONFIG_PATH")
 
