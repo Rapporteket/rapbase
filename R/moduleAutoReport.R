@@ -232,7 +232,7 @@ autoReportServer <- function(
   paramValues = shiny::reactiveVal(c("")),
   reports = NULL,
   orgs = NULL,
-  eligible = TRUE,
+  eligible = shiny::reactiveVal(TRUE),
   freq = "month",
   user
 ) {
@@ -253,8 +253,6 @@ autoReportServer <- function(
     quarter = "Kvartalsvis-quarter",
     year = "\u00C5rlig-year"
   )
-  # Either get autoreport-list from file or database
-  target <- getConfig(fileName = "rapbaseConfig.yml")$r$autoReport$target
 
   shiny::moduleServer(id, function(input, output, session) {
     autoReport <- shiny::reactiveValues(
@@ -265,8 +263,7 @@ autoReportServer <- function(
         group = registryName,
         orgId = NULL,
         type = type,
-        mapOrgId = orgList2df(orgs),
-        target = target
+        mapOrgId = orgList2df(orgs)
       ),
       report = names(reports)[1],
       org = unlist(orgs, use.names = FALSE)[1],
@@ -287,8 +284,7 @@ autoReportServer <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs),
-        target = target
+        mapOrgId = orgList2df(orgs)
       ),
       ignoreNULL = FALSE
     )
@@ -335,8 +331,7 @@ autoReportServer <- function(
         runDayOfYear = as.integer(c(10, 42, 100)), # Not in use anymore
         startDate = input$start,
         interval = interval,
-        intervalName = strsplit(input$freq, "-")[[1]][1],
-        target = target
+        intervalName = strsplit(input$freq, "-")[[1]][1]
       )
       autoReport$tab <-
         makeAutoReportTab(
@@ -346,34 +341,23 @@ autoReportServer <- function(
           group = registryName,
           orgId = user$org(),
           type = type,
-          mapOrgId = orgList2df(orgs),
-          target = target
+          mapOrgId = orgList2df(orgs)
         )
       autoReport$email <- vector()
     })
 
     shiny::observeEvent(input$edit_button, {
       repId <- strsplit(input$edit_button, "__")[[1]][2]
-      if (target == "db") {
-        rep <- readAutoReportData(target = target) %>%
-          dplyr::filter(id == repId)
-        if (nrow(rep) != 1) {
-          message("Can not modify (either less or more than 1)")
-          return(NULL)
-        }
-      } else {
-        rep <- readAutoReportData()[[repId]]
-        # try matching report by synopsis, fallback to currently selected
-        for (i in names(reports)) {
-          if (reports[[i]]$synopsis == rep$synopsis) {
-            autoReport$report <- i
-          }
-        }
+      rep <- readAutoReportData() %>%
+        dplyr::filter(id == repId)
+      if (nrow(rep) != 1) {
+        message("Can not modify (either less or more than 1)")
+        return(NULL)
       }
       autoReport$org <- rep$organization
       autoReport$freq <- paste0(rep$intervalName, "-", rep$interval)
       autoReport$email <- rep$email
-      deleteAutoReport(repId, target = target)
+      deleteAutoReport(repId)
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
@@ -381,8 +365,7 @@ autoReportServer <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs),
-        target = target
+        mapOrgId = orgList2df(orgs)
       )
 
       if (rep$type == "subscription") {
@@ -398,7 +381,7 @@ autoReportServer <- function(
 
     shiny::observeEvent(input$del_button, {
       repId <- strsplit(input$del_button, "__")[[1]][2]
-      deleteAutoReport(repId, target = target)
+      deleteAutoReport(repId)
       autoReport$tab <- makeAutoReportTab(
         session,
         namespace = id,
@@ -406,8 +389,7 @@ autoReportServer <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs),
-        target = target
+        mapOrgId = orgList2df(orgs)
       )
     })
 
@@ -523,7 +505,7 @@ autoReportServer <- function(
     })
 
     output$makeAutoReport <- shiny::renderUI({
-      if (is.null(autoReport$report) || !eligible) {
+      if (is.null(autoReport$report) || !eligible()) {
         NULL
       } else {
         if (type %in% c("subscription")) {
@@ -563,7 +545,7 @@ autoReportServer <- function(
     )
 
     output$autoReportTable <- shiny::renderUI({
-      if (!eligible) {
+      if (!eligible()) {
         shiny::tagList(
           shiny::h2(paste0("Funksjonen ('", type, "') er utilgjengelig")),
           shiny::p("Ved sp\u00F8rsm\u00E5l ta gjerne kontakt med registeret."),

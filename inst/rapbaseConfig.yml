@@ -20,11 +20,6 @@ r :
     target: db
     key: autoreport
 
-  # Staging data
-  staging:
-    target: db
-    key: staging
-
 ## Network
 network :
 

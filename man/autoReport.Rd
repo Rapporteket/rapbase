@@ -35,7 +35,7 @@ autoReportServer(
   paramValues = shiny::reactiveVal(c("")),
   reports = NULL,
   orgs = NULL,
-  eligible = TRUE,
+  eligible = shiny::reactiveVal(TRUE),
   freq = "month",
   user
 )

@@ -38,7 +38,6 @@
 #' @param dryRun Logical defining if global auto report config actually is to
 #' be updated. If set to TRUE the actual config (all of it) will be returned by
 #' the function. FALSE by default
-#' @param target List of autoreports in file or database
 #'
 #' @return Nothing unless dryRun is set TRUE in which case a list of all config
 #' will be returned
@@ -61,8 +60,7 @@ createAutoReport <- function(
   terminateDate = NULL,
   interval = "",
   intervalName = "",
-  dryRun = FALSE,
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+  dryRun = FALSE
 ) {
 
   # When NULL, set expiry date based on context
@@ -76,10 +74,6 @@ createAutoReport <- function(
     }
     terminateDate <- as.Date(terminateDate)
   }
-
-  # make unique id by (hashing) combination of owner and timestamp
-  ts <- as.character(as.integer(as.POSIXct(Sys.time())))
-  autoRepId <- digest::digest(paste0(owner, ts))
 
   l <- list()
 
@@ -98,180 +92,55 @@ createAutoReport <- function(
   l$intervalName <- intervalName
   l$runDayOfYear <- runDayOfYear
 
-  if (target == "db") {
-    rd <- list(l)
-  } else {
-    # Read current autoreport data and add new entry
-    rd <- readAutoReportData()
-
-    rd[[eval(autoRepId)]] <- l
-  }
+  rd <- list(l)
 
   if (dryRun) {
     rd
   } else {
-    writeAutoReportData(config = rd, target = target)
+    writeAutoReportData(config = rd)
   }
 }
 
 #' Delete existing report from config/db
 #'
 #' @param autoReportId String providing the auto report unique id
-#' @param target List of autoreports in file or database
 #'
 #' @seealso \code{\link{createAutoReport}}
 #' @export
 
-deleteAutoReport <- function(
-  autoReportId,
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
-) {
-  if (target == "file") {
-    rd <- readAutoReportData()
-    # just stop with an error if report does not exist
-    stopifnot(!is.null(rd[[autoReportId]]))
-    ind <- names(rd) == autoReportId
-    rd <- rd[!ind]
-    writeAutoReportData(config = rd)
-  } else if (target == "db") {
-    query <- paste0('DELETE FROM autoreport WHERE id = "', autoReportId, '";')
-    dbConnect <- rapOpenDbConnection("autoreport")
-    DBI::dbExecute(dbConnect$con, query)
-    rapCloseDbConnection(dbConnect$con)
-    dbConnect <- NULL
-  }
+deleteAutoReport <- function(autoReportId) {
+  query <- paste0(
+    "DELETE FROM autoreport ",
+    " WHERE id = '",
+    autoReportId,
+    "';"
+  )
+  dbConnect <- rapOpenDbConnection("autoreport")
+  DBI::dbExecute(dbConnect$con, query)
+  rapCloseDbConnection(dbConnect$con)
+  dbConnect <- NULL
 }
 
 #' Read automated report metadata
 #'
-#' @param fileName String defining name of the yaml configuration file. Default
-#' 'autoReport.yml'
-#' @param packageName String defining the package in which the above
-#' configuration file resides. A configuration file within an R-package is
-#' only used in case the environmental variable 'R_RAP_CONFIG_PATH' is not
-#' defined (empty)
-#' @param target List of autoreports in file or database
 #'
-#' @return a list of yaml data
+#' @return a table of autoreport data
 #' @export
 #'
 #' @examples
-#' readAutoReportData()
-readAutoReportData <- function(
-  fileName = "autoReport.yml",
-  packageName = "rapbase",
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
-) {
-
-  if (target == "db") {
-    config <- getConfig(fileName = "rapbaseConfig.yml")
-    query <- paste0("SELECT * FROM ", config$r$autoReport$key, ";")
-    res <- rapbase::loadRegData(config$r$autoReport$key, query)
-    return(res)
-  } else if (target == "file") {
-    path <- Sys.getenv("R_RAP_CONFIG_PATH")
-
-    if (path == "") {
-      stopifnot(file.exists(system.file(fileName, package = packageName)))
-      config_file <- system.file(fileName, package = packageName)
-    } else {
-      if (!file.exists(file.path(path, fileName))) {
-        warning(paste(
-          "No configuration file found in", path,
-          ". A new file will be made from the package default"
-        ))
-        file.copy(system.file(fileName, package = packageName), path)
-      }
-      config_file <- file.path(path, fileName)
-    }
-
-    conf <- yaml::yaml.load_file(config_file)
-  }
-
-  upgradeAutoReportData(conf)
-  # conf
-}
-
-#' Upgrade auto reports
-#'
-#' Upgrade auto report config as new features emerge. Currently, the type
-#' definition is added and set to 'subscription' that historically has been
-#' the only type used
-#'
-#' @param config List of auto report configuration
-#'
-#' @return List of (upgraded) auto report configuration
-#' @export
-
-upgradeAutoReportData <- function(config) {
-  upgradeType <- FALSE
-  upgradeOwnerName <- FALSE
-  upgradeParams <- FALSE
-  upgradeStartDate <- FALSE
-
-  for (i in seq_len(length(config))) {
-    rep <- config[[i]]
-    if (!"type" %in% names(rep)) {
-      upgradeType <- TRUE
-      config[[i]]$type <- "subscription"
-    }
-    if (!"ownerName" %in% names(rep)) {
-      upgradeOwnerName <- TRUE
-      config[[i]]$ownerName <- ""
-    }
-    if ("params" %in% names(rep) && inherits(rep$params[[1]], "list")) {
-      upgradeParams <- TRUE
-      paramName <- vector()
-      paramValue <- vector()
-      for (j in seq_len(length(rep$params))) {
-        paramName[j] <- names(rep$params[[j]])
-        paramValue[j] <- rep$params[[j]]
-      }
-      config[[i]]$params <- as.list(stats::setNames(paramValue, paramName))
-    }
-    if (!"startDate" %in% names(rep)) {
-      upgradeStartDate <- TRUE
-      config[[i]]$startDate <- "1900-01-01"
-    }
-  }
-
-  if (upgradeType) {
-    message(paste(
-      "Auto report data were upgraded:",
-      "auto reports with no type defined now set to",
-      "'subscription'."
-    ))
-  }
-  if (upgradeOwnerName) {
-    message(paste(
-      "Auto report data were upgraded:",
-      "auto reports with no owner name defined now set to",
-      "an empty string."
-    ))
-  }
-  if (upgradeParams) {
-    message(paste(
-      "Auto report data were upgraded:",
-      "function params list un-nested. Please check that autor reports for",
-      "registries are still working as expected."
-    ))
-  }
-  if (upgradeStartDate) {
-    message(paste(
-      "Auto report data were upgraded:",
-      "auto reports with no start date defined now set to 1900-01-01."
-    ))
-  }
-
-  config
+#' \donttest{
+#' try(readAutoReportData())
+#' }
+readAutoReportData <- function() {
+  query <- paste0("SELECT * FROM autoreport;")
+  res <- rapbase::loadRegData("autoreport", query)
+  res
 }
 
 
 #' Write automated report metadata
 #'
-#' @inheritParams readAutoReportData
 #' @param config a list of yaml configuration
-#' @param target List of autoreports in file or database
 #'
 #' @return NULL
 #' @export
@@ -279,112 +148,59 @@ upgradeAutoReportData <- function(config) {
 #' @examples
 #' \donttest{
 #' # Example depend on environment variable R_RAP_CONFIG_PATH being set
-#' config <- readAutoReportData()
+#' try(config <- readAutoReportData())
 #' try(writeAutoReportData(config = config))
 #' }
 #'
-writeAutoReportData <- function(
-  fileName = "autoReport.yml", config,
-  packageName = "rapbase",
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
-) {
-
-  if (target == "db") {
-    rc <- getConfig(fileName = "rapbaseConfig.yml")
-    key <- rc$r$autoReport$key
-    # Create empty data frame
-    dataframe <- stats::setNames(
-      data.frame(
-        matrix(ncol = 15, nrow = 0)
-      ),
-      c("id", names(config[[1]]))
-    ) |>
-      dplyr::mutate(dplyr::across(dplyr::everything(), as.character))
-    for (element in config) {
-      for (email in element$email) {
-        dataframe <- dataframe |> dplyr::add_row(
-          id = digest::digest(
-            paste0(
-              email,
-              as.character(as.integer(as.POSIXct(Sys.time())))
-            )
-          ),
-          synopsis = element$synopsis,
-          package = element$package,
-          fun = element$fun,
-          params = paste0(
-            "{",
-            paste0(
-              "\"",
-              names(element$params),
-              "\": \"",
-              element$params,
-              "\"",
-              collapse = ", "
-            ), "}"
-          ),
-          owner = element$owner,
-          email = email,
-          organization = element$organization,
-          terminateDate = element$terminateDate,
-          interval = element$interval,
-          intervalName = element$intervalName,
-          type = element$type,
-          ownerName = element$ownerName,
-          startDate = element$startDate,
-          runDayOfYear = toString(element$runDayOfYear)
-        )
-      }
-    }
-
-    con <- rapOpenDbConnection(key)$con
-    DBI::dbAppendTable(con, key, dataframe, row.names = NULL)
-    rapCloseDbConnection(con)
-  } else if (target == "file") {
-    path <- Sys.getenv("R_RAP_CONFIG_PATH")
-
-    if (path == "") {
-      # cannot proceed if there is nowhere to store config
-      stop(paste(
-        "There is nowhere to store config data.",
-        "The environment variable R_RAP_CONFIG_PATH must be defined",
-        "providing av path to a directory where configuration can",
-        "be written. Stopping"
-      ))
-    } else {
-      oriFile <- file.path(path, fileName)
-      # in case we screw-up, make a backup
-      tmpTag <- as.character(as.integer(as.POSIXct(Sys.time())))
-      nameParts <- strsplit(fileName, "[.]")[[1]]
-      bckFileName <- paste0(nameParts[1], tmpTag, ".", nameParts[-1])
-      bckFilePath <- file.path(path, "autoReportBackup")
-      if (!dir.exists(bckFilePath)) {
-        dir.create(bckFilePath)
-      }
-      file.copy(
-        from = oriFile, to = file.path(bckFilePath, bckFileName),
-        overwrite = TRUE
+writeAutoReportData <- function(config) {
+  # Create empty data frame
+  dataframe <- stats::setNames(
+    data.frame(
+      matrix(ncol = 15, nrow = 0)
+    ),
+    c("id", names(config[[1]]))
+  ) |>
+    dplyr::mutate(dplyr::across(dplyr::everything(), as.character))
+  for (element in config) {
+    for (email in element$email) {
+      dataframe <- dataframe |> dplyr::add_row(
+        id = digest::digest(
+          paste0(
+            email,
+            as.character(as.integer(as.POSIXct(Sys.time())))
+          )
+        ),
+        synopsis = element$synopsis,
+        package = element$package,
+        fun = element$fun,
+        params = paste0(
+          "{",
+          paste0(
+            "\"",
+            names(element$params),
+            "\": \"",
+            element$params,
+            "\"",
+            collapse = ", "
+          ), "}"
+        ),
+        owner = element$owner,
+        email = email,
+        organization = element$organization,
+        terminateDate = element$terminateDate,
+        interval = element$interval,
+        intervalName = element$intervalName,
+        type = element$type,
+        ownerName = element$ownerName,
+        startDate = element$startDate,
+        runDayOfYear = toString(element$runDayOfYear)
       )
-      # to maintain some order, remove files older than 30 days
-      files <- file.info(list.files(bckFilePath, full.names = TRUE))
-      rmFiles <- rownames(
-        files[difftime(
-          Sys.time(),
-          files[, "mtime"],
-          units = "days"
-        ) > 30,
-        ]
-      )
-      file.remove(rmFiles)
-      con <- file(oriFile, "w")
     }
-    yaml::write_yaml(config, con)
-    close(con)
-  } else {
-    stop(paste0(
-      "Target ", target, " is not supported. Auto report data not written!"
-    ))
   }
+
+  con <- rapOpenDbConnection("autoreport")$con
+  DBI::dbAppendTable(con, "autoreport", dataframe, row.names = NULL)
+  rapCloseDbConnection(con)
 }
 
 
@@ -399,37 +215,25 @@ writeAutoReportData <- function(
 #' represents the registry name
 #' @param pass Character vector defining the values of the filtering entity that
 #' will allow reports to pass through the filter
-#' @param target List of autoreports in file or database
 #'
 #' @return List of auto reports matching the filtering criteria
 #' @export
 #'
 #' @examples
-#' ar <- list(ar1 = list(type = "A"), ar2 = list(type = "B"))
+#' ar <- data.frame(type = c("A", "B"))
 #' filterAutoRep(ar, "type", "B") # ar2
 #'
 filterAutoRep <- function(
   data,
   by,
-  pass,
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+  pass
 ) {
   stopifnot(by %in% c("package", "type", "owner", "organization"))
 
   if (length(data) == 0) {
     list()
   } else {
-    if (target == "db") {
-      return(dplyr::filter(data, .data[[by]] %in% pass))
-    } else {
-      ind <- integer()
-      for (i in seq_len(length(data))) {
-        if (data[[i]][[by]] %in% pass) {
-          ind <- c(ind, i)
-        }
-      }
-      c(data[ind])
-    }
+    dplyr::filter(data, .data[[by]] %in% pass)
   }
 }
 
@@ -532,7 +336,6 @@ getRegs <- function(config) {
 #' May contain one or more of
 #' \code{c("subscription", "dispatchment", "bulletin")}. Defaults value set to
 #' \code{c("subscription", "dispatchment")}.
-#' @param target List of autoreports in file or database
 #' @param dryRun Logical defining if emails are to be sent. If TRUE a message
 #' with reference to the payload file is given but no emails will actually be
 #' sent. Default is FALSE
@@ -547,7 +350,7 @@ getRegs <- function(config) {
 #' @examples
 #' \donttest{
 #' # Example depend on environment variable R_RAP_CONFIG_PATH being set
-#' runAutoReport()
+#' try(runAutoReport())
 #' }
 #'
 
@@ -556,27 +359,24 @@ runAutoReport <- function(
   dato = Sys.Date(),
   group = NULL,
   type = c("subscription", "dispatchment"),
-  target = rapbase::getConfig("rapbaseConfig.yml")$r$autoReport$target,
   dryRun = FALSE
 ) {
 
   # get report candidates
-  reps <- rapbase::readAutoReportData(target = target) %>%
-    rapbase::filterAutoRep(by = "type", pass = type, target = target)
+  reps <- rapbase::readAutoReportData() %>%
+    rapbase::filterAutoRep(by = "type", pass = type)
   if (!is.null(group)) {
     reps <- reps %>%
-      rapbase::filterAutoRep(by = "package", pass = group, target = target)
+      rapbase::filterAutoRep(by = "package", pass = group)
   }
-  if (target == "db") {
-    reps <- reps %>%
-      # nolint start: object_usage_linter
-      dplyr::summarise(
-        email = list(unique(email)),
-        .by = c(owner, ownerName, package, organization, type, fun,
-                params, startDate, terminateDate, interval, synopsis)
-      )
-    # nolint end
-  }
+  reps <- reps %>%
+    # nolint start: object_usage_linter
+    dplyr::summarise(
+      email = list(unique(email)),
+      .by = c(owner, ownerName, package, organization, type, fun,
+              params, startDate, terminateDate, interval, synopsis)
+    )
+  # nolint end
 
   # standard text for email body
   stdTxt <- readr::read_file(
@@ -588,32 +388,21 @@ runAutoReport <- function(
   # get sender from common config
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
-  for (i in seq_len(ifelse(target == "db", dim(reps)[1], length(reps)))) {
+  for (i in seq_len(dim(reps)[1])) {
     tryCatch(
       {
-        if (target == "db") {
-          rep <- reps[i, ] %>% as.list()
-          rep$email <- unlist(rep$email)
-          params <- jsonlite::fromJSON(rep$params)
-        } else {
-          rep <- reps[[i]]
-          params <- rep$params
-        }
-        if ((
-          target == "file"
-          && dayNumber %in% rep$runDayOfYear
-          && as.Date(rep$terminateDate) > Sys.Date()
-          && as.Date(rep$startDate) <= Sys.Date()
-        ) || (
-          target == "db"
-          && as.Date(rep$startDate) <= dato
+        rep <- reps[i, ] %>% as.list()
+        rep$email <- unlist(rep$email)
+        params <- jsonlite::fromJSON(rep$params)
+        if (
+          as.Date(rep$startDate) <= dato
           && as.Date(rep$terminateDate) > dato
           && dato %in% seq.Date(
             as.Date(rep$startDate),
             as.Date(dato),
             by = rep$interval
           ) # 'days', 'weeks', 'months', 'years',
-        )) {
+        ) {
           # get explicit referenced function and call it
           f <- rapbase::.getFun(paste0(rep$package, "::", rep$fun))
           content <- do.call(what = f, args = params)
@@ -726,94 +515,40 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 #' @return String date for printing
 #' @examples
 #' # Will return Jan 30 in the current year and locale with default formatting
-#' findNextRunDate(c(10, 20, 30), 20)
+#' findNextRunDate(runDayOfYear = c(10, 20, 30),
+#'  baseDayNum = 20, startDate = 1, terminateDate = 50)
 #' @export
 
 findNextRunDate <- function(
   runDayOfYear,
   baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
-  startDate = NULL,
-  terminateDate = NULL,
+  startDate,
+  terminateDate,
   interval = NULL,
-  returnFormat = "%A %e. %B %Y",
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+  returnFormat = "%A %e. %B %Y"
 ) {
 
-  if (target == "db") {
-    if (Sys.Date() < startDate) {
-      nextDate <- as.Date(startDate)
-    }
-    if (Sys.Date() >= startDate && Sys.Date() <= terminateDate) {
-      dateseq <- seq.Date(
-        as.Date(startDate),
-        as.Date(terminateDate),
-        by = interval
-      )
-      tidsdiff <- difftime(dateseq, Sys.Date(), units = "days")
-      tidsdiff[tidsdiff <= 0] <- NA
-      if (length(tidsdiff) == sum(is.na(tidsdiff))) {
-        nextDate <- as.Date(terminateDate) + 1
-      } else {
-        nextDate <- dateseq[which(tidsdiff == min(tidsdiff, na.rm = TRUE))]
-      }
-    }
-    if (Sys.Date() > terminateDate) {
-      nextDate <- as.Date(terminateDate) + 1
-    }
-
-    return(format(nextDate, format = returnFormat))
-  } else {
-
-    year <- as.POSIXlt(Sys.Date())$year + 1900
-
-    if (!is.null(startDate)) {
-      if (as.Date(startDate) > as.Date(strptime(
-        paste(year, baseDayNum),
-        "%Y %j"
-      ))) {
-        # since we pull the NEXT run day set new base day
-        # on day BEFORE start date
-        baseDayNum <- as.POSIXlt(startDate)$yday
-      }
-    }
-
-    # special case if out of max range and only one run day defined (yearly)
-    if (baseDayNum >= max(runDayOfYear) || length(runDayOfYear) == 1) {
-      # next run will be first run in day num vector
-      nextDayNum <- min(runDayOfYear)
-    } else {
-      # find year transition, if any
-      nDay <- length(runDayOfYear)
-      deltaDay <- runDayOfYear[2:nDay] - runDayOfYear[1:(nDay - 1)]
-      trans <- deltaDay < 0
-      if (any(trans)) {
-        indTrans <- match(TRUE, trans)
-        # vector head
-        dHead <- runDayOfYear[1:indTrans]
-        # vector tail
-        dTail <- runDayOfYear[(indTrans + 1):nDay]
-
-        if (baseDayNum >= max(dTail)) {
-          ## next run day to be found in vector head
-          runDayOfYearSubset <- dHead
-        } else {
-          ## next run day to be found in vector tail
-          runDayOfYearSubset <- dTail
-        }
-      } else {
-        runDayOfYearSubset <- runDayOfYear
-      }
-
-      nextDayNum <- min(runDayOfYearSubset[runDayOfYearSubset > baseDayNum])
-    }
-
-    # if current day num larger than nextDayNum report will be run next year
-    if (as.numeric(format(Sys.Date(), "%j")) > nextDayNum) {
-      year <- year + 1
-    }
-
-    format(strptime(paste(year, nextDayNum), "%Y %j"), format = returnFormat)
+  if (Sys.Date() < startDate) {
+    nextDate <- as.Date(startDate)
   }
+  if (Sys.Date() >= startDate && Sys.Date() <= terminateDate) {
+    dateseq <- seq.Date(
+      as.Date(startDate),
+      as.Date(terminateDate),
+      by = interval
+    )
+    tidsdiff <- difftime(dateseq, Sys.Date(), units = "days")
+    tidsdiff[tidsdiff <= 0] <- NA
+    if (length(tidsdiff) == sum(is.na(tidsdiff))) {
+      nextDate <- as.Date(terminateDate) + 1
+    } else {
+      nextDate <- dateseq[which(tidsdiff == min(tidsdiff, na.rm = TRUE))]
+    }
+  }
+  if (Sys.Date() > terminateDate) {
+    nextDate <- as.Date(terminateDate) + 1
+  }
+  return(format(nextDate, format = returnFormat))
 }
 
 # nolint start
@@ -869,7 +604,6 @@ findNextRunDate <- function(
 #'   report data will also be used
 #' @param includeReportId Logical if the unique report id should be added as
 #'   the last column in the table. FALSE by default.
-#' @param target autoreport-list in file or database
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
 #' @importFrom dplyr "%>%"
@@ -884,151 +618,86 @@ makeAutoReportTab <- function(
   orgId = rapbase::getUserReshId(session),
   type = "subscription",
   mapOrgId = NULL,
-  includeReportId = FALSE,
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+  includeReportId = FALSE
 ) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
-  autoRep <- readAutoReportData(target = target) %>%
-    filterAutoRep(by = "package", pass = group, target = target) %>%
-    filterAutoRep(by = "type", pass = type, target = target)
+  autoRep <- readAutoReportData() %>%
+    filterAutoRep(by = "package", pass = group) %>%
+    filterAutoRep(by = "type", pass = type)
 
   if (type == "subscription") {
     autoRep <- autoRep %>%
-      filterAutoRep(by = "owner", pass = user, target = target) %>%
-      filterAutoRep(by = "organization", pass = orgId, target = target)
+      filterAutoRep(by = "owner", pass = user) %>%
+      filterAutoRep(by = "organization", pass = orgId)
   }
 
   dateFormat <- "%A %e. %B %Y"
 
-  if (target == "db") {
-    if (length(autoRep$id) == 0) {
-      return(as.matrix(autoRep))
-    }
-
-    l <- list()
-    for (i in seq_len(nrow(autoRep))) {
-      nextDate <- findNextRunDate(
-        runDayOfYear = NULL,
-        startDate = autoRep[i, ]$startDate,
-        terminateDate = autoRep[i, ]$terminateDate,
-        interval = autoRep[i, ]$interval,
-        returnFormat = dateFormat,
-        target = target
-      )
-      if (as.Date(nextDate, format = dateFormat) > autoRep[i, ]$terminateDate) {
-        nextDate <- "Utl\u00F8pt"
-      }
-      dataSource <- autoRep[i, ]$organization
-      if (!is.null(mapOrgId)) {
-        if (dataSource %in% mapOrgId$id) {
-          dataSource <- mapOrgId$name[mapOrgId$id == dataSource]
-        }
-      }
-      r <- list(
-        "Rapport" = autoRep[i, ]$synopsis,
-        "Datakilde" = dataSource,
-        "Mottaker" = autoRep[i, ]$email,
-        "Periode" = autoRep[i, ]$intervalName,
-        "Slutt" = strftime(
-          as.Date(
-            autoRep[i, ]$terminateDate
-          ),
-          format = "%b %Y"
-        ),
-        "Neste" = nextDate,
-        "Endre" = as.character(
-          shiny::actionButton(
-            inputId = shiny::NS(namespace, paste0("edit__", autoRep[i, ]$id)),
-            label = "",
-            icon = shiny::icon("edit"),
-            onclick = sprintf(
-              "Shiny.onInputChange('%s', this.id)",
-              shiny::NS(namespace, "edit_button")
-            )
-          )
-        ),
-        "Slett" = as.character(
-          shiny::actionButton(
-            inputId = shiny::NS(namespace, paste0("del__", autoRep[i, ]$id)),
-            label = "",
-            icon = shiny::icon("trash"),
-            onclick = sprintf(
-              "Shiny.onInputChange('%s', this.id)",
-              shiny::NS(namespace, "del_button")
-            )
-          )
-        )
-      )
-      if (includeReportId) {
-        r <- c(r, list("id" = autoRep[i, ]$id))
-      }
-      if (!type %in% c("subscription")) {
-        r <- c(list(Ansvarlig = autoRep[i, ]$ownerName), r)
-      }
-      l <- rbind(l, r)
-    }
-    return(as.matrix(l))
-  } else {
-    l <- list()
-    for (n in names(autoRep)) {
-      nextDate <- findNextRunDate(
-        runDayOfYear = autoRep[[n]]$runDayOfYear,
-        startDate = autoRep[[n]]$startDate,
-        returnFormat = dateFormat
-      )
-      if (as.Date(nextDate, format = dateFormat) > autoRep[[n]]$terminateDate) {
-        nextDate <- "Utl\u00F8pt"
-      }
-      dataSource <- autoRep[[n]]$organization
-      if (!is.null(mapOrgId)) {
-        if (dataSource %in% mapOrgId$id) {
-          dataSource <- mapOrgId$name[mapOrgId$id == dataSource]
-        }
-      }
-      r <- list(
-        "Rapport" = autoRep[[n]]$synopsis,
-        "Datakilde" = dataSource,
-        "Mottaker" = paste0(autoRep[[n]]$email, collapse = "<br>"),
-        "Periode" = autoRep[[n]]$intervalName,
-        "Slutt" = strftime(
-          as.Date(
-            autoRep[[n]]$terminateDate
-          ),
-          format = "%b %Y"
-        ),
-        "Neste" = nextDate,
-        "Endre" = as.character(
-          shiny::actionButton(
-            inputId = shiny::NS(namespace, paste0("edit__", n)),
-            label = "",
-            icon = shiny::icon("edit"),
-            onclick = sprintf(
-              "Shiny.onInputChange('%s', this.id)",
-              shiny::NS(namespace, "edit_button")
-            )
-          )
-        ),
-        "Slett" = as.character(
-          shiny::actionButton(
-            inputId = shiny::NS(namespace, paste0("del__", n)),
-            label = "",
-            icon = shiny::icon("trash"),
-            onclick = sprintf(
-              "Shiny.onInputChange('%s', this.id)",
-              shiny::NS(namespace, "del_button")
-            )
-          )
-        )
-      )
-      if (includeReportId) {
-        r <- c(r, list("id" = n))
-      }
-      if (!type %in% c("subscription")) {
-        r <- c(list(Ansvarlig = autoRep[[n]]$ownerName), r)
-      }
-      l <- rbind(l, r)
-    }
-    return(as.matrix(l))
+  if (length(autoRep$id) == 0) {
+    return(as.matrix(autoRep))
   }
+
+  l <- list()
+  for (i in seq_len(nrow(autoRep))) {
+    nextDate <- findNextRunDate(
+      runDayOfYear = NULL,
+      startDate = autoRep[i, ]$startDate,
+      terminateDate = autoRep[i, ]$terminateDate,
+      interval = autoRep[i, ]$interval,
+      returnFormat = dateFormat
+    )
+    if (as.Date(nextDate, format = dateFormat) > autoRep[i, ]$terminateDate) {
+      nextDate <- "Utl\u00F8pt"
+    }
+    dataSource <- autoRep[i, ]$organization
+    if (!is.null(mapOrgId)) {
+      if (dataSource %in% mapOrgId$id) {
+        dataSource <- mapOrgId$name[mapOrgId$id == dataSource]
+      }
+    }
+    r <- list(
+      "Rapport" = autoRep[i, ]$synopsis,
+      "Datakilde" = dataSource,
+      "Mottaker" = autoRep[i, ]$email,
+      "Periode" = autoRep[i, ]$intervalName,
+      "Slutt" = strftime(
+        as.Date(
+          autoRep[i, ]$terminateDate
+        ),
+        format = "%b %Y"
+      ),
+      "Neste" = nextDate,
+      "Endre" = as.character(
+        shiny::actionButton(
+          inputId = shiny::NS(namespace, paste0("edit__", autoRep[i, ]$id)),
+          label = "",
+          icon = shiny::icon("edit"),
+          onclick = sprintf(
+            "Shiny.onInputChange('%s', this.id)",
+            shiny::NS(namespace, "edit_button")
+          )
+        )
+      ),
+      "Slett" = as.character(
+        shiny::actionButton(
+          inputId = shiny::NS(namespace, paste0("del__", autoRep[i, ]$id)),
+          label = "",
+          icon = shiny::icon("trash"),
+          onclick = sprintf(
+            "Shiny.onInputChange('%s', this.id)",
+            shiny::NS(namespace, "del_button")
+          )
+        )
+      )
+    )
+    if (includeReportId) {
+      r <- c(r, list("id" = autoRep[i, ]$id))
+    }
+    if (!type %in% c("subscription")) {
+      r <- c(list(Ansvarlig = autoRep[i, ]$ownerName), r)
+    }
+    l <- rbind(l, r)
+  }
+  return(as.matrix(l))
 }

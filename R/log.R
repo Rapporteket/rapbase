@@ -292,35 +292,6 @@ getSessionData <- function(session, group = NULL) {
   )
 }
 
-
-#' Create a logging database
-#'
-#' Internal function that crates a database to be used for logging. Will return
-#' an error if the database already exists.
-#'
-#' @param dbKey Character string with the key to a corresponding entry for the
-#' database in dbConfig.yml. Please also make sure that the r.raplog.key
-#' property in rapbaseConfig.yml is given the exact same value.
-#'
-#' @return Invisibly TRUE
-#'
-#' @keywords internal
-createLogDb <- function(dbKey) {
-  conf <- rapbase::getConfig()
-  conf <- conf[[dbKey]]
-
-  query <- paste0("CREATE DATABASE ", conf$name, ";")
-
-  con <- RMariaDB::dbConnect(
-    RMariaDB::MariaDB(),
-    host = conf$host,
-    user = conf$user,
-    password = conf$pass
-  )
-  RMariaDB::dbExecute(con, query)
-  RMariaDB::dbDisconnect(con)
-}
-
 #' Create tables for log entries in a database
 #'
 #' Internal function that crates a database tables to be used for logging. Will

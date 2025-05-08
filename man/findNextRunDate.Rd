@@ -7,11 +7,10 @@
 findNextRunDate(
   runDayOfYear,
   baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
-  startDate = NULL,
-  terminateDate = NULL,
+  startDate,
+  terminateDate,
   interval = NULL,
-  returnFormat = "\%A \%e. \%B \%Y",
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+  returnFormat = "\%A \%e. \%B \%Y"
 )
 }
 \arguments{
@@ -36,8 +35,6 @@ and 1 month if not}
 \code{\link[base]{strptime}} in the current locale. Defaults to
 "\%A \%d. \%B \%Y" that will provide something like
 'Mandag 20. januar 2019' in a Norwegian locale}
-
-\item{target}{List of autoreports in file or database}
 }
 \value{
 String date for printing
@@ -49,5 +46,6 @@ be printed
 }
 \examples{
 # Will return Jan 30 in the current year and locale with default formatting
-findNextRunDate(c(10, 20, 30), 20)
+findNextRunDate(runDayOfYear = c(10, 20, 30),
+ baseDayNum = 20, startDate = 1, terminateDate = 50)
 }

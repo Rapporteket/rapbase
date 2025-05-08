@@ -232,8 +232,8 @@ exportDb <- function(registryName, compress = FALSE, session) {
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
-  f <- tempfile(pattern = registryName, fileext = ".sql")
   conf <- getDbConfig(registryName)
+  f <- tempfile(pattern = conf$name, fileext = ".sql")
 
   cmd <- paste0(
     "mysqldump ",

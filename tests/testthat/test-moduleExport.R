@@ -20,43 +20,27 @@ session <- list()
 attr(session, "class") <- "ShinySession"
 
 ## db
-# Database infrastructure is only available at gh actions and our own dev env.
-# Tests running on other environments should be skipped
-checkDb <- function(is_test_that = TRUE) {
-  if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
-    NULL
-  } else if (Sys.getenv("GITHUB_ACTIONS_RUN_DB_UNIT_TESTS") == "true") {
-    NULL
-  } else {
-    if (is_test_that) {
-      testthat::skip("Possible lack of database infrastructure")
-    } else {
-      1
-    }
-  }
-}
-
 test_that("env vars needed for testing is present", {
-  checkDb()
-  expect_true("DB_HOST" %in% names(Sys.getenv()))
-  expect_true("DB_USER" %in% names(Sys.getenv()))
-  expect_true("DB_PASS" %in% names(Sys.getenv()))
+  check_db()
+  expect_true("MYSQL_HOST" %in% names(Sys.getenv()))
+  expect_true("MYSQL_USER" %in% names(Sys.getenv()))
+  expect_true("MYSQL_PASSWORD" %in% names(Sys.getenv()))
 })
 
 # prep db for testing
-if (is.null(checkDb(is_test_that = FALSE))) {
+if (is.null(check_db(is_test_that = FALSE))) {
   con <- RMariaDB::dbConnect(
     RMariaDB::MariaDB(),
-    host = Sys.getenv("DB_HOST"),
-    user = Sys.getenv("DB_USER"),
-    password = Sys.getenv("DB_PASS"),
+    host = Sys.getenv("MYSQL_HOST"),
+    user = Sys.getenv("MYSQL_USER"),
+    password = Sys.getenv("MYSQL_PASSWORD"),
     bigint = "integer"
   )
   RMariaDB::dbExecute(con, "CREATE DATABASE rapbase;")
   RMariaDB::dbDisconnect(con)
 }
 
-if (is.null(checkDb(is_test_that = FALSE))) {
+if (is.null(check_db(is_test_that = FALSE))) {
   query <- c(
     "USE rapbase;",
     paste(
@@ -68,9 +52,9 @@ if (is.null(checkDb(is_test_that = FALSE))) {
   drv <- RMariaDB::MariaDB()
   con <- RMariaDB::dbConnect(
     RMariaDB::MariaDB(),
-    host = Sys.getenv("DB_HOST"),
-    user = Sys.getenv("DB_USER"),
-    password = Sys.getenv("DB_PASS"),
+    host = Sys.getenv("MYSQL_HOST"),
+    user = Sys.getenv("MYSQL_USER"),
+    password = Sys.getenv("MYSQL_PASSWORD"),
     bigint = "integer"
   )
   for (q in query) {
@@ -79,24 +63,10 @@ if (is.null(checkDb(is_test_that = FALSE))) {
   DBI::dbDisconnect(con)
 }
 
-# make temporary config
 regName <- "rapbase"
-test_config <- paste0(
-  "rapbase:",
-  "\n  host : ", Sys.getenv("DB_HOST"),
-  "\n  name : rapbase",
-  "\n  user : ", Sys.getenv("DB_USER"),
-  "\n  pass : ", Sys.getenv("DB_PASS"),
-  "\n  disp : ephemaralUnitTesting\n"
-)
-# preserve initial state
-cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
-writeLines(test_config, cf)
-close(cf)
-
 
 test_that("an existing file name is provided", {
-  checkDb()
+  check_db()
   f <- exportDb(regName, compress = TRUE, session = session)
   expect_true(file.exists(f))
 })
@@ -112,7 +82,7 @@ test_that("export UC input returns a shiny tag list", {
 
 with_mock_dir("gh_api_response", {
   test_that("module server provides sensible output", {
-    checkDb()
+    check_db()
     shiny::testServer(exportUCServer, args = list(registryName = "rapbase"), {
       expect_equal(class(output$exportPidUI), "list")
       session$setInputs(exportPid = "areedv")
@@ -127,7 +97,7 @@ with_mock_dir("gh_api_response", {
   })
 
   test_that("download is prevented when module is not eligible", {
-    checkDb()
+    check_db()
     shiny::testServer(
       exportUCServer,
       args = list(registryName = regName, eligible = FALSE),
@@ -147,7 +117,7 @@ test_that("guide test app returns an app object", {
 })
 
 # remove test db
-if (is.null(checkDb(is_test_that = FALSE))) {
+if (is.null(check_db(is_test_that = FALSE))) {
   con <- rapbase::rapOpenDbConnection(regName)$con
   RMariaDB::dbExecute(con, "DROP DATABASE rapbase;")
   rapbase::rapCloseDbConnection(con)
