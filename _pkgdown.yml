@@ -22,15 +22,7 @@ reference:
     - loadRegData
     - rapOpenDbConnection
     - rapCloseDbConnection
-
-  - title: Staging data
-    desc: >
-      Handle staging data
-    contents:
-    - saveStagingData
-    - loadStagingData
-    - deleteStagingData
-    - cleanStagingData
+    - exportApp
 
   - title: User information
     desc: >
@@ -62,7 +54,6 @@ reference:
     contents:
     - readAutoReportData
     - writeAutoReportData
-    - upgradeAutoReportData
     - runAutoReport
     - runBulletin
     - createAutoReport

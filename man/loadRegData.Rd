@@ -3,14 +3,21 @@
 \name{loadRegData}
 \alias{loadRegData}
 \alias{describeRegistryDb}
+\alias{nlinesRegistryDb}
 \title{Provider of data for registries at Rapporteket}
 \usage{
 loadRegData(registryName, query, dbType = "mysql")
 
 describeRegistryDb(registryName, tabs = c())
+
+nlinesRegistryDb(registryName, tabs = c())
 }
 \arguments{
-\item{registryName}{String Name of the registry as defined in dbConfig.yml}
+\item{registryName}{String providing the name of the database to connect to.
+If it is "data" it will use the MYSQL_DB_DATA environment variable, if it is
+"autoreport" it will use the MYSQL_DB_AUTOREPORT environment variable, and
+if it is "raplog" it will use the MYSQL_DB_LOG environment variable. If
+none of these are set, it will use the name provided.}
 
 \item{query}{String SQL query to obtain the data}
 

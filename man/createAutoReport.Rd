@@ -20,8 +20,7 @@ createAutoReport(
   terminateDate = NULL,
   interval = "",
   intervalName = "",
-  dryRun = FALSE,
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+  dryRun = FALSE
 )
 }
 \arguments{
@@ -71,8 +70,6 @@ and 1 month if not}
 \item{dryRun}{Logical defining if global auto report config actually is to
 be updated. If set to TRUE the actual config (all of it) will be returned by
 the function. FALSE by default}
-
-\item{target}{List of autoreports in file or database}
 }
 \value{
 Nothing unless dryRun is set TRUE in which case a list of all config

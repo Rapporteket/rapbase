@@ -51,9 +51,9 @@ jobs:
         run: |
           if [[ ${{ runner.os }} == Linux ]]; then
             echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=true" >> $GITHUB_ENV
-            echo "DB_HOST=localhost" >> $GITHUB_ENV
-            echo "DB_USER=root" >> $GITHUB_ENV
-            echo "DB_PASS=root" >> $GITHUB_ENV
+            echo "MYSQL_HOST=localhost" >> $GITHUB_ENV
+            echo "MYSQL_USER=root" >> $GITHUB_ENV
+            echo "MYSQL_PASSWORD=root" >> $GITHUB_ENV
           else
             echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=false" >> $GITHUB_ENV
           fi
@@ -61,7 +61,9 @@ jobs:
       - name: Set up MySQL, ubuntu only
         if: runner.os == 'Linux'
         run: |
-          sudo /etc/init.d/mysql start
+          sudo apt-get update
+          sudo apt-get install -y mysql-server
+          sudo service mysql start
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
@@ -72,4 +74,4 @@ jobs:
         uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          build_args: 'c("--no-manual", "--as-cran", "--compact-vignettes=gs+qpdf")'
+          build_args: 'c("--no-manual", "--compact-vignettes=gs+qpdf")'

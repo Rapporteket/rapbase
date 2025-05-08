@@ -7,7 +7,7 @@ Sys.setenv(R_RAP_INSTANCE = "DEV")
 Sys.setenv(R_RAP_CONFIG_PATH = file.path(tempdir(), "navbarWidgetTesting"))
 dir.create(Sys.getenv("R_RAP_CONFIG_PATH"))
 file.copy(
-  system.file(c("rapbaseConfig.yml", "dbConfig.yml", "autoReport.yml"),
+  system.file(c("rapbaseConfig.yml", "autoReport.yml"),
     package = "rapbase"
   ),
   Sys.getenv("R_RAP_CONFIG_PATH")

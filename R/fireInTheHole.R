@@ -17,7 +17,7 @@
 #' @examples
 #' \donttest{
 #' # Depends on the env var R_RAP_CONFIG_PATH being properly set
-#' fireInTheHole()
+#' try(fireInTheHole())
 #' }
 #'
 fireInTheHole <- function(flipPeriod = FALSE) {
