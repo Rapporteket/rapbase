@@ -128,23 +128,9 @@ test_that("env vars needed for testing is present", {
   expect_true("MYSQL_PASSWORD" %in% names(Sys.getenv()))
 })
 
-# make temporary config
-test_config <- paste0(
-  config$r$raplog$key, ":",
-  "\n  host : ", Sys.getenv("MYSQL_HOST"),
-  "\n  name : ", nameLogDb,
-  "\n  user : ", Sys.getenv("MYSQL_USER"),
-  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
-  "\n  disp : ephemaralUnitTesting\n"
-)
-
-cf <- file(file.path(tempdir, "dbConfig.yml"))
-writeLines(test_config, cf)
-close(cf)
-
 test_that("a db for logging can be created", {
   check_db()
-  expect_true(rapbase:::createLogDb(nameLogDb))
+  expect_null(query_db(query =  paste0("CREATE DATABASE ", nameLogDb, ";")))
 })
 
 test_that("tables can be created in logging db", {

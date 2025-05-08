@@ -3,13 +3,13 @@ context("Handling db connections")
 # For these test to work locally make sure an instance of mysql server is
 # running and that the necessary user privileges are provided, e.g. as SQL:
 #   grant all privileges on [DATABASE].* to '[USER]'@'[HOST]';
-# where [DATABASE], [USER] and [HOST] correspond to whatever given in 
+# where [DATABASE], [USER] and [HOST] correspond to whatever given in
 # environment variables MYSQL_NAME, MYSQL_USER and MYSQL_HOST.
 #
 
 test_that("Error provided when key has no corresponding config", {
   NULL
-  expect_error(rapOpenDbConnection(registryName = "aNoneExistingRegistryKey"))
+  expect_error(rapOpenDbConnection(dbName = "aNoneExistingRegistryKey"))
 })
 
 regName <- "rapbase"
@@ -41,7 +41,7 @@ query_db(query = query)
 
 test_that("A mysql db connection and driver can be provided and cleaned", {
   check_db()
-  l <- rapOpenDbConnection(registryName = regName)
+  l <- rapOpenDbConnection(dbName = regName)
   expect_output(str(l), "List of 2")
   expect_is(l[[1]], "MariaDBConnection")
   expect_is(l[[2]], "MariaDBDriver")
@@ -122,11 +122,11 @@ withr::with_envvar(
         regexp = "Could not connect to database because the enviroment"
       )
       expect_error(
-        getDbConfig(registryName = "dev"),
+        getDbConfig(dbName = "dev"),
         regexp = "Could not connect to database because the enviroment"
       )
       expect_error(
-        getDbConfig(registryName = "rapbase")$name,
+        getDbConfig(dbName = "rapbase")$name,
         regexp = "Could not connect to database because the enviroment"
       )
     })
@@ -153,19 +153,19 @@ withr::with_envvar(
       expect_equal(conf$pass, "zxcvb")
       expect_equal(conf$port, 3306)
 
-      conf <- getDbConfig(registryName = "rapbase")
+      conf <- getDbConfig(dbName = "rapbase")
       expect_equal(conf$name, "rapbase")
 
-      conf <- getDbConfig(registryName = "raplog")
+      conf <- getDbConfig(dbName = "raplog")
       expect_equal(conf$name, "log_db")
 
-      conf <- getDbConfig(registryName = "autoreport")
+      conf <- getDbConfig(dbName = "autoreport")
       expect_equal(conf$name, "autoreport_db")
 
-      conf <- getDbConfig(registryName = "data")
+      conf <- getDbConfig(dbName = "data")
       expect_equal(conf$name, "data_db")
 
-      conf <- getDbConfig(registryName = "qwerty123")
+      conf <- getDbConfig(dbName = "qwerty123")
       expect_equal(conf$name, "qwerty123")
       expect_equal(conf$host, "qwerty")
       expect_equal(conf$user, "asdfg")

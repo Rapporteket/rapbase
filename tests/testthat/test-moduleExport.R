@@ -63,21 +63,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
   DBI::dbDisconnect(con)
 }
 
-# make temporary config
 regName <- "rapbase"
-test_config <- paste0(
-  "rapbase:",
-  "\n  host : ", Sys.getenv("MYSQL_HOST"),
-  "\n  name : rapbase",
-  "\n  user : ", Sys.getenv("MYSQL_USER"),
-  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
-  "\n  disp : ephemaralUnitTesting\n"
-)
-# preserve initial state
-cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
-writeLines(test_config, cf)
-close(cf)
-
 
 test_that("an existing file name is provided", {
   check_db()
