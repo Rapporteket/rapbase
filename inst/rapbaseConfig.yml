@@ -1,12 +1,7 @@
 ## Configuration of the R package 'rapbase', yaml formatted
 ## May contain anything, but try to keep some sensible structure and tidyness
 
-
-## R
 r :
-
-  # Dummy library path
-  libpath :
 
   # Activity logging
   raplog:
@@ -27,22 +22,14 @@ network :
   proxy :
     http :
     port :
-    # http : http://dummy_proxy_hostname.no
-    # port : 8080
-    # ip : 192.168.0.100
 
   # email
   smtp :
-    server : localhost
-    port : 2525
+    server :
+    port :
   sender : rapporteket@skde.no
 
 ## GitHub
 github :
-
   # Github organization
   organization : Rapporteket
-
-  # Dummy PAT
-  PAT :
-    githubUserName : PAT
