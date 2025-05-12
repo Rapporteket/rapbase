@@ -6,11 +6,7 @@ tempdir <- tempdir()
 
 file.copy(system.file("rapbaseConfig.yml", package = "rapbase"), tempdir)
 configFile <- file.path(tempdir, "rapbaseConfig.yml")
-
-# make sure we test with file as target
 config <- yaml::read_yaml(configFile)
-config$r$raplog$target <- "file"
-yaml::write_yaml(config, configFile)
 
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 
@@ -20,86 +16,12 @@ Sys.setenv(R_RAP_INSTANCE = "DEV")
 session <- list()
 attr(session, "class") <- "ShinySession"
 
-# Log events to files
-
-test_that("logging is performed at application level", {
-  expect_silent(appLogger(session))
-  expect_true(file.exists(file.path(tempdir, "appLog.csv")))
-})
-
-test_that("logging is performed at report level", {
-  expect_silent(repLogger(session))
-  expect_true(file.exists(file.path(tempdir, "reportLog.csv")))
-})
-
-test_that("logging can be made by (automated) reports outside session", {
-  expect_silent(autLogger(
-    user = "ttest", name = "Tore Tester",
-    registryName = "stats", reshId = "999999",
-    type = "bulletin",
-    pkg = "testpkg",
-    fun = "testfun",
-    param = list(testparam = "test")
-  ))
-})
-
-test_that("formatter returns error upon non-existing format", {
-  expect_error(makeLogRecord(content = list(), format = "a4"))
-})
-
-test_that("formatter returns a data.frame-class object", {
-  expect_equal(class(makeLogRecord(content = list())), "data.frame")
-})
-
-test_that("formatter returns as expected", {
-  expect_equal(makeLogRecord(list(val = 0))$val, 0)
-})
-
-test_that("log entries can be read from file", {
-  expect_error(rapbase:::readLog(type = "noneExistingLogType"))
-  expect_equal(class(rapbase:::readLog(type = "report")), "data.frame")
-  expect_equal(
-    rapbase:::readLog(type = "report", name = "stats")$user,
-    "ttest"
-  )
-})
-
-config$r$raplog$eolDays <- -1L
-yaml::write_yaml(config, configFile)
-test_that("log can be sanitized in files", {
-  expect_null(rapbase:::sanitizeLog())
-  expect_equal(dim(rapbase:::readLog(type = "app"))[1], 0)
-  expect_equal(dim(rapbase:::readLog(type = "report"))[1], 0)
-})
-
-test_that("existing backup files can be overwritten", {
-  expect_silent(autLogger(
-    user = "ttest", name = "Tore Tester",
-    registryName = "stats", reshId = "999999",
-    type = "bulletin",
-    pkg = "testpkg",
-    fun = "testfun",
-    param = list(testparam = "test")
-  ))
-  expect_equal(dim(rapbase:::readLog(type = "report"))[1], 1)
-  expect_null(rapbase:::sanitizeLog())
-  expect_equal(dim(rapbase:::readLog(type = "report"))[1], 0)
-})
-
-
 # must be last...
 Sys.setenv(R_RAP_CONFIG_PATH = "")
 
 test_that("nothing will be appended if path is not defined", {
   expect_error(appendLog(
     event = data.frame(foo = "bar"), name = ""
-  ))
-})
-
-test_that("nothing will be appended if (file) format is not recognized", {
-  expect_error(appendLog(
-    event = data.frame(foo = "bar"), name = "",
-    target = "file", format = "a4"
   ))
 })
 
@@ -117,9 +39,10 @@ Sys.setenv(R_RAP_INSTANCE = currentInstance)
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 
 # adjust config and get whatever name of logging database define there
-config$r$raplog$target <- "db"
-yaml::write_yaml(config, configFile)
 nameLogDb <- "raplogTest"
+config$r$raplog$target <- "db"
+config$r$raplog$key <- nameLogDb
+yaml::write_yaml(config, configFile)
 
 test_that("env vars needed for testing is present", {
   check_db()
@@ -128,23 +51,9 @@ test_that("env vars needed for testing is present", {
   expect_true("MYSQL_PASSWORD" %in% names(Sys.getenv()))
 })
 
-# make temporary config
-test_config <- paste0(
-  config$r$raplog$key, ":",
-  "\n  host : ", Sys.getenv("MYSQL_HOST"),
-  "\n  name : ", nameLogDb,
-  "\n  user : ", Sys.getenv("MYSQL_USER"),
-  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
-  "\n  disp : ephemaralUnitTesting\n"
-)
-
-cf <- file(file.path(tempdir, "dbConfig.yml"))
-writeLines(test_config, cf)
-close(cf)
-
 test_that("a db for logging can be created", {
   check_db()
-  expect_true(rapbase:::createLogDb(nameLogDb))
+  expect_null(query_db(query =  paste0("CREATE DATABASE ", nameLogDb, ";")))
 })
 
 test_that("tables can be created in logging db", {
@@ -191,19 +100,11 @@ test_that("append and read errors when target is not known", {
   yaml::write_yaml(conf, file.path(tempdir, "rapbaseConfig.yml"))
   expect_error(appendLog(event = appEvent, name = "appLog"))
   expect_error(rapbase:::readLog(type = "app"))
+  expect_error(rapbase:::sanitizeLog())
 })
 
 # remove test db
-if (is.null(check_db(is_test_that = FALSE))) {
-  con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
-                             host = Sys.getenv("MYSQL_HOST"),
-                             user = Sys.getenv("MYSQL_USER"),
-                             password = Sys.getenv("MYSQL_PASSWORD"),
-                             bigint = "integer"
-  )
-  RMariaDB::dbExecute(con, paste("DROP DATABASE", nameLogDb))
-  rapbase::rapCloseDbConnection(con)
-}
+query_db(paste0("DROP DATABASE ", nameLogDb, ";"))
 
 # Restore instance
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfig)

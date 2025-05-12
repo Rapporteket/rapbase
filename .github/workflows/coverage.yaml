@@ -41,7 +41,9 @@ jobs:
 
       - name: Set up MySQL
         run: |
-          sudo /etc/init.d/mysql start
+          sudo apt-get update
+          sudo apt-get install -y mysql-server
+          sudo service mysql start
 
       - name: Test coverage
         run: covr::codecov(token = "${{ secrets.CODECOV_TOKEN }}")

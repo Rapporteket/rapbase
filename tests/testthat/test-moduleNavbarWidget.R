@@ -7,7 +7,7 @@ Sys.setenv(R_RAP_INSTANCE = "DEV")
 Sys.setenv(R_RAP_CONFIG_PATH = file.path(tempdir(), "navbarWidgetTesting"))
 dir.create(Sys.getenv("R_RAP_CONFIG_PATH"))
 file.copy(
-  system.file(c("rapbaseConfig.yml", "dbConfig.yml", "autoReport.yml"),
+  system.file(c("rapbaseConfig.yml", "autoReport.yml"),
     package = "rapbase"
   ),
   Sys.getenv("R_RAP_CONFIG_PATH")
@@ -38,11 +38,6 @@ test_that("test app returns an app object", {
 
 
 ## new widget for shinyproxy container instances
-file.copy(
-  system.file("extdata/accesstree.json", package = "rapbase"),
-  Sys.getenv("R_RAP_CONFIG_PATH")
-)
-
 with_envvar(
   new = c(
     "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LU\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",

@@ -12,8 +12,7 @@ makeAutoReportTab(
   orgId = rapbase::getUserReshId(session),
   type = "subscription",
   mapOrgId = NULL,
-  includeReportId = FALSE,
-  target = getConfig("rapbaseConfig.yml")$r$autoReport$target
+  includeReportId = FALSE
 )
 }
 \arguments{
@@ -49,8 +48,6 @@ report data will also be used}
 
 \item{includeReportId}{Logical if the unique report id should be added as
 the last column in the table. FALSE by default.}
-
-\item{target}{autoreport-list in file or database}
 }
 \value{
 Matrix providing a table to be rendered in a shiny app
