@@ -8,7 +8,7 @@ r :
     archiveDir: logArchive
     eolDays: 730
     target: db
-    key: raplog
+    key: raplogTest
 
   # Automated report data
   autoReport:

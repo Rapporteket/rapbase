@@ -15,6 +15,11 @@ file.copy(system.file(c("rapbaseConfig.yml"), package = "rapbase"),
   overwrite = TRUE
 )
 
+config <- yaml::read_yaml(system.file("rapbaseConfig.yml", package = "rapbase"))
+currentLogKey <- Sys.getenv("MYSQL_DB_LOG")
+dbLogKey <- config$r$raplog$key
+Sys.setenv(MYSQL_DB_LOG = dbLogKey)
+
 ## shiny session object
 session <- list()
 attr(session, "class") <- "ShinySession"
@@ -29,19 +34,9 @@ test_that("env vars needed for testing is present", {
 
 # prep db for testing
 if (is.null(check_db(is_test_that = FALSE))) {
-  con <- RMariaDB::dbConnect(
-    RMariaDB::MariaDB(),
-    host = Sys.getenv("MYSQL_HOST"),
-    user = Sys.getenv("MYSQL_USER"),
-    password = Sys.getenv("MYSQL_PASSWORD"),
-    bigint = "integer"
-  )
-  RMariaDB::dbExecute(con, "CREATE DATABASE rapbase;")
-  RMariaDB::dbDisconnect(con)
-}
-
-if (is.null(check_db(is_test_that = FALSE))) {
   query <- c(
+    "DROP DATABASE IF EXISTS rapbase;",
+    "CREATE DATABASE rapbase;",
     "USE rapbase;",
     paste(
       "CREATE TABLE testTable (id int, someText varchar(50),",
@@ -49,18 +44,9 @@ if (is.null(check_db(is_test_that = FALSE))) {
       "someTime DATETIME);"
     )
   )
-  drv <- RMariaDB::MariaDB()
-  con <- RMariaDB::dbConnect(
-    RMariaDB::MariaDB(),
-    host = Sys.getenv("MYSQL_HOST"),
-    user = Sys.getenv("MYSQL_USER"),
-    password = Sys.getenv("MYSQL_PASSWORD"),
-    bigint = "integer"
-  )
-  for (q in query) {
-    tmp <- DBI::dbExecute(con, q)
-  }
-  DBI::dbDisconnect(con)
+  query_db(query = query)
+
+  create_log_db(dbLogKey)
 }
 
 regName <- "rapbase"
@@ -118,12 +104,14 @@ test_that("guide test app returns an app object", {
 
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
-  con <- rapbase::rapOpenDbConnection(regName)$con
-  RMariaDB::dbExecute(con, "DROP DATABASE rapbase;")
-  rapbase::rapCloseDbConnection(con)
-  con <- NULL
+  query <- c(
+    "DROP DATABASE rapbase;",
+    paste0("DROP DATABASE IF EXISTS ", dbLogKey, ";")
+  )
+  query_db(query = query)
 }
 
 
 # Restore instance
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)
+Sys.setenv(MYSQL_DB_LOG = currentLogKey)
