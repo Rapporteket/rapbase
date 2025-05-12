@@ -12,7 +12,7 @@ r :
   raplog:
     archiveDir: logArchive
     eolDays: 730
-    target: file
+    target: db
     key: raplogTest
 
   # Automated report data
