@@ -184,7 +184,8 @@ autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
       environment = parent_environment,
       call = paste0(
         pkg, "::",
-        deparse(call(fun, unlist(param, recursive = FALSE)),
+        deparse(
+          call(fun, unlist(param, recursive = FALSE)),
           width.cutoff = 500
         )
       ),
@@ -344,21 +345,31 @@ readLog <- function(type, name = "", app_id = NULL) {
 #' @export
 sanitizeLog <- function() {
   conf <- getConfig(fileName = "rapbaseConfig.yml")
+  target <- conf$r$raplog$target
 
-  eolDate <- Sys.Date() - conf$r$raplog$eolDays
+  if (target == "db") {
+    eolDate <- Sys.Date() - conf$r$raplog$eolDays
 
-  con <- rapOpenDbConnection(conf$r$raplog$key)$con
-  query <- paste0(
-    "DELETE FROM appLog WHERE time < '",
-    as.character(eolDate), "';"
-  )
-  DBI::dbExecute(con, query)
-  query <- paste0(
-    "DELETE FROM reportLog WHERE time < '",
-    as.character(eolDate), "';"
-  )
-  DBI::dbExecute(con, query)
-  rapCloseDbConnection(con)
-  con <- NULL
+    con <- rapOpenDbConnection(conf$r$raplog$key)$con
+    query <- paste0(
+      "DELETE FROM appLog WHERE time < '",
+      as.character(eolDate), "';"
+    )
+    DBI::dbExecute(con, query)
+    query <- paste0(
+      "DELETE FROM reportLog WHERE time < '",
+      as.character(eolDate), "';"
+    )
+    DBI::dbExecute(con, query)
+    rapCloseDbConnection(con)
+    con <- NULL
+  } else {
+    stop(paste0(
+      "Log target '", target, "' is not supported. ",
+      "Log could not be sanitized! ",
+      "To remedy, please check that configuration is ",
+      "set up properly."
+    ))
+  }
   NULL
 }
