@@ -36,7 +36,6 @@ reference:
     - getUserPhone
     - getUserEmail
     - userInfo
-    - unitAttribute
     - userAttribute
 
   - title: Logging
