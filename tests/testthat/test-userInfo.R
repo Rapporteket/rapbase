@@ -132,7 +132,7 @@ test_that("Function can handle redefined contexts", {
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 file.copy(
   system.file(
-    c("rapbaseConfig.yml", "extdata/accesstree.yaml"), package = "rapbase"
+    c("rapbaseConfig.yml"), package = "rapbase"
   ),
   Sys.getenv("R_RAP_CONFIG_PATH")
 )
@@ -225,45 +225,33 @@ withr::with_envvar(
   }
 )
 
-## unitAttribute
-test_that("error is returned when attributes file does not exist", {
-  expect_error(unitAttribute(1, "role", file = "does_not_exist.json"))
-})
-
-test_that("error is returned when unknown attribute", {
-  expect_error(unitAttribute(1, "userRole"))
-})
-
-#test_that("warning is given when unit does not exist", {
-#  expect_warning(unitAttribute(100000, "role"))
-#})
-#
-#test_that("unit attributes can be obtained", {
-#  expect_equal(unitAttribute(2, "role"), "SC")
-#})
-#
-#withr::with_envvar(
-#  new = c(
-#    "R_RAP_INSTANCE" = "QAC",
-#    "SHINYPROXY_USERNAME" = "userc",
-#    "SHINYPROXY_USERGROUPS" = "rapbase",
-#    "USERORGID" = "2",
-#    "USEREMAIL" = "userc@container.no",
-#    "USERFULLNAME" = "User Container",
-#    "USERPHONE" = "+4787654321"
-#  ),
-#  code = {
-#    test_that("User attribs can be fetched in container instance (QA, PROD)", {
-#      expect_equal(getUserName(shinySession, "rapbase"), "userc")
-#      expect_equal(getUserGroups(shinySession, "rapbase"), "rapbase")
-#      expect_equal(getUserReshId(shinySession, "rapbase"), "102966")
-#      expect_equal(getUserRole(shinySession, "rapbase"), "SC")
-#      expect_equal(getUserEmail(shinySession, "rapbase"), "userc@container.no")
-#      expect_equal(getUserFullName(shinySession, "rapbase"), "User Container")
-#      expect_equal(getUserPhone(shinySession, "rapbase"), "+4787654321")
-#    })
-#  }
-#)
+withr::with_envvar(
+  new = c(
+    "FALK_EXTENDED_USER_RIGHTS" = paste0(
+      '[{\"A\":80,\"R\":\"SC\",\"U\":102966},',
+      '{\"A\":80,\"R\":\"LU\",\"U\":4219765},',
+      '{\"A\":80,\"R\":\"LC\",\"U\":4219765},',
+      '{\"A\":80,\"R\":\"LC\",\"U\":700328}]"'
+    ),
+    "FALK_APP_ID" = "80",
+    "R_RAP_INSTANCE" = "QAC",
+    "SHINYPROXY_USERNAME" = "userc",
+    "FALK_USER_EMAIL" = "userc@container.no",
+    "FALK_USER_FULLNAME" = "User Container",
+    "FALK_USER_PHONE" = "+4787654321"
+  ),
+  code = {
+    test_that("User attribs can be fetched in container instance (QA, PROD)", {
+      expect_equal(getUserName(shinySession, "rapbase"), "userc")
+      expect_equal(getUserGroups(shinySession, "rapbase"), 80)
+      expect_equal(getUserReshId(shinySession, "rapbase"), 102966)
+      expect_equal(getUserRole(shinySession, "rapbase"), "SC")
+      expect_equal(getUserEmail(shinySession, "rapbase"), "userc@container.no")
+      expect_equal(getUserFullName(shinySession, "rapbase"), "User Container")
+      expect_equal(getUserPhone(shinySession, "rapbase"), "+4787654321")
+    })
+  }
+)
 
 # Restore instance
 Sys.setenv(R_RAP_INSTANCE = currentInstance)
