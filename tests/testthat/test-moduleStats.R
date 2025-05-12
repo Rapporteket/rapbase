@@ -28,11 +28,7 @@ Sys.setenv(MYSQL_DB_LOG = dbLogKey)
 
 # Create log db
 if (is.null(check_db(is_test_that = FALSE))) {
-  query <- c(
-    paste0("DROP DATABASE IF EXISTS ", dbLogKey, ";"),
-    paste0("CREATE DATABASE ", dbLogKey, ";")
-  )
-  query_db(query = query)
+  create_log_db(dbLogKey)
   # Add log table to db
   con <- connect_db(dbname = dbLogKey)
   RMariaDB::dbWriteTable(
@@ -47,12 +43,14 @@ if (is.null(check_db(is_test_that = FALSE))) {
 
 # helper functions
 test_that("mutated log data are returned as data frame", {
+  check_db()
   expect_equal(
     class(logFormat(rapbase:::readLog(type = "app", name = registryName))),
     "data.frame"
   )
 })
 test_that("time framed log data are returned as data frame", {
+  check_db()
   expect_equal(
     class(
       logTimeFrame(
@@ -74,6 +72,7 @@ test_that("stats UC input returns a shiny tag list", {
 })
 
 test_that("module server provides sensible output", {
+  check_db()
   shiny::testServer(statsServer, args = list(registryName = registryName), {
     session$setInputs(type = "app")
     expect_equal(class(output$period), "list")

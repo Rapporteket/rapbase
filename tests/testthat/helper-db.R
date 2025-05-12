@@ -43,3 +43,19 @@ close_db_connection <- function(con) {
   con <- DBI::dbDisconnect(con)
   con <- NULL
 }
+
+create_log_db <- function(dbLogKey) {
+
+  fc <- file(system.file("createRaplogTabs.sql", package = "rapbase"), "r")
+  t <- readLines(fc)
+  close(fc)
+  sql <- paste0(t, collapse = "\n")
+  queries <- c(
+    paste0("DROP DATABASE IF EXISTS ", dbLogKey, ";"),
+    paste0("CREATE DATABASE ", dbLogKey, ";"),
+    paste0("USE ", dbLogKey, ";"),
+    strsplit(sql, ";")[[1]]
+  )
+  query_db(query = queries)
+
+}

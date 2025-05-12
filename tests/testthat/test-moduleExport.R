@@ -35,8 +35,6 @@ test_that("env vars needed for testing is present", {
 # prep db for testing
 if (is.null(check_db(is_test_that = FALSE))) {
   query <- c(
-    paste0("DROP DATABASE IF EXISTS ", dbLogKey, ";"),
-    paste0("CREATE DATABASE ", dbLogKey, ";"),
     "DROP DATABASE IF EXISTS rapbase;",
     "CREATE DATABASE rapbase;",
     "USE rapbase;",
@@ -48,15 +46,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
   )
   query_db(query = query)
 
-  fc <- file(system.file("createRaplogTabs.sql", package = "rapbase"), "r")
-  t <- readLines(fc)
-  close(fc)
-  sql <- paste0(t, collapse = "\n")
-  queries <- c(
-    paste0("USE ", dbLogKey, ";"),
-    strsplit(sql, ";")[[1]]
-  )
-  query_db(query = queries)
+  create_log_db(dbLogKey)
 }
 
 regName <- "rapbase"
