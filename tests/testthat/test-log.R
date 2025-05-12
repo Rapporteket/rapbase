@@ -100,6 +100,7 @@ test_that("append and read errors when target is not known", {
   yaml::write_yaml(conf, file.path(tempdir, "rapbaseConfig.yml"))
   expect_error(appendLog(event = appEvent, name = "appLog"))
   expect_error(rapbase:::readLog(type = "app"))
+  expect_error(rapbase:::sanitizeLog())
 })
 
 # remove test db
