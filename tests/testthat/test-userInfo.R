@@ -253,7 +253,6 @@ withr::with_envvar(
     "FALK_APP_ID" = "80",
     "R_RAP_INSTANCE" = "QAC",
     "SHINYPROXY_USERNAME" = "userc",
-    "SHINYPROXY_USERGROUPS" = "rapbase",
     "FALK_USER_EMAIL" = "userc@container.no",
     "FALK_USER_FULLNAME" = "User Container",
     "FALK_USER_PHONE" = "+4787654321"
