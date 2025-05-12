@@ -176,9 +176,4 @@ withr::with_envvar(
 )
 
 # remove test db
-if (is.null(check_db(is_test_that = FALSE))) {
-  con <- rapbase::rapOpenDbConnection(regName)$con
-  RMariaDB::dbExecute(con, "DROP DATABASE rapbase;")
-  rapbase::rapCloseDbConnection(con)
-  con <- NULL
-}
+query_db(paste0("DROP DATABASE IF EXISTS ", regName, ";"))
