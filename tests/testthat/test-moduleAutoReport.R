@@ -51,14 +51,5 @@ test_that("module format server returns outputs and list of reactives", {
   })
 })
 
-## Duplicate for shinyproxy container instance
-file.copy(
-  system.file(
-    c("autoReport.yml", "extdata/accesstree.json"),
-    package = "rapbase"
-  ),
-  Sys.getenv("R_RAP_CONFIG_PATH")
-)
-
 # Restore instance
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)

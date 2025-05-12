@@ -132,7 +132,7 @@ test_that("Function can handle redefined contexts", {
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 file.copy(
   system.file(
-    c("rapbaseConfig.yml", "extdata/accesstree.yaml"), package = "rapbase"
+    c("rapbaseConfig.yml"), package = "rapbase"
   ),
   Sys.getenv("R_RAP_CONFIG_PATH")
 )
