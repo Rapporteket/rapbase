@@ -104,16 +104,7 @@ test_that("append and read errors when target is not known", {
 })
 
 # remove test db
-if (is.null(check_db(is_test_that = FALSE))) {
-  con <- RMariaDB::dbConnect(RMariaDB::MariaDB(),
-                             host = Sys.getenv("MYSQL_HOST"),
-                             user = Sys.getenv("MYSQL_USER"),
-                             password = Sys.getenv("MYSQL_PASSWORD"),
-                             bigint = "integer"
-  )
-  RMariaDB::dbExecute(con, paste("DROP DATABASE", nameLogDb))
-  rapbase::rapCloseDbConnection(con)
-}
+query_db(paste0("DROP DATABASE ", nameLogDb, ";"))
 
 # Restore instance
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfig)
