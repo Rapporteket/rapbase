@@ -232,8 +232,10 @@ calling a function that provides a histogram:</p><div class="sourceCode"><pre><c
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> System has no defined instance. Configuration as provided by</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in appendLog(event, name) : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   There is nowhere to append the logfiles. The environment variable R_RAP_CONFIG_PATH should be defined!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in getDbConfig(dbName) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        are not defined. Please check configuration.</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
@@ -249,8 +251,10 @@ calling a function that provides a histogram:</p><div class="sourceCode"><pre><c
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> System has no defined instance. Configuration as provided by</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in appendLog(event, name) : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   There is nowhere to append the logfiles. The environment variable R_RAP_CONFIG_PATH should be defined!</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in getDbConfig(dbName) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        are not defined. Please check configuration.</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
