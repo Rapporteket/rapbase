@@ -15,6 +15,16 @@ r :
     target: db
     key: autoreport
 
+  # User data for testing purposes
+  testUser :
+    user : ttester
+    groups : rapbase
+    role : accessLevel
+    resh_id : '999999'
+    email: rapporteket@skde.no
+    full_name: Tore Tester
+    phone: '04050607'
+
 ## Network
 network :
 
