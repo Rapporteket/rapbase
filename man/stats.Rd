@@ -8,6 +8,7 @@
 \alias{statsApp}
 \alias{logFormat}
 \alias{logTimeFrame}
+\alias{statsServer2}
 \title{Shiny modules and helper functions for registry usage reports}
 \usage{
 statsInput(id)
@@ -15,6 +16,13 @@ statsInput(id)
 statsUI(id)
 
 statsServer(id, registryName, app_id = NULL, eligible = TRUE)
+
+statsServer2(
+  id,
+  registryName,
+  app_id = NULL,
+  eligible = shiny::reactiveVal(TRUE)
+)
 
 statsApp()
 
