@@ -618,7 +618,8 @@ makeAutoReportTab <- function(
   orgId = rapbase::getUserReshId(session),
   type = "subscription",
   mapOrgId = NULL,
-  includeReportId = FALSE
+  includeReportId = FALSE,
+  filterorg = NULL
 ) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
@@ -630,6 +631,11 @@ makeAutoReportTab <- function(
     autoRep <- autoRep %>%
       filterAutoRep(by = "owner", pass = user) %>%
       filterAutoRep(by = "organization", pass = orgId)
+  }
+
+  if (type == "dispatchment" && !is.null(filterorg)) {
+    autoRep <- autoRep %>%
+      filterAutoRep(by = "organization", pass = filterorg)
   }
 
   dateFormat <- "%A %e. %B %Y"
