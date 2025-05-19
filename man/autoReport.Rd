@@ -30,7 +30,7 @@ autoReportServer(
   id,
   registryName,
   type,
-  org = NULL,
+  org = shiny::reactiveVal(NULL),
   paramNames = shiny::reactiveVal(c("")),
   paramValues = shiny::reactiveVal(c("")),
   reports = NULL,

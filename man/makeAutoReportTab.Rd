@@ -12,7 +12,8 @@ makeAutoReportTab(
   orgId = rapbase::getUserReshId(session),
   type = "subscription",
   mapOrgId = NULL,
-  includeReportId = FALSE
+  includeReportId = FALSE,
+  filterorg = NULL
 )
 }
 \arguments{
@@ -48,6 +49,10 @@ report data will also be used}
 
 \item{includeReportId}{Logical if the unique report id should be added as
 the last column in the table. FALSE by default.}
+
+\item{filterorg}{Character vector with organization ids to be used for
+filtering the auto report data. This is only relevant for dispatchment
+reports. Default is NULL in which case no filtering will be done.}
 }
 \value{
 Matrix providing a table to be rendered in a shiny app

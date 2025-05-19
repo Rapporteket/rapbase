@@ -604,6 +604,9 @@ findNextRunDate <- function(
 #'   report data will also be used
 #' @param includeReportId Logical if the unique report id should be added as
 #'   the last column in the table. FALSE by default.
+#' @param filterorg Character vector with organization ids to be used for
+#'  filtering the auto report data. This is only relevant for dispatchment
+#'  reports. Default is NULL in which case no filtering will be done.
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
 #' @importFrom dplyr "%>%"
