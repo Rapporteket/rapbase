@@ -317,6 +317,12 @@ test_that("auto report tables (for shiny) can be made", {
   ))
   expect_true(is.list(
     makeAutoReportTab(shinySession,
+      type = "dispatchment", mapOrgId = mapOrgId,
+      includeReportId = TRUE, filterorg = c("999999")
+    )
+  ))
+  expect_true(is.list(
+    makeAutoReportTab(shinySession,
       type = "bulletin", mapOrgId = mapOrgId,
       includeReportId = TRUE
     )
