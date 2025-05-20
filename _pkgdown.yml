@@ -60,7 +60,6 @@ reference:
     - makeAutoReportTab
     - makeRunDayOfYearSequence
     - isPkgRapReg
-    - getRegs
     - findNextRunDate
     - filterAutoRep
     - autoReport
