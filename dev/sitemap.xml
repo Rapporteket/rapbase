@@ -23,13 +23,11 @@
 <url><loc>/dev/reference/getConfig.html</loc></url>
 <url><loc>/dev/reference/getDbConfig.html</loc></url>
 <url><loc>/dev/reference/getGithub.html</loc></url>
-<url><loc>/dev/reference/getRapPackages.html</loc></url>
 <url><loc>/dev/reference/getRegs.html</loc></url>
 <url><loc>/dev/reference/getSessionData.html</loc></url>
 <url><loc>/dev/reference/halloRapporteket.html</loc></url>
 <url><loc>/dev/reference/howWeDealWithPersonalData.html</loc></url>
 <url><loc>/dev/reference/index.html</loc></url>
-<url><loc>/dev/reference/isPkgRapReg.html</loc></url>
 <url><loc>/dev/reference/isRapContext.html</loc></url>
 <url><loc>/dev/reference/loadRegData.html</loc></url>
 <url><loc>/dev/reference/logShinyInputChanges.html</loc></url>
