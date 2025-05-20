@@ -86,7 +86,6 @@ reference:
     - fireInTheHole
     - sendEmail
     - howWeDealWithPersonalData
-    - runNoweb
     - getRapPackages
     - isRapContext
     - noOptOutOk
