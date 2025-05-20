@@ -144,6 +144,37 @@ test_that("loggerSetup is working", {
     )
   )
 
+  warningLog <- jsonlite::fromJSON(logger::log_warn(
+    "Test warning"
+  )$default$record)
+  expect_equal(
+    c(
+      warningLog$level,
+      warningLog$message
+    ),
+    c(
+      "WARN",
+      "Test warning"
+    )
+  )
+
+  errorLog <- jsonlite::fromJSON(logger::log_error(
+    "Test error"
+  )$default$record)
+  expect_equal(
+    c(
+      errorLog$level,
+      errorLog$message
+    ),
+    c(
+      "ERROR",
+      "Test error"
+    )
+  )
+
+
+
+
   # env-stuff
   if (currentUser == "" && currentApp == "") {
     Sys.unsetenv("SHINYPROXY_USERNAME")
