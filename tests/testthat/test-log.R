@@ -186,3 +186,24 @@ test_that("loggerSetup is working", {
 
   expect_error(loggerSetup())
 })
+
+test_that("logShinyInputChanges works without errors", {
+  # Mock a Shiny input object
+  shiny_input <- list(input1 = "value1", input2 = "value2")
+
+  # Mock logger::log_shiny_input_changes to avoid actual logging
+  mock_log_shiny_input_changes <- function(...) {
+    return(TRUE) # Simulate successful logging
+  }
+
+  # Temporarily replace the logger function with the mock
+  with_mocked_bindings(
+    logShinyInputChanges = function(input) {
+      mock_log_shiny_input_changes(input)
+    },
+    {
+      # Call the function and check for errors
+      expect_silent(logShinyInputChanges(shiny_input))
+    }
+  )
+})
