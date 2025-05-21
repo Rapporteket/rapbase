@@ -84,7 +84,6 @@ reference:
     - fireInTheHole
     - sendEmail
     - howWeDealWithPersonalData
-    - runNoweb
     - isRapContext
     - noOptOutOk
     - renderRmd
