@@ -39,6 +39,14 @@ query <- c(
 )
 query_db(query = query)
 
+
+if (is.null(check_db(is_test_that = FALSE))) {
+  # add some data to db
+  con <- rapOpenDbConnection(regName)$con
+  DBI::dbAppendTable(con, "testTable", testdata, row.names = NULL)
+  rapCloseDbConnection(con)
+}
+
 test_that("A mysql db connection and driver can be provided and cleaned", {
   check_db()
   l <- rapOpenDbConnection(dbName = regName)
@@ -54,9 +62,22 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
 test_that("Data can be queried from (MySQL) db", {
   check_db()
   query <- "SELECT * FROM testTable"
-  expect_output(
-    str(loadRegData(regName, query, dbType = "mysql")),
-    "data.frame"
+  expect_equal(
+    loadRegData(regName, query, dbType = "mysql")$id,
+    c(1:10)
+  )
+  expect_equal(
+    loadRegData(regName, query, dbType = "mysql")$someInt,
+    c(11:20)
+  )
+})
+
+test_that("Data can be queried from (MySQL) db with no data", {
+  check_db()
+  query <- "SELECT * FROM testTable WHERE id = -1"
+  expect_equal(
+    length(loadRegData(regName, query, dbType = "mysql")$id),
+    0
   )
 })
 

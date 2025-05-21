@@ -14,3 +14,19 @@
 #'   \item{message}{log message}
 #' }
 "appLog"
+
+
+#' Test dataset.
+#'
+#' A dataset containing test entries.
+#'
+#' @format A data frame with 10 rows and 6 variables:
+#' \describe{
+#'   \item{id}{int id}
+#'   \item{someText}{char text}
+#'   \item{someInt}{int integer}
+#'   \item{someBigInt}{int big integer}
+#'   \item{someFloat}{num float number}
+#'   \item{someTime}{time date}
+#' }
+"testdata"
