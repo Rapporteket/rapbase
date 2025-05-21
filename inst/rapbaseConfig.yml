@@ -5,7 +5,6 @@ r :
 
   # Activity logging
   raplog:
-    archiveDir: logArchive
     eolDays: 730
     target: db
     key: raplogTest
