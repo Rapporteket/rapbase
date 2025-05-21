@@ -33,12 +33,12 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
   } else if (dbType == "mssql") {
     stop("Use of MSSQL is no longer supported. Exiting")
   } else if (dbType == "sqlite") {
+    conf <- getDbConfig(dbName)
     drv <- RSQLite::SQLite()
     con <- DBI::dbConnect(
       drv,
-      dbname = conf$name
+      dbname = paste0(conf$name)
     )
-    invisible(DBI::dbExecute(con))
   }
 
   list(con = con, drv = drv)
