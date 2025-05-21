@@ -257,58 +257,6 @@ userAttribute <- function(unit = NULL,
   )
 }
 
-#' Get unit attributes from an access tree file
-#'
-#' Obtain organization unit attributes from an access tree JSON file
-#'
-#' @param unit Integer providing the look-up unit id
-#' @param what Character string defining what to return for the given unit id
-#' @param file Character string file name of the JSON file. Default values is
-#'   NULL in which case the corresponding value from rapbaseConfig.yml will be
-#'   used.
-#' @param path Character string file path of the JSON file. Default value is
-#'   \code{Sys.getenv("R_RAP_CONFIG_PATH")}.
-#'
-#' @return The corresponding value of 'what'.
-#' @export
-unitAttribute <- function(unit,
-                          what,
-                          file = NULL,
-                          path = Sys.getenv("R_RAP_CONFIG_PATH")) {
-
-  conf <- getConfig(fileName = "rapbaseConfig.yml")$accesstree
-
-  if (is.null(file)) {
-    file <- conf$file
-  }
-
-  stopifnot(file.exists(file.path(path, file)))
-  if (!what %in% names(conf$list)) {
-    stop(
-      paste0(
-        "Argument what is not one of '",
-        paste0(names(conf$list), collapse = "', '"),
-        "'"
-      )
-    )
-  }
-
-  d <- jsonlite::read_json(file.path(path, file)) %>%
-    unlist()
-
-  ind <- as.vector(d[names(d) == conf$list$unit]) == unit
-
-  if (all(!ind)) {
-    warning(
-      paste0(
-        "Unit '", unit, "' was not found! Hence, your request for '", what,
-        "' will return empty!"
-      )
-    )
-  }
-  as.vector(d[names(d) == conf$list[[what]]][ind])
-}
-
 
 #' Get user attributes
 #'

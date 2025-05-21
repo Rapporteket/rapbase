@@ -1,10 +1,5 @@
 context("Miscellaneos functions")
 
-
-test_that("Listing of Rapporteket packages is present", {
-  expect_true(is.vector(getRapPackages()))
-})
-
 test_that("Widget for shiny apps can be provided", {
   expect_output(str(appNavbarUserWidget()), "script|navbar-brand")
 })
@@ -23,7 +18,7 @@ tempdir <- tempdir()
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
 Sys.setenv(R_RAP_INSTANCE = "")
 file.copy(
-  system.file(c("rapbaseConfig.yml", "dbConfig.yml"),
+  system.file("rapbaseConfig.yml",
     package = "rapbase"
   ),
   tempdir

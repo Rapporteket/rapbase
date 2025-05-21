@@ -140,7 +140,9 @@ navbarWidgetServer2 <- function(
     )
 
     output$name <- shiny::renderText(rv$fullName)
-    output$affiliation <- shiny::renderText(paste(orgName, rv$role, sep = ", "))
+    output$affiliation <- shiny::renderText(
+      paste(rv$orgName, rv$role, sep = ", ")
+    )
 
     # User info in widget
     userInfo <- howWeDealWithPersonalData(session, callerPkg = caller)
@@ -159,6 +161,11 @@ navbarWidgetServer2 <- function(
     # Select organization in widget (for container apps only)
     shiny::observeEvent(input$selectOrganization, {
       choices <- paste0(user$orgName, " (", user$org, ") - ", user$role)
+      lastchoice <- if (is.null(input$unit)) {
+        NA
+      } else {
+        choices[choices == input$unit]
+      }
 
       shinyalert::shinyalert(
         html = TRUE,
@@ -177,7 +184,11 @@ navbarWidgetServer2 <- function(
             session$ns("unit"),
             "",
             choices,
-            selected = choices[1]
+            selected = if (is.na(lastchoice)) {
+              choices[1]
+            } else {
+              lastchoice
+            }
           )
         )),
         type = "", imageUrl = "rap/logo.svg",

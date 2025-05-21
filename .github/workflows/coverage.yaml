@@ -20,9 +20,9 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GH_TOKEN }}
       GITHUB_ACTIONS_RUN_DB_UNIT_TESTS: true
-      DB_HOST: localhost
-      DB_USER: root
-      DB_PASS: root
+      MYSQL_HOST: localhost
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
     steps:
       - uses: actions/checkout@v4
 
@@ -41,7 +41,9 @@ jobs:
 
       - name: Set up MySQL
         run: |
-          sudo /etc/init.d/mysql start
+          sudo apt-get update
+          sudo apt-get install -y mysql-server
+          sudo service mysql start
 
       - name: Test coverage
         run: covr::codecov(token = "${{ secrets.CODECOV_TOKEN }}")

@@ -9,7 +9,6 @@ runAutoReport(
   dato = Sys.Date(),
   group = NULL,
   type = c("subscription", "dispatchment"),
-  target = rapbase::getConfig("rapbaseConfig.yml")$r$autoReport$target,
   dryRun = FALSE
 )
 }
@@ -32,8 +31,6 @@ May contain one or more of
 \code{c("subscription", "dispatchment", "bulletin")}. Defaults value set to
 \code{c("subscription", "dispatchment")}.}
 
-\item{target}{List of autoreports in file or database}
-
 \item{dryRun}{Logical defining if emails are to be sent. If TRUE a message
 with reference to the payload file is given but no emails will actually be
 sent. Default is FALSE}
@@ -53,7 +50,7 @@ The email itself is prepared and sent to recipients defined in the config
 \examples{
 \donttest{
 # Example depend on environment variable R_RAP_CONFIG_PATH being set
-runAutoReport()
+try(runAutoReport())
 }
 
 }

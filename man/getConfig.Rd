@@ -4,7 +4,7 @@
 \alias{getConfig}
 \title{Get configuration for package, if any}
 \usage{
-getConfig(fileName = "dbConfig.yml", packageName = "rapbase")
+getConfig(fileName, packageName = "rapbase")
 }
 \arguments{
 \item{fileName}{String providing configuration file base name}
@@ -18,7 +18,4 @@ A list of (yaml) configuration
 Try to obtain yaml-formatted configuration placed either as given by the
 environment variable R_RAP_CONFIG_PATH or as provided by the package itself.
 If none can be found the function exits with an error
-}
-\examples{
-getConfig()
 }

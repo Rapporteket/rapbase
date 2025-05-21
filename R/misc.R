@@ -1,53 +1,3 @@
-#' Test if a package is part of Rapporteket
-#'
-#' Test if an installed package is linked to Rapporteket based on
-#' dependency to the package 'rapbase'
-#'
-#' @param pkg String providing the package name
-#'
-#' @return Logical TRUE if pkg depends on 'rapbase', FALSE if not
-#' @export
-#'
-#' @seealso \code{\link{getRapPackages}} on how to list all packages that
-#' depend om 'rapbase'
-#'
-#' @examples
-#' # returns FALSE, rapbase has no explicit dependency to itself
-#' isPkgRapReg("rapbase")
-#'
-isPkgRapReg <- function(pkg) {
-  grepl("rapbase", utils::packageDescription(pkg)$Depends, fixed = TRUE)
-}
-
-
-#' Get all installed Rapporteket packages
-#'
-#' Get all installed packages that depends on 'rapbase' which itself will not
-#' be reported
-#'
-#' @return Character vector of packages names
-#' @export
-#'
-#' @examples
-#' ## Relevant only in a Rapporteket-like context
-#' if (isRapContext()) {
-#'   getRapPackages()
-#' }
-getRapPackages <- function() {
-  allPkg <- as.data.frame(library()$result, stringsAsFactors = FALSE)
-  res <- sapply(allPkg$Package, isPkgRapReg)
-  res <- names(res[res == TRUE])
-  # make sure a vector is always returned
-  if (length(res[!is.na(res)]) == 0) {
-    # nocov start
-    vector(mode = "character")
-    # nocov end
-  } else {
-    res[!is.na(res)]
-  }
-}
-
-
 #' Rapporteket context
 #'
 #' Call to this function will return TRUE when run on a system where the
@@ -63,9 +13,9 @@ getRapPackages <- function() {
 isRapContext <- function() {
   if (Sys.getenv("R_RAP_INSTANCE") %in%
         c("DEV", "TEST", "QA", "QAC", "PRODUCTION", "PRODUCTIONC")) {
-    return(TRUE)
+    TRUE
   } else {
-    return(FALSE)
+    FALSE
   }
 }
 
@@ -163,35 +113,6 @@ noOptOutOk <- function() {
 
   sample(msg, 1)
 }
-
-
-#' runNoweb
-#'
-#' Function to run noweb file contained in a package. Assume all noweb files
-#' of the package are placed flat under the \emph{inst} directory
-#'
-#' @param nowebFileName Basename of the noweb file, \emph{e.g.} 'myFile.Rnw'.
-#' @param packageName Name of the package containing noweb file(s)
-#' @param weaveMethod Method to apply for weaving. Currently available are
-#'  'Sweave' and 'knitr', default to the latter.
-#' @importFrom utils Sweave
-#' @export
-
-runNoweb <- function(nowebFileName, packageName, weaveMethod = "knitr") {
-  weaveInputFile <- system.file(nowebFileName, package = packageName)
-  if (weaveMethod == "knitr") {
-    # make sure processing takes place "here" (sessions getwd())
-    knitr::opts_knit$set(root.dir = "./")
-    # make sure we do not make figure folder
-    knitr::opts_chunk$set(fig.path = "")
-    knitr::knit(weaveInputFile)
-  } else if (is.element(weaveMethod, c("Sweave", "sweave"))) {
-    Sweave(weaveInputFile, encoding = "utf8")
-  } else {
-    cat("\nweaveMethod specified is none of knitr or Sweave. Nothing to do\n")
-  }
-}
-
 
 #' Plain testing tool
 #'

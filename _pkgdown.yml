@@ -22,15 +22,7 @@ reference:
     - loadRegData
     - rapOpenDbConnection
     - rapCloseDbConnection
-
-  - title: Staging data
-    desc: >
-      Handle staging data
-    contents:
-    - saveStagingData
-    - loadStagingData
-    - deleteStagingData
-    - cleanStagingData
+    - exportApp
 
   - title: User information
     desc: >
@@ -44,7 +36,6 @@ reference:
     - getUserPhone
     - getUserEmail
     - userInfo
-    - unitAttribute
     - userAttribute
 
   - title: Logging
@@ -62,15 +53,12 @@ reference:
     contents:
     - readAutoReportData
     - writeAutoReportData
-    - upgradeAutoReportData
     - runAutoReport
     - runBulletin
     - createAutoReport
     - deleteAutoReport
     - makeAutoReportTab
     - makeRunDayOfYearSequence
-    - isPkgRapReg
-    - getRegs
     - findNextRunDate
     - filterAutoRep
     - autoReport
@@ -96,8 +84,6 @@ reference:
     - fireInTheHole
     - sendEmail
     - howWeDealWithPersonalData
-    - runNoweb
-    - getRapPackages
     - isRapContext
     - noOptOutOk
     - renderRmd
@@ -109,6 +95,7 @@ reference:
       Data contained by the package
     contents:
     - appLog
+    - testdata
 
   - title: Meta
     desc: >
