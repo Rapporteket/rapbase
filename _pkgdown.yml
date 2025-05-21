@@ -59,8 +59,6 @@ reference:
     - deleteAutoReport
     - makeAutoReportTab
     - makeRunDayOfYearSequence
-    - isPkgRapReg
-    - getRegs
     - findNextRunDate
     - filterAutoRep
     - autoReport
@@ -86,7 +84,6 @@ reference:
     - fireInTheHole
     - sendEmail
     - howWeDealWithPersonalData
-    - getRapPackages
     - isRapContext
     - noOptOutOk
     - renderRmd

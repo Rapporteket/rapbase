@@ -238,25 +238,6 @@ filterAutoRep <- function(
 }
 
 
-#' Provide vector of registries (\emph{i.e.} their R packages) in config
-#'
-#' @param config list of configuration for automated reports
-#'
-#' @return character vector of registry (package) names
-#' @export
-
-getRegs <- function(config) {
-  regs <- vector(mode = "character")
-  for (i in seq_len(length(config))) {
-    reg <- config[[i]]$package
-    if (!(reg %in% regs)) {
-      regs <- c(regs, reg)
-    }
-  }
-  regs
-}
-
-
 ## Run automated reports
 
 #' Simple test of automated report
