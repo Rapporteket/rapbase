@@ -95,6 +95,7 @@ reference:
       Data contained by the package
     contents:
     - appLog
+    - testdata
 
   - title: Meta
     desc: >
