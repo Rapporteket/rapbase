@@ -14,7 +14,7 @@ if it is "raplog" it will use the MYSQL_DB_LOG environment variable. If
 none of these are set, it will use the name provided.}
 
 \item{dbType}{String providing type of data source, one of
-  "mysql" and "mssql". Defaults to "mysql". "mssql" is not supported
+  "mysql" and "sqlite". Defaults to "mysql". "mssql" is not supported
 anymore.}
 }
 \value{
