@@ -33,11 +33,11 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
   } else if (dbType == "mssql") {
     stop("Use of MSSQL is no longer supported. Exiting")
   } else if (dbType == "sqlite") {
-    conf <- getDbConfig(dbName)
+    conf <- getDbConfig(dbName, dbType = "sqlite")
     drv <- RSQLite::SQLite()
     con <- DBI::dbConnect(
       drv,
-      dbname = paste0(conf$name)
+      dbname = conf$name
     )
   }
 
@@ -67,12 +67,12 @@ rapCloseDbConnection <- function(con) {
 #'
 #' @keywords internal
 #'
-getDbConfig <- function(dbName = "data") {
-  if (
+getDbConfig <- function(dbName = "data", dbType = "mysql") {
+  if (dbType == "sqlite" || (
     ("MYSQL_HOST" %in% names(Sys.getenv())) &&
-      ("MYSQL_USER" %in% names(Sys.getenv())) &&
-      ("MYSQL_PASSWORD" %in% names(Sys.getenv()))
-  ) {
+    ("MYSQL_USER" %in% names(Sys.getenv())) &&
+    ("MYSQL_PASSWORD" %in% names(Sys.getenv()))
+  )) {
     conf <- data.frame(
       host = Sys.getenv("MYSQL_HOST"),
       user = Sys.getenv("MYSQL_USER"),
