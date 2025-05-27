@@ -34,6 +34,7 @@ exportApp <- function(repoName = "", registryName = "data") {
       value = "exportPanel",
       shiny::sidebarLayout(
         shiny::sidebarPanel(
+          shiny::uiOutput("exportDbUI"),
           shiny::uiOutput("exportSidebarPanel")
         ),
         shiny::mainPanel(
@@ -51,10 +52,9 @@ exportApp <- function(repoName = "", registryName = "data") {
     )
 
     shiny::observeEvent(user$role(), {
+      shiny::hideTab(inputId = "navbarpage", target = "exportPanel")
       if (user$role() == "SC") {
         shiny::showTab(inputId = "navbarpage", target = "exportPanel")
-      } else {
-        shiny::hideTab(inputId = "navbarpage", target = "exportPanel")
       }
     })
 
@@ -67,7 +67,7 @@ exportApp <- function(repoName = "", registryName = "data") {
       }
     })
 
-    rapbase::exportUCServer("export", registryName = registryName,
+    rapbase::exportUCServer("export", registryName = input$exportDb,
                             repoName = repoName)
 
     # User guide
@@ -77,6 +77,16 @@ exportApp <- function(repoName = "", registryName = "data") {
       } else {
         return(NULL)
       }
+    })
+
+    output$exportDbUI <- shiny::renderUI({
+      shiny::selectInput(
+        "exportDb",
+        label = shiny::tags$div(
+          shiny::HTML(as.character(shiny::icon("database")), "Velg database:")
+        ),
+        choices = Sys.getenv("MYSQL_DB_DATA")
+      )
     })
 
     rapbase::exportGuideServer("exportGuide", repoName)
