@@ -85,7 +85,7 @@ exportApp <- function(repoName = "", registryName = "data") {
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("database")), "Velg database:")
         ),
-        choices = Sys.getenv("MYSQL_DB_DATA")
+        choices = strsplit(Sys.getenv("MYSQL_DB_DATA"), ",")[[1]]
       )
     })
 
