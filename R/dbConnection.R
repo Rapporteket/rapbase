@@ -16,23 +16,44 @@
 #' @export
 
 rapOpenDbConnection <- function(dbName, dbType = "mysql") {
-
-  if (dbType == "mysql") {
-    conf <- getDbConfig(dbName)
-    drv <- RMariaDB::MariaDB()
-    con <- DBI::dbConnect(
-      drv,
-      dbname = conf$name,
-      host = conf$host,
-      user = conf$user,
-      password = conf$pass,
-      bigint = "integer"
-    )
-    # ensure utf8 encoding
-    invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
-  } else if (dbType == "mssql") {
-    stop("Use of MSSQL is no longer supported. Exiting")
+  # Check if necessary environment variables are defined
+  if (!(
+    ("MYSQL_HOST" %in% names(Sys.getenv())) &&
+      ("MYSQL_USER" %in% names(Sys.getenv())) &&
+      ("MYSQL_PASSWORD" %in% names(Sys.getenv()))
+  )) {
+    stop(paste0(
+      "Could not connect to database because the enviroment
+       variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD
+       are not defined. Please check configuration."
+    ))
   }
+
+  if (dbType != "mysql") {
+    stop(paste0("Use of dbType ", dbType, " is not supported. Exiting"))
+  }
+
+  # Get database name from environment variable
+  dbname <- switch(
+    dbName,
+    "raplog" = Sys.getenv("MYSQL_DB_LOG"),
+    "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
+    "staging" = Sys.getenv("MYSQL_DB_STAGING"),
+    "data" = Sys.getenv("MYSQL_DB_DATA"),
+    dbName
+  )
+
+  drv <- RMariaDB::MariaDB()
+  con <- DBI::dbConnect(
+    drv,
+    dbname = dbname,
+    host = Sys.getenv("MYSQL_HOST"),
+    user = Sys.getenv("MYSQL_USER"),
+    password = Sys.getenv("MYSQL_PASSWORD"),
+    bigint = "integer"
+  )
+  # ensure utf8 encoding
+  invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
 
   list(con = con, drv = drv)
 }
@@ -46,45 +67,4 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
 rapCloseDbConnection <- function(con) {
   con <- DBI::dbDisconnect(con)
   con <- NULL
-}
-
-#' Get database connection configuration
-#'
-#' @param dbName String providing the name of the database to connect to. If it
-#' is "data" it will use the MYSQL_DB_DATA environment variable, if it is
-#' "autoreport" it will use the MYSQL_DB_AUTOREPORT environment variable, and
-#' if it is "raplog" it will use the MYSQL_DB_LOG environment variable. If
-#' none of these are set, it will use the name provided.
-#'
-#' @return A list with name, user, password and host of the db connection.
-#'
-#' @keywords internal
-#'
-getDbConfig <- function(dbName = "data") {
-  if (
-    ("MYSQL_HOST" %in% names(Sys.getenv())) &&
-      ("MYSQL_USER" %in% names(Sys.getenv())) &&
-      ("MYSQL_PASSWORD" %in% names(Sys.getenv()))
-  ) {
-    conf <- data.frame(
-      host = Sys.getenv("MYSQL_HOST"),
-      user = Sys.getenv("MYSQL_USER"),
-      pass = Sys.getenv("MYSQL_PASSWORD"),
-      port = as.numeric(Sys.getenv("MYSQL_PORT", "3306"))
-    )
-    conf$name <- switch(
-      dbName,
-      "raplog" = Sys.getenv("MYSQL_DB_LOG"),
-      "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
-      "data" = Sys.getenv("MYSQL_DB_DATA"),
-      dbName
-    )
-  } else {
-    stop(paste0(
-      "Could not connect to database because the enviroment
-       variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD
-       are not defined. Please check configuration."
-    ))
-  }
-  return(conf)
 }
