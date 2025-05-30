@@ -10,33 +10,20 @@
 \alias{cleanStagingData}
 \title{Staging data functions}
 \usage{
-listStagingData(registryName, dir = Sys.getenv("R_RAP_CONFIG_PATH"))
+listStagingData(registryName)
 
-mtimeStagingData(registryName, dir = Sys.getenv("R_RAP_CONFIG_PATH"))
+mtimeStagingData(registryName)
 
-saveStagingData(
-  registryName,
-  dataName,
-  data,
-  dir = Sys.getenv("R_RAP_CONFIG_PATH")
-)
+saveStagingData(registryName, dataName, data)
 
-loadStagingData(registryName, dataName, dir = Sys.getenv("R_RAP_CONFIG_PATH"))
+loadStagingData(registryName, dataName)
 
-deleteStagingData(
-  registryName,
-  dataName,
-  dir = Sys.getenv("R_RAP_CONFIG_PATH")
-)
+deleteStagingData(registryName, dataName)
 
 cleanStagingData(eolAge, dryRun = TRUE)
 }
 \arguments{
 \item{registryName}{Character string providing the registry name.}
-
-\item{dir}{Character string providing the path to where the staging data
-directory resides in case of storage as files. Default value is
-\code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
 
 \item{dataName}{Character string providing the data set name.}
 
@@ -67,10 +54,6 @@ destructive) mode.}
     and FALSE if not.
   \item \code{cleanStagingData()} returns a list of data sets (to be)
     removed.
-  \item \code{rapbase:::pathStagingData()} is an internal helper function and
-    returns a character string with the path to the staging directory of
-    \code{registryName}. If its parent directory (\code{dir}) does not exists
-    an error is returned.
 }
 }
 \description{
@@ -97,18 +80,17 @@ that should be used with great care.
 registryName <- "rapbase"
 dataName <- "testData"
 data <- mtcars
-dir <- tempdir()
 
 ## Save data for staging
-saveStagingData(registryName, dataName, data, dir)
+saveStagingData(registryName, dataName, data)
 
 ## List data currently in staging
-listStagingData(registryName, dir)
+listStagingData(registryName)
 
 ## Retrieve data set from staging and compare to outset
-stagedData <- loadStagingData(registryName, dataName, dir)
+stagedData <- loadStagingData(registryName, dataName)
 identical(data, stagedData)
 
 ## Get modification time for staging file(s)
-mtimeStagingData(registryName, dir)
+mtimeStagingData(registryName)
 }

@@ -2,7 +2,6 @@
 % Please edit documentation in R/stagingData.R
 \name{stagingDataHelper}
 \alias{stagingDataHelper}
-\alias{pathStagingData}
 \alias{dbStagingData}
 \alias{dbStagingPrereq}
 \alias{dbStagingConnection}
@@ -11,11 +10,9 @@
 \alias{unwrapStagingData}
 \title{Data staging helper (internal) functions}
 \usage{
-pathStagingData(registryName, dir)
+wrapStagingData(data)
 
-wrapStagingData(data, key)
-
-unwrapStagingData(data, key)
+unwrapStagingData(data)
 
 dbStagingData(key, drop = FALSE)
 
@@ -26,12 +23,6 @@ dbStagingConnection(key = NULL, con = NULL, init = FALSE)
 dbStagingProcess(key, query, params = list(), statement = FALSE)
 }
 \arguments{
-\item{registryName}{Character string providing the registry name.}
-
-\item{dir}{Character string providing the path to where the staging data
-directory resides in case of storage as files. Default value is
-\code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
-
 \item{data}{A data object that is to be added to or collected from staging.}
 
 \item{key}{Character string with key to be used for staging data store
@@ -51,12 +42,15 @@ set-up of a database. Default value is FALSE}
 
 \item{statement}{Logical defining if a query is a statement or not. Default
 value is FALSE.}
+
+\item{registryName}{Character string providing the registry name.}
+
+\item{dir}{Character string providing the path to where the staging data
+directory resides in case of storage as files. Default value is
+\code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
 }
 \value{
 \itemize{
-  \item \code{pathStagingData()} returns a character string with the path to
-    the staging directory of \code{registryName}. If its parent directory
-    (\code{dir}) does not exists an error is returned.
   \item \code{dbStagingData()} creates or drops a staging data database and
     returns a message invisibly.
   \item \code{dbStagingPrereq()} ensures that a database for staging data is
