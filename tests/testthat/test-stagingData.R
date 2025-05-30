@@ -1,113 +1,15 @@
 # store current instance
 currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
+currentStagingKey <- Sys.getenv("MYSQL_DB_STAGING")
 
 # test data
 registryName <- "testReg"
-Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 dataName <- "testData"
 d <- mtcars
-testPath <- file.path(
-  Sys.getenv("R_RAP_CONFIG_PATH"),
-  "stagingData",
-  registryName
-)
-testFile <- file.path(testPath, dataName)
 
-# test config for file backend
-test_config <- paste0(
-  "r:",
-  "\n  staging: ",
-  "\n    target: file",
-  "\n    key: staging\n"
-)
-cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml"))
-writeLines(test_config, cf)
-close(cf)
+# Define staging database name
+Sys.setenv(MYSQL_DB_STAGING = "test_staging")
 
-# make proper dbConfig
-test_config <- paste0(
-  registryName, ":",
-  "\n  host : ", Sys.getenv("MYSQL_HOST"),
-  "\n  name : test_staging",
-  "\n  user : ", Sys.getenv("MYSQL_USER"),
-  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
-  "\n  disp : registryEphemaralUnitTesting\n",
-  "staging:",
-  "\n  host : ", Sys.getenv("MYSQL_HOST"),
-  "\n  name : test_staging",
-  "\n  user : ", Sys.getenv("MYSQL_USER"),
-  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
-  "\n  disp : dbBackendEphemaralUnitTesting\n"
-)
-cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
-writeLines(test_config, cf)
-close(cf)
-
-test_that("staging cannot commence if parent directory does not exist", {
-  expect_error(pathStagingData(registryName, dir = "imaginaryDir"))
-  expect_error(
-    saveStagingData(registryName, "testData", d, dir = "imaginaryDir")
-  )
-})
-
-test_that("relevant directories are created at first time use", {
-  expect_equal(
-    pathStagingData(registryName,
-      dir = Sys.getenv("R_RAP_CONFIG_PATH")
-    ),
-    testPath
-  )
-})
-
-test_that("data can be stored for staging", {
-  expect_equal(saveStagingData(registryName, dataName, d), d)
-  expect_true(file.exists(testFile))
-})
-
-test_that("staging files can be listed", {
-  expect_equal(class(listStagingData(registryName)), "character")
-})
-
-test_that("modification time of stagin files can be obtained", {
-  expect_true("POSIXct" %in% class(mtimeStagingData(registryName)))
-})
-
-test_that("data can be retrieved from staging", {
-  expect_equal(loadStagingData(registryName, dataName), d)
-})
-
-test_that("loading none-existing data returns false", {
-  expect_false(loadStagingData(registryName, "imaginaryDataSet"))
-})
-
-test_that("deleting a none-existing file returns FALSE", {
-  expect_false(deleteStagingData(registryName, "imaginaryDataSet"))
-})
-
-test_that("a file can be deleted", {
-  expect_true(deleteStagingData(registryName, dataName))
-  expect_false(file.exists(testFile))
-})
-
-test_that("a global clean of staging data can be performed (also dry run)", {
-  expect_equal(saveStagingData(registryName, dataName, d), d)
-  expect_true(file.exists(testFile))
-  expect_message(cleanStagingData(0))
-  expect_equal(class(cleanStagingData(0)), "character")
-  expect_true(file.exists(testFile))
-  expect_invisible(cleanStagingData(0, dryRun = FALSE))
-  expect_false(file.exists(testFile))
-})
-
-# clean up config for file backend
-unlink(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml"))
-
-test_that("a global clean of staging data will stop if no parent directory", {
-  Sys.unsetenv("R_RAP_CONFIG_PATH")
-  expect_error(cleanStagingData(0))
-})
-
-# Test with db as backend
 Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
 
 test_that("env vars needed for db testing is present", {
@@ -116,35 +18,6 @@ test_that("env vars needed for db testing is present", {
   expect_true("MYSQL_USER" %in% names(Sys.getenv()))
   expect_true("MYSQL_PASSWORD" %in% names(Sys.getenv()))
 })
-
-test_config <- paste0(
-  "r:",
-  "\n  staging: ",
-  "\n    target: db",
-  "\n    key: staging\n"
-)
-cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml"))
-writeLines(test_config, cf)
-close(cf)
-
-# make proper dbConfig
-test_config <- paste0(
-  registryName, ":",
-  "\n  host : ", Sys.getenv("MYSQL_HOST"),
-  "\n  name : test_staging",
-  "\n  user : ", Sys.getenv("MYSQL_USER"),
-  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
-  "\n  disp : registryEphemaralUnitTesting\n",
-  "staging:",
-  "\n  host : ", Sys.getenv("MYSQL_HOST"),
-  "\n  name : test_staging",
-  "\n  user : ", Sys.getenv("MYSQL_USER"),
-  "\n  pass : ", Sys.getenv("MYSQL_PASSWORD"),
-  "\n  disp : dbBackendEphemaralUnitTesting\n"
-)
-cf <- file(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
-writeLines(test_config, cf)
-close(cf)
 
 test_that("No connection provided when no key (or connection object) given", {
   expect_error(dbStagingConnection(key = NULL, con = NULL))
@@ -158,7 +31,7 @@ test_that("No connection provided when insufficient config", {
 # make new staging database using prereq function
 test_that("prereq creates database initially", {
   check_db()
-  expect_silent(dbStagingPrereq("staging"))
+  expect_silent(create_staging_db("staging"))
 })
 
 test_that("Error is returned when key cannot be found in config", {
@@ -228,6 +101,5 @@ if (is.null(check_db(is_test_that = FALSE))) {
 }
 
 # Restore environment
-unlink(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml"))
-unlink(file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "dbConfig.yml"))
 Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)
+Sys.setenv(MYSQL_DB_STAGING = currentStagingKey)
