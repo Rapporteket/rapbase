@@ -1,14 +1,6 @@
 # store current instance and prepare
 currentInstance <- Sys.getenv("R_RAP_INSTANCE")
-currentConfig <- Sys.getenv("R_RAP_CONFIG_PATH")
 currentDb <- Sys.getenv("MYSQL_DB_AUTOREPORT")
-
-Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
-
-file.copy(
-  system.file(c("rapbaseConfig.yml"), package = "rapbase"),
-  Sys.getenv("R_RAP_CONFIG_PATH")
-)
 
 # get some auto report data to work on, i.e. default rapbase
 arSample <- yaml::read_yaml(system.file("autoReport.yml", package = "rapbase"))
@@ -337,10 +329,7 @@ withr::with_envvar(
     "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
     "FALK_APP_ID" = "80",
     "SHINYPROXY_USERNAME" = "ttesterc",
-    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
-    "USERORGID" = "[1, 2, 3, 4]",
-    "USERFULLNAME" = "Tore Tester Container",
-    "USEREMAIL" = "ttesterc@rapporteket.no"
+    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils"
   ),
   code = {
     registryName <- "rapbase"
@@ -497,7 +486,6 @@ if (is.null(check_db(is_test_that = FALSE))) {
 }
 
 # Restore instance
-Sys.setenv(R_RAP_CONFIG_PATH = currentConfig)
 Sys.setenv(R_RAP_INSTANCE = currentInstance)
 Sys.setenv(MYSQL_DB_AUTOREPORT = currentDb)
 
