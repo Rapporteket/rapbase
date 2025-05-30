@@ -20,6 +20,11 @@ r :
     target: file
     key: autoreport
 
+  # Staging data
+  staging:
+    target: file
+    key: staging
+
   # User data for testing purposes
   testUser :
     user : ttester

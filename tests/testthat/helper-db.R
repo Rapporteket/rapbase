@@ -59,3 +59,18 @@ create_log_db <- function(dbLogKey) {
   query_db(query = queries)
 
 }
+
+create_staging_db <- function(dbStagingKey) {
+
+  fc <- file(system.file("createStagingTab.sql", package = "rapbase"), "r")
+  t <- readLines(fc)
+  close(fc)
+  sql <- paste0(t, collapse = "\n")
+  queries <- c(
+    paste0("DROP DATABASE IF EXISTS ", dbStagingKey, ";"),
+    paste0("CREATE DATABASE ", dbStagingKey, ";"),
+    paste0("USE ", dbStagingKey, ";"),
+    strsplit(sql, ";")[[1]]
+  )
+  query_db(query = queries)
+}
