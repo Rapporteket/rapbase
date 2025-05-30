@@ -96,7 +96,7 @@ mtimeStagingData <- function(registryName) {
 #' @rdname stagingData
 #' @export
 saveStagingData <- function(registryName, dataName, data) {
-  b <- wrapStagingData(data, registryName) %>%
+  b <- wrapStagingData(data) %>%
     blob::as_blob()
 
   dbStagingPrereq("staging")
@@ -130,7 +130,7 @@ loadStagingData <- function(registryName, dataName) {
     data <- FALSE
   } else {
     # raw is first element in blob list
-    data <- unwrapStagingData(df$data[[1]], registryName)
+    data <- unwrapStagingData(df$data[[1]])
   }
 
   data

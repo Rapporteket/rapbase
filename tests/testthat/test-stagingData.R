@@ -25,18 +25,20 @@ test_that("No connection provided when no key (or connection object) given", {
 
 test_that("No connection provided when insufficient config", {
   check_db()
-  expect_error(dbStagingConnection("unknown"), regexp = "Could not connect")
-})
-
-# make new staging database using prereq function
-test_that("prereq creates database initially", {
-  check_db()
-  expect_silent(create_staging_db("staging"))
+  expect_error(
+    dbStagingConnection("unknown"),
+    "Failed to connect: Unknown database 'unknown'"
+    )
 })
 
 test_that("Error is returned when key cannot be found in config", {
   expect_error(dbStagingData("wrongEntry"))
 })
+
+# prep db for testing
+if (is.null(check_db(is_test_that = FALSE))) {
+  create_staging_db(Sys.getenv("MYSQL_DB_STAGING"))
+}
 
 test_that("A db connection object can be opened and closed", {
   check_db()
