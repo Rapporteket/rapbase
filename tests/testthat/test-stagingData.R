@@ -31,10 +31,23 @@ test_that("No connection provided when insufficient config", {
     )
 })
 
+test_that("dbStagingPrereq can not find db", {
+  check_db()
+  expect_error(
+    dbStagingPrereq("staging"),
+    "Failed to connect: Unknown database 'test_staging'"
+  )
+})
+
 # prep db for testing
 if (is.null(check_db(is_test_that = FALSE))) {
   create_staging_db(Sys.getenv("MYSQL_DB_STAGING"))
 }
+
+test_that("dbStagingPrereq can find db", {
+  check_db()
+  expect_invisible(dbStagingPrereq("staging"))
+})
 
 test_that("A db connection object can be opened and closed", {
   check_db()
