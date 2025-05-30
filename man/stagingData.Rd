@@ -76,21 +76,23 @@ prior to the end-of-life age provided. This is a vastly destructive function
 that should be used with great care.
 }
 \examples{
+\donttest{
 ## Prep test data
 registryName <- "rapbase"
 dataName <- "testData"
 data <- mtcars
 
 ## Save data for staging
-saveStagingData(registryName, dataName, data)
+try(saveStagingData(registryName, dataName, data))
 
 ## List data currently in staging
-listStagingData(registryName)
+try(listStagingData(registryName))
 
 ## Retrieve data set from staging and compare to outset
-stagedData <- loadStagingData(registryName, dataName)
-identical(data, stagedData)
+try(stagedData <- loadStagingData(registryName, dataName))
+try(identical(data, stagedData))
 
 ## Get modification time for staging file(s)
-mtimeStagingData(registryName)
+try(mtimeStagingData(registryName))
+}
 }

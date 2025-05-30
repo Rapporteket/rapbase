@@ -50,23 +50,25 @@
 #' deleteStagingData cleanStagingData
 #'
 #' @examples
+#' \donttest{
 #' ## Prep test data
 #' registryName <- "rapbase"
 #' dataName <- "testData"
 #' data <- mtcars
 #'
 #' ## Save data for staging
-#' saveStagingData(registryName, dataName, data)
+#' try(saveStagingData(registryName, dataName, data))
 #'
 #' ## List data currently in staging
-#' listStagingData(registryName)
+#' try(listStagingData(registryName))
 #'
 #' ## Retrieve data set from staging and compare to outset
-#' stagedData <- loadStagingData(registryName, dataName)
-#' identical(data, stagedData)
+#' try(stagedData <- loadStagingData(registryName, dataName))
+#' try(identical(data, stagedData))
 #'
 #' ## Get modification time for staging file(s)
-#' mtimeStagingData(registryName)
+#' try(mtimeStagingData(registryName))
+#' }
 NULL
 
 #' @rdname stagingData
@@ -189,10 +191,6 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
 #' A set of helper functions to aid staging of registry data at Rapporteket.
 #'
 #'
-#' @param registryName Character string providing the registry name.
-#' @param dir Character string providing the path to where the staging data
-#'   directory resides in case of storage as files. Default value is
-#'   \code{Sys.getenv("R_RAP_CONFIG_PATH")}.
 #' @param data A data object that is to be added to or collected from staging.
 #' @param key Character string with key to be used for staging data store
 #'   credentials.

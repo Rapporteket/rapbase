@@ -42,12 +42,6 @@ set-up of a database. Default value is FALSE}
 
 \item{statement}{Logical defining if a query is a statement or not. Default
 value is FALSE.}
-
-\item{registryName}{Character string providing the registry name.}
-
-\item{dir}{Character string providing the path to where the staging data
-directory resides in case of storage as files. Default value is
-\code{Sys.getenv("R_RAP_CONFIG_PATH")}.}
 }
 \value{
 \itemize{
