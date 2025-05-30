@@ -45,9 +45,7 @@ with_envvar(
     "FALK_USER_FULLNAME" = "Tore Tester Container",
     "R_RAP_INSTANCE" = "QAC",
     "SHINYPROXY_USERNAME" = "ttesterc",
-    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils",
-    "USERORGID" = "[1, 2, 3]",
-    "USERFULLNAME" = "Tore Tester Container"
+    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils"
   ),
   code = {
 
