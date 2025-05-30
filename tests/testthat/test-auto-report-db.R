@@ -9,9 +9,6 @@ file.copy(
   system.file(c("rapbaseConfig.yml"), package = "rapbase"),
   Sys.getenv("R_RAP_CONFIG_PATH")
 )
-configFile <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
-
-nameAutoReportDb <- "autoreporttest"
 
 # get some auto report data to work on, i.e. default rapbase
 arSample <- yaml::read_yaml(system.file("autoReport.yml", package = "rapbase"))
@@ -32,8 +29,7 @@ createAutoReportDb <- function() {
   query_db(query = query)
 }
 
-createAutoReportTab <- function() {
-  conf <- getConfig(fileName = "rapbaseConfig.yml")
+createAutoReportTab <- function(nameAutoReportDb) {
 
   fc <- file(system.file("createAutoReportTab.sql", package = "rapbase"), "r")
   t <- readLines(fc)
@@ -41,7 +37,7 @@ createAutoReportTab <- function() {
   sql <- paste0(t, collapse = "\n")
   queries <- strsplit(sql, ";")[[1]]
 
-  con <- rapOpenDbConnection(conf[["r"]][["autoReport"]][["key"]])[["con"]]
+  con <- rapOpenDbConnection(nameAutoReportDb)[["con"]]
   for (i in seq_len(length(queries))) {
     RMariaDB::dbExecute(con, queries[i])
   }
@@ -56,7 +52,7 @@ test_that("a db for auto report defs can be created", {
 
 test_that("table can be created in auto report db", {
   check_db()
-  expect_null(createAutoReportTab())
+  expect_null(createAutoReportTab(nameAutoReportDb))
 })
 
 test_that("a sample of auto report data can be written to db", {
