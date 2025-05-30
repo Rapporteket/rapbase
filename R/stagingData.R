@@ -21,9 +21,6 @@
 #' @param dataName Character string providing the data set name.
 #' @param data A data object such as a data.frame to be stored as
 #' \code{dataName}.
-#' @param dir Character string providing the path to where the staging data
-#'   directory resides in case of storage as files. Default value is
-#'   \code{Sys.getenv("R_RAP_CONFIG_PATH")}.
 #' @param eolAge Numeric providing the staging data end-of-life age in seconds.
 #'   Based on the current time and the time of storage staging files
 #'   older than \code{eolAge} will be identified as subject for removal.
@@ -46,10 +43,6 @@
 #'     and FALSE if not.
 #'   \item \code{cleanStagingData()} returns a list of data sets (to be)
 #'     removed.
-#'   \item \code{rapbase:::pathStagingData()} is an internal helper function and
-#'     returns a character string with the path to the staging directory of
-#'     \code{registryName}. If its parent directory (\code{dir}) does not exists
-#'     an error is returned.
 #' }
 #'
 #' @name stagingData
@@ -61,101 +54,65 @@
 #' registryName <- "rapbase"
 #' dataName <- "testData"
 #' data <- mtcars
-#' dir <- tempdir()
 #'
 #' ## Save data for staging
-#' saveStagingData(registryName, dataName, data, dir)
+#' saveStagingData(registryName, dataName, data)
 #'
 #' ## List data currently in staging
-#' listStagingData(registryName, dir)
+#' listStagingData(registryName)
 #'
 #' ## Retrieve data set from staging and compare to outset
-#' stagedData <- loadStagingData(registryName, dataName, dir)
+#' stagedData <- loadStagingData(registryName, dataName)
 #' identical(data, stagedData)
 #'
 #' ## Get modification time for staging file(s)
-#' mtimeStagingData(registryName, dir)
+#' mtimeStagingData(registryName)
 NULL
 
 #' @rdname stagingData
 #' @export
-listStagingData <- function(registryName,
-                            dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
+listStagingData <- function(registryName) {
 
-  conf <- getConfig("rapbaseConfig.yml")$r$staging
-
-  if (conf$target == "file") {
-    path <- pathStagingData(registryName, dir)
-
-    return(list.files(path))
-  }
-
-  if (conf$target == "db") {
-    dbStagingPrereq(conf$key)
-    query <- "SELECT name FROM data WHERE registry = ?;"
-    params <- list(registryName)
-    df <- dbStagingProcess(conf$key, query, params)
-
-    return(df$name)
-  }
+  dbStagingPrereq("staging")
+  query <- "SELECT name FROM data WHERE registry = ?;"
+  params <- list(registryName)
+  df <- dbStagingProcess("staging", query, params)
+  df$name
 }
 
 #' @rdname stagingData
 #' @export
-mtimeStagingData <- function(registryName,
-                             dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
+mtimeStagingData <- function(registryName) {
 
-  conf <- getConfig("rapbaseConfig.yml")$r$staging
-
-  if (conf$target == "file") {
-    parentPath <- "stagingData"
-    path <- file.path(dir, parentPath, registryName)
-    f <- normalizePath(list.files(path, recursive = TRUE, full.names = TRUE))
-    mtime <- file.mtime(f)
-
-    names(mtime) <- basename(f)
-  }
-
-  if (conf$target == "db") {
-    dbStagingPrereq(conf$key)
-    query <- "SELECT mtime, name FROM data WHERE registry = ?;"
-    params <- list(registryName)
-    df <- dbStagingProcess(conf$key, query, params)
-    mtime <- as.POSIXct(df$mtime)
-    names(mtime) <- df$name
-  }
+  dbStagingPrereq("staging")
+  query <- "SELECT mtime, name FROM data WHERE registry = ?;"
+  params <- list(registryName)
+  df <- dbStagingProcess("staging", query, params)
+  mtime <- as.POSIXct(df$mtime)
+  names(mtime) <- df$name
   mtime
 }
 
 #' @rdname stagingData
 #' @export
-saveStagingData <- function(registryName, dataName, data,
-                            dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
-  conf <- getConfig("rapbaseConfig.yml")$r$staging
+saveStagingData <- function(registryName, dataName, data) {
   b <- wrapStagingData(data, registryName) %>%
     blob::as_blob()
 
-  if (conf$target == "file") {
-    path <- pathStagingData(registryName, dir)
-    saveRDS(b, file.path(path, dataName))
-  }
+  dbStagingPrereq("staging")
 
-  if (conf$target == "db") {
-    dbStagingPrereq(conf$key)
+  # remove any existing registry data with same data name (should never fail)
+  query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
+  params <- list(registryName, dataName)
+  d <- dbStagingProcess("staging", query, params, statement = TRUE)
 
-    # remove any existing registry data with same data name (should never fail)
-    query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
-    params <- list(registryName, dataName)
-    d <- dbStagingProcess(conf$key, query, params, statement = TRUE)
-
-    # insert new data (can fail, but hard to test...)
-    query <- "INSERT INTO data (registry, name, data) VALUES (?, ?, ?);"
-    params <- list(registryName, dataName, b)
-    d <- dbStagingProcess(conf$key, query, params, statement = TRUE)
-    if (d < 1) {
-      warning(paste0("The data set '", dataName, "' could not be saved!"))
-      data <- FALSE
-    }
+  # insert new data (can fail, but hard to test...)
+  query <- "INSERT INTO data (registry, name, data) VALUES (?, ?, ?);"
+  params <- list(registryName, dataName, b)
+  d <- dbStagingProcess("staging", query, params, statement = TRUE)
+  if (d < 1) {
+    warning(paste0("The data set '", dataName, "' could not be saved!"))
+    data <- FALSE
   }
 
   invisible(data)
@@ -163,35 +120,17 @@ saveStagingData <- function(registryName, dataName, data,
 
 #' @rdname stagingData
 #' @export
-loadStagingData <- function(registryName, dataName,
-                            dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
+loadStagingData <- function(registryName, dataName) {
 
-  conf <- getConfig("rapbaseConfig.yml")$r$staging
-
-  if (conf$target == "file") {
-    path <- pathStagingData(registryName, dir)
-    filePath <- file.path(path, dataName)
-
-    if (file.exists(filePath)) {
-      b <- readRDS(filePath)
-      # raw is first element in blob list
-      data <- unwrapStagingData(b[[1]], registryName)
-    } else {
-      data <- FALSE
-    }
-  }
-
-  if (conf$target == "db") {
-    dbStagingPrereq(conf$key)
-    query <- "SELECT data FROM data WHERE registry = ? AND name = ?;"
-    params <- list(registryName, dataName)
-    df <- dbStagingProcess(conf$key, query, params)
-    if (length(df$data) == 0) {
-      data <- FALSE
-    } else {
-      # raw is first element in blob list
-      data <- unwrapStagingData(df$data[[1]], registryName)
-    }
+  dbStagingPrereq("staging")
+  query <- "SELECT data FROM data WHERE registry = ? AND name = ?;"
+  params <- list(registryName, dataName)
+  df <- dbStagingProcess("staging", query, params)
+  if (length(df$data) == 0) {
+    data <- FALSE
+  } else {
+    # raw is first element in blob list
+    data <- unwrapStagingData(df$data[[1]], registryName)
   }
 
   data
@@ -199,33 +138,16 @@ loadStagingData <- function(registryName, dataName,
 
 #' @rdname stagingData
 #' @export
-deleteStagingData <- function(registryName, dataName,
-                              dir = Sys.getenv("R_RAP_CONFIG_PATH")) {
+deleteStagingData <- function(registryName, dataName) {
 
-  conf <- getConfig("rapbaseConfig.yml")$r$staging
-
-  if (conf$target == "file") {
-    path <- pathStagingData(registryName, dir)
-    filePath <- file.path(path, dataName)
-
-    if (file.exists(filePath)) {
-      file.remove(filePath)
-      isDelete <- TRUE
-    } else {
-      isDelete <- FALSE
-    }
-  }
-
-  if (conf$target == "db") {
-    dbStagingPrereq(conf$key)
-    query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
-    params <- list(registryName, dataName)
-    d <- dbStagingProcess(conf$key, query, params, statement = TRUE)
-    if (d > 0) {
-      isDelete <- TRUE
-    } else {
-      isDelete <- FALSE
-    }
+  dbStagingPrereq("staging")
+  query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
+  params <- list(registryName, dataName)
+  d <- dbStagingProcess("staging", query, params, statement = TRUE)
+  if (d > 0) {
+    isDelete <- TRUE
+  } else {
+    isDelete <- FALSE
   }
 
   isDelete
@@ -234,34 +156,15 @@ deleteStagingData <- function(registryName, dataName,
 #' @rdname stagingData
 #' @export
 cleanStagingData <- function(eolAge, dryRun = TRUE) {
-  if (Sys.getenv("R_RAP_CONFIG_PATH") == "") {
-    stop(paste(
-      "No data store provided. Hence, no data will be deleted.",
-      "Exiting."
-    ))
-  }
 
-  conf <- getConfig("rapbaseConfig.yml")$r$staging
-
-  if (conf$target == "file") {
-    dir <- Sys.getenv("R_RAP_CONFIG_PATH")
-    parentPath <- "stagingData"
-    path <- file.path(dir, parentPath)
-    f <- normalizePath(list.files(path, recursive = TRUE, full.names = TRUE))
-    fAge <- as.numeric(Sys.time()) - as.numeric(file.mtime(f))
-    deleteDataset <- f[fAge > eolAge]
-  }
-
-  if (conf$target == "db") {
-    dbStagingPrereq(conf$key)
-    eolTime <- Sys.time() - eolAge
-    query <- paste0(
-      "SELECT registry, name FROM data WHERE mtime < ? ORDER BY registry, name;"
-    )
-    params <- list(eolTime)
-    df <- dbStagingProcess(conf$key, query, params)
-    deleteDataset <- paste0(df$registry, ": ", df$name)
-  }
+  dbStagingPrereq("staging")
+  eolTime <- Sys.time() - eolAge
+  query <- paste0(
+    "SELECT registry, name FROM data WHERE mtime < ? ORDER BY registry, name;"
+  )
+  params <- list(eolTime)
+  df <- dbStagingProcess("staging", query, params)
+  deleteDataset <- paste0(df$registry, ": ", df$name)
 
   if (dryRun) {
     message(
@@ -274,13 +177,8 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
     )
     deleteDataset
   } else {
-    if (conf$target == "file") {
-      file.remove(deleteDataset)
-    }
-    if (conf$target == "db") {
-      query <- "DELETE FROM data WHERE mtime < ?;"
-      dbStagingProcess(conf$key, query, params, statement = TRUE)
-    }
+    query <- "DELETE FROM data WHERE mtime < ?;"
+    dbStagingProcess("staging", query, params, statement = TRUE)
     invisible(deleteDataset)
   }
 }
@@ -309,9 +207,6 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
 #'   value is FALSE.
 #'
 #' @return \itemize{
-#'   \item \code{pathStagingData()} returns a character string with the path to
-#'     the staging directory of \code{registryName}. If its parent directory
-#'     (\code{dir}) does not exists an error is returned.
 #'   \item \code{dbStagingData()} creates or drops a staging data database and
 #'     returns a message invisibly.
 #'   \item \code{dbStagingPrereq()} ensures that a database for staging data is
@@ -325,38 +220,23 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
 #'
 #' @name stagingDataHelper
 #' @keywords internal
-#' @aliases pathStagingData dbStagingData dbStagingPrereq dbStagingConnection
+#' @aliases dbStagingData dbStagingPrereq dbStagingConnection
 #'   dbStagingProcess
 NULL
 
 #' @rdname stagingDataHelper
-pathStagingData <- function(registryName, dir) {
-  stopifnot(dir.exists(dir))
+wrapStagingData <- function(data) {
 
-  parentPath <- "stagingData"
-
-  path <- file.path(dir, parentPath, registryName)
-
-  if (!dir.exists(path)) {
-    dir.create(path, recursive = TRUE)
-  }
-
-  path
-}
-
-#' @rdname stagingDataHelper
-wrapStagingData <- function(data, key) {
-
-  k <- digest::digest(getConfig()[[key]]$pass, algo = "sha256", raw = TRUE)
+  k <- digest::digest(Sys.getenv("MYSQL_PASSWORD"), algo = "sha256", raw = TRUE)
   serialize(data, connection = NULL) %>%
     sship::sym_enc(key = k, iv = NULL) %>%
     memCompress(type = "bzip2")
 }
 
 #' @rdname stagingDataHelper
-unwrapStagingData <- function(data, key) {
+unwrapStagingData <- function(data) {
 
-  k <- digest::digest(getConfig()[[key]]$pass, algo = "sha256", raw = TRUE)
+  k <- digest::digest(Sys.getenv("MYSQL_PASSWORD"), algo = "sha256", raw = TRUE)
   memDecompress(data, type = "bzip2") %>%
     sship::sym_dec(key = k, iv = NULL) %>%
     unserialize()
@@ -365,7 +245,7 @@ unwrapStagingData <- function(data, key) {
 #' @rdname stagingDataHelper
 dbStagingData <- function(key, drop = FALSE) {
 
-  conf <- getConfig()[[key]]
+  conf <- getDbConfig(key)
   if (is.null(conf)) {
     stop(paste("There is no configuration corresponding to key", key))
   }
@@ -399,10 +279,7 @@ dbStagingData <- function(key, drop = FALSE) {
 #' @rdname stagingDataHelper
 dbStagingPrereq <- function(key) {
 
-  conf <- getConfig()[[key]]
-  if (is.null(conf)) {
-    stop(paste("There is no configuration corresponding to key", key))
-  }
+  conf <- getDbConfig(key)
 
   con <- dbStagingConnection(key, init = TRUE)
   query <- paste0("SHOW DATABASES LIKE '", conf$name, "';")
@@ -412,8 +289,10 @@ dbStagingPrereq <- function(key) {
   if (length(df$Database) > 0) {
     msg <- "You're good! Database for staging data already exists."
   } else {
-    dbStagingData(key)
-    msg <- "Database for staging data was created."
+    stop(paste0(
+      "Database for staging does not exist. ",
+      "Please run dbStagingData() to create it."
+    ))
   }
 
   invisible(msg)
@@ -429,29 +308,7 @@ dbStagingConnection <- function(key = NULL, con = NULL, init = FALSE) {
   }
 
   if (!is.null(key)) {
-    conf <- getConfig()[[key]]
-    if (is.null(conf)) {
-      stop(
-        paste0(
-          "Could not connect to database because there is no configuration ",
-          "corresponding to key '", key, "'. Please check key and/or ",
-          "configuration."
-        )
-      )
-    }
-    if (init) {
-      dbname <- NULL
-    } else {
-      dbname <- conf$name
-    }
-    drv <- RMariaDB::MariaDB()
-    con <- RMariaDB::dbConnect(
-      drv,
-      dbname,
-      host = conf$host,
-      user = conf$user,
-      password = conf$pass
-    )
+    con <- rapOpenDbConnection(dbName = key)$con
     return(con)
   } else {
     stop("Either a key or a valid database connection object must be provided.")
