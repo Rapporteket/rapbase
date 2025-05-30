@@ -16,15 +16,6 @@ nameAutoReportDb <- "autoreporttest"
 # get some auto report data to work on, i.e. default rapbase
 arSample <- yaml::read_yaml(system.file("autoReport.yml", package = "rapbase"))
 
-# make sure we test with database as target
-config <- yaml::read_yaml(configFile)
-config$r$autoReport$target <- "db"
-config$r$autoReport$key <- nameAutoReportDb
-yaml::write_yaml(config, configFile)
-
-# adjust config and get whatever name of logging database define there
-config$r$autoReport$target <- "db"
-yaml::write_yaml(config, configFile)
 nameAutoReportDb <- "autoreporttest"
 Sys.setenv(MYSQL_DB_AUTOREPORT = nameAutoReportDb)
 
