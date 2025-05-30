@@ -194,8 +194,6 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
 #' @param data A data object that is to be added to or collected from staging.
 #' @param key Character string with key to be used for staging data store
 #'   credentials.
-#' @param drop Logical defining if a database is to be deleted. FALSE by
-#'   default.
 #' @param con A database connection object.
 #' @param init Logical defining if the function call will perform an initial
 #'   set-up of a database. Default value is FALSE
@@ -205,8 +203,6 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
 #'   value is FALSE.
 #'
 #' @return \itemize{
-#'   \item \code{dbStagingData()} creates or drops a staging data database and
-#'     returns a message invisibly.
 #'   \item \code{dbStagingPrereq()} ensures that a database for staging data is
 #'     properly setup and returns a message, invisibly.
 #'   \item \code{dbStagingConnection()} returns an open database connection
@@ -218,7 +214,7 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
 #'
 #' @name stagingDataHelper
 #' @keywords internal
-#' @aliases dbStagingData dbStagingPrereq dbStagingConnection
+#' @aliases dbStagingPrereq dbStagingConnection
 #'   dbStagingProcess
 NULL
 
@@ -241,40 +237,6 @@ unwrapStagingData <- function(data) {
 }
 
 #' @rdname stagingDataHelper
-dbStagingData <- function(key, drop = FALSE) {
-
-  conf <- getDbConfig(key)
-  if (is.null(conf)) {
-    stop(paste("There is no configuration corresponding to key", key))
-  }
-  if (drop) {
-    query <- paste("DROP DATABASE", conf$name)
-    msg <- paste0("Database '", conf$name, "' deleted.")
-  } else {
-    query <- c(
-      sprintf(
-        readLines(system.file("createStagingDb.sql", package = "rapbase")),
-        conf$name
-      ),
-      paste0(
-        readLines(system.file("createStagingTab.sql", package = "rapbase")),
-        collapse = "\n"
-      )
-    )
-    msg <- paste0("Database '", conf$name, "exists.")
-  }
-
-  con <- dbStagingConnection(key = key, init = TRUE)
-  for (q in query) {
-    invisible(RMariaDB::dbExecute(con, q))
-  }
-
-  con <- dbStagingConnection(con = con)
-
-  invisible(msg)
-}
-
-#' @rdname stagingDataHelper
 dbStagingPrereq <- function(key) {
 
   conf <- getDbConfig(key)
@@ -288,8 +250,7 @@ dbStagingPrereq <- function(key) {
     msg <- "You're good! Database for staging data already exists."
   } else {
     stop(paste0(
-      "Database for staging does not exist. ",
-      "Please run dbStagingData() to create it."
+      "Database for staging (", conf$name, ") does not exist."
     ))
   }
 

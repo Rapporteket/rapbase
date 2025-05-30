@@ -2,7 +2,6 @@
 % Please edit documentation in R/stagingData.R
 \name{stagingDataHelper}
 \alias{stagingDataHelper}
-\alias{dbStagingData}
 \alias{dbStagingPrereq}
 \alias{dbStagingConnection}
 \alias{dbStagingProcess}
@@ -13,8 +12,6 @@
 wrapStagingData(data)
 
 unwrapStagingData(data)
-
-dbStagingData(key, drop = FALSE)
 
 dbStagingPrereq(key)
 
@@ -27,9 +24,6 @@ dbStagingProcess(key, query, params = list(), statement = FALSE)
 
 \item{key}{Character string with key to be used for staging data store
 credentials.}
-
-\item{drop}{Logical defining if a database is to be deleted. FALSE by
-default.}
 
 \item{con}{A database connection object.}
 
@@ -45,8 +39,6 @@ value is FALSE.}
 }
 \value{
 \itemize{
-  \item \code{dbStagingData()} creates or drops a staging data database and
-    returns a message invisibly.
   \item \code{dbStagingPrereq()} ensures that a database for staging data is
     properly setup and returns a message, invisibly.
   \item \code{dbStagingConnection()} returns an open database connection

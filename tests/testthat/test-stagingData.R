@@ -31,10 +31,6 @@ test_that("No connection provided when insufficient config", {
     )
 })
 
-test_that("Error is returned when key cannot be found in config", {
-  expect_error(dbStagingData("wrongEntry"))
-})
-
 # prep db for testing
 if (is.null(check_db(is_test_that = FALSE))) {
   create_staging_db(Sys.getenv("MYSQL_DB_STAGING"))
@@ -99,7 +95,8 @@ test_that("a global clean of db staging data can be performed (also dry run)", {
 })
 
 if (is.null(check_db(is_test_that = FALSE))) {
-  dbStagingData("staging", drop = TRUE)
+  query <- paste0("DROP DATABASE ", Sys.getenv("MYSQL_DB_STAGING"), ";")
+  query_db(query)
 }
 
 # Restore environment
