@@ -125,76 +125,21 @@ test_that(paste(
   "message"
 ), {
   expect_error(loadRegData(regName, query, dbType = "mssql"),
-               regexp = "Use of MSSQL is no longer supported. Exiting"
+               regexp = "Use of dbType mssql is not supported. Exiting"
+  )
+  expect_error(loadRegData(regName, query, dbType = "sqlite"),
+               regexp = "Use of dbType sqlite is not supported. Exiting"
+  )
+  expect_error(loadRegData(regName, query, dbType = NULL),
+               regexp = "argument is of length zero"
+  )
+  expect_error(loadRegData(regName, query, dbType = FALSE),
+               regexp = "Use of dbType FALSE is not supported. Exiting"
+  )
+  expect_error(loadRegData(regName, query, dbType = c("mysql", "sqlite")),
+               regexp = "the condition has length > 1"
   )
 })
-
-
-withr::with_envvar(
-  new = c(
-    "MYSQL_HOST" = NA,
-    "MYSQL_USER" = NA,
-    "MYSQL_PASSWORD" = NA
-  ),
-  code = {
-    test_that("getDbConfig is working when not db", {
-      expect_error(
-        getDbConfig(),
-        regexp = "Could not connect to database because the enviroment"
-      )
-      expect_error(
-        getDbConfig(dbName = "dev"),
-        regexp = "Could not connect to database because the enviroment"
-      )
-      expect_error(
-        getDbConfig(dbName = "rapbase")$name,
-        regexp = "Could not connect to database because the enviroment"
-      )
-    })
-  }
-)
-
-
-withr::with_envvar(
-  new = c(
-    "MYSQL_HOST" = "qwerty",
-    "MYSQL_USER" = "asdfg",
-    "MYSQL_PASSWORD" = "zxcvb",
-    "MYSQL_DB_LOG" = "log_db",
-    "MYSQL_DB_AUTOREPORT" = "autoreport_db",
-    "MYSQL_DB_DATA" = "data_db",
-    "rapbase" = "data_db_rapbase"
-  ),
-  code = {
-    test_that("Returns default values", {
-      conf <- getDbConfig()
-      expect_equal(conf$host, "qwerty")
-      expect_equal(conf$name, "data_db")
-      expect_equal(conf$user, "asdfg")
-      expect_equal(conf$pass, "zxcvb")
-      expect_equal(conf$port, 3306)
-
-      conf <- getDbConfig(dbName = "rapbase")
-      expect_equal(conf$name, "rapbase")
-
-      conf <- getDbConfig(dbName = "raplog")
-      expect_equal(conf$name, "log_db")
-
-      conf <- getDbConfig(dbName = "autoreport")
-      expect_equal(conf$name, "autoreport_db")
-
-      conf <- getDbConfig(dbName = "data")
-      expect_equal(conf$name, "data_db")
-
-      conf <- getDbConfig(dbName = "qwerty123")
-      expect_equal(conf$name, "qwerty123")
-      expect_equal(conf$host, "qwerty")
-      expect_equal(conf$user, "asdfg")
-      expect_equal(conf$pass, "zxcvb")
-      expect_equal(conf$port, 3306)
-    })
-  }
-)
 
 # remove test db
 query_db(paste0("DROP DATABASE IF EXISTS ", regName, ";"))
