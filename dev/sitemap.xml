@@ -50,6 +50,8 @@
 <url><loc>/dev/reference/runBulletin.html</loc></url>
 <url><loc>/dev/reference/sanitizeLog.html</loc></url>
 <url><loc>/dev/reference/sendEmail.html</loc></url>
+<url><loc>/dev/reference/stagingData.html</loc></url>
+<url><loc>/dev/reference/stagingDataHelper.html</loc></url>
 <url><loc>/dev/reference/stats.html</loc></url>
 <url><loc>/dev/reference/statsGuide.html</loc></url>
 <url><loc>/dev/reference/testdata.html</loc></url>
