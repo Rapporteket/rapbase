@@ -6,9 +6,8 @@
 #' must therefore be established within each registry that take staging data
 #' into use.
 #'
-#' Staging data can be stored as files or as binary large objects in a database
-#' and method of choice is defined by the \code{rapbase} configuration.
-#' Regardless of storage method a per registry symmetric encryption of storage
+#' Staging data is stored as binary large objects in a database.
+#' A per registry symmetric encryption of storage
 #' content is enforced. Keys used for encryption are generated from existing
 #' database credentials. Therefore, please note that removing or changing
 #' such credentials will render any historic staging data inaccessible.
