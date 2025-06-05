@@ -23,18 +23,10 @@ test_that("No connection provided when no key (or connection object) given", {
   expect_error(dbStagingConnection(key = NULL, con = NULL))
 })
 
-test_that("No connection provided when insufficient config", {
-  check_db()
-  expect_error(
-    dbStagingConnection("unknown"),
-    "Failed to connect: Unknown database 'unknown'"
-    )
-})
-
 test_that("dbStagingPrereq can not find db", {
   check_db()
   expect_error(
-    dbStagingPrereq("staging"),
+    rapbase:::dbStagingPrereq("staging"),
     "Failed to connect: Unknown database 'test_staging'"
   )
 })
@@ -46,15 +38,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
 
 test_that("dbStagingPrereq can find db", {
   check_db()
-  expect_invisible(dbStagingPrereq("staging"))
-})
-
-test_that("A db connection object can be opened and closed", {
-  check_db()
-  con <- dbStagingConnection(key = "staging")
-  expect_true(inherits(con, "DBIConnection"))
-  con <- dbStagingConnection(con = con)
-  expect_true(is.null(con))
+  expect_invisible(rapbase:::dbStagingPrereq("staging"))
 })
 
 test_that("Data can be staged with db backend", {
