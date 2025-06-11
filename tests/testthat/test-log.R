@@ -74,7 +74,7 @@ appEvent <- data.frame(
 
 test_that("app event can be appended to db", {
   check_db()
-  expect_silent(appendLog(event = appEvent, name = "appLog"))
+  expect_message(appendLog(event = appEvent, name = "appLog"))
 })
 
 test_that("log entries can be read from db", {
