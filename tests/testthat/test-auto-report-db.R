@@ -289,7 +289,7 @@ dryRun <- FALSE
 
 test_that("Auto report can be created and written to file", {
   check_db()
-  expect_silent(createAutoReport(
+  expect_message(createAutoReport(
     synopsis, package, type, fun, paramNames,
     paramValues, owner, email, organization,
     runDayOfYear, dryRun
@@ -338,7 +338,7 @@ test_that("Auto report can be deleted", {
   )
   rd <- readAutoReportData()
   reportId <- names(rd)[length(rd)]
-  expect_silent(deleteAutoReport(reportId))
+  expect_message(deleteAutoReport(reportId))
   expect_true(is.na(names(readAutoReportData())[reportId]))
 })
 
