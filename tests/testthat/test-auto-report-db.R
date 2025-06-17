@@ -125,7 +125,7 @@ test_that("Bulletin reports can be processed (monthly)", {
 
 test_that("Auto reports not sent because of no reports this date", {
   check_db()
-  expect_silent(runAutoReport(
+  expect_message(runAutoReport(
     dato = "2024-12-03",
     dryRun = TRUE
     ))
@@ -133,7 +133,7 @@ test_that("Auto reports not sent because of no reports this date", {
 
 test_that("Auto reports not sent if before start date", {
   check_db()
-  expect_silent(runAutoReport(
+  expect_message(runAutoReport(
     dato = "1800-01-01",
     dryRun = TRUE
     ))
@@ -141,7 +141,7 @@ test_that("Auto reports not sent if before start date", {
 
 test_that("Auto reports not sent if after start date", {
   check_db()
-  expect_silent(runAutoReport(
+  expect_message(runAutoReport(
     dato = "3000-01-01",
     dryRun = TRUE
     ))
