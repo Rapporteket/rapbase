@@ -44,6 +44,7 @@ Imports:
     RMariaDB,
     rmarkdown,
     rpivotTable,
+    RSQLite,
     sendmailR,
     shiny,
     shinyalert,
