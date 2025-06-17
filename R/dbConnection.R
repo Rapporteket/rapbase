@@ -28,6 +28,7 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
       password = conf$pass,
       bigint = "integer"
     )
+    message("Connected to database: ", conf$name)
     # ensure utf8 encoding
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
   } else if (dbType == "mssql") {
