@@ -76,6 +76,7 @@ getDbConfig <- function(dbName = "data") {
       dbName,
       "raplog" = Sys.getenv("MYSQL_DB_LOG"),
       "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
+      "staging" = Sys.getenv("MYSQL_DB_STAGING"),
       "data" = Sys.getenv("MYSQL_DB_DATA"),
       dbName
     )
