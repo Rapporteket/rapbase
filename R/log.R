@@ -313,28 +313,19 @@ createLogDbTabs <- function() {
 #'
 #' @return A data frame of log entries
 #' @keywords internal
-readLog <- function(type, name = "", app_id = NULL) {
+readLog <- function(type, app_id = NULL) {
   stopifnot(type == "report" | type == "app")
 
   config <- rapbase::getConfig(fileName = "rapbaseConfig.yml")
-  target <- config$r$raplog$target
 
-  if (target == "db") {
-    query <- paste0("SELECT * FROM ", type, "Log")
-    query <- paste0(query, ";")
-    log <- rapbase::loadRegData(config$r$raplog$key, query)
-    if (!is.null(app_id)) {
-      log <- log[which(log$group == app_id), ]
-    }
-    log <- log %>%
-      dplyr::select(-"id")
-  } else {
-    stop(paste0(
-      "Log target '", target, "' is not supported. ",
-      "Log could not be read! To remedy, please check that configuration is ",
-      "set up properly."
-    ))
+  query <- paste0("SELECT * FROM ", type, "log ")
+  if (!is.null(app_id) && app_id != "") {
+    query <- paste0(query, "WHERE group = '", app_id, "' ")
   }
+  query <- paste0(query, ";")
+  log <- rapbase::loadRegData(config$r$raplog$key, query)
+  log <- log %>%
+    dplyr::select(-"id")
 
   invisible(log)
 }
