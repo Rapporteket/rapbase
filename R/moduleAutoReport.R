@@ -534,7 +534,6 @@ autoReportServer <- function(
       server = FALSE, escape = FALSE, selection = "none",
       rownames = FALSE,
       options = list(
-        # dom = "tp",
         ordering = FALSE,
         pageLength = 40,
         language = list(
