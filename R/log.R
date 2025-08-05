@@ -305,15 +305,24 @@ createLogDbTabs <- function() {
 #' @param type Character string defining which log to request data from. Must be
 #' one of \code{c("app", "report")}.
 #' @param name Character string with registry filter. Default value is an empty
-#' string that will return all log entries. If not empty its value must
-#' correspond to an existing registry (\emph{i.e.} R package) name.
+#' string. WARNING: this is not used in the function, but is kept for
+#' compatibility with the old function signature. It is recommended to use
+#' \code{app_id} instead, which is the new parameter for filtering by
+#' application ID.
 #' @param app_id An identifier for a particular registry. Default value is NULL,
 #' in which case no action is taken. If value is provided, the log is filtered
 #' to show only entries matching chosen app_id.
 #'
 #' @return A data frame of log entries
 #' @keywords internal
-readLog <- function(type, app_id = NULL) {
+readLog <- function(type, name = "", app_id = NULL) {
+  if (name != "" && is.null(app_id)) {
+    warning(paste0(
+      "The 'name' parameter is deprecated and ",
+      "will be removed in future versions. ",
+      "Use 'app_id' instead."
+    ))
+  }
   stopifnot(type == "report" | type == "app")
 
   config <- rapbase::getConfig(fileName = "rapbaseConfig.yml")
