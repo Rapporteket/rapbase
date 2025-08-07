@@ -16,4 +16,5 @@
 ^docker-compose.yml$
 ^.devcontainer$
 ^renovate\.json$
+^.vscode$
 ^dev$
