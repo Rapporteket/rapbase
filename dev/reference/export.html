@@ -20,10 +20,6 @@ relevant helper functions"><meta property="og:image" content="/logo.svg"><meta n
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/stagingData.html">Staging data: principles and set-up</a></li>
-  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -36,7 +32,7 @@ relevant helper functions"><meta property="og:image" content="/logo.svg"><meta n
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Shiny modules providing GUI and server logic for Export</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/v2.0.0/R/moduleExport.R" class="external-link"><code>R/moduleExport.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/v2.0.1/R/moduleExport.R" class="external-link"><code>R/moduleExport.R</code></a></small>
       <div class="d-none name"><code>export.Rd</code></div>
     </div>
 
@@ -51,6 +47,13 @@ relevant helper functions</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">exportUCInput</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">exportUCServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">registryName</span>, repoName <span class="op">=</span> <span class="va">registryName</span>, eligible <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">exportUCServer2</span><span class="op">(</span></span>
+<span>  <span class="va">id</span>,</span>
+<span>  <span class="va">registryName</span>,</span>
+<span>  repoName <span class="op">=</span> <span class="va">registryName</span>,</span>
+<span>  eligible <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">exportUCApp</span><span class="op">(</span>registryName <span class="op">=</span> <span class="st">"rapbase"</span><span class="op">)</span></span>
 <span></span>
