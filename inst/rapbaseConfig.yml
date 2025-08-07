@@ -9,11 +9,6 @@ r :
     target: db
     key: raplogTest
 
-  # Automated report data
-  autoReport:
-    target: db
-    key: autoreport
-
   # User data for testing purposes
   testUser :
     user : ttester
