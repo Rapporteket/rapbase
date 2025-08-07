@@ -16,6 +16,10 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/stagingData.html">Staging data: principles and set-up</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -28,7 +32,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Write automated report metadata</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/main/R/autoReport.R" class="external-link"><code>R/autoReport.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/v2.0.0/R/autoReport.R" class="external-link"><code>R/autoReport.R</code></a></small>
       <div class="d-none name"><code>writeAutoReportData.Rd</code></div>
     </div>
 
@@ -38,15 +42,36 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">writeAutoReportData</span><span class="op">(</span><span class="va">config</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">writeAutoReportData</span><span class="op">(</span></span>
+<span>  fileName <span class="op">=</span> <span class="st">"autoReport.yml"</span>,</span>
+<span>  <span class="va">config</span>,</span>
+<span>  packageName <span class="op">=</span> <span class="st">"rapbase"</span>,</span>
+<span>  target <span class="op">=</span> <span class="fu"><a href="getConfig.html">getConfig</a></span><span class="op">(</span><span class="st">"rapbaseConfig.yml"</span><span class="op">)</span><span class="op">$</span><span class="va">r</span><span class="op">$</span><span class="va">autoReport</span><span class="op">$</span><span class="va">target</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
 
 
-<dl><dt id="arg-config">config<a class="anchor" aria-label="anchor" href="#arg-config"></a></dt>
+<dl><dt id="arg-filename">fileName<a class="anchor" aria-label="anchor" href="#arg-filename"></a></dt>
+<dd><p>String defining name of the yaml configuration file. Default
+'autoReport.yml'</p></dd>
+
+
+<dt id="arg-config">config<a class="anchor" aria-label="anchor" href="#arg-config"></a></dt>
 <dd><p>a list of yaml configuration</p></dd>
+
+
+<dt id="arg-packagename">packageName<a class="anchor" aria-label="anchor" href="#arg-packagename"></a></dt>
+<dd><p>String defining the package in which the above
+configuration file resides. A configuration file within an R-package is
+only used in case the environmental variable 'R_RAP_CONFIG_PATH' is not
+defined (empty)</p></dd>
+
+
+<dt id="arg-target">target<a class="anchor" aria-label="anchor" href="#arg-target"></a></dt>
+<dd><p>List of autoreports in file or database</p></dd>
 
 </dl></div>
 
@@ -54,13 +79,11 @@
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># \donttest{</span></span></span>
 <span class="r-in"><span><span class="co"># Example depend on environment variable R_RAP_CONFIG_PATH being set</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="readAutoReportData.html">readAutoReportData</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in getDbConfig(dbName) : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        are not defined. Please check configuration.</span>
+<span class="r-in"><span><span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="readAutoReportData.html">readAutoReportData</a></span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Auto report data were upgraded: auto reports with no type defined now set to 'subscription'.</span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">writeAutoReportData</span><span class="op">(</span>config <span class="op">=</span> <span class="va">config</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in eval(expr, envir) : object 'config' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in writeAutoReportData(config = config) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   There is nowhere to store config data. The environment variable R_RAP_CONFIG_PATH must be defined providing av path to a directory where configuration can be written. Stopping</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

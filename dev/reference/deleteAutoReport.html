@@ -16,6 +16,10 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/stagingData.html">Staging data: principles and set-up</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -28,7 +32,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Delete existing report from config/db</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/main/R/autoReport.R" class="external-link"><code>R/autoReport.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/v2.0.0/R/autoReport.R" class="external-link"><code>R/autoReport.R</code></a></small>
       <div class="d-none name"><code>deleteAutoReport.Rd</code></div>
     </div>
 
@@ -38,7 +42,10 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">deleteAutoReport</span><span class="op">(</span><span class="va">autoReportId</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">deleteAutoReport</span><span class="op">(</span></span>
+<span>  <span class="va">autoReportId</span>,</span>
+<span>  target <span class="op">=</span> <span class="fu"><a href="getConfig.html">getConfig</a></span><span class="op">(</span><span class="st">"rapbaseConfig.yml"</span><span class="op">)</span><span class="op">$</span><span class="va">r</span><span class="op">$</span><span class="va">autoReport</span><span class="op">$</span><span class="va">target</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -47,6 +54,10 @@
 
 <dl><dt id="arg-autoreportid">autoReportId<a class="anchor" aria-label="anchor" href="#arg-autoreportid"></a></dt>
 <dd><p>String providing the auto report unique id</p></dd>
+
+
+<dt id="arg-target">target<a class="anchor" aria-label="anchor" href="#arg-target"></a></dt>
+<dd><p>List of autoreports in file or database</p></dd>
 
 </dl></div>
     <div class="section level2">

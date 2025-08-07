@@ -24,6 +24,10 @@ functions used by the same reactive environments."><meta property="og:image" con
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/stagingData.html">Staging data: principles and set-up</a></li>
+  </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -36,7 +40,7 @@ functions used by the same reactive environments."><meta property="og:image" con
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Log user events in shiny applications at Rapporteket</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/main/R/log.R" class="external-link"><code>R/log.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/v2.0.0/R/log.R" class="external-link"><code>R/log.R</code></a></small>
       <div class="d-none name"><code>logger.Rd</code></div>
     </div>
 
@@ -232,10 +236,8 @@ calling a function that provides a histogram:</p><div class="sourceCode"><pre><c
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> System has no defined instance. Configuration as provided by</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in getDbConfig(dbName) : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        are not defined. Please check configuration.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in appendLog(event, name) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   There is nowhere to append the logfiles. The environment variable R_RAP_CONFIG_PATH should be defined!</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
@@ -251,10 +253,8 @@ calling a function that provides a histogram:</p><div class="sourceCode"><pre><c
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> System has no defined instance. Configuration as provided by</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span>             'rapbaseConfig.yml' will be used as source for user data.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in getDbConfig(dbName) : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        are not defined. Please check configuration.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in appendLog(event, name) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   There is nowhere to append the logfiles. The environment variable R_RAP_CONFIG_PATH should be defined!</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># \donttest{</span></span></span>
