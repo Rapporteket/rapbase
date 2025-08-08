@@ -24,6 +24,15 @@ reference:
     - rapCloseDbConnection
     - exportApp
 
+  - title: Staging data
+    desc: >
+      Handle staging data
+    contents:
+    - saveStagingData
+    - loadStagingData
+    - deleteStagingData
+    - cleanStagingData
+
   - title: User information
     desc: >
       Provides information on the logged in user in a shiny session
@@ -59,8 +68,6 @@ reference:
     - deleteAutoReport
     - makeAutoReportTab
     - makeRunDayOfYearSequence
-    - isPkgRapReg
-    - getRegs
     - findNextRunDate
     - filterAutoRep
     - autoReport
@@ -86,8 +93,6 @@ reference:
     - fireInTheHole
     - sendEmail
     - howWeDealWithPersonalData
-    - runNoweb
-    - getRapPackages
     - isRapContext
     - noOptOutOk
     - renderRmd
@@ -99,6 +104,7 @@ reference:
       Data contained by the package
     contents:
     - appLog
+    - testdata
 
   - title: Meta
     desc: >

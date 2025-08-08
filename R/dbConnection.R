@@ -28,6 +28,7 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
       password = conf$pass,
       bigint = "integer"
     )
+    message("Connected to database: ", conf$name)
     # ensure utf8 encoding
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
   } else if (dbType == "mssql") {
@@ -76,6 +77,7 @@ getDbConfig <- function(dbName = "data") {
       dbName,
       "raplog" = Sys.getenv("MYSQL_DB_LOG"),
       "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
+      "staging" = Sys.getenv("MYSQL_DB_STAGING"),
       "data" = Sys.getenv("MYSQL_DB_DATA"),
       dbName
     )

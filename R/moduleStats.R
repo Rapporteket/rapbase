@@ -146,7 +146,91 @@ statsServer <- function(id,
     })
     output$pivot <- rpivotTable::renderRpivotTable(
       if (eligible) {
-        rpivotTable::rpivotTable(logFrame(),
+        rpivotTable::rpivotTable(
+          logFrame(),
+          rows = c("name"),
+          cols = c("year", "month"),
+          rendererName = "Heatmap"
+        )
+      } else {
+        rpivotTable::rpivotTable(data.frame())
+      }
+    )
+  })
+}
+
+#' @rdname stats
+#' @export
+statsServer2 <- function(id,
+                         registryName,
+                         app_id = NULL,
+                         eligible = shiny::reactiveVal(TRUE)) {
+  shiny::moduleServer(id, function(input, output, session) {
+    log <- shiny::reactive({
+      readLog(input$type, registryName, app_id) %>%
+        logFormat()
+    })
+
+    logFrame <- shiny::reactive({
+      shiny::req(input$period)
+      logTimeFrame(log(), input$period[1], input$period[2])
+    })
+
+    output$period <- shiny::renderUI({
+      shiny::dateRangeInput(
+        shiny::NS(id, "period"),
+        label = shiny::tags$div(
+          shiny::HTML(as.character(shiny::icon("calendar")), "Periode:")
+        ),
+        start = min(log()$date), end = max(log()$date), separator = "-"
+      )
+    })
+
+    output$downloadButton <- shiny::renderUI({
+      if (eligible()) {
+        shiny::downloadButton(shiny::NS(id, "download"), "Last ned!")
+      } else {
+        NULL
+      }
+    })
+
+    shiny::observeEvent(eligible(), {
+      if (eligible()) {
+        output$download <- shiny::downloadHandler(
+          filename = function() {
+            basename(
+              tempfile(
+                pattern = paste0("useStats-", registryName),
+                fileext = ".csv"
+              )
+            )
+          },
+          content = function(file) {
+            if (input$downloadFormat == "xlsx-csv") {
+              readr::write_excel_csv2(logFrame(), file)
+            } else {
+              readr::write_csv2(logFrame(), file)
+            }
+          }
+        )
+      }
+    }
+    )
+
+    output$eligible <- shiny::renderUI({
+      if (eligible()) {
+        NULL
+      } else {
+        shiny::tagList(
+          shiny::h4("Funksjonen er ikke tilgjengelig"),
+          shiny::p("Ta kontakt med registeret")
+        )
+      }
+    })
+    output$pivot <- rpivotTable::renderRpivotTable(
+      if (eligible()) {
+        rpivotTable::rpivotTable(
+          logFrame(),
           rows = c("name"),
           cols = c("year", "month"),
           rendererName = "Heatmap"
@@ -244,7 +328,8 @@ logFormat <- function(log) {
       year = as.POSIXlt(.data$datetime)$year + 1900,
       month = as.POSIXlt(.data$datetime)$mon + 1,
       day = as.POSIXlt(.data$datetime)$mday,
-      weekday = ifelse(as.POSIXlt(.data$datetime)$wday == 0, 7,
+      weekday = ifelse(
+        as.POSIXlt(.data$datetime)$wday == 0, 7,
         as.POSIXlt(.data$datetime)$wday
       )
     )

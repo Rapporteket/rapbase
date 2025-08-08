@@ -534,7 +534,7 @@ autoReportServer <- function(
       server = FALSE, escape = FALSE, selection = "none",
       rownames = FALSE,
       options = list(
-        dom = "tp", ordering = FALSE,
+        pageLength = 40,
         language = list(
           lengthMenu = "Vis _MENU_ rader per side",
           search = "S\u00f8k:",

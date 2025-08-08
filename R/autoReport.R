@@ -97,6 +97,22 @@ createAutoReport <- function(
   if (dryRun) {
     rd
   } else {
+    message(
+      paste0(
+        "Creating auto report with synopsis: ",
+        synopsis,
+        ", package: ",
+        package,
+        ", type: ",
+        type,
+        ", function: ",
+        fun,
+        ", owner: ",
+        owner,
+        ", email: ",
+        email
+      )
+    )
     writeAutoReportData(config = rd)
   }
 }
@@ -109,6 +125,12 @@ createAutoReport <- function(
 #' @export
 
 deleteAutoReport <- function(autoReportId) {
+  message(
+    paste0(
+      "Deleting auto report with id: ",
+      autoReportId
+    )
+  )
   query <- paste0(
     "DELETE FROM autoreport ",
     " WHERE id = '",
@@ -197,7 +219,8 @@ writeAutoReportData <- function(config) {
       )
     }
   }
-
+  message(paste0("Add auto report data to database, ",
+                 nrow(dataframe), " entries."))
   con <- rapOpenDbConnection("autoreport")$con
   DBI::dbAppendTable(con, "autoreport", dataframe, row.names = NULL)
   rapCloseDbConnection(con)
@@ -235,25 +258,6 @@ filterAutoRep <- function(
   } else {
     dplyr::filter(data, .data[[by]] %in% pass)
   }
-}
-
-
-#' Provide vector of registries (\emph{i.e.} their R packages) in config
-#'
-#' @param config list of configuration for automated reports
-#'
-#' @return character vector of registry (package) names
-#' @export
-
-getRegs <- function(config) {
-  regs <- vector(mode = "character")
-  for (i in seq_len(length(config))) {
-    reg <- config[[i]]$package
-    if (!(reg %in% regs)) {
-      regs <- c(regs, reg)
-    }
-  }
-  regs
 }
 
 

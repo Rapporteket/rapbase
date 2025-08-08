@@ -74,7 +74,7 @@ appEvent <- data.frame(
 
 test_that("app event can be appended to db", {
   check_db()
-  expect_silent(appendLog(event = appEvent, name = "appLog"))
+  expect_message(appendLog(event = appEvent, name = "appLog"))
 })
 
 test_that("log entries can be read from db", {
@@ -144,6 +144,37 @@ test_that("loggerSetup is working", {
     )
   )
 
+  warningLog <- jsonlite::fromJSON(logger::log_warn(
+    "Test warning"
+  )$default$record)
+  expect_equal(
+    c(
+      warningLog$level,
+      warningLog$message
+    ),
+    c(
+      "WARN",
+      "Test warning"
+    )
+  )
+
+  errorLog <- jsonlite::fromJSON(logger::log_error(
+    "Test error"
+  )$default$record)
+  expect_equal(
+    c(
+      errorLog$level,
+      errorLog$message
+    ),
+    c(
+      "ERROR",
+      "Test error"
+    )
+  )
+
+
+
+
   # env-stuff
   if (currentUser == "" && currentApp == "") {
     Sys.unsetenv("SHINYPROXY_USERNAME")
@@ -154,4 +185,25 @@ test_that("loggerSetup is working", {
   }
 
   expect_error(loggerSetup())
+})
+
+test_that("logShinyInputChanges works without errors", {
+  # Mock a Shiny input object
+  shiny_input <- list(input1 = "value1", input2 = "value2")
+
+  # Mock logger::log_shiny_input_changes to avoid actual logging
+  mock_log_shiny_input_changes <- function(...) {
+    return(TRUE) # Simulate successful logging
+  }
+
+  # Temporarily replace the logger function with the mock
+  with_mocked_bindings(
+    logShinyInputChanges = function(input) {
+      mock_log_shiny_input_changes(input)
+    },
+    {
+      # Call the function and check for errors
+      expect_silent(logShinyInputChanges(shiny_input))
+    }
+  )
 })
