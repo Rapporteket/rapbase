@@ -1,30 +1,10 @@
 # store current instance and prepare
 currentInstance <- Sys.getenv("R_RAP_INSTANCE")
-currentConfig <- Sys.getenv("R_RAP_CONFIG_PATH")
 currentDb <- Sys.getenv("MYSQL_DB_AUTOREPORT")
-
-Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
-
-file.copy(
-  system.file(c("rapbaseConfig.yml"), package = "rapbase"),
-  Sys.getenv("R_RAP_CONFIG_PATH")
-)
-configFile <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
-
-nameAutoReportDb <- "autoreporttest"
 
 # get some auto report data to work on, i.e. default rapbase
 arSample <- yaml::read_yaml(system.file("autoReport.yml", package = "rapbase"))
 
-# make sure we test with database as target
-config <- yaml::read_yaml(configFile)
-config$r$autoReport$target <- "db"
-config$r$autoReport$key <- nameAutoReportDb
-yaml::write_yaml(config, configFile)
-
-# adjust config and get whatever name of logging database define there
-config$r$autoReport$target <- "db"
-yaml::write_yaml(config, configFile)
 nameAutoReportDb <- "autoreporttest"
 Sys.setenv(MYSQL_DB_AUTOREPORT = nameAutoReportDb)
 
@@ -41,8 +21,7 @@ createAutoReportDb <- function() {
   query_db(query = query)
 }
 
-createAutoReportTab <- function() {
-  conf <- getConfig(fileName = "rapbaseConfig.yml")
+createAutoReportTab <- function(nameAutoReportDb) {
 
   fc <- file(system.file("createAutoReportTab.sql", package = "rapbase"), "r")
   t <- readLines(fc)
@@ -50,7 +29,7 @@ createAutoReportTab <- function() {
   sql <- paste0(t, collapse = "\n")
   queries <- strsplit(sql, ";")[[1]]
 
-  con <- rapOpenDbConnection(conf[["r"]][["autoReport"]][["key"]])[["con"]]
+  con <- rapOpenDbConnection(nameAutoReportDb)[["con"]]
   for (i in seq_len(length(queries))) {
     RMariaDB::dbExecute(con, queries[i])
   }
@@ -65,7 +44,7 @@ test_that("a db for auto report defs can be created", {
 
 test_that("table can be created in auto report db", {
   check_db()
-  expect_null(createAutoReportTab())
+  expect_null(createAutoReportTab(nameAutoReportDb))
 })
 
 test_that("a sample of auto report data can be written to db", {
@@ -125,7 +104,7 @@ test_that("Bulletin reports can be processed (monthly)", {
 
 test_that("Auto reports not sent because of no reports this date", {
   check_db()
-  expect_silent(runAutoReport(
+  expect_message(runAutoReport(
     dato = "2024-12-03",
     dryRun = TRUE
     ))
@@ -133,7 +112,7 @@ test_that("Auto reports not sent because of no reports this date", {
 
 test_that("Auto reports not sent if before start date", {
   check_db()
-  expect_silent(runAutoReport(
+  expect_message(runAutoReport(
     dato = "1800-01-01",
     dryRun = TRUE
     ))
@@ -141,7 +120,7 @@ test_that("Auto reports not sent if before start date", {
 
 test_that("Auto reports not sent if after start date", {
   check_db()
-  expect_silent(runAutoReport(
+  expect_message(runAutoReport(
     dato = "3000-01-01",
     dryRun = TRUE
     ))
@@ -289,7 +268,7 @@ dryRun <- FALSE
 
 test_that("Auto report can be created and written to file", {
   check_db()
-  expect_silent(createAutoReport(
+  expect_message(createAutoReport(
     synopsis, package, type, fun, paramNames,
     paramValues, owner, email, organization,
     runDayOfYear, dryRun
@@ -344,7 +323,7 @@ test_that("Auto report can be deleted", {
   )
   rd <- readAutoReportData()
   reportId <- names(rd)[length(rd)]
-  expect_silent(deleteAutoReport(reportId))
+  expect_message(deleteAutoReport(reportId))
   expect_true(is.na(names(readAutoReportData())[reportId]))
 })
 
@@ -356,10 +335,7 @@ withr::with_envvar(
     "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
     "FALK_APP_ID" = "80",
     "SHINYPROXY_USERNAME" = "ttesterc",
-    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils",
-    "USERORGID" = "[1, 2, 3, 4]",
-    "USERFULLNAME" = "Tore Tester Container",
-    "USEREMAIL" = "ttesterc@rapporteket.no"
+    "SHINYPROXY_USERGROUPS" = "rapbase,rapbase,utils,utils"
   ),
   code = {
     registryName <- "rapbase"
@@ -516,7 +492,6 @@ if (is.null(check_db(is_test_that = FALSE))) {
 }
 
 # Restore instance
-Sys.setenv(R_RAP_CONFIG_PATH = currentConfig)
 Sys.setenv(R_RAP_INSTANCE = currentInstance)
 Sys.setenv(MYSQL_DB_AUTOREPORT = currentDb)
 
