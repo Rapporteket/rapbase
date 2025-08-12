@@ -45,11 +45,6 @@ jobs:
           booktabs 
           caption 
           datetime 
-          epstopdf-pkg 
-          fancyhdr 
-          float 
-          geometry 
-          hyperref 
 
       - name: Set up MySQL
         run: |
