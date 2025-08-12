@@ -42,9 +42,7 @@ jobs:
         run: >
           tlmgr update --self && tlmgr install 
           babel-norsk 
-          booktabs 
           caption 
-          datetime 
 
       - name: Set up MySQL
         run: |
