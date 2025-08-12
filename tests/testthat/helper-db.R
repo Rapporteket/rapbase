@@ -6,6 +6,8 @@ check_db <- function(is_test_that = TRUE) {
     NULL
   } else if (Sys.getenv("GITHUB_ACTIONS_RUN_DB_UNIT_TESTS") == "true") {
     NULL
+  } else if (Sys.getenv("RUN_DB_UNIT_TESTS") == "true") {
+    NULL
   } else {
     if (is_test_that) {
       testthat::skip("Possible lack of database infrastructure")
