@@ -22,11 +22,6 @@ regtext: Skriv inn en tekst om registeret og/eller rapporten her.
 
 ---
 
-```{r, include=FALSE}
-options(tinytex.verbose = TRUE)
-```
-
-
 # Et kapittel
 Dette er et kapittel med datadrevet tekst og tabell.
 
