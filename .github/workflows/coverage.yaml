@@ -40,9 +40,7 @@ jobs:
       - uses: r-lib/actions/setup-tinytex@v2
       - name: Install extra LaTeX packages
         run: >
-          tlmgr update --self && tlmgr install 
-          babel-norsk 
-          caption 
+          tlmgr update --self && tlmgr install babel-norsk 
 
       - name: Set up MySQL
         run: |
