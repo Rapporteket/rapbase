@@ -66,30 +66,6 @@ jobs:
           intcalc 
           kvdefinekeys 
           kvsetkeys 
-          lastpage 
-          latex-amsmath-dev 
-          lato 
-          letltxmacro 
-          ltxcmds 
-          marginnote 
-          microtype 
-          oberdiek 
-          pdfescape 
-          pdflscape 
-          pdfpages 
-          ragged2e 
-          refcount 
-          rerunfilecheck 
-          sectsty 
-          stringenc 
-          subfig 
-          textpos 
-          titlesec 
-          ucs 
-          uniquecounter 
-          xcolor 
-          xkeyval 
-          zapfding
 
       - name: Set up MySQL
         run: |
