@@ -42,30 +42,14 @@ jobs:
         run: >
           tlmgr update --self && tlmgr install 
           babel-norsk 
-          beamer 
-          bigintcalc 
-          bitset 
           booktabs 
           caption 
           datetime 
           epstopdf-pkg 
-          eso-pic 
-          etexcmds 
-          etoolbox 
           fancyhdr 
           float 
-          fmtcount 
-          fontaxes 
-          framed 
           geometry 
-          gettitlestring 
-          grfext 
-          hycolor 
           hyperref 
-          hyphen-norwegian 
-          intcalc 
-          kvdefinekeys 
-          kvsetkeys 
 
       - name: Set up MySQL
         run: |
