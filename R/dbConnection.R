@@ -9,7 +9,7 @@
 #' if it is "raplog" it will use the MYSQL_DB_LOG environment variable. If
 #' none of these are set, it will use the name provided.
 #' @param dbType String providing type of data source, one of
-#'   "mysql" and "mssql". Defaults to "mysql". "mssql" is not supported
+#'   "mysql" and "sqlite". Defaults to "mysql". "mssql" is not supported
 #' anymore.
 #' @return A named list of con and drv representing the db connection handle and
 #'   driver, respectively.
@@ -33,6 +33,15 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
   } else if (dbType == "mssql") {
     stop("Use of MSSQL is no longer supported. Exiting")
+  } else if (dbType == "sqlite") {
+    conf <- getDbConfig(dbName, sqlite = TRUE)
+    drv <- RSQLite::SQLite()
+    con <- DBI::dbConnect(
+      drv,
+      dbname = conf$name
+    )
+  } else {
+    stop(paste0("Unsupported dbType ", dbType, ". Use 'mysql' or 'sqlite'."))
   }
 
   list(con = con, drv = drv)
@@ -56,17 +65,21 @@ rapCloseDbConnection <- function(con) {
 #' "autoreport" it will use the MYSQL_DB_AUTOREPORT environment variable, and
 #' if it is "raplog" it will use the MYSQL_DB_LOG environment variable. If
 #' none of these are set, it will use the name provided.
+#' @param sqlite A boolean indicating if the connection is to a SQLite database.
+#' If TRUE, the envicronment variables MYSQL_HOST, MYSQL_USER and MYSQL_PASSWORD
+#' are not needed.
 #'
 #' @return A list with name, user, password and host of the db connection.
 #'
 #' @keywords internal
 #'
-getDbConfig <- function(dbName = "data") {
-  if (
-    ("MYSQL_HOST" %in% names(Sys.getenv())) &&
-      ("MYSQL_USER" %in% names(Sys.getenv())) &&
-      ("MYSQL_PASSWORD" %in% names(Sys.getenv()))
-  ) {
+getDbConfig <- function(dbName = "data", sqlite = FALSE) {
+  if (sqlite || (
+    ("MYSQL_HOST" %in% names(Sys.getenv()))
+    && ("MYSQL_USER" %in% names(Sys.getenv()))
+    && ("MYSQL_PASSWORD" %in% names(Sys.getenv())
+    )
+  )) {
     conf <- data.frame(
       host = Sys.getenv("MYSQL_HOST"),
       user = Sys.getenv("MYSQL_USER"),

@@ -4,7 +4,7 @@
 \alias{getDbConfig}
 \title{Get database connection configuration}
 \usage{
-getDbConfig(dbName = "data")
+getDbConfig(dbName = "data", sqlite = FALSE)
 }
 \arguments{
 \item{dbName}{String providing the name of the database to connect to. If it
@@ -12,6 +12,10 @@ is "data" it will use the MYSQL_DB_DATA environment variable, if it is
 "autoreport" it will use the MYSQL_DB_AUTOREPORT environment variable, and
 if it is "raplog" it will use the MYSQL_DB_LOG environment variable. If
 none of these are set, it will use the name provided.}
+
+\item{sqlite}{A boolean indicating if the connection is to a SQLite database.
+If TRUE, the envicronment variables MYSQL_HOST, MYSQL_USER and MYSQL_PASSWORD
+are not needed.}
 }
 \value{
 A list with name, user, password and host of the db connection.
