@@ -51,12 +51,12 @@ jobs:
         if: runner.os != 'Windows'
         run: |
           if [[ ${{ runner.os }} == Linux ]]; then
-            echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=true" >> $GITHUB_ENV
+            echo "RUN_DB_UNIT_TESTS=true" >> $GITHUB_ENV
             echo "MYSQL_HOST=localhost" >> $GITHUB_ENV
             echo "MYSQL_USER=root" >> $GITHUB_ENV
             echo "MYSQL_PASSWORD=root" >> $GITHUB_ENV
           else
-            echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=false" >> $GITHUB_ENV
+            echo "RUN_DB_UNIT_TESTS=false" >> $GITHUB_ENV
           fi
 
       - name: Set up MySQL, ubuntu only
