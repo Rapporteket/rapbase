@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-24.04
     env:
       GITHUB_PAT: ${{ secrets.GH_TOKEN }}
-      GITHUB_ACTIONS_RUN_DB_UNIT_TESTS: true
+      RUN_DB_UNIT_TESTS: true
       MYSQL_HOST: localhost
       MYSQL_USER: root
       MYSQL_PASSWORD: root
