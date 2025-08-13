@@ -129,6 +129,14 @@ test_that(paste(
   )
 })
 
+test_that(paste(
+  "The use of unknown dbType return an appropriate",
+  "message"
+), {
+  expect_error(loadRegData(regName, query, dbType = "qwertysql"),
+               regexp = "Unsupported dbType qwertysql. Use 'mysql' or 'sqlite'."
+  )
+})
 
 withr::with_envvar(
   new = c(

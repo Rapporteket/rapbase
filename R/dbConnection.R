@@ -40,6 +40,8 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
       drv,
       dbname = conf$name
     )
+  } else {
+    stop(paste0("Unsupported dbType ", dbType, ". Use 'mysql' or 'sqlite'."))
   }
 
   list(con = con, drv = drv)
