@@ -227,7 +227,7 @@ autoReportServer <- function(
   id,
   registryName,
   type,
-  org = NULL,
+  org = shiny::reactiveVal(NULL),
   paramNames = shiny::reactiveVal(c("")),
   paramValues = shiny::reactiveVal(c("")),
   reports = NULL,
@@ -263,7 +263,8 @@ autoReportServer <- function(
         group = registryName,
         orgId = NULL,
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        filterorg = NULL
       ),
       report = names(reports)[1],
       org = unlist(orgs, use.names = FALSE)[1],
@@ -273,7 +274,7 @@ autoReportServer <- function(
 
     ## update tab whenever changes to user privileges (and on init)
     userEvent <- shiny::reactive(
-      list(user$name(), user$org(), user$role())
+      list(user$name(), user$org(), user$role(), org())
     )
     shiny::observeEvent(
       userEvent(),
@@ -284,7 +285,8 @@ autoReportServer <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        filterorg = org()
       ),
       ignoreNULL = FALSE
     )
@@ -341,7 +343,8 @@ autoReportServer <- function(
           group = registryName,
           orgId = user$org(),
           type = type,
-          mapOrgId = orgList2df(orgs)
+          mapOrgId = orgList2df(orgs),
+          filterorg = org()
         )
       autoReport$email <- vector()
     })
@@ -365,7 +368,8 @@ autoReportServer <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        filterorg = org()
       )
 
       if (rep$type == "subscription") {
@@ -389,7 +393,8 @@ autoReportServer <- function(
         group = registryName,
         orgId = user$org(),
         type = type,
-        mapOrgId = orgList2df(orgs)
+        mapOrgId = orgList2df(orgs),
+        filterorg = org()
       )
     })
 
