@@ -669,7 +669,7 @@ makeAutoReportTab <- function(
         as.Date(
           autoRep[i, ]$terminateDate
         ),
-        format = "%b %Y"
+        format = dateFormat
       ),
       "Neste" = nextDate,
       "Endre" = as.character(
