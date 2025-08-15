@@ -45,22 +45,22 @@
 #' @export
 
 createAutoReport <- function(
-  synopsis,
-  package,
-  type = "subscription",
-  fun,
-  paramNames,
-  paramValues,
-  owner,
-  ownerName = "",
-  email,
-  organization,
-  runDayOfYear,
-  startDate = as.character(Sys.Date()),
-  terminateDate = NULL,
-  interval = "",
-  intervalName = "",
-  dryRun = FALSE
+    synopsis,
+    package,
+    type = "subscription",
+    fun,
+    paramNames,
+    paramValues,
+    owner,
+    ownerName = "",
+    email,
+    organization,
+    runDayOfYear,
+    startDate = as.character(Sys.Date()),
+    terminateDate = NULL,
+    interval = "",
+    intervalName = "",
+    dryRun = FALSE
 ) {
 
   # When NULL, set expiry date based on context
@@ -247,9 +247,9 @@ writeAutoReportData <- function(config) {
 #' filterAutoRep(ar, "type", "B") # ar2
 #'
 filterAutoRep <- function(
-  data,
-  by,
-  pass
+    data,
+    by,
+    pass
 ) {
   stopifnot(by %in% c("package", "type", "owner", "organization"))
 
@@ -383,9 +383,10 @@ runAutoReport <- function(
   # nolint end
 
   # standard text for email body
+  standardEmailFileName <- "autoReportStandardEmailText.txt"
   stdTxt <- readr::read_file(
     system.file(
-      "autoReportStandardEmailText.txt",
+      standardEmailFileName,
       package = "rapbase"
     )
   )
@@ -414,8 +415,21 @@ runAutoReport <- function(
             text <- content
             attFile <- NULL
           } else {
-            text <- stdTxt
             attFile <- content
+            if (file.exists(system.file(
+              standardEmailFileName,
+              package = rep$package
+            ))) {
+              # read standard text from package
+              text <- readr::read_file(
+                system.file(
+                  standardEmailFileName,
+                  package = rep$package
+                )
+              )
+            } else {
+              text <- stdTxt
+            }
           }
           if (dryRun) {
             message(paste("No emails sent. Content is:", content))
@@ -524,12 +538,12 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
 #' @export
 
 findNextRunDate <- function(
-  runDayOfYear,
-  baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
-  startDate,
-  terminateDate,
-  interval = NULL,
-  returnFormat = "%A %e. %B %Y"
+    runDayOfYear,
+    baseDayNum = as.POSIXlt(Sys.Date())$yday + 1,
+    startDate,
+    terminateDate,
+    interval = NULL,
+    returnFormat = "%A %e. %B %Y"
 ) {
 
   if (Sys.Date() < startDate) {
@@ -615,14 +629,14 @@ findNextRunDate <- function(
 # nolint end
 
 makeAutoReportTab <- function(
-  session,
-  namespace = character(),
-  user = rapbase::getUserName(session),
-  group = rapbase::getUserGroups(session),
-  orgId = rapbase::getUserReshId(session),
-  type = "subscription",
-  mapOrgId = NULL,
-  includeReportId = FALSE
+    session,
+    namespace = character(),
+    user = rapbase::getUserName(session),
+    group = rapbase::getUserGroups(session),
+    orgId = rapbase::getUserReshId(session),
+    type = "subscription",
+    mapOrgId = NULL,
+    includeReportId = FALSE
 ) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
