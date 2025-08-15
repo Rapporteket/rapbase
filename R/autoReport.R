@@ -378,14 +378,15 @@ runAutoReport <- function(
     dplyr::summarise(
       email = list(unique(email)),
       .by = c(owner, ownerName, package, organization, type, fun,
-              params, startDate, terminateDate, interval, synopsis)
+        params, startDate, terminateDate, interval, synopsis)
     )
   # nolint end
 
   # standard text for email body
+  standardEmailFileName <- "autoReportStandardEmailText.txt"
   stdTxt <- readr::read_file(
     system.file(
-      "autoReportStandardEmailText.txt",
+      standardEmailFileName,
       package = "rapbase"
     )
   )
@@ -414,8 +415,21 @@ runAutoReport <- function(
             text <- content
             attFile <- NULL
           } else {
-            text <- stdTxt
             attFile <- content
+            if (file.exists(system.file(
+              standardEmailFileName,
+              package = rep$package
+            ))) {
+              # read standard text from package
+              text <- readr::read_file(
+                system.file(
+                  standardEmailFileName,
+                  package = rep$package
+                )
+              )
+            } else {
+              text <- stdTxt
+            }
           }
           if (dryRun) {
             message(paste("No emails sent. Content is:", content))
