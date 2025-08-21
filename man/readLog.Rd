@@ -11,8 +11,10 @@ readLog(type, name = "", app_id = NULL)
 one of \code{c("app", "report")}.}
 
 \item{name}{Character string with registry filter. Default value is an empty
-string that will return all log entries. If not empty its value must
-correspond to an existing registry (\emph{i.e.} R package) name.}
+string. WARNING: this is not used in the function, but is kept for
+compatibility with the old function signature. It is recommended to use
+\code{app_id} instead, which is the new parameter for filtering by
+application ID.}
 
 \item{app_id}{An identifier for a particular registry. Default value is NULL,
 in which case no action is taken. If value is provided, the log is filtered
