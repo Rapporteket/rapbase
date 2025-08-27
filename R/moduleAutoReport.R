@@ -217,7 +217,8 @@ autoReportInput <- function(id) {
     shiny::htmlOutput(shiny::NS(id, "editEmail")),
     shiny::htmlOutput(shiny::NS(id, "recipient")),
     shiny::tags$hr(),
-    shiny::uiOutput(shiny::NS(id, "makeAutoReport"))
+    shiny::uiOutput(shiny::NS(id, "makeAutoReport")),
+    shiny::uiOutput(shiny::NS(id, "runAutoreport"))
   )
 }
 
@@ -234,7 +235,8 @@ autoReportServer <- function(
   orgs = NULL,
   eligible = shiny::reactiveVal(TRUE),
   freq = "month",
-  user
+  user,
+  debug = FALSE
 ) {
   stopifnot(
     all(unlist(lapply(user, shiny::is.reactive), use.names = FALSE))
@@ -574,6 +576,50 @@ autoReportServer <- function(
         sourceFile = system.file("autoReportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
         params = list(registryName = registryName, type = type)
+      )
+    })
+
+    # Option to run all auto reports with a given date by clicking a button.
+    # This is only available if debug = TRUE
+    output$runAutoreport <- shiny::renderUI({
+      if (debug) {
+        shiny::tagList(
+          shiny::hr(),
+          shiny::actionButton(
+            inputId = shiny::NS(id, "run_autoreport"),
+            label = "Kjør autorapporter"
+          ),
+          shiny::dateInput(
+            inputId = shiny::NS(id, "rapportdato"),
+            label = "Kjør rapporter med dato:",
+            value = Sys.Date(),
+            min = Sys.Date(),
+            max = Sys.Date() + 366
+          ),
+          shiny::checkboxInput(
+            inputId = shiny::NS(id, "dryRun"),
+            label = "Send e-post",
+            value = FALSE
+          )
+        )
+      } else {
+        NULL
+      }
+    })
+    shiny::observeEvent(input$run_autoreport, {
+      # Run all auto reports with the given date
+      # when clicking the button
+      dato <- input$rapportdato
+      dryRun <- !(input$dryRun)
+      message("Running all auto reports for date ", dato,
+        " and registry ", registryName, ", ",
+        ifelse(dryRun, "WITHOUT", "WITH"),
+        " sending e-mails. This job was triggered by ", user$fullName()
+      )
+      rapbase::runAutoReport(
+        group = registryName,
+        dato = dato,
+        dryRun = dryRun
       )
     })
   })
