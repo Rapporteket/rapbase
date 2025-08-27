@@ -591,11 +591,11 @@ autoReportServer <- function(
           shiny::hr(),
           shiny::actionButton(
             inputId = shiny::NS(id, "run_autoreport"),
-            label = "Kjør autorapporter"
+            label = "Kj\u00F8r autorapporter"
           ),
           shiny::dateInput(
             inputId = shiny::NS(id, "rapportdato"),
-            label = "Kjør rapporter med dato:",
+            label = "Kj\u00F8r rapporter med dato:",
             value = Sys.Date(),
             min = Sys.Date(),
             max = Sys.Date() + 366
