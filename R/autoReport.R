@@ -394,6 +394,11 @@ runAutoReport <- function(
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
   for (i in seq_len(dim(reps)[1])) {
+    message(paste("Processing report", i, "of", dim(reps)[1]))
+    message(paste0("  synopsis:", reps$synopsis[i],
+                   ", package:", reps$package[i],
+                   ", type:", reps$type[i],
+                   ", function:", reps$fun[i]))
     tryCatch(
       {
         rep <- reps[i, ] %>% as.list()
