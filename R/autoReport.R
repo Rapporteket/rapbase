@@ -455,7 +455,7 @@ runAutoReport <- function(
                   email
                 )
               )
-              sendEmail(
+              rapbase::sendEmail(
                 conf = conf, to = email, subject = rep$synopsis,
                 text = text, attFile = attFile
               )

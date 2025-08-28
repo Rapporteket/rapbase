@@ -34,10 +34,7 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
   }
 
   sendmailR::sendmail(
-    from,
-    to,
-    subject,
-    body,
+    from, to, subject, body,
     control = list(
       smtpServer = conf$network$smtp$server,
       smtpPortSMTP = conf$network$smtp$port
