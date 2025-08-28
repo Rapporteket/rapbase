@@ -434,27 +434,32 @@ runAutoReport <- function(
           if (dryRun) {
             message(paste("No emails sent. Content is:", content))
           } else {
-            rapbase::autLogger(
-              user = rep$owner,
-              name = rep$ownerName,
-              registryName = rep$package,
-              reshId = rep$organization,
-              type = rep$type,
-              pkg = rep$package,
-              fun = rep$fun,
-              param = rep$params,
-              msg = paste(
-                "recipients:",
-                paste(
-                  rep$email,
-                  collapse = ", "
+            for (email in rep$email) {
+              message(paste(
+                "Sending email to:",
+                email,
+                "with content:",
+                content
+              ))
+              rapbase::autLogger(
+                user = rep$owner,
+                name = rep$ownerName,
+                registryName = rep$package,
+                reshId = rep$organization,
+                type = rep$type,
+                pkg = rep$package,
+                fun = rep$fun,
+                param = rep$params,
+                msg = paste(
+                  "recipient:",
+                  email
                 )
               )
-            )
-            rapbase::sendEmail(
-              conf = conf, to = rep$email, subject = rep$synopsis,
-              text = text, attFile = attFile
-            )
+              sendEmail(
+                conf = conf, to = email, subject = rep$synopsis,
+                text = text, attFile = attFile
+              )
+            }
           }
         }
       },
