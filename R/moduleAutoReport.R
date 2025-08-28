@@ -584,11 +584,18 @@ autoReportServer <- function(
     })
 
     # Option to run all auto reports with a given date by clicking a button.
-    # This is only available if debug = TRUE
+    # This is only available if debug = TRUE or when running in QA environment
     output$runAutoreport <- shiny::renderUI({
-      if (debug) {
+      if (debug || Sys.getenv("R_RAP_INSTANCE") %in% c("QAC", "DEV", "TEST")) {
         shiny::tagList(
           shiny::hr(),
+          shiny::h3("Kj\u00F8r alle aktuelle autorapporter"),
+          shiny::p(paste0(
+            "Denne funksjonen er kun for testing og utvikling. ",
+            "Den er kun synlig ",
+            ifelse(debug, "n\u00E5r debug = TRUE eller ", ""),
+            "n\u00E5r applikasjonen kj\u00F8res i QA."
+          )),
           shiny::actionButton(
             inputId = shiny::NS(id, "run_autoreport"),
             label = "Kj\u00F8r autorapporter"
