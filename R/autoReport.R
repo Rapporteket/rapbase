@@ -394,6 +394,10 @@ runAutoReport <- function(
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
   for (i in seq_len(dim(reps)[1])) {
+    message(paste0(
+      "Processing report ", i, " of ", dim(reps)[1],
+      " from package ", reps$package[i], ". Synopsis: ", reps$synopsis[i]
+    ))
     tryCatch(
       {
         rep <- reps[i, ] %>% as.list()
@@ -436,10 +440,8 @@ runAutoReport <- function(
           } else {
             for (email in rep$email) {
               message(paste(
-                "Sending email to:",
-                email,
-                "with content:",
-                content
+                "Report", i, "of", dim(reps)[1],
+                ". Sending email to:", email
               ))
               rapbase::autLogger(
                 user = rep$owner,
@@ -464,7 +466,7 @@ runAutoReport <- function(
         }
       },
       error = function(e) {
-        message(paste(
+        warning(paste(
           "Report could not be processed (moving on to the next):",
           e
         ))
