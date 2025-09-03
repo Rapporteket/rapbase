@@ -606,7 +606,7 @@ autoReportServer <- function(
             value = Sys.Date() + 1
           ),
           shiny::checkboxInput(
-            inputId = shiny::NS(id, "dryRun"),
+            inputId = shiny::NS(id, "sendEmails"),
             label = "Send e-post",
             value = FALSE
           )
@@ -619,12 +619,12 @@ autoReportServer <- function(
       # Run all auto reports with the given date
       # when clicking the button
       dato <- input$rapportdato
-      dryRun <- !(input$dryRun)
       message("Running all auto reports for date ", dato,
         " and registry ", registryName, ", ",
-        ifelse(input$dryRun, "WITH", "WITHOUT"),
+        ifelse(input$sendEmails, "WITH", "WITHOUT"),
         " sending e-mails. This job was triggered by ", user$fullName()
       )
+      dryRun <- !(input$sendEmails)
       rapbase::runAutoReport(
         group = registryName,
         dato = dato,
