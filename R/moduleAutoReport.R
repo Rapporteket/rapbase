@@ -631,6 +631,7 @@ autoReportServer <- function(
         dryRun = dryRun
       )
       message("Finished running all auto reports for date ", dato)
+      # reactivate button
       shiny::updateActionButton(
         inputId = "run_autoreport",
         disabled = FALSE
