@@ -38,7 +38,7 @@ autoReportServer(
   eligible = shiny::reactiveVal(TRUE),
   freq = "month",
   user,
-  debug = FALSE
+  runAutoReportButton = FALSE
 )
 
 autoReportServer2(...)
@@ -96,10 +96,10 @@ report GUI. Must be one of
 privileges corresponding to the return value of
 \code{\link{navbarWidgetServer}}.}
 
-\item{debug}{Logical defining if debug options should be made available in
-the GUI. Default is FALSE. If TRUE a button will be made available to
-trigger running all auto reports for a given date. This is mainly useful
-for testing purposes.}
+\item{runAutoReportButton}{Logical defining if runAutoReport button should
+be made available in the GUI. Default is FALSE. If TRUE, a button will be
+made available to trigger running all auto reports for a given date. This
+is mainly useful for testing purposes.}
 
 \item{...}{Arguments passed to autoReportServer function}
 }

@@ -393,6 +393,7 @@ runAutoReport <- function(
   # get sender from common config
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
+  message("runAutoReport: Starting processing of auto reports")
   for (i in seq_len(dim(reps)[1])) {
     message(paste0(
       "Processing report ", i, " of ", dim(reps)[1],
@@ -473,6 +474,7 @@ runAutoReport <- function(
       }
     )
   }
+  message("runAutoReport: Finished processing of auto reports")
 }
 
 #' Run bulletin auto reports

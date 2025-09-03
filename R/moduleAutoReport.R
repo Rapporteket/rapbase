@@ -63,10 +63,10 @@
 #' @param user List of shiny reactive values providing user metadata and
 #'   privileges corresponding to the return value of
 #'   \code{\link{navbarWidgetServer}}.
-#' @param debug Logical defining if debug options should be made available in
-#'   the GUI. Default is FALSE. If TRUE a button will be made available to
-#'   trigger running all auto reports for a given date. This is mainly useful
-#'   for testing purposes.
+#' @param runAutoReportButton Logical defining if runAutoReport button should
+#'   be made available in the GUI. Default is FALSE. If TRUE, a button will be
+#'   made available to trigger running all auto reports for a given date. This
+#'   is mainly useful for testing purposes.
 #'
 #' @return In general, shiny objects. In particular, \code{autoreportOrgServer}
 #' returns a list with names "name" and "value" with corresponding reactive
@@ -240,7 +240,7 @@ autoReportServer <- function(
   eligible = shiny::reactiveVal(TRUE),
   freq = "month",
   user,
-  debug = FALSE
+  runAutoReportButton = FALSE
 ) {
   stopifnot(
     all(unlist(lapply(user, shiny::is.reactive), use.names = FALSE))
@@ -584,24 +584,29 @@ autoReportServer <- function(
     })
 
     # Option to run all auto reports with a given date by clicking a button.
-    # This is only available if debug = TRUE
+    # This is only available if runAutoReportButton = TRUE
     output$runAutoreport <- shiny::renderUI({
-      if (debug) {
+      if (runAutoReportButton) {
         shiny::tagList(
           shiny::hr(),
+          shiny::h3("Kj\u00F8r alle aktuelle autorapporter"),
+          shiny::p(paste0(
+            "Denne funksjonen er kun for testing og utvikling, ",
+            "og vil lage alle rapporter for gitt dato."
+          )),
           shiny::actionButton(
             inputId = shiny::NS(id, "run_autoreport"),
-            label = "Kj\u00F8r autorapporter"
+            label = "Kj\u00F8r autorapporter",
+            icon = shiny::icon("play"),
+            onclick = "this.disabled=true;"
           ),
           shiny::dateInput(
             inputId = shiny::NS(id, "rapportdato"),
             label = "Kj\u00F8r rapporter med dato:",
-            value = Sys.Date(),
-            min = Sys.Date(),
-            max = Sys.Date() + 366
+            value = Sys.Date() + 1
           ),
           shiny::checkboxInput(
-            inputId = shiny::NS(id, "dryRun"),
+            inputId = shiny::NS(id, "sendEmails"),
             label = "Send e-post",
             value = FALSE
           )
@@ -614,16 +619,22 @@ autoReportServer <- function(
       # Run all auto reports with the given date
       # when clicking the button
       dato <- input$rapportdato
-      dryRun <- !(input$dryRun)
       message("Running all auto reports for date ", dato,
         " and registry ", registryName, ", ",
-        ifelse(dryRun, "WITHOUT", "WITH"),
+        ifelse(input$sendEmails, "WITH", "WITHOUT"),
         " sending e-mails. This job was triggered by ", user$fullName()
       )
+      dryRun <- !(input$sendEmails)
       rapbase::runAutoReport(
         group = registryName,
         dato = dato,
         dryRun = dryRun
+      )
+      message("Finished running all auto reports for date ", dato)
+      # reactivate button
+      shiny::updateActionButton(
+        inputId = "run_autoreport",
+        disabled = FALSE
       )
     })
   })
