@@ -4,11 +4,9 @@
 \alias{howWeDealWithPersonalData}
 \title{Render text in pop-up}
 \usage{
-howWeDealWithPersonalData(session, callerPkg = NULL)
+howWeDealWithPersonalData(callerPkg = NULL)
 }
 \arguments{
-\item{session}{A shiny session object used to personalize the text}
-
 \item{callerPkg}{Character string naming the package that makes a call to
 this function in case version number of the caller package should be added
 to the returned (html) info text. Default to NULL in which case no version

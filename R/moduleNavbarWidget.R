@@ -85,13 +85,13 @@ navbarWidgetInput <- function(id,
 navbarWidgetServer <- function(id, orgName,
                                caller = environmentName(rlang::caller_env())) {
   shiny::moduleServer(id, function(input, output, session) {
-    output$name <- shiny::renderText(rapbase::getUserFullName(session))
+    output$name <- shiny::renderText(rapbase::getUserFullName())
     output$affiliation <- shiny::renderText(
-      paste(orgName, getUserRole(session), sep = ", ")
+      paste(orgName, getUserRole(), sep = ", ")
     )
 
     # User info in widget
-    userInfo <- howWeDealWithPersonalData(session, callerPkg = caller)
+    userInfo <- howWeDealWithPersonalData(callerPkg = caller)
     shiny::observeEvent(input$userInfo, {
       shinyalert::shinyalert(
         "Dette vet Rapporteket om deg:",
@@ -145,7 +145,7 @@ navbarWidgetServer2 <- function(
     )
 
     # User info in widget
-    userInfo <- howWeDealWithPersonalData(session, callerPkg = caller)
+    userInfo <- howWeDealWithPersonalData(callerPkg = caller)
     shiny::observeEvent(input$userInfo, {
       shinyalert::shinyalert(
         "Dette vet Rapporteket om deg:",
@@ -348,7 +348,6 @@ appNavbarUserWidget <- function(user = "Undefined person",
 #'
 #' Render text on how Rapporteket deals with personal data
 #'
-#' @param session A shiny session object used to personalize the text
 #' @param callerPkg Character string naming the package that makes a call to
 #' this function in case version number of the caller package should be added
 #' to the returned (html) info text. Default to NULL in which case no version
@@ -357,7 +356,7 @@ appNavbarUserWidget <- function(user = "Undefined person",
 #' @return fragment html info text
 #' @export
 
-howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
+howWeDealWithPersonalData <- function(callerPkg = NULL) {
   pkg <- list()
   pkg$name <- as.vector(utils::installed.packages()[, 1])
   pkg$ver <- as.vector(utils::installed.packages()[, 3])
@@ -389,7 +388,6 @@ howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
 
   renderRmd(
     sourceFile = sourceFile, outputType = "html_fragment", params = list(
-      session = session,
       pkgInfo = pkgInfo
     )
   )
