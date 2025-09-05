@@ -1,11 +1,5 @@
 context("User info")
 
-test_that("Function handles general errors", {
-  expect_error(userInfo(entity = "user"))
-  expect_error(userInfo(entity = "username"))
-})
-
-
 
 withr::with_envvar(
   new = c(

@@ -36,6 +36,8 @@ which case all privileges for \code{group} are returned.}
  \item{UnitId}{unit ids}
  \item{orgname}{corresponding organization names}
  }}
+
+\item{...}{To keep the same interface as before. Not used.}
 }
 \value{
 Invisibly a list of user metadata and privileges:

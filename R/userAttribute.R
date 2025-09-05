@@ -129,6 +129,7 @@ userAttribute <- function(unit = NULL,
 #' shiny session object calls to these functions is made without any arguments.
 #' If redefining contexts is needed, please use \code{\link{userInfo}} instead.
 #'
+#' @param ... To keep the same interface as before. Not used.
 #' @return String with user attribute
 #' @name userAttribute
 #' @aliases getUserEmail getUserFullName getUserGroups getUserName getUserPhone
@@ -139,6 +140,7 @@ userAttribute <- function(unit = NULL,
 #' try(getUserEmail())
 #' }
 NULL
+
 
 #' @rdname userAttribute
 #' @export
