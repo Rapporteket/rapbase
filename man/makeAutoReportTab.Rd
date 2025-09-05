@@ -5,35 +5,32 @@
 \title{Make table of automated reports}
 \usage{
 makeAutoReportTab(
-  session,
   namespace = character(),
-  user = rapbase::getUserName(session),
-  group = rapbase::getUserGroups(session),
-  orgId = rapbase::getUserReshId(session),
+  user = rapbase::getUserName(),
+  group = rapbase::getUserGroups(),
+  orgId = rapbase::getUserReshId(),
   type = "subscription",
   mapOrgId = NULL,
   includeReportId = FALSE
 )
 }
 \arguments{
-\item{session}{A shiny session object}
-
 \item{namespace}{String naming namespace. Defaults to \code{character()} in
 which case no namespace will be created. When this function is used by
 shiny modules namespace must be provided.}
 
 \item{user}{Character string providing the username. Introduced as a new
 argument when running apps inside containers. Default value is set to
-\code{rapbase::getUserName(session)} to allow backward compatibility.}
+\code{rapbase::getUserName()} to allow backward compatibility.}
 
 \item{group}{Character string defining the registry, normally corresponding
 to the R package name and the value stemming from the SHINYPROXY_GROUPS
 environment variable. Introduced as a new argument when running apps inside
-containers. Default value is set to \code{rapbase::getUserGroups(session)}
+containers. Default value is set to \code{rapbase::getUserGroups()}
 to allow backward compatibility.}
 
 \item{orgId}{Character string or integer defining the organization (id) for
-\code{user}. Default value is set to \code{rapbase::getUserReshId(session)}
+\code{user}. Default value is set to \code{rapbase::getUserReshId()}
 to allow backward compatibility.}
 
 \item{type}{Character string defining the type of auto reports to tabulate.
@@ -54,8 +51,7 @@ Matrix providing a table to be rendered in a shiny app
 }
 \description{
 Make a table to be rendered in a shiny app providing automated reports
-from a given user or registry as obtained from the shiny session
-object provided or environmental variables when run inside an app container.
+from a given user or registry as obtained from the environmental variables.
 }
 \details{
 Each table record (line) represents a uniquely defined automated report.
