@@ -450,7 +450,9 @@ autoReportServer <- function(
         # set default to following day
         value = Sys.Date() + 1,
         min = Sys.Date() + 1,
-        max = seq.Date(Sys.Date(), length.out = 2, by = "1 years")[2] - 1
+        max = seq.Date(Sys.Date(), length.out = 2, by = "1 years")[2] - 1,
+        weekstart = 1,
+        language = "no"
       )
     })
 
@@ -598,7 +600,9 @@ autoReportServer <- function(
           shiny::dateInput(
             inputId = shiny::NS(id, "rapportdato"),
             label = "Kj\u00F8r rapporter med dato:",
-            value = Sys.Date() + 1
+            value = Sys.Date() + 1,
+            weekstart = 1,
+            language = "no"
           ),
           shiny::checkboxInput(
             inputId = shiny::NS(id, "sendEmails"),
