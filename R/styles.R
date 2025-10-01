@@ -8,10 +8,17 @@
 title <- function(regTitle = "rapbase") {
   shiny::div(
     shiny::a(
-        style = "vertical-align: middle; float: left; width: 26px; height: 26px; fill: #18bc9c;",
-        shiny::includeHTML(
-      system.file("www/logo.svg", package = "rapbase")
-    )),
+      style = paste(
+        "vertical-align: middle;",
+        "float: left;",
+        "width: 26px;",
+        "height: 26px;",
+        " fill: #18bc9c;"
+      ),
+      shiny::includeHTML(
+        system.file("www/logo.svg", package = "rapbase")
+      )
+    ),
     regTitle
   )
 }
