@@ -17,7 +17,7 @@ normally be used via its helper functions (see below)."><meta property="og:image
 
     <a class="navbar-brand me-2" href="../index.html">rapbase</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">2.4.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -38,7 +38,7 @@ normally be used via its helper functions (see below)."><meta property="og:image
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.svg" class="logo" alt=""><h1>Provide user attributes based on environment context</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/v2.2.0/R/userAttribute.R" class="external-link"><code>R/userAttribute.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Rapporteket/rapbase/blob/main/R/userAttribute.R" class="external-link"><code>R/userAttribute.R</code></a></small>
       <div class="d-none name"><code>userInfo.Rd</code></div>
     </div>
 
@@ -53,14 +53,7 @@ normally be used via its helper functions (see below).</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">userInfo</span><span class="op">(</span></span>
-<span>  <span class="va">entity</span>,</span>
-<span>  shinySession <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  devContexts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"DEV"</span><span class="op">)</span>,</span>
-<span>  testContexts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"TEST"</span><span class="op">)</span>,</span>
-<span>  prodContexts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"QA"</span>, <span class="st">"QAC"</span>, <span class="st">"PRODUCTION"</span>, <span class="st">"PRODUCTIONC"</span><span class="op">)</span>,</span>
-<span>  group <span class="op">=</span> <span class="cn">NULL</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">userInfo</span><span class="op">(</span><span class="va">entity</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,49 +63,6 @@ normally be used via its helper functions (see below).</p>
 <dl><dt id="arg-entity">entity<a class="anchor" aria-label="anchor" href="#arg-entity"></a></dt>
 <dd><p>String defining the element to return. Currently, one of
 'user', groups', 'resh_id', 'role', 'email', 'full_name' or 'phone'.</p></dd>
-
-
-<dt id="arg-shinysession">shinySession<a class="anchor" aria-label="anchor" href="#arg-shinysession"></a></dt>
-<dd><p>Shiny session object (list, NULL by default). Must be
-provided when the source of user attributes is either the shiny app url or
-an external authentication provider. By default this will apply to the
-'TEST', 'QA' and 'PRODUCTION' contexts in which case the shiny session
-object must be provided.</p></dd>
-
-
-<dt id="arg-devcontexts">devContexts<a class="anchor" aria-label="anchor" href="#arg-devcontexts"></a></dt>
-<dd><p>A character vector providing unique instances to be
-regarded as a development context. In this context user attributes will be
-read from configuration as provided by 'rapbaseConfig.yml'. The instances
-provided cannot overlap instances provided in any other contexts. By
-default set to <code>c("DEV")</code>.</p></dd>
-
-
-<dt id="arg-testcontexts">testContexts<a class="anchor" aria-label="anchor" href="#arg-testcontexts"></a></dt>
-<dd><p>A character vector providing unique instances to be
-regarded as a test context. In this context user attributes will be read
-from the url call to a shiny application. Hence, for this context the
-corresponding shiny session object must also be provided. The instances
-provided cannot overlap instances provided in any other contexts. By
-default set to <code>c("TEST")</code>.</p></dd>
-
-
-<dt id="arg-prodcontexts">prodContexts<a class="anchor" aria-label="anchor" href="#arg-prodcontexts"></a></dt>
-<dd><p>A character vector providing unique instances to be
-regarded as a production context. In this context user attributes will be
-read from the shiny session object (on deployment in shiny-server) or, from
-environmental variables (on standalone container deployment). Hence, for
-this context the corresponding shiny session object must also be provided.
-Instances provided cannot overlap instances in any other contexts. By
-default set to <code>c("QA", "QAC", "PRODUCTION", "PRODUCTIONC")</code>.
-Duplication as seen by the "C" suffix will be needed as long as apps in
-question are to be run on both shiny-server and as standalone containers.</p></dd>
-
-
-<dt id="arg-group">group<a class="anchor" aria-label="anchor" href="#arg-group"></a></dt>
-<dd><p>Character string providing the name of the app R package name.
-The term "group" is used to relate to the environmental variable
-SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.</p></dd>
 
 </dl></div>
     <div class="section level2">
