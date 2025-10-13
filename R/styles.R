@@ -25,14 +25,14 @@ title <- function(regTitle = "rapbase") {
 
 #' Theme of the app.
 #'
-#' This is a wrapper around shinythemes::shinytheme
+#' This is a wrapper around bslib::bs_theme
 #'
-#' @param theme Name of the theme. See ?shinythemes::shinytheme
+#' @param theme Name of the theme. See bslib::bootswatch_themes()
 #' for available themes.
 #'
 #' @return a shinytheme object
 #' @export
 #'
-theme <- function(theme = "flatly") {
-  shinythemes::shinytheme(theme)
+theme <- function(theme = "flatly", version = 3) {
+  bslib::bs_theme(bootswatch = theme, version = version)
 }
