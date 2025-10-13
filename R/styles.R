@@ -29,8 +29,9 @@ title <- function(regTitle = "rapbase") {
 #'
 #' @param theme Name of the theme. See bslib::bootswatch_themes()
 #' for available themes.
+#' @param version Version of bootstrap to use (3, 4 or 5).
 #'
-#' @return a shinytheme object
+#' @return a Bootstrap theme object
 #' @export
 #'
 theme <- function(theme = "flatly", version = 3) {
