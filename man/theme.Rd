@@ -2,16 +2,17 @@
 % Please edit documentation in R/styles.R
 \name{theme}
 \alias{theme}
-\title{Theme of the app. Default is "flatly"}
+\title{Theme of the app.}
 \usage{
 theme(theme = "flatly")
 }
 \arguments{
-\item{theme}{}
+\item{theme}{Name of the theme. See ?shinythemes::shinytheme
+for available themes.}
 }
 \value{
 a shinytheme object
 }
 \description{
-Theme of the app. Default is "flatly"
+This is a wrapper around shinythemes::shinytheme
 }

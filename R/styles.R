@@ -23,9 +23,12 @@ title <- function(regTitle = "rapbase") {
   )
 }
 
-#' Theme of the app. Default is "flatly"
+#' Theme of the app.
 #'
-#' @param theme
+#' This is a wrapper around shinythemes::shinytheme
+#'
+#' @param theme Name of the theme. See ?shinythemes::shinytheme
+#' for available themes.
 #'
 #' @return a shinytheme object
 #' @export
