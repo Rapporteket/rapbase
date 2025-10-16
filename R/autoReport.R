@@ -582,7 +582,8 @@ findNextRunDate <- function(
 #' Make table of automated reports
 #'
 #' Make a table to be rendered in a shiny app providing automated reports
-#' from a given user or registry as obtained from the environmental variables.
+#' from a given user or registry as obtained from the shiny session
+#' object provided or environmental variables when run inside an app container.
 #'
 #' Each table record (line) represents a uniquely defined automated report.
 #' For each line two shiny action buttons are provided to allow
@@ -605,19 +606,20 @@ findNextRunDate <- function(
 #' \href{https://github.com/Rapporteket/rapRegTemplate/blob/main/inst/shinyApps/app1/server.R}{example shiny server function in rapRegTemplate}
 #' on how this function may be implemented.
 #'
+#' @param session A shiny session object
 #' @param namespace String naming namespace. Defaults to \code{character()} in
 #'   which case no namespace will be created. When this function is used by
 #'   shiny modules namespace must be provided.
 #' @param user Character string providing the username. Introduced as a new
 #'   argument when running apps inside containers. Default value is set to
-#'   \code{rapbase::getUserName()} to allow backward compatibility.
+#'   \code{rapbase::getUserName(session)} to allow backward compatibility.
 #' @param group Character string defining the registry, normally corresponding
 #'   to the R package name and the value stemming from the SHINYPROXY_GROUPS
 #'   environment variable. Introduced as a new argument when running apps inside
-#'   containers. Default value is set to \code{rapbase::getUserGroups()}
+#'   containers. Default value is set to \code{rapbase::getUserGroups(session)}
 #'   to allow backward compatibility.
 #' @param orgId Character string or integer defining the organization (id) for
-#'   \code{user}. Default value is set to \code{rapbase::getUserReshId()}
+#'   \code{user}. Default value is set to \code{rapbase::getUserReshId(session)}
 #'   to allow backward compatibility.
 #' @param type Character string defining the type of auto reports to tabulate.
 #'   Must be one of \code{"subscription"}, \code{"dispatchment"} or
@@ -636,10 +638,11 @@ findNextRunDate <- function(
 # nolint end
 
 makeAutoReportTab <- function(
+  session,
   namespace = character(),
-  user = rapbase::getUserName(),
-  group = rapbase::getUserGroups(),
-  orgId = rapbase::getUserReshId(),
+  user = rapbase::getUserName(session),
+  group = rapbase::getUserGroups(session),
+  orgId = rapbase::getUserReshId(session),
   type = "subscription",
   mapOrgId = NULL,
   includeReportId = FALSE

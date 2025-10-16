@@ -4,10 +4,15 @@
 \alias{howWeDealWithPersonalData}
 \title{Render text in pop-up}
 \usage{
-howWeDealWithPersonalData(...)
+howWeDealWithPersonalData(session, callerPkg = NULL)
 }
 \arguments{
-\item{...}{Further arguments, currently not used}
+\item{session}{A shiny session object used to personalize the text}
+
+\item{callerPkg}{Character string naming the package that makes a call to
+this function in case version number of the caller package should be added
+to the returned (html) info text. Default to NULL in which case no version
+number for the caller will be added to the info text}
 }
 \value{
 fragment html info text
