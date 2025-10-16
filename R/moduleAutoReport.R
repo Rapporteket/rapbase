@@ -263,6 +263,7 @@ autoReportServer <- function(
   shiny::moduleServer(id, function(input, output, session) {
     autoReport <- shiny::reactiveValues(
       tab = makeAutoReportTab(
+        session = session,
         namespace = id,
         user = NULL,
         group = registryName,
@@ -283,6 +284,7 @@ autoReportServer <- function(
     shiny::observeEvent(
       userEvent(),
       autoReport$tab <- makeAutoReportTab(
+        session = session,
         namespace = id,
         user = user$name(),
         group = registryName,
@@ -339,6 +341,7 @@ autoReportServer <- function(
       )
       autoReport$tab <-
         makeAutoReportTab(
+          session,
           namespace = id,
           user = user$name(),
           group = registryName,
@@ -362,6 +365,7 @@ autoReportServer <- function(
       autoReport$email <- rep$email
       deleteAutoReport(repId)
       autoReport$tab <- makeAutoReportTab(
+        session,
         namespace = id,
         user = user$name(),
         group = registryName,
@@ -385,6 +389,7 @@ autoReportServer <- function(
       repId <- strsplit(input$del_button, "__")[[1]][2]
       deleteAutoReport(repId)
       autoReport$tab <- makeAutoReportTab(
+        session,
         namespace = id,
         user = user$name(),
         group = registryName,

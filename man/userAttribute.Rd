@@ -13,19 +13,19 @@
 \usage{
 userAttribute(unit = NULL, map_orgname = NULL)
 
-getUserEmail(...)
+getUserEmail(shinySession = NULL, group = NULL)
 
-getUserFullName(...)
+getUserFullName(shinySession = NULL, group = NULL)
 
-getUserGroups(...)
+getUserGroups(shinySession = NULL, group = NULL)
 
-getUserName(...)
+getUserName(shinySession = NULL, group = NULL)
 
-getUserPhone(...)
+getUserPhone(shinySession = NULL, group = NULL)
 
-getUserReshId(...)
+getUserReshId(shinySession = NULL, group = NULL)
 
-getUserRole(...)
+getUserRole(shinySession = NULL, group = NULL)
 }
 \arguments{
 \item{unit}{Integer providing the look-up unit id. Default value is NULL in
@@ -37,7 +37,13 @@ which case all privileges for \code{group} are returned.}
  \item{orgname}{corresponding organization names}
  }}
 
-\item{...}{To keep the same interface as before. Not used.}
+\item{shinySession}{A shiny session object. Default value is NULL}
+
+\item{group}{Character string providing the name of the app R package name.
+The term "group" is used to relate to the environmental variable
+SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.
+Default value is NULL but should always be set when shiny app is run as a
+shinyproxy container.}
 }
 \value{
 Invisibly a list of user metadata and privileges:
@@ -66,6 +72,8 @@ If redefining contexts is needed, please use \code{\link{userInfo}} instead.
 }
 \examples{
 \donttest{
+# Requires a valid shiny session object
 try(getUserEmail())
+try(getUserEmail(shinySessionObject))
 }
 }
