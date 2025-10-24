@@ -17,7 +17,14 @@ test_that("title function returns a div with the correct structure", {
 test_that("theme function returns a valid shinytheme object", {
 
     # Check if the theme name is correctly set
-    expect_equal(theme(), "shinythemes/css/flatly.min.css")
+    expect_true(grepl("flatly", as.character(theme())))
+
+    expect_false(grepl("flatly", as.character(theme(theme = "darkly"))))
+
+    expect_true(grepl("`bootstrap-version` = \"3\"", as.character(theme())))
+    expect_false(
+      grepl("`bootstrap-version` = \"3\"", as.character(theme(version = 5)))
+    )
 
     # Check if rubbish theme name returns an error
     expect_error(theme("qwerty"))
