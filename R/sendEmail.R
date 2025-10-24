@@ -36,7 +36,12 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
   message(paste0(
     "Sending email to: ",
     paste(to, collapse = ", "),
-    " with subject: ", subject
+    " with subject: ", subject,
+    ifelse(
+      is.null(attFile),
+      "",
+      paste0(" and attachment: ", attFile)
+    ),
   ))
   sendmailR::sendmail(
     from, to, subject, body,
