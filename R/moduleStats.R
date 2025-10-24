@@ -167,6 +167,8 @@ statsServer2 <- function(id,
                          registryName,
                          app_id = NULL,
                          eligible = shiny::reactiveVal(TRUE)) {
+  # statsServer2 is identical to statsServer,
+  # except that *eligible* is a reactive value.
   shiny::moduleServer(id, function(input, output, session) {
     log <- shiny::reactive({
       readLog(input$type, registryName, app_id) %>%
