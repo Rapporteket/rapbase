@@ -121,10 +121,10 @@ navbarWidgetServer2 <- function(
 
     # Initial privileges and affiliation will be first in list
     rv <- shiny::reactiveValues(
-      name = user$name[1],
-      fullName = user$fullName[1],
-      phone = user$phone[1],
-      email = user$email[1],
+      name = user$name,
+      fullName = user$fullName,
+      phone = user$phone,
+      email = user$email,
       group = user$group[1],
       unit = user$unit[1],
       org = user$org[1],
@@ -193,10 +193,6 @@ navbarWidgetServer2 <- function(
 
     shiny::observeEvent(input$unit, {
       choices <- paste0(user$orgName, " (", user$org, ") - ", user$role)
-      rv$name <- user$name[choices == input$unit]
-      rv$fullName <- user$fullName[choices == input$unit]
-      rv$phone <- user$phone[choices == input$unit]
-      rv$email <- user$email[choices == input$unit]
       rv$group <- user$group[choices == input$unit]
       rv$unit <- user$unit[choices == input$unit]
       rv$org <- user$org[choices == input$unit]
