@@ -2,6 +2,8 @@
 title: "How we deal with personal data"
 pkgInfo: '`r params$pkgInfo`'
 params:
+  session: list()
+  caller: ""
   pkgInfo: missing
 ---
 
