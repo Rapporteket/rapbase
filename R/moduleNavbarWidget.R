@@ -18,14 +18,7 @@
 #' @param selectOrganization Logical providing option for selecting among
 #'   available organizations and roles.
 #' @param orgName Character string naming the organization
-#' @param caller Character string naming the environment this function was
-#'   called from. Default value is
-#'   \code{environmentName(topenv(parent.frame()))}. The value is used to
-#'   display the current version of the R package representing the registry at
-#'   Rapporteket. If this module is called from exported functions in the
-#'   registry R package the default value should be applied. If the module is
-#'   called from outside the registry environment \code{caller} must be set to
-#'   the actual name of the R package.
+#' @param ... Further arguments, currently not used
 #'
 #' @return Shiny objects, mostly. \code{navbarWidgetServer2()} invisibly returns
 #'   a list of reactive values representing user metadata and privileges. See
@@ -49,7 +42,7 @@
 #'
 #' ## server function
 #' server <- function(input, output, session) {
-#'   navbarWidgetServer("testWidget", orgName = "Test org", caller = "Rpkg")
+#'   navbarWidgetServer("testWidget", orgName = "Test org")
 #' }
 #'
 #' ## run the app in an interactive session and a Rapporteket like environment
@@ -83,16 +76,15 @@ navbarWidgetInput <- function(id,
 
 #' @rdname navbarWidget
 #' @export
-navbarWidgetServer <- function(id, orgName,
-                               caller = environmentName(rlang::caller_env())) {
+navbarWidgetServer <- function(id, orgName, ...) {
   shiny::moduleServer(id, function(input, output, session) {
-    output$name <- shiny::renderText(rapbase::getUserFullName(session))
+    output$name <- shiny::renderText(rapbase::getUserFullName())
     output$affiliation <- shiny::renderText(
-      paste(orgName, getUserRole(session), sep = ", ")
+      paste(orgName, getUserRole(), sep = ", ")
     )
 
     # User info in widget
-    userInfo <- howWeDealWithPersonalData(session, callerPkg = caller)
+    userInfo <- howWeDealWithPersonalData()
     shiny::observeEvent(input$userInfo, {
       shinyalert::shinyalert(
         "Dette vet Rapporteket om deg:",
@@ -119,7 +111,7 @@ navbarWidgetServer2 <- function(
   id,
   orgName,
   map_orgname = NULL,
-  caller = environmentName(topenv(parent.frame()))
+  ...
 ) {
 
   shiny::moduleServer(id, function(input, output, session) {
@@ -129,10 +121,10 @@ navbarWidgetServer2 <- function(
 
     # Initial privileges and affiliation will be first in list
     rv <- shiny::reactiveValues(
-      name = user$name[1],
-      fullName = user$fullName[1],
-      phone = user$phone[1],
-      email = user$email[1],
+      name = user$name,
+      fullName = user$fullName,
+      phone = user$phone,
+      email = user$email,
       group = user$group[1],
       unit = user$unit[1],
       org = user$org[1],
@@ -146,7 +138,7 @@ navbarWidgetServer2 <- function(
     )
 
     # User info in widget
-    userInfo <- howWeDealWithPersonalData(session, callerPkg = caller)
+    userInfo <- howWeDealWithPersonalData()
     shiny::observeEvent(input$userInfo, {
       shinyalert::shinyalert(
         "Dette vet Rapporteket om deg:",
@@ -201,10 +193,6 @@ navbarWidgetServer2 <- function(
 
     shiny::observeEvent(input$unit, {
       choices <- paste0(user$orgName, " (", user$org, ") - ", user$role)
-      rv$name <- user$name[choices == input$unit]
-      rv$fullName <- user$fullName[choices == input$unit]
-      rv$phone <- user$phone[choices == input$unit]
-      rv$email <- user$email[choices == input$unit]
       rv$group <- user$group[choices == input$unit]
       rv$unit <- user$unit[choices == input$unit]
       rv$org <- user$org[choices == input$unit]
@@ -349,16 +337,13 @@ appNavbarUserWidget <- function(user = "Undefined person",
 #'
 #' Render text on how Rapporteket deals with personal data
 #'
-#' @param session A shiny session object used to personalize the text
-#' @param callerPkg Character string naming the package that makes a call to
-#' this function in case version number of the caller package should be added
-#' to the returned (html) info text. Default to NULL in which case no version
-#' number for the caller will be added to the info text
+#' @param ... Further arguments, currently not used
 #'
 #' @return fragment html info text
 #' @export
 
-howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
+howWeDealWithPersonalData <- function(...) {
+  callerPkg <- utils::packageName()
   pkg <- list()
   pkg$name <- as.vector(utils::installed.packages()[, 1])
   pkg$ver <- as.vector(utils::installed.packages()[, 3])
@@ -390,7 +375,6 @@ howWeDealWithPersonalData <- function(session, callerPkg = NULL) {
 
   renderRmd(
     sourceFile = sourceFile, outputType = "html_fragment", params = list(
-      session = session,
       pkgInfo = pkgInfo
     )
   )
