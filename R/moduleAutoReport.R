@@ -63,6 +63,10 @@
 #' @param user List of shiny reactive values providing user metadata and
 #'   privileges corresponding to the return value of
 #'   \code{\link{navbarWidgetServer}}.
+#' @param runAutoReportButton Logical defining if runAutoReport button should
+#'   be made available in the GUI. Default is FALSE. If TRUE, a button will be
+#'   made available to trigger running all auto reports for a given date. This
+#'   is mainly useful for testing purposes.
 #'
 #' @return In general, shiny objects. In particular, \code{autoreportOrgServer}
 #' returns a list with names "name" and "value" with corresponding reactive
@@ -217,7 +221,8 @@ autoReportInput <- function(id) {
     shiny::htmlOutput(shiny::NS(id, "editEmail")),
     shiny::htmlOutput(shiny::NS(id, "recipient")),
     shiny::tags$hr(),
-    shiny::uiOutput(shiny::NS(id, "makeAutoReport"))
+    shiny::uiOutput(shiny::NS(id, "makeAutoReport")),
+    shiny::uiOutput(shiny::NS(id, "runAutoreport"))
   )
 }
 
@@ -234,7 +239,8 @@ autoReportServer <- function(
   orgs = NULL,
   eligible = shiny::reactiveVal(TRUE),
   freq = "month",
-  user
+  user,
+  runAutoReportButton = FALSE
 ) {
   stopifnot(
     all(unlist(lapply(user, shiny::is.reactive), use.names = FALSE))
@@ -449,7 +455,9 @@ autoReportServer <- function(
         # set default to following day
         value = Sys.Date() + 1,
         min = Sys.Date() + 1,
-        max = seq.Date(Sys.Date(), length.out = 2, by = "1 years")[2] - 1
+        max = seq.Date(Sys.Date(), length.out = 2, by = "1 years")[2] - 1,
+        weekstart = 1,
+        language = "no"
       )
     })
 
@@ -534,7 +542,7 @@ autoReportServer <- function(
       server = FALSE, escape = FALSE, selection = "none",
       rownames = FALSE,
       options = list(
-        dom = "tp", ordering = FALSE,
+        pageLength = 40,
         language = list(
           lengthMenu = "Vis _MENU_ rader per side",
           search = "S\u00f8k:",
@@ -574,6 +582,63 @@ autoReportServer <- function(
         sourceFile = system.file("autoReportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
         params = list(registryName = registryName, type = type)
+      )
+    })
+
+    # Option to run all auto reports with a given date by clicking a button.
+    # This is only available if runAutoReportButton = TRUE
+    output$runAutoreport <- shiny::renderUI({
+      if (runAutoReportButton) {
+        shiny::tagList(
+          shiny::hr(),
+          shiny::h3("Kj\u00F8r alle aktuelle autorapporter"),
+          shiny::p(paste0(
+            "Denne funksjonen er kun for testing og utvikling, ",
+            "og vil lage alle rapporter for gitt dato."
+          )),
+          shiny::actionButton(
+            inputId = shiny::NS(id, "run_autoreport"),
+            label = "Kj\u00F8r autorapporter",
+            icon = shiny::icon("play"),
+            onclick = "this.disabled=true;"
+          ),
+          shiny::dateInput(
+            inputId = shiny::NS(id, "rapportdato"),
+            label = "Kj\u00F8r rapporter med dato:",
+            value = Sys.Date() + 1,
+            weekstart = 1,
+            language = "no"
+          ),
+          shiny::checkboxInput(
+            inputId = shiny::NS(id, "sendEmails"),
+            label = "Send e-post",
+            value = FALSE
+          )
+        )
+      } else {
+        NULL
+      }
+    })
+    shiny::observeEvent(input$run_autoreport, {
+      # Run all auto reports with the given date
+      # when clicking the button
+      dato <- input$rapportdato
+      message("Running all auto reports for date ", dato,
+        " and registry ", registryName, ", ",
+        ifelse(input$sendEmails, "WITH", "WITHOUT"),
+        " sending e-mails. This job was triggered by ", user$fullName()
+      )
+      dryRun <- !(input$sendEmails)
+      rapbase::runAutoReport(
+        group = registryName,
+        dato = dato,
+        dryRun = dryRun
+      )
+      message("Finished running all auto reports for date ", dato)
+      # reactivate button
+      shiny::updateActionButton(
+        inputId = "run_autoreport",
+        disabled = FALSE
       )
     })
   })

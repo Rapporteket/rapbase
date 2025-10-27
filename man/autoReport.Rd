@@ -37,7 +37,8 @@ autoReportServer(
   orgs = NULL,
   eligible = shiny::reactiveVal(TRUE),
   freq = "month",
-  user
+  user,
+  runAutoReportButton = FALSE
 )
 
 autoReportServer2(...)
@@ -94,6 +95,11 @@ report GUI. Must be one of
 \item{user}{List of shiny reactive values providing user metadata and
 privileges corresponding to the return value of
 \code{\link{navbarWidgetServer}}.}
+
+\item{runAutoReportButton}{Logical defining if runAutoReport button should
+be made available in the GUI. Default is FALSE. If TRUE, a button will be
+made available to trigger running all auto reports for a given date. This
+is mainly useful for testing purposes.}
 
 \item{...}{Arguments passed to autoReportServer function}
 }

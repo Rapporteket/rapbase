@@ -67,6 +67,7 @@ navbarWidgetInput <- function(id,
   shiny::addResourcePath("rap", system.file("www", package = "rapbase"))
 
   shiny::tagList(
+    shiny::includeCSS(system.file("www/style.css", package = "rapbase")),
     appNavbarUserWidget(
       user = shiny::uiOutput(shiny::NS(id, "name")),
       organization = shiny::uiOutput(shiny::NS(id, "affiliation")),

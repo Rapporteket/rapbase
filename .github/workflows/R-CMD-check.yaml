@@ -34,28 +34,31 @@ jobs:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GH_TOKEN }}
+      R_COMPILE_AND_INSTALL_PACKAGES: never
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
+          use-public-rspm: true
 
       - uses: r-lib/actions/setup-pandoc@v2
 
       - uses: r-lib/actions/setup-tinytex@v2
-
+      - name: Install extra LaTeX package
+        run: tlmgr update --self && tlmgr install babel-norsk
       - name: Db unit tests in ubuntu/linux only
         if: runner.os != 'Windows'
         run: |
           if [[ ${{ runner.os }} == Linux ]]; then
-            echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=true" >> $GITHUB_ENV
+            echo "RUN_DB_UNIT_TESTS=true" >> $GITHUB_ENV
             echo "MYSQL_HOST=localhost" >> $GITHUB_ENV
             echo "MYSQL_USER=root" >> $GITHUB_ENV
             echo "MYSQL_PASSWORD=root" >> $GITHUB_ENV
           else
-            echo "GITHUB_ACTIONS_RUN_DB_UNIT_TESTS=false" >> $GITHUB_ENV
+            echo "RUN_DB_UNIT_TESTS=false" >> $GITHUB_ENV
           fi
 
       - name: Set up MySQL, ubuntu only

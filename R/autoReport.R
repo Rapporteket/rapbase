@@ -378,21 +378,27 @@ runAutoReport <- function(
     dplyr::summarise(
       email = list(unique(email)),
       .by = c(owner, ownerName, package, organization, type, fun,
-              params, startDate, terminateDate, interval, synopsis)
+        params, startDate, terminateDate, interval, synopsis)
     )
   # nolint end
 
   # standard text for email body
+  standardEmailFileName <- "autoReportStandardEmailText.txt"
   stdTxt <- readr::read_file(
     system.file(
-      "autoReportStandardEmailText.txt",
+      standardEmailFileName,
       package = "rapbase"
     )
   )
   # get sender from common config
   conf <- rapbase::getConfig("rapbaseConfig.yml")
 
+  message("runAutoReport: Starting processing of auto reports")
   for (i in seq_len(dim(reps)[1])) {
+    message(paste0(
+      "Processing report ", i, " of ", dim(reps)[1],
+      " from package ", reps$package[i], ". Synopsis: ", reps$synopsis[i]
+    ))
     tryCatch(
       {
         rep <- reps[i, ] %>% as.list()
@@ -414,44 +420,61 @@ runAutoReport <- function(
             text <- content
             attFile <- NULL
           } else {
-            text <- stdTxt
             attFile <- content
+            if (file.exists(system.file(
+              standardEmailFileName,
+              package = rep$package
+            ))) {
+              # read standard text from package
+              text <- readr::read_file(
+                system.file(
+                  standardEmailFileName,
+                  package = rep$package
+                )
+              )
+            } else {
+              text <- stdTxt
+            }
           }
           if (dryRun) {
             message(paste("No emails sent. Content is:", content))
           } else {
-            rapbase::autLogger(
-              user = rep$owner,
-              name = rep$ownerName,
-              registryName = rep$package,
-              reshId = rep$organization,
-              type = rep$type,
-              pkg = rep$package,
-              fun = rep$fun,
-              param = rep$params,
-              msg = paste(
-                "recipients:",
-                paste(
-                  rep$email,
-                  collapse = ", "
+            for (email in rep$email) {
+              message(paste(
+                "Report", i, "of", dim(reps)[1],
+                ". Sending email to:", email
+              ))
+              rapbase::autLogger(
+                user = rep$owner,
+                name = rep$ownerName,
+                registryName = rep$package,
+                reshId = rep$organization,
+                type = rep$type,
+                pkg = rep$package,
+                fun = rep$fun,
+                param = rep$params,
+                msg = paste(
+                  "recipient:",
+                  email
                 )
               )
-            )
-            rapbase::sendEmail(
-              conf = conf, to = rep$email, subject = rep$synopsis,
-              text = text, attFile = attFile
-            )
+              rapbase::sendEmail(
+                conf = conf, to = email, subject = rep$synopsis,
+                text = text, attFile = attFile
+              )
+            }
           }
         }
       },
       error = function(e) {
-        message(paste(
+        warning(paste(
           "Report could not be processed (moving on to the next):",
           e
         ))
       }
     )
   }
+  message("runAutoReport: Finished processing of auto reports")
 }
 
 #' Run bulletin auto reports
@@ -669,7 +692,7 @@ makeAutoReportTab <- function(
         as.Date(
           autoRep[i, ]$terminateDate
         ),
-        format = "%b %Y"
+        format = dateFormat
       ),
       "Neste" = nextDate,
       "Endre" = as.character(
