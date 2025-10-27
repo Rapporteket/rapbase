@@ -293,14 +293,13 @@ dbStagingProcess <- function(key, query, params = list(), statement = FALSE) {
 #' @rdname stagingDataHelper
 dbStagingCreate <- function() {
   dbStagingKey <- Sys.getenv("MYSQL_DB_STAGING")
-  con <- rapOpenDbConnection(dbName = "staging")$con
+  createDb(dbStagingKey)
+  con <- rapOpenDbConnection(dbName = dbStagingKey)$con
   fc <- file(system.file("createStagingTab.sql", package = "rapbase"), "r")
   t <- readLines(fc)
   close(fc)
   sql <- paste0(t, collapse = "\n")
   queries <- c(
-    paste0("CREATE DATABASE IF NOT EXISTS ", dbStagingKey, ";"),
-    paste0("USE ", dbStagingKey, ";"),
     strsplit(sql, ";")[[1]]
   )
   DBI::dbExecute(con, queries)
