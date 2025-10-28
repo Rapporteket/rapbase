@@ -26,25 +26,23 @@ createDb <- function(dbName, dbType = "mysql", force = FALSE) {
     dbType <- Sys.getenv("db_type")
   }
   if (dbType == "mysql") {
-    drv <- RMariaDB::MariaDB()
-    dbConnect <- DBI::dbConnect(
-      drv,
+    con <- DBI::dbConnect(
+      RMariaDB::MariaDB(),
       host = Sys.getenv("MYSQL_HOST"),
       user = Sys.getenv("MYSQL_USER"),
       password = Sys.getenv("MYSQL_PASSWORD"),
       bigint = "integer"
     )
+    if (force) {
+      DBI::dbExecute(con, paste0("DROP DATABASE IF EXISTS ", dbName, ";"))
+    }
+    DBI::dbExecute(con, paste0("CREATE DATABASE IF NOT EXISTS ", dbName, ";"))
+    invisible(DBI::dbDisconnect(con))
   } else if (dbType == "sqlite") {
-    drv <- RSQLite::SQLite()
-    dbConnect <- DBI::dbConnect(
-      drv
-    )
+    # will create a file named dbName in the working directory
+    con <- DBI::dbConnect(RSQLite::SQLite(), dbName)
   } else {
     stop(paste0("Unsupported dbType ", dbType, ". Use 'mysql' or 'sqlite'."))
   }
-  if (force) {
-    DBI::dbExecute(dbConnect$con, paste0("DROP DATABASE IF EXISTS ", dbName, ";"))
-  }
-  DBI::dbExecute(dbConnect$con, paste0("CREATE DATABASE IF NOT EXISTS ", dbName, ";"))
-  invisible(DBI::dbDisconnect(dbConnect$con))
+  invisible(DBI::dbDisconnect(con))
 }
