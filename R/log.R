@@ -291,7 +291,7 @@ createLogDbTabs <- function() {
 
   con <- rapOpenDbConnection(conf$r$raplog$key)$con
   for (i in seq_len(length(queries))) {
-    RMariaDB::dbExecute(con, queries[i])
+    DBI::dbExecute(con, queries[i])
   }
   rapbase::rapCloseDbConnection(con)
   con <- NULL

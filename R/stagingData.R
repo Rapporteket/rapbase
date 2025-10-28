@@ -242,7 +242,7 @@ dbStagingPrereq <- function(key) {
 
   con <- dbStagingConnection(key, init = TRUE)
   query <- paste0("SHOW DATABASES LIKE '", conf$name, "';")
-  df <- RMariaDB::dbGetQuery(con, query)
+  df <- DBI::dbGetQuery(con, query)
   # close and remove db connection
   con <- dbStagingConnection(con = con)
   if (length(df$Database) > 0) {
@@ -278,12 +278,12 @@ dbStagingProcess <- function(key, query, params = list(), statement = FALSE) {
 
   con <- dbStagingConnection(key)
   if (statement) {
-    df <- RMariaDB::dbExecute(con, query, params)
+    df <- DBI::dbExecute(con, query, params)
   } else {
-    rs <- RMariaDB::dbSendQuery(con, query)
-    RMariaDB::dbBind(rs, params)
-    df <- RMariaDB::dbFetch(rs)
-    RMariaDB::dbClearResult(rs)
+    rs <- DBI::dbSendQuery(con, query)
+    DBI::dbBind(rs, params)
+    df <- DBI::dbFetch(rs)
+    DBI::dbClearResult(rs)
   }
   con <- dbStagingConnection(con = con)
 
