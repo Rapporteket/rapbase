@@ -31,7 +31,7 @@ createAutoReportTab <- function(nameAutoReportDb) {
 
   con <- rapOpenDbConnection(nameAutoReportDb)[["con"]]
   for (i in seq_len(length(queries))) {
-    RMariaDB::dbExecute(con, queries[i])
+    DBI::dbExecute(con, queries[i])
   }
   rapbase::rapCloseDbConnection(con)
   con <- NULL
@@ -476,14 +476,14 @@ withr::with_envvar(
 
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
-  con <- RMariaDB::dbConnect(
+  con <- DBI::dbConnect(
     RMariaDB::MariaDB(),
     host = Sys.getenv("MYSQL_HOST"),
     user = Sys.getenv("MYSQL_USER"),
     password = Sys.getenv("MYSQL_PASSWORD"),
     bigint = "integer"
   )
-  RMariaDB::dbExecute(con, paste("DROP DATABASE", nameAutoReportDb))
+  DBI::dbExecute(con, paste("DROP DATABASE", nameAutoReportDb))
   rapbase::rapCloseDbConnection(con)
 }
 
