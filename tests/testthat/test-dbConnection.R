@@ -53,9 +53,9 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
   expect_output(str(l), "List of 2")
   expect_is(l[[1]], "MariaDBConnection")
   expect_is(l[[2]], "MariaDBDriver")
-  expect_true(RMariaDB::dbIsValid(l$con))
+  expect_true(DBI::dbIsValid(l$con))
   rapCloseDbConnection(l$con)
-  expect_false(RMariaDB::dbIsValid(l$con))
+  expect_false(DBI::dbIsValid(l$con))
   l <- NULL
 })
 
