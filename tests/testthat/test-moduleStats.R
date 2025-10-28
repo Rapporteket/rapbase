@@ -31,7 +31,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
   create_log_db(dbLogKey)
   # Add log table to db
   con <- connect_db(dbname = dbLogKey)
-  RMariaDB::dbWriteTable(
+  DBI::dbWriteTable(
     conn = con,
     name = "applog",
     value = rapbase::appLog, append = TRUE, header = TRUE, row.names = FALSE

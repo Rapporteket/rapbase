@@ -20,16 +20,16 @@ query_db <- function(query, ...) {
   if (is.null(check_db(is_test_that = FALSE))) {
     con <- connect_db(...)
     for (q in query) {
-      RMariaDB::dbExecute(con, q)
+      DBI::dbExecute(con, q)
     }
-    RMariaDB::dbDisconnect(con)
+    DBI::dbDisconnect(con)
     con <- NULL
   }
 }
 
 # Connect to database server
 connect_db <- function(...) {
-  con <- RMariaDB::dbConnect(
+  con <- DBI::dbConnect(
     RMariaDB::MariaDB(),
     host = Sys.getenv("MYSQL_HOST"),
     user = Sys.getenv("MYSQL_USER"),
