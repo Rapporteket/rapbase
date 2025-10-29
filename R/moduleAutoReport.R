@@ -72,12 +72,11 @@
 #' returns a list with names "name" and "value" with corresponding reactive
 #' values for the selected organization name and id. This may be used when
 #' parameter values of auto report functions needs to be altered at application
-#' run time. \code{orgList2df} returns a data frame with columns "name" and
-#' "id".
+#' run time.
 #' @name autoReport
 #' @aliases autoReportUI autoReportOrgInput autoReportOrgServer
 #'   autoReportFormatInput autoReportFormatSercer autoReportInput
-#'   autoReportServer autoReportServer2 orgList2df
+#'   autoReportServer autoReportServer2
 #' @examples
 #' ## make a list for report metadata
 #' reports <- list(
@@ -651,7 +650,6 @@ autoReportServer2 <- function(...) {
   autoReportServer(...)
 }
 
-#' @rdname autoReport
 #' @keywords internal
 orgList2df <- function(orgs) {
   data.frame(

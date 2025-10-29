@@ -10,7 +10,6 @@
 \alias{autoReportInput}
 \alias{autoReportServer}
 \alias{autoReportServer2}
-\alias{orgList2df}
 \alias{autoReportFormatServer}
 \title{Shiny modules and helper functions for registry auto reports}
 \usage{
@@ -42,8 +41,6 @@ autoReportServer(
 )
 
 autoReportServer2(...)
-
-orgList2df(orgs)
 }
 \arguments{
 \item{id}{Character string providing the shiny module id.}
@@ -108,8 +105,7 @@ In general, shiny objects. In particular, \code{autoreportOrgServer}
 returns a list with names "name" and "value" with corresponding reactive
 values for the selected organization name and id. This may be used when
 parameter values of auto report functions needs to be altered at application
-run time. \code{orgList2df} returns a data frame with columns "name" and
-"id".
+run time.
 }
 \description{
 These shiny modules may be used to set up auto reporting from registries at
@@ -195,4 +191,3 @@ if (interactive()) {
   shiny::shinyApp(ui, server)
 }
 }
-\keyword{internal}
