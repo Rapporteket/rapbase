@@ -195,3 +195,4 @@ if (interactive()) {
   shiny::shinyApp(ui, server)
 }
 }
+\keyword{internal}

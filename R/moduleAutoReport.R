@@ -652,7 +652,7 @@ autoReportServer2 <- function(...) {
 }
 
 #' @rdname autoReport
-#' @export
+#' @keywords internal
 orgList2df <- function(orgs) {
   data.frame(
     name = names(orgs),
