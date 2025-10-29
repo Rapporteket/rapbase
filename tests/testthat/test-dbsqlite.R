@@ -26,18 +26,3 @@ test_that("Some data can be read from a sqlite db file with loadRegData", {
   )
   expect_equal(someData$gear,3)
 })
-
-withr::with_envvar(
-  new = c(
-    "db_type" = "sqlite"
-  ),
-  code = {
-    test_that("dbType can be given as an environment variable", {
-      someData <- loadRegData(
-        registryName = "data/db.sqlite",
-        "SELECT gear FROM mtcars WHERE disp = 360 AND hp = 175"
-      )
-      expect_equal(someData$gear,3)
-    })
-  }
-)
