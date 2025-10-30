@@ -23,7 +23,7 @@ is set to \code{Sys.Date()}}
 \item{group}{Character string defining the registry, normally corresponding
 to the R package name and the value stemming from the SHINYPROXY_GROUPS
 environment variable. Introduced as a new argument when running apps inside
-containers. Default value is set to \code{rapbase::getUserGroups(session)}
+containers. Default value is set to \code{rapbase::getUserGroups()}
 to allow backward compatibility.}
 
 \item{type}{Character vector defining the type of reports to be processed.
