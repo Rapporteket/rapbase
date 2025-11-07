@@ -51,52 +51,60 @@ if (is.null(check_db(is_test_that = FALSE))) {
 
 regName <- "rapbase"
 
-test_that("an existing file name is provided", {
-  check_db()
-  f <- exportDb(regName, compress = TRUE, session = session)
-  expect_true(file.exists(f))
-})
+with_envvar(
+  new = c(
+    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LU\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
+    "FALK_APP_ID" = "80"
+  ),
+  code = {
+
+    test_that("an existing file name is provided", {
+      check_db()
+      f <- exportDb(regName, compress = TRUE, session = session)
+      expect_true(file.exists(f))
+    })
 
 
-# The remaining test the corresponding shiny modules
-test_that("export UC input returns a shiny tag list", {
-  expect_true("shiny.tag.list" %in% class(exportUCInput("id")))
-})
+    # The remaining test the corresponding shiny modules
+    test_that("export UC input returns a shiny tag list", {
+      expect_true("shiny.tag.list" %in% class(exportUCInput("id")))
+    })
 
-# To recreate the stored responses delete the 'gh_api_response' directory
-# recursively and re-run these tests
+    # To recreate the stored responses delete the 'gh_api_response' directory
+    # recursively and re-run these tests
 
-with_mock_dir("gh_api_response", {
-  test_that("module server provides sensible output", {
-    check_db()
-    shiny::testServer(exportUCServer, args = list(registryName = "rapbase"), {
-      expect_equal(class(output$exportPidUI), "list")
-      session$setInputs(exportPid = "areedv")
-      expect_equal("character", class(pubkey()))
-      session$setInputs(exportKey = pubkey())
-      expect_equal(class(output$exportKeyUI), "list")
-      session$setInputs(exportCompress = FALSE)
-      expect_true(length(encFile()) == 1)
-      session$setInputs(exportDownload = 1)
-      expect_true(basename(output$exportDownload) == basename(encFile()))
+    with_mock_dir("gh_api_response", {
+      test_that("module server provides sensible output", {
+        check_db()
+        shiny::testServer(exportUCServer, args = list(registryName = "rapbase"), {
+          expect_equal(class(output$exportPidUI), "list")
+          session$setInputs(exportPid = "areedv")
+          expect_equal("character", class(pubkey()))
+          session$setInputs(exportKey = pubkey())
+          expect_equal(class(output$exportKeyUI), "list")
+          session$setInputs(exportCompress = FALSE)
+          expect_true(length(encFile()) == 1)
+          session$setInputs(exportDownload = 1)
+          expect_true(basename(output$exportDownload) == basename(encFile()))
+        })
+      })
+
+      test_that("download is prevented when module is not eligible", {
+        check_db()
+        shiny::testServer(
+          exportUCServer,
+          args = list(registryName = regName, eligible = FALSE),
+          {
+            session$setInputs(exportPid = "areedv")
+            session$setInputs(exportKey = pubkey())
+            session$setInputs(exportCompress = TRUE)
+            session$setInputs(exportEncrypt = 1)
+            expect_false(exists("output$exportDownload"))
+          }
+        )
+      })
     })
   })
-
-  test_that("download is prevented when module is not eligible", {
-    check_db()
-    shiny::testServer(
-      exportUCServer,
-      args = list(registryName = regName, eligible = FALSE),
-      {
-        session$setInputs(exportPid = "areedv")
-        session$setInputs(exportKey = pubkey())
-        session$setInputs(exportCompress = TRUE)
-        session$setInputs(exportEncrypt = 1)
-        expect_false(exists("output$exportDownload"))
-      }
-    )
-  })
-})
 
 test_that("guide test app returns an app object", {
   expect_equal(class(exportUCApp()), "shiny.appobj")
