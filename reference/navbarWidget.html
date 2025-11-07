@@ -46,14 +46,9 @@ number of code lines for each registry.</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">navbarWidgetInput</span><span class="op">(</span><span class="va">id</span>, addUserInfo <span class="op">=</span> <span class="cn">TRUE</span>, selectOrganization <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">navbarWidgetServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">orgName</span>, caller <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environmentName</a></span><span class="op">(</span><span class="fu">rlang</span><span class="fu">::</span><span class="fu"><a href="https://rlang.r-lib.org/reference/stack.html" class="external-link">caller_env</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">navbarWidgetServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">orgName</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">navbarWidgetServer2</span><span class="op">(</span></span>
-<span>  <span class="va">id</span>,</span>
-<span>  <span class="va">orgName</span>,</span>
-<span>  map_orgname <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  caller <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/environment.html" class="external-link">environmentName</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-topenv.html" class="external-link">topenv</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sys.parent.html" class="external-link">parent.frame</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">navbarWidgetServer2</span><span class="op">(</span><span class="va">id</span>, <span class="va">orgName</span>, map_orgname <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">navbarWidgetApp</span><span class="op">(</span>orgName <span class="op">=</span> <span class="st">"Org Name"</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -79,15 +74,8 @@ available organizations and roles.</p></dd>
 <dd><p>Character string naming the organization</p></dd>
 
 
-<dt id="arg-caller">caller<a class="anchor" aria-label="anchor" href="#arg-caller"></a></dt>
-<dd><p>Character string naming the environment this function was
-called from. Default value is
-<code>environmentName(topenv(parent.frame()))</code>. The value is used to
-display the current version of the R package representing the registry at
-Rapporteket. If this module is called from exported functions in the
-registry R package the default value should be applied. If the module is
-called from outside the registry environment <code>caller</code> must be set to
-the actual name of the R package.</p></dd>
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>Further arguments, currently not used</p></dd>
 
 
 <dt id="arg-map-orgname">map_orgname<a class="anchor" aria-label="anchor" href="#arg-map-orgname"></a></dt>
@@ -136,7 +124,7 @@ list object (of reactive user attributes) returned by this function.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## server function</span></span></span>
 <span class="r-in"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="fu">navbarWidgetServer</span><span class="op">(</span><span class="st">"testWidget"</span>, orgName <span class="op">=</span> <span class="st">"Test org"</span>, caller <span class="op">=</span> <span class="st">"Rpkg"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">navbarWidgetServer</span><span class="op">(</span><span class="st">"testWidget"</span>, orgName <span class="op">=</span> <span class="st">"Test org"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## run the app in an interactive session and a Rapporteket like environment</span></span></span>
