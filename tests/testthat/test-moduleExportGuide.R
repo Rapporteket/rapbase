@@ -3,7 +3,7 @@ test_that("guide UI returns a shiny tag object", {
 })
 
 test_that("guide module server provides output", {
-  shiny::testServer(exportGuideServer, args = list(registryName = "test"), {
+  shiny::testServer(exportGuideServer, args = list(dbName = "test"), {
     expect_equal(class(output$exportGuide), "list")
   })
 })
