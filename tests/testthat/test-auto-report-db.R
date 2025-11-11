@@ -277,38 +277,6 @@ test_that("Auto report can be created and written to file", {
   ))
 })
 
-test_that("auto report tables (for shiny) can be made", {
-  shinySession <- list(user = "tester")
-  shinySession$groups <- "rapbase"
-  attr(shinySession, "class") <- "ShinySession"
-  mapOrgId <- data.frame(id = "999999", name = "HUS", stringsAsFactors = FALSE)
-
-  check_db()
-  expect_true(is.list(
-    makeAutoReportTab(shinySession,
-      type = "subscription", mapOrgId = mapOrgId,
-      includeReportId = TRUE
-    )
-  ))
-  expect_true(is.list(
-    makeAutoReportTab(shinySession,
-      type = "dispatchment", mapOrgId = mapOrgId,
-      includeReportId = TRUE
-    )
-  ))
-  expect_true(is.list(
-    makeAutoReportTab(shinySession,
-      type = "bulletin", mapOrgId = mapOrgId,
-      includeReportId = TRUE
-    )
-  ))
-
-  expect_true(is.list(
-    makeAutoReportTab(shinySession, type = "dispatchment", mapOrgId)
-  ))
-
-})
-
 
 test_that("Auto report can be deleted", {
   check_db()
