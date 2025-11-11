@@ -12,28 +12,29 @@
 \usage{
 exportUCInput(id)
 
-exportUCServer(id, registryName, repoName = registryName, eligible = TRUE)
+exportUCServer(id, dbName, teamName = dbName)
 
 exportUCServer2(
   id,
-  registryName,
-  repoName = registryName,
+  dbName,
+  teamName = dbName,
   eligible = shiny::reactiveVal(TRUE)
 )
 
-exportUCApp(registryName = "rapbase")
+exportUCApp(dbName = "rapbase")
 
 selectListPubkey(pubkey)
 
-exportDb(registryName, compress = FALSE, session)
+exportDb(dbName, compress = FALSE, session)
 }
 \arguments{
 \item{id}{Character string module ID}
 
-\item{registryName}{Character string registry name key}
+\item{dbName}{Character string database name. If this is `data`, then the
+database name is taken from the environment variable `MYSQL_DB_DATA`.}
 
-\item{repoName}{Character string defining the github repository name of the
-registry. Default value is \code{registryName}.}
+\item{teamName}{Character string defining the github team name containing
+members allowed to export the database. Default value is \code{dbName}.}
 
 \item{eligible}{Logical defining if the module should be allowed to work at
 full capacity. This might be useful when access to module products should be
@@ -69,7 +70,7 @@ ui <- shiny::fluidPage(
 
 ## server function
 server <- function(input, output, session) {
-  exportUCServer("test", registryName = "rapbase")
+  exportUCServer("test", dbName = "rapbase")
 }
 
 ## run the shiny app in an interactive environment
