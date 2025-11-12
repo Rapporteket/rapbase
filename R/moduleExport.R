@@ -145,7 +145,7 @@ exportUCServer <- function(id, dbName, teamName = dbName) {
 
 #' @rdname export
 #' @export
-exportUCServer2 <- function(id, dbName, teamName = dbName,
+exportUCServer2 <- function(id, dbName, teamName,
                             eligible = shiny::reactiveVal(TRUE)) {
   shiny::moduleServer(id, function(input, output, session) {
 
