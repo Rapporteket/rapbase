@@ -479,8 +479,7 @@ runAutoReport <- function(
 
 #' Run bulletin auto reports
 #'
-#' This is a wrapper for \code{runAutoReport()} to issue bulletins. Purpose is
-#' to ease simplify fire-in-the-hole at Rapporteket
+#' This is a wrapper for \code{runAutoReport()} to issue bulletins.
 #'
 #' @return  Whatever \code{runAutoReport()} might provide
 #' @export
