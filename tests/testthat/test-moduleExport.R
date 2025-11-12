@@ -90,7 +90,7 @@ with_envvar(
         check_db()
         shiny::testServer(
           exportUCServer,
-          args = list(dbName = regName, eligible = FALSE),
+          args = list(dbName = "rapbase", eligible = FALSE),
           {
             session$setInputs(exportPid = "areedv")
             session$setInputs(exportKey = pubkey())
