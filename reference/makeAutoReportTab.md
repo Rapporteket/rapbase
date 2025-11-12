@@ -1,0 +1,95 @@
+# Make table of automated reports
+
+Make a table to be rendered in a shiny app providing automated reports
+from a given user or registry as obtained from the environmental
+variables.
+
+## Usage
+
+``` r
+makeAutoReportTab(
+  namespace = character(),
+  user = rapbase::getUserName(),
+  group = rapbase::getUserGroups(),
+  orgId = rapbase::getUserReshId(),
+  type = "subscription",
+  mapOrgId = NULL,
+  includeReportId = FALSE
+)
+```
+
+## Arguments
+
+- namespace:
+
+  String naming namespace. Defaults to
+  [`character()`](https://rdrr.io/r/base/character.html) in which case
+  no namespace will be created. When this function is used by shiny
+  modules namespace must be provided.
+
+- user:
+
+  Character string providing the username. Introduced as a new argument
+  when running apps inside containers. Default value is set to
+  [`rapbase::getUserName()`](userAttribute.md) to allow backward
+  compatibility.
+
+- group:
+
+  Character string defining the registry, normally corresponding to the
+  R package name and the value stemming from the SHINYPROXY_GROUPS
+  environment variable. Introduced as a new argument when running apps
+  inside containers. Default value is set to
+  [`rapbase::getUserGroups()`](userAttribute.md) to allow backward
+  compatibility.
+
+- orgId:
+
+  Character string or integer defining the organization (id) for `user`.
+  Default value is set to [`rapbase::getUserReshId()`](userAttribute.md)
+  to allow backward compatibility.
+
+- type:
+
+  Character string defining the type of auto reports to tabulate. Must
+  be one of `"subscription"`, `"dispatchment"` or `"bulletin"`. Default
+  value set to `"subscription"`.
+
+- mapOrgId:
+
+  Data frame containing the two columns 'name' and 'id' corresponding to
+  unique name and id of organizations. Default is NULL in which case the
+  ids provided in auto report data will be used. In case mapOrgId is not
+  NULL but no id match is found the id found in the auto report data
+  will also be used
+
+- includeReportId:
+
+  Logical if the unique report id should be added as the last column in
+  the table. FALSE by default.
+
+## Value
+
+Matrix providing a table to be rendered in a shiny app
+
+## Details
+
+Each table record (line) represents a uniquely defined automated report.
+For each line two shiny action buttons are provided to allow for editing
+and deleting of each entry. For applications implementing this table
+observing events on these action buttons may be used to allow users to
+manage automated reports by GUI. The action buttons for editing and
+deleting are provided with the static input ids *edit_button* and
+*del_button* and upon clicking the *button* part of their ids will
+change to the unique id of the report. Hence, a GUI call for editing a
+report can be caught by `shiny::observeEvent("edit_button")` and within
+this event the report id is obtained by collecting the string after the
+double underscore, *e.g.* `strsplit(input$edit_button, "__")[[1]][2]`.
+
+Optionally, report id may be provided as the last column in the table to
+allow further development for registry specific purposes. Regardless,
+this column should normally be hidden in the GUI.
+
+Take a look at the [example shiny server function in
+rapRegTemplate](https://github.com/Rapporteket/rapRegTemplate/blob/main/inst/shinyApps/app1/server.R)
+on how this function may be implemented.
