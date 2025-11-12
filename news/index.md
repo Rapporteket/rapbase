@@ -1,5 +1,18 @@
 # Changelog
 
+## rapbase 3.0.0
+
+### Breaking change
+
+Changed the variable names in `exportUCServer` and `exportGuideServer`
+from `registryName` and `repoName` to `dbName` and `teamName`.
+
+## rapbase 2.0.0
+
+### Breaking changes
+
+Rapbase for NHN (Kubernetes, Shinyproxy and FALK).
+
 ## rapbase 1.24.3
 
 ### Main change
