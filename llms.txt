@@ -235,8 +235,6 @@ Helper functions to be used by shiny apps
 Various tools
 
 - [`halloRapporteket()`](halloRapporteket.md) : Plain testing tool
-- [`fireInTheHole()`](fireInTheHole.md) : Kick off functions at
-  Rapporteket
 - [`sendEmail()`](sendEmail.md) : Send email from Rapporteket
 - [`howWeDealWithPersonalData()`](howWeDealWithPersonalData.md) : Render
   text in pop-up

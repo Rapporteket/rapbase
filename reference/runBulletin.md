@@ -1,7 +1,7 @@
 # Run bulletin auto reports
 
 This is a wrapper for [`runAutoReport()`](runAutoReport.md) to issue
-bulletins. Purpose is to ease simplify fire-in-the-hole at Rapporteket
+bulletins.
 
 ## Usage
 
