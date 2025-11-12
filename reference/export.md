@@ -9,20 +9,15 @@ helper functions
 ``` r
 exportUCInput(id)
 
-exportUCServer(id, registryName, repoName = registryName, eligible = TRUE)
+exportUCServer(id, dbName, teamName = dbName, eligible = TRUE)
 
-exportUCServer2(
-  id,
-  registryName,
-  repoName = registryName,
-  eligible = shiny::reactiveVal(TRUE)
-)
+exportUCServer2(id, dbName, teamName, eligible = shiny::reactiveVal(TRUE))
 
-exportUCApp(registryName = "rapbase")
+exportUCApp(dbName = "rapbase")
 
 selectListPubkey(pubkey)
 
-exportDb(registryName, compress = FALSE, session)
+exportDb(dbName, compress = FALSE, session)
 ```
 
 ## Arguments
@@ -31,14 +26,15 @@ exportDb(registryName, compress = FALSE, session)
 
   Character string module ID
 
-- registryName:
+- dbName:
 
-  Character string registry name key
+  Character string database name. If this is \`data\`, then the database
+  name is taken from the environment variable \`MYSQL_DB_DATA\`.
 
-- repoName:
+- teamName:
 
-  Character string defining the github repository name of the registry.
-  Default value is `registryName`.
+  Character string defining the github team name containing members
+  allowed to export the database. Default value is `dbName`.
 
 - eligible:
 
@@ -80,7 +76,7 @@ ui <- shiny::fluidPage(
 
 ## server function
 server <- function(input, output, session) {
-  exportUCServer("test", registryName = "rapbase")
+  exportUCServer("test", dbName = "rapbase")
 }
 
 ## run the shiny app in an interactive environment

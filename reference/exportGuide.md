@@ -7,9 +7,9 @@ Shiny modules providing the Export Guide
 ``` r
 exportGuideUI(id)
 
-exportGuideServer(id, registryName)
+exportGuideServer(id, dbName)
 
-exportGuideServer2(id, registryName)
+exportGuideServer2(id, dbName)
 
 exportGuideApp()
 ```
@@ -20,7 +20,7 @@ exportGuideApp()
 
   Character string module ID
 
-- registryName:
+- dbName:
 
   Character string registry name key
 

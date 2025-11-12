@@ -46,20 +46,15 @@ relevant helper functions</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">exportUCInput</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">exportUCServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">registryName</span>, repoName <span class="op">=</span> <span class="va">registryName</span>, eligible <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">exportUCServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">dbName</span>, teamName <span class="op">=</span> <span class="va">dbName</span>, eligible <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">exportUCServer2</span><span class="op">(</span></span>
-<span>  <span class="va">id</span>,</span>
-<span>  <span class="va">registryName</span>,</span>
-<span>  repoName <span class="op">=</span> <span class="va">registryName</span>,</span>
-<span>  eligible <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu">exportUCServer2</span><span class="op">(</span><span class="va">id</span>, <span class="va">dbName</span>, <span class="va">teamName</span>, eligible <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">exportUCApp</span><span class="op">(</span>registryName <span class="op">=</span> <span class="st">"rapbase"</span><span class="op">)</span></span>
+<span><span class="fu">exportUCApp</span><span class="op">(</span>dbName <span class="op">=</span> <span class="st">"rapbase"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">selectListPubkey</span><span class="op">(</span><span class="va">pubkey</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">exportDb</span><span class="op">(</span><span class="va">registryName</span>, compress <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">session</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">exportDb</span><span class="op">(</span><span class="va">dbName</span>, compress <span class="op">=</span> <span class="cn">FALSE</span>, <span class="va">session</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -70,13 +65,14 @@ relevant helper functions</p>
 <dd><p>Character string module ID</p></dd>
 
 
-<dt id="arg-registryname">registryName<a class="anchor" aria-label="anchor" href="#arg-registryname"></a></dt>
-<dd><p>Character string registry name key</p></dd>
+<dt id="arg-dbname">dbName<a class="anchor" aria-label="anchor" href="#arg-dbname"></a></dt>
+<dd><p>Character string database name. If this is `data`, then the
+database name is taken from the environment variable `MYSQL_DB_DATA`.</p></dd>
 
 
-<dt id="arg-reponame">repoName<a class="anchor" aria-label="anchor" href="#arg-reponame"></a></dt>
-<dd><p>Character string defining the github repository name of the
-registry. Default value is <code>registryName</code>.</p></dd>
+<dt id="arg-teamname">teamName<a class="anchor" aria-label="anchor" href="#arg-teamname"></a></dt>
+<dd><p>Character string defining the github team name containing
+members allowed to export the database. Default value is <code>dbName</code>.</p></dd>
 
 
 <dt id="arg-eligible">eligible<a class="anchor" aria-label="anchor" href="#arg-eligible"></a></dt>
@@ -119,7 +115,7 @@ FALSE by default.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## server function</span></span></span>
 <span class="r-in"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="fu">exportUCServer</span><span class="op">(</span><span class="st">"test"</span>, registryName <span class="op">=</span> <span class="st">"rapbase"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu">exportUCServer</span><span class="op">(</span><span class="st">"test"</span>, dbName <span class="op">=</span> <span class="st">"rapbase"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## run the shiny app in an interactive environment</span></span></span>
