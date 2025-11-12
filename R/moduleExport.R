@@ -5,9 +5,10 @@
 #' relevant helper functions
 #'
 #' @param id Character string module ID
-#' @param registryName Character string registry name key
-#' @param repoName Character string defining the github repository name of the
-#' registry. Default value is \code{registryName}.
+#' @param dbName Character string database name. If this is `data`, then the
+#' database name is taken from the environment variable `MYSQL_DB_DATA`.
+#' @param teamName Character string defining the github team name containing
+#' members allowed to export the database. Default value is \code{dbName}.
 #' @param eligible Logical defining if the module should be allowed to work at
 #' full capacity. This might be useful when access to module products should be
 #' restricted. Default is TRUE, \emph{i.e.} no restrictions.
@@ -34,7 +35,7 @@
 #'
 #' ## server function
 #' server <- function(input, output, session) {
-#'   exportUCServer("test", registryName = "rapbase")
+#'   exportUCServer("test", dbName = "rapbase")
 #' }
 #'
 #' ## run the shiny app in an interactive environment
@@ -57,8 +58,7 @@ exportUCInput <- function(id) {
 
 #' @rdname export
 #' @export
-exportUCServer <- function(id, registryName, repoName = registryName,
-                           eligible = TRUE) {
+exportUCServer <- function(id, dbName, teamName = dbName, eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
 
     pubkey <- shiny::reactive({
@@ -69,7 +69,7 @@ exportUCServer <- function(id, registryName, repoName = registryName,
 
     encFile <- shiny::reactive({
       f <- exportDb(
-        registryName,
+        dbName,
         compress = input$exportCompress,
         session = session
       )
@@ -107,7 +107,7 @@ exportUCServer <- function(id, registryName, repoName = registryName,
         ),
         choices = getGithub(
           "members",
-          repoName,
+          teamName,
           .token = Sys.getenv("GITHUB_PAT")
         )
       )
@@ -126,7 +126,7 @@ exportUCServer <- function(id, registryName, repoName = registryName,
       }
     })
     output$exportDownloadUI <- shiny::renderUI({
-      if (!eligible | length(pubkey()) == 0) {
+      if (length(pubkey()) == 0) {
         shiny::tagList(
           shiny::hr(),
           shiny::h4("Funksjon utilgjengelig"),
@@ -147,7 +147,7 @@ exportUCServer <- function(id, registryName, repoName = registryName,
 
 #' @rdname export
 #' @export
-exportUCServer2 <- function(id, registryName, repoName = registryName,
+exportUCServer2 <- function(id, dbName, teamName,
                             eligible = shiny::reactiveVal(TRUE)) {
   shiny::moduleServer(id, function(input, output, session) {
 
@@ -160,7 +160,7 @@ exportUCServer2 <- function(id, registryName, repoName = registryName,
 
     encFile <- shiny::reactive({
       f <- exportDb(
-        registryName(),
+        dbName(),
         compress = input$exportCompress,
         session = session
       )
@@ -201,7 +201,7 @@ exportUCServer2 <- function(id, registryName, repoName = registryName,
         ),
         choices = getGithub(
           "members",
-          repoName,
+          teamName,
           .token = Sys.getenv("GITHUB_PAT")
         )
       )
@@ -241,12 +241,12 @@ exportUCServer2 <- function(id, registryName, repoName = registryName,
 
 #' @rdname export
 #' @export
-exportUCApp <- function(registryName = "rapbase") {
+exportUCApp <- function(dbName = "rapbase") {
   ui <- shiny::fluidPage(
     exportUCInput("rapbaseExport")
   )
   server <- function(input, output, session) {
-    exportUCServer("rapbaseExport", registryName)
+    exportUCServer("rapbaseExport", dbName)
   }
 
   shiny::shinyApp(ui, server)
@@ -256,7 +256,7 @@ exportUCApp <- function(registryName = "rapbase") {
 #' Shiny modules providing the Export Guide
 #'
 #' @param id Character string module ID
-#' @param registryName Character string registry name key
+#' @param dbName Character string registry name key
 #'
 #' @return Functions ui and server representing the (module) app
 #' @name exportGuide
@@ -283,13 +283,14 @@ exportGuideUI <- function(id) {
 
 #' @rdname exportGuide
 #' @export
-exportGuideServer <- function(id, registryName) {
+exportGuideServer <- function(id, dbName) {
   shiny::moduleServer(id, function(input, output, session) {
     output$exportGuide <- shiny::renderUI({
       renderRmd(
         sourceFile = system.file("exportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
-        params = list(registryName = registryName)
+        # sqlite is TRUE to avoid check about missing env vars
+        params = list(dbName = getDbConfig(dbName, sqlite = TRUE)$name)
       )
     })
   })
@@ -297,13 +298,13 @@ exportGuideServer <- function(id, registryName) {
 
 #' @rdname exportGuide
 #' @export
-exportGuideServer2 <- function(id, registryName) {
+exportGuideServer2 <- function(id, dbName) {
   shiny::moduleServer(id, function(input, output, session) {
     output$exportGuide <- shiny::renderUI({
       renderRmd(
         sourceFile = system.file("exportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
-        params = list(registryName = registryName())
+        params = list(dbName = dbName())
       )
     })
   })
@@ -338,11 +339,11 @@ selectListPubkey <- function(pubkey) {
 
 #' @rdname export
 #' @export
-exportDb <- function(registryName, compress = FALSE, session) {
+exportDb <- function(dbName, compress = FALSE, session) {
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
-  conf <- getDbConfig(registryName)
+  conf <- getDbConfig(dbName)
   f <- tempfile(pattern = conf$name, fileext = ".sql")
 
   cmd <- paste0(
@@ -362,7 +363,7 @@ exportDb <- function(registryName, compress = FALSE, session) {
     invisible(system(cmd))
   }
 
-  repLogger(session, msg = paste(registryName, "Db dump created."))
+  repLogger(session, msg = paste(conf$name, "Db dump created."))
 
   invisible(f)
 }
