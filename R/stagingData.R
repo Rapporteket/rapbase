@@ -17,6 +17,7 @@
 #' that should be used with great care.
 #'
 #' @param registryName Character string providing the registry name.
+#' @param dbTable Character string providing the database table name to be used
 #' @param dataName Character string providing the data set name.
 #' @param data A data object such as a data.frame to be stored as
 #' \code{dataName}.
@@ -72,10 +73,10 @@ NULL
 
 #' @rdname stagingData
 #' @export
-listStagingData <- function(registryName) {
+listStagingData <- function(registryName, dbTable = "data") {
 
   dbStagingPrereq("staging")
-  query <- "SELECT name FROM data WHERE registry = ?;"
+  query <- paste0("SELECT name FROM ", dbTable, " WHERE registry = ?;")
   params <- list(registryName)
   df <- dbStagingProcess("staging", query, params)
   df$name
@@ -83,10 +84,10 @@ listStagingData <- function(registryName) {
 
 #' @rdname stagingData
 #' @export
-mtimeStagingData <- function(registryName) {
+mtimeStagingData <- function(registryName, dbTable = "data") {
 
   dbStagingPrereq("staging")
-  query <- "SELECT mtime, name FROM data WHERE registry = ?;"
+  query <- paste0("SELECT mtime, name FROM ", dbTable, " WHERE registry = ?;")
   params <- list(registryName)
   df <- dbStagingProcess("staging", query, params)
   mtime <- as.POSIXct(df$mtime)
@@ -96,19 +97,23 @@ mtimeStagingData <- function(registryName) {
 
 #' @rdname stagingData
 #' @export
-saveStagingData <- function(registryName, dataName, data) {
+saveStagingData <- function(registryName, dataName, data, dbTable = "data") {
   b <- wrapStagingData(data) %>%
     blob::as_blob()
 
   dbStagingPrereq("staging")
 
   # remove any existing registry data with same data name (should never fail)
-  query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
+  query <- paste0("DELETE FROM ", dbTable, " WHERE registry = ? AND name = ?;")
   params <- list(registryName, dataName)
   d <- dbStagingProcess("staging", query, params, statement = TRUE)
 
   # insert new data (can fail, but hard to test...)
-  query <- "INSERT INTO data (registry, name, data) VALUES (?, ?, ?);"
+  query <- paste0(
+    "INSERT INTO ",
+    dbTable,
+    " (registry, name, data) VALUES (?, ?, ?);"
+  )
   params <- list(registryName, dataName, b)
   d <- dbStagingProcess("staging", query, params, statement = TRUE)
   if (d < 1) {
@@ -121,10 +126,14 @@ saveStagingData <- function(registryName, dataName, data) {
 
 #' @rdname stagingData
 #' @export
-loadStagingData <- function(registryName, dataName) {
+loadStagingData <- function(registryName, dataName, dbTable = "data") {
 
   dbStagingPrereq("staging")
-  query <- "SELECT data FROM data WHERE registry = ? AND name = ?;"
+  query <- paste0(
+    "SELECT data FROM ",
+    dbTable,
+    " WHERE registry = ? AND name = ?;"
+  )
   params <- list(registryName, dataName)
   df <- dbStagingProcess("staging", query, params)
   if (length(df$data) == 0) {
@@ -139,10 +148,10 @@ loadStagingData <- function(registryName, dataName) {
 
 #' @rdname stagingData
 #' @export
-deleteStagingData <- function(registryName, dataName) {
+deleteStagingData <- function(registryName, dataName, dbTable = "data") {
 
   dbStagingPrereq("staging")
-  query <- "DELETE FROM data WHERE registry = ? AND name = ?;"
+  query <- paste0("DELETE FROM ", dbTable, " WHERE registry = ? AND name = ?;")
   params <- list(registryName, dataName)
   d <- dbStagingProcess("staging", query, params, statement = TRUE)
   if (d > 0) {
@@ -156,12 +165,14 @@ deleteStagingData <- function(registryName, dataName) {
 
 #' @rdname stagingData
 #' @export
-cleanStagingData <- function(eolAge, dryRun = TRUE) {
+cleanStagingData <- function(eolAge, dryRun = TRUE, dbTable = "data") {
 
   dbStagingPrereq("staging")
   eolTime <- Sys.time() - eolAge
   query <- paste0(
-    "SELECT registry, name FROM data WHERE mtime < ? ORDER BY registry, name;"
+    "SELECT registry, name FROM ",
+    dbTable,
+    " WHERE mtime < ? ORDER BY registry, name;"
   )
   params <- list(eolTime)
   df <- dbStagingProcess("staging", query, params)
@@ -178,7 +189,7 @@ cleanStagingData <- function(eolAge, dryRun = TRUE) {
     )
     deleteDataset
   } else {
-    query <- "DELETE FROM data WHERE mtime < ?;"
+    query <- paste0("DELETE FROM ", dbTable, " WHERE mtime < ?;")
     dbStagingProcess("staging", query, params, statement = TRUE)
     invisible(deleteDataset)
   }
