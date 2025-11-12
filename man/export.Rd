@@ -14,12 +14,7 @@ exportUCInput(id)
 
 exportUCServer(id, dbName, teamName = dbName)
 
-exportUCServer2(
-  id,
-  dbName,
-  teamName = dbName,
-  eligible = shiny::reactiveVal(TRUE)
-)
+exportUCServer2(id, dbName, teamName, eligible = shiny::reactiveVal(TRUE))
 
 exportUCApp(dbName = "rapbase")
 
