@@ -58,7 +58,7 @@ exportUCInput <- function(id) {
 
 #' @rdname export
 #' @export
-exportUCServer <- function(id, dbName, teamName = dbName) {
+exportUCServer <- function(id, dbName, teamName = dbName, eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
 
     pubkey <- shiny::reactive({
@@ -83,18 +83,20 @@ exportUCServer <- function(id, dbName, teamName = dbName) {
       ef
     })
 
-    output$exportDownload <- shiny::downloadHandler(
-      filename = function() {
-        basename(encFile())
-      },
-      content = function(file) {
-        file.copy(encFile(), file)
-        repLogger(
-          session,
-          msg = paste("Db export file", basename(encFile()), "downloaded.")
-        )
-      }
-    )
+    if (eligible) {
+      output$exportDownload <- shiny::downloadHandler(
+        filename = function() {
+          basename(encFile())
+        },
+        content = function(file) {
+          file.copy(encFile(), file)
+          repLogger(
+            session,
+            msg = paste("Db export file", basename(encFile()), "downloaded.")
+          )
+        }
+      )
+    }
 
     ## UC
     output$exportPidUI <- shiny::renderUI({

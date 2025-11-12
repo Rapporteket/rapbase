@@ -86,10 +86,22 @@ with_envvar(
           expect_true(basename(output$exportDownload) == basename(encFile()))
         })
       })
-    })
+      test_that("download is prevented when module is not eligible", {
+        check_db()
+        shiny::testServer(
+          exportUCServer,
+          args = list(dbName = regName, eligible = FALSE),
+          {
+            session$setInputs(exportPid = "areedv")
+            session$setInputs(exportKey = pubkey())
+            session$setInputs(exportCompress = TRUE)
+            session$setInputs(exportEncrypt = 1)
+            expect_false(exists("output$exportDownload"))
+          }
+        )
+      })
 
-    with_mock_dir("gh_api_response", {
-      test_that("module server provides sensible output", {
+      test_that("exportUCServer2 provides sensible output", {
         check_db()
         shiny::testServer(exportUCServer2, args = list(
           dbName = shiny::reactiveVal("rapbase"),
