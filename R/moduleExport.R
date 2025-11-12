@@ -287,7 +287,8 @@ exportGuideServer <- function(id, dbName) {
       renderRmd(
         sourceFile = system.file("exportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
-        params = list(dbName = getDbConfig(dbName)$name)
+        # sqlite is TRUE to avoid check about missing env vars
+        params = list(dbName = getDbConfig(dbName, sqlite = TRUE)$name)
       )
     })
   })
