@@ -40,35 +40,53 @@ test_that("tables can be created in logging db", {
   expect_null(rapbase:::createLogDbTabs())
 })
 
-appEvent <- data.frame(
-  time = "2022-03-24 11:16:29",
-  user = "ttester",
-  name = "Tore Tester",
-  group = "rapbase",
-  role = "accessLevel",
-  resh_id = "999999",
-  message = "unit test logging to db",
-  stringsAsFactors = FALSE
-)
 
-test_that("app event can be appended to db", {
+test_that("two app events can be appended to db", {
   check_db()
+  appEvent <- data.frame(
+    time = "2022-03-24 11:16:29",
+    user = "ttester",
+    name = "Tore Tester",
+    group = "rapbase",
+    role = "accessLevel",
+    resh_id = "999999",
+    message = "unit test logging to db",
+    stringsAsFactors = FALSE
+  )
   expect_message(appendLog(event = appEvent, name = "appLog"))
+  appEvent <- data.frame(
+    time = Sys.Date(),
+    user = "btester",
+    name = "B Tester",
+    group = "qwerty",
+    role = "LU",
+    resh_id = "42",
+    message = "Another test logging to db",
+    stringsAsFactors = FALSE
+  )
+  expect_message(appendLog(event = appEvent, name = "appLog"))
+  expect_warning(appendLog(event = appEvent, name = "appLogWrongName"))
 })
 
 test_that("log entries can be read from db", {
   check_db()
   expect_equal(class(rapbase:::readLog(type = "app")), "data.frame")
+  # Only read one of the load entries
   expect_equal(
-    rapbase:::readLog(type = "app", name = "rapbase")$user,
+    rapbase:::readLog(type = "app", app_id = "rapbase")$user,
     "ttester"
+  )
+  # Read both log entries
+  expect_equal(
+    rapbase:::readLog(type = "app")$role,
+    c("accessLevel", "LU")
   )
 })
 
 test_that("log can be sanitized in db", {
   check_db()
   expect_null(rapbase:::sanitizeLog())
-  expect_equal(dim(rapbase:::readLog(type = "app"))[1], 0)
+  expect_equal(dim(rapbase:::readLog(type = "app"))[1], 1)
   expect_equal(dim(rapbase:::readLog(type = "report"))[1], 0)
 })
 
