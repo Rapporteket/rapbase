@@ -6,7 +6,7 @@ session <- list()
 attr(session, "class") <- "ShinySession"
 
 test_that("nothing will be appended if path is not defined", {
-  expect_error(appendLog(
+  expect_warning(appendLog(
     event = data.frame(foo = "bar"), name = ""
   ))
 })
