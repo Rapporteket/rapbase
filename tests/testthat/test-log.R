@@ -1,23 +1,9 @@
-# store current instance and prepare
-currentInstance <- Sys.getenv("R_RAP_INSTANCE")
-currentConfig <- Sys.getenv("R_RAP_CONFIG_PATH")
-
+# store current env var
+currentDbLog <- Sys.getenv("MYSQL_DB_LOG")
 tempdir <- tempdir()
-
-file.copy(system.file("rapbaseConfig.yml", package = "rapbase"), tempdir)
-configFile <- file.path(tempdir, "rapbaseConfig.yml")
-config <- yaml::read_yaml(configFile)
-
-Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
-
-# mocking when run as part of ci
-Sys.setenv(R_RAP_INSTANCE = "DEV")
 
 session <- list()
 attr(session, "class") <- "ShinySession"
-
-# must be last...
-Sys.setenv(R_RAP_CONFIG_PATH = "")
 
 test_that("nothing will be appended if path is not defined", {
   expect_error(appendLog(
@@ -33,16 +19,9 @@ test_that("error is provided when target is not supported", {
 })
 
 
-# --- logging with database target ---
-Sys.setenv(R_RAP_INSTANCE = currentInstance)
-
-Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
-
 # adjust config and get whatever name of logging database define there
 nameLogDb <- "raplogTest"
-config$r$raplog$target <- "db"
-config$r$raplog$key <- nameLogDb
-yaml::write_yaml(config, configFile)
+Sys.setenv(MYSQL_DB_LOG = nameLogDb)
 
 test_that("env vars needed for testing is present", {
   check_db()
@@ -93,22 +72,10 @@ test_that("log can be sanitized in db", {
   expect_equal(dim(rapbase:::readLog(type = "report"))[1], 0)
 })
 
-test_that("append and read errors when target is not known", {
-  check_db()
-  conf <- yaml::read_yaml(file.path(tempdir, "rapbaseConfig.yml"))
-  conf$r$raplog$target <- "unknown"
-  yaml::write_yaml(conf, file.path(tempdir, "rapbaseConfig.yml"))
-  expect_error(appendLog(event = appEvent, name = "appLog"))
-  expect_error(rapbase:::readLog(type = "app"))
-  expect_error(rapbase:::sanitizeLog())
-})
-
 # remove test db
 query_db(paste0("DROP DATABASE ", nameLogDb, ";"))
-
-# Restore instance
-Sys.setenv(R_RAP_CONFIG_PATH = currentConfig)
-Sys.setenv(R_RAP_INSTANCE = currentInstance)
+# Restore env var
+Sys.setenv(MYSQL_DB_LOG = currentDbLog)
 
 test_that("loggerSetup is working", {
   # env-stuff
@@ -171,8 +138,6 @@ test_that("loggerSetup is working", {
       "Test error"
     )
   )
-
-
 
 
   # env-stuff
