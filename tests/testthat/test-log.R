@@ -97,6 +97,10 @@ test_that("sanitizeLog return warning", {
   expect_warning(rapbase:::sanitizeLog())
 })
 
+test_that("readLog return warning", {
+  expect_warning(rapbase:::readLog(type = "app"))
+})
+
 # Restore env var
 Sys.setenv(MYSQL_DB_LOG = currentDbLog)
 
