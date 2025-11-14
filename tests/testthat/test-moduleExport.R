@@ -7,17 +7,8 @@ test_that("a abbreviated named list can be provided from key(s)", {
 # rest of test on db export will have to be performed where a db is present,
 # a valid shiny session object and somewhere to do logging
 
-## store current instance and set temporary config
-currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
-Sys.setenv(R_RAP_CONFIG_PATH = tempdir())
-file.copy(system.file(c("rapbaseConfig.yml"), package = "rapbase"),
-  Sys.getenv("R_RAP_CONFIG_PATH"),
-  overwrite = TRUE
-)
-
-config <- yaml::read_yaml(system.file("rapbaseConfig.yml", package = "rapbase"))
 currentLogKey <- Sys.getenv("MYSQL_DB_LOG")
-dbLogKey <- config$r$raplog$key
+dbLogKey <- "raplogTest"
 Sys.setenv(MYSQL_DB_LOG = dbLogKey)
 
 ## shiny session object
@@ -137,5 +128,4 @@ if (is.null(check_db(is_test_that = FALSE))) {
 
 
 # Restore instance
-Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)
 Sys.setenv(MYSQL_DB_LOG = currentLogKey)

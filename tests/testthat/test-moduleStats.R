@@ -11,19 +11,8 @@ test_that("env vars needed for testing is present", {
   expect_true("MYSQL_PASSWORD" %in% names(Sys.getenv()))
 })
 
-# make pristine config path to avoid clutter from other tests
-Sys.setenv(R_RAP_CONFIG_PATH = file.path(tempdir(), "statsTesting"))
-dir.create(Sys.getenv("R_RAP_CONFIG_PATH"))
-
-# some systems do not provide a database back-end, test only on file log target
-confFile <- file.path(Sys.getenv("R_RAP_CONFIG_PATH"), "rapbaseConfig.yml")
-file.copy(system.file("rapbaseConfig.yml", package = "rapbase"), confFile)
-con <- file(confFile, "r")
-conf <- yaml::read_yaml(con)
-close(con)
-
 currentLogKey <- Sys.getenv("MYSQL_DB_LOG")
-dbLogKey <- conf$r$raplog$key
+dbLogKey <- "raplogTest"
 Sys.setenv(MYSQL_DB_LOG = dbLogKey)
 
 # Create log db
@@ -91,6 +80,7 @@ test_that("module server is restricted when not eligible", {
     statsServer,
     args = list(registryName = registryName, eligible = FALSE),
     {
+      session$setInputs(type = "app")
       expect_true(is.null(output$downloadButton))
     }
   )
@@ -109,5 +99,4 @@ if (is.null(check_db(is_test_that = FALSE))) {
 }
 
 # Restore instance
-Sys.setenv(R_RAP_CONFIG_PATH = currentConfigPath)
 Sys.setenv(MYSQL_DB_LOG = currentLogKey)
