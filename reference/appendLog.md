@@ -22,7 +22,5 @@ appendLog(event, name)
 
 ## Value
 
-Provides a new record in the log. If the log does not exist a new one is
-created before appending the new record when the log target is
-configured to be files. When logging to a database this have to be set
+Provides a new record in the log database. The database have to be set
 up in advance.
