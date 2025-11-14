@@ -92,6 +92,11 @@ test_that("log can be sanitized in db", {
 
 # remove test db
 query_db(paste0("DROP DATABASE ", nameLogDb, ";"))
+
+test_that("sanitizeLog return warning", {
+  expect_warning(rapbase:::sanitizeLog())
+})
+
 # Restore env var
 Sys.setenv(MYSQL_DB_LOG = currentDbLog)
 
