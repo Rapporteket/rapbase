@@ -29,7 +29,7 @@ test_that("Some data can be read from a sqlite db file with loadRegData", {
 
 withr::with_envvar(
   new = c(
-    "db_type" = "sqlite"
+    "DB_TYPE" = "sqlite"
   ),
   code = {
     test_that("dbType can be given as an environment variable", {
