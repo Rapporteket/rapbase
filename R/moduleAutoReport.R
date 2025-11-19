@@ -234,7 +234,7 @@ autoReportServer <- function(
   org = NULL,
   paramNames = shiny::reactiveVal(c("")),
   paramValues = shiny::reactiveVal(c("")),
-  reports = NULL,
+  reports = shiny::reactiveVal(NULL),
   orgs = NULL,
   eligible = shiny::reactiveVal(TRUE),
   freq = "month",
@@ -258,6 +258,10 @@ autoReportServer <- function(
     quarter = "Kvartalsvis-quarter",
     year = "\u00C5rlig-year"
   )
+  if (!shiny::is.reactive(reports)) {
+    # make reports reactive if not already
+    reports <- shiny::reactiveVal(reports)
+  }
 
   shiny::moduleServer(id, function(input, output, session) {
     autoReport <- shiny::reactiveValues(
@@ -269,7 +273,7 @@ autoReportServer <- function(
         type = type,
         mapOrgId = orgList2df(orgs)
       ),
-      report = names(reports)[1],
+      report = NULL,
       org = unlist(orgs, use.names = FALSE)[1],
       freq = defaultFreq,
       email = vector()
@@ -280,15 +284,17 @@ autoReportServer <- function(
       list(user$name(), user$org(), user$role())
     )
     shiny::observeEvent(
-      userEvent(),
-      autoReport$tab <- makeAutoReportTab(
-        namespace = id,
-        user = user$name(),
-        group = registryName,
-        orgId = user$org(),
-        type = type,
-        mapOrgId = orgList2df(orgs)
-      ),
+      userEvent(), {
+        autoReport$tab <- makeAutoReportTab(
+          namespace = id,
+          user = user$name(),
+          group = registryName,
+          orgId = user$org(),
+          type = type,
+          mapOrgId = orgList2df(orgs)
+        )
+        autoReport$report <- names(reports())[1]
+      },
       ignoreNULL = FALSE
     )
 
@@ -301,7 +307,7 @@ autoReportServer <- function(
     })
 
     shiny::observeEvent(input$makeAutoReport, {
-      report <- reports[[input$report]]
+      report <- reports()[[input$report]]
       interval <- strsplit(input$freq, "-")[[1]][2]
       paramValues <- report$paramValues
       paramNames <- report$paramNames
@@ -395,7 +401,7 @@ autoReportServer <- function(
 
     # outputs
     output$reports <- shiny::renderUI({
-      if (is.null(reports)) {
+      if (is.null(reports())) {
         NULL
       } else {
         shiny::selectInput(
@@ -403,7 +409,7 @@ autoReportServer <- function(
           label = shiny::tags$div(
             shiny::HTML(as.character(shiny::icon("file")), "Velg rapport:")
           ),
-          choices = names(reports),
+          choices = names(reports()),
           selected = autoReport$report
         )
       }
@@ -414,7 +420,7 @@ autoReportServer <- function(
       shiny::HTML(
         paste0(
           "Rapportbeskrivelse:<br/><i>",
-          reports[[input$report]]$synopsis,
+          reports()[[input$report]]$synopsis,
           "</i>"
         )
       )
