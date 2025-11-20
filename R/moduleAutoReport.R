@@ -273,7 +273,6 @@ autoReportServer <- function(
         type = type,
         mapOrgId = orgList2df(orgs)
       ),
-      report = NULL,
       org = unlist(orgs, use.names = FALSE)[1],
       freq = defaultFreq,
       email = vector()
@@ -293,7 +292,6 @@ autoReportServer <- function(
           type = type,
           mapOrgId = orgList2df(orgs)
         )
-        autoReport$report <- names(reports())[1]
       },
       ignoreNULL = FALSE
     )
@@ -410,7 +408,7 @@ autoReportServer <- function(
             shiny::HTML(as.character(shiny::icon("file")), "Velg rapport:")
           ),
           choices = names(reports()),
-          selected = autoReport$report
+          selected = names(reports())[1]
         )
       }
     })
@@ -513,7 +511,7 @@ autoReportServer <- function(
     })
 
     output$makeAutoReport <- shiny::renderUI({
-      if (is.null(autoReport$report) || !eligible()) {
+      if (!eligible()) {
         NULL
       } else {
         if (type %in% c("subscription")) {
