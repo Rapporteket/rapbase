@@ -283,16 +283,15 @@ autoReportServer <- function(
       list(user$name(), user$org(), user$role())
     )
     shiny::observeEvent(
-      userEvent(), {
-        autoReport$tab <- makeAutoReportTab(
-          namespace = id,
-          user = user$name(),
-          group = registryName,
-          orgId = user$org(),
-          type = type,
-          mapOrgId = orgList2df(orgs)
-        )
-      },
+      userEvent(),
+      autoReport$tab <- makeAutoReportTab(
+        namespace = id,
+        user = user$name(),
+        group = registryName,
+        orgId = user$org(),
+        type = type,
+        mapOrgId = orgList2df(orgs)
+      ),
       ignoreNULL = FALSE
     )
 
