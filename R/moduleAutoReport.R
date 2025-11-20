@@ -510,7 +510,7 @@ autoReportServer <- function(
     })
 
     output$makeAutoReport <- shiny::renderUI({
-      if (!eligible()) {
+      if (is.null(reports()) || !eligible()) {
         NULL
       } else {
         if (type %in% c("subscription")) {
