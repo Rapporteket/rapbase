@@ -258,6 +258,10 @@ autoReportServer <- function(
     quarter = "Kvartalsvis-quarter",
     year = "\u00C5rlig-year"
   )
+  if (!shiny::is.reactive(reports)) {
+    # make reports reactive if not already
+    reports <- shiny::reactiveVal(reports)
+  }
 
   shiny::moduleServer(id, function(input, output, session) {
     autoReport <- shiny::reactiveValues(
@@ -269,7 +273,6 @@ autoReportServer <- function(
         type = type,
         mapOrgId = orgList2df(orgs)
       ),
-      report = names(reports)[1],
       org = unlist(orgs, use.names = FALSE)[1],
       freq = defaultFreq,
       email = vector()
@@ -301,7 +304,7 @@ autoReportServer <- function(
     })
 
     shiny::observeEvent(input$makeAutoReport, {
-      report <- reports[[input$report]]
+      report <- reports()[[input$report]]
       interval <- strsplit(input$freq, "-")[[1]][2]
       paramValues <- report$paramValues
       paramNames <- report$paramNames
@@ -395,7 +398,7 @@ autoReportServer <- function(
 
     # outputs
     output$reports <- shiny::renderUI({
-      if (is.null(reports)) {
+      if (is.null(reports())) {
         NULL
       } else {
         shiny::selectInput(
@@ -403,8 +406,8 @@ autoReportServer <- function(
           label = shiny::tags$div(
             shiny::HTML(as.character(shiny::icon("file")), "Velg rapport:")
           ),
-          choices = names(reports),
-          selected = autoReport$report
+          choices = names(reports()),
+          selected = names(reports())[1]
         )
       }
     })
@@ -414,7 +417,7 @@ autoReportServer <- function(
       shiny::HTML(
         paste0(
           "Rapportbeskrivelse:<br/><i>",
-          reports[[input$report]]$synopsis,
+          reports()[[input$report]]$synopsis,
           "</i>"
         )
       )
@@ -507,7 +510,7 @@ autoReportServer <- function(
     })
 
     output$makeAutoReport <- shiny::renderUI({
-      if (is.null(autoReport$report) || !eligible()) {
+      if (is.null(reports()) || !eligible()) {
         NULL
       } else {
         if (type %in% c("subscription")) {
