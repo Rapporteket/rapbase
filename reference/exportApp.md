@@ -5,16 +5,16 @@ Shiny app with database export functionality
 ## Usage
 
 ``` r
-exportApp(repoName = "", registryName = "data")
+exportApp(teamName = "", dbName = "data")
 ```
 
 ## Arguments
 
-- repoName:
+- teamName:
 
-  Character string registry name key, corresponding to github team name
+  Character string, corresponding to github team name
 
-- registryName:
+- dbName:
 
-  Character string registry name key, can be used to specify name of
-  database if needed.
+  Character string, can be used to specify name of database if needed.
+  Defaults to "data", which will work for most registries.
