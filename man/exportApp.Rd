@@ -12,7 +12,7 @@ github team name}
 
 \item{dbName}{Character string, can be used to
 specify name of database if needed. Defaults to "data",
-whcih will work for most registries.}
+which will work for most registries.}
 }
 \description{
 Shiny app with database export functionality

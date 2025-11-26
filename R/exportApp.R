@@ -4,7 +4,7 @@
 #' github team name
 #' @param dbName Character string, can be used to
 #' specify name of database if needed. Defaults to "data",
-#' whcih will work for most registries.
+#' which will work for most registries.
 #' @export
 exportApp <- function(teamName = "", dbName = "data") {
   ui <- shiny::navbarPage(
