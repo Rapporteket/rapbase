@@ -1,11 +1,12 @@
 #' Shiny app with database export functionality
 #'
-#' @param repoName Character string registry name key, corresponding to
+#' @param teamName Character string, corresponding to
 #' github team name
-#' @param registryName Character string registry name key, can be used to
-#' specify name of database if needed.
+#' @param dbName Character string, can be used to
+#' specify name of database if needed. Defaults to "data",
+#' whcih will work for most registries.
 #' @export
-exportApp <- function(repoName = "", registryName = "data") {
+exportApp <- function(teamName = "", dbName = "data") {
   ui <- shiny::navbarPage(
     id = "navbarpage",
     title = shiny::div(shiny::a(shiny::includeHTML(
@@ -20,7 +21,7 @@ exportApp <- function(repoName = "", registryName = "data") {
     theme = "rap/bootstrap.css",
     shiny::tabPanel(
       title = "Info",
-      rapbase::navbarWidgetInput("navbar-widget", selectOrganization = TRUE),
+      navbarWidgetInput("navbar-widget", selectOrganization = TRUE),
       shiny::sidebarLayout(
         shiny::sidebarPanel(shiny::uiOutput("metaControl")),
         shiny::mainPanel(
@@ -44,10 +45,9 @@ exportApp <- function(repoName = "", registryName = "data") {
     )
   )
   server <- function(input, output, session) {
-    user <- rapbase::navbarWidgetServer2(
+    user <- navbarWidgetServer2(
       id = "navbar-widget",
-      orgName = repoName,
-      caller = repoName
+      orgName = "exportApp"
     )
 
     shiny::observeEvent(user$role(), {
@@ -61,33 +61,32 @@ exportApp <- function(repoName = "", registryName = "data") {
     # User control
     output$exportSidebarPanel <- shiny::renderUI({
       if (user$role() == "SC") {
-        rapbase::exportUCInput("export")
+        exportUCInput("export")
       } else {
         return(NULL)
       }
     })
 
-    rapbase::exportUCServer("export", registryName = registryName,
-                            repoName = repoName)
+    exportUCServer("export", dbName = dbName, teamName = teamName)
 
     # User guide
     output$exportMainPanel <- shiny::renderUI({
       if (user$role() == "SC") {
-        rapbase::exportGuideUI("exportGuide")
+        exportGuideUI("exportGuide")
       } else {
         return(NULL)
       }
     })
 
-    rapbase::exportGuideServer("exportGuide", repoName)
+    exportGuideServer("exportGuide", dbName)
 
     ## Metadata
     meta <- shiny::reactive({
-      rapbase::describeRegistryDb(registryName = registryName)
+      describeRegistryDb(registryName = dbName)
     })
 
     meta2 <- shiny::reactive({
-      rapbase::nlinesRegistryDb(registryName = registryName)
+      nlinesRegistryDb(registryName = dbName)
     })
 
     output$metaControl <- shiny::renderUI({
