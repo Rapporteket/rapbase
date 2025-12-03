@@ -285,7 +285,7 @@ createLogDbTabs <- function() {
   queries <- strsplit(sql, ";")[[1]]
 
   con <- rapOpenDbConnection("raplog")$con
-  for (i in seq_len(length(queries))) {
+  for (i in seq_along(queries)) {
     DBI::dbExecute(con, queries[i])
   }
   rapbase::rapCloseDbConnection(con)
@@ -318,7 +318,7 @@ readLog <- function(type, name = "", app_id = NULL) {
     if (!is.null(app_id)) {
       log <- log[which(log$group == app_id), ]
     }
-    log <- log %>%
+    log <- log |>
       dplyr::select(-"id")
     invisible(log)
   } , error = function(e) {
