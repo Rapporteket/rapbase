@@ -318,7 +318,7 @@ autoReportServer <- function(
       }
       if (!paramValues()[1] == "") {
         stopifnot(length(paramNames()) == length(paramValues()))
-        for (i in seq_len(length(paramNames()))) {
+        for (i in seq_along(paramNames())) {
           paramValues[paramNames == paramNames()[i]] <- paramValues()[i]
         }
       }
@@ -353,7 +353,7 @@ autoReportServer <- function(
 
     shiny::observeEvent(input$edit_button, {
       repId <- strsplit(input$edit_button, "__")[[1]][2]
-      rep <- readAutoReportData() %>%
+      rep <- readAutoReportData() |>
         dplyr::filter(id == repId)
       if (nrow(rep) != 1) {
         message("Can not modify (either less or more than 1)")

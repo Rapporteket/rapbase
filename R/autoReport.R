@@ -367,13 +367,13 @@ runAutoReport <- function(
 ) {
 
   # get report candidates
-  reps <- rapbase::readAutoReportData() %>%
+  reps <- rapbase::readAutoReportData() |>
     rapbase::filterAutoRep(by = "type", pass = type)
   if (!is.null(group)) {
-    reps <- reps %>%
+    reps <- reps |>
       rapbase::filterAutoRep(by = "package", pass = group)
   }
-  reps <- reps %>%
+  reps <- reps |>
     # nolint start: object_usage_linter
     dplyr::summarise(
       email = list(unique(email)),
@@ -401,7 +401,7 @@ runAutoReport <- function(
     ))
     tryCatch(
       {
-        rep <- reps[i, ] %>% as.list()
+        rep <- reps[i, ] |> as.list()
         rep$email <- unlist(rep$email)
         params <- jsonlite::fromJSON(rep$params)
         if (
@@ -515,7 +515,7 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
   s <- seq(from = start, to = end, by = interval)
   # skip redundant end value
   if (length(s) > 1) {
-    s <- s[seq_len(length(s)) - 1]
+    s <- s[seq_along(s) - 1]
   }
   unique(as.integer(format(s, "%j")))
 }
@@ -630,7 +630,6 @@ findNextRunDate <- function(
 #'   the last column in the table. FALSE by default.
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
-#' @importFrom dplyr "%>%"
 #' @export
 # nolint end
 
@@ -645,13 +644,13 @@ makeAutoReportTab <- function(
 ) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
-  autoRep <- readAutoReportData() %>%
-    filterAutoRep(by = "package", pass = group) %>%
+  autoRep <- readAutoReportData() |>
+    filterAutoRep(by = "package", pass = group) |>
     filterAutoRep(by = "type", pass = type)
 
   if (type == "subscription") {
-    autoRep <- autoRep %>%
-      filterAutoRep(by = "owner", pass = user) %>%
+    autoRep <- autoRep |>
+      filterAutoRep(by = "owner", pass = user) |>
       filterAutoRep(by = "organization", pass = orgId)
   }
 

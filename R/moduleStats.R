@@ -87,7 +87,7 @@ statsServer <- function(id,
                         eligible = TRUE) {
   shiny::moduleServer(id, function(input, output, session) {
     log <- shiny::reactive({
-      readLog(input$type, registryName, app_id) %>%
+      readLog(input$type, registryName, app_id) |>
         logFormat()
     })
 
@@ -169,7 +169,7 @@ statsServer2 <- function(id,
                          eligible = shiny::reactiveVal(TRUE)) {
   shiny::moduleServer(id, function(input, output, session) {
     log <- shiny::reactive({
-      readLog(input$type, registryName, app_id) %>%
+      readLog(input$type, registryName, app_id) |>
         logFormat()
     })
 
@@ -324,7 +324,7 @@ statsGuideApp <- function() {
 #' @rdname stats
 #' @export
 logFormat <- function(log) {
-  log <- log %>%
+  log <- log |>
     dplyr::mutate(
       datetime = as.POSIXct(.data$time),
       date = as.Date(.data$datetime),
