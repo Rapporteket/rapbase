@@ -345,6 +345,9 @@ exportGuideApp <- function() {
 #' @rdname export
 #' @export
 selectListPubkey <- function(pubkey) {
+  if (!is.character(pubkey)) {
+    stop("pubkey must be a character vector, got: ", typeof(pubkey))
+  }
   listName <- substr(pubkey, nchar(pubkey) - 7, nchar(pubkey))
   listName <- paste0(substr(pubkey, 1, 8), "...", listName)
   names(pubkey) <- listName
