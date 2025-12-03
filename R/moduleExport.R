@@ -58,7 +58,20 @@ exportUCInput <- function(id) {
 
 #' @rdname export
 #' @export
-exportUCServer <- function(id, dbName, teamName = dbName, eligible = TRUE) {
+exportUCServer <- function(
+  id, dbName, teamName = dbName,
+  eligible = shiny::reactiveVal(TRUE)
+) {
+  if (!shiny::is.reactive(eligible)) {
+    # make eligible reactive if not already
+    eligible <- shiny::reactiveVal(eligible)
+  }
+
+  if (!shiny::is.reactive(dbName)) {
+    # make dbName reactive if not already
+    dbName <- shiny::reactiveVal(dbName)
+  }
+
   shiny::moduleServer(id, function(input, output, session) {
 
     pubkey <- shiny::reactive({
@@ -69,7 +82,7 @@ exportUCServer <- function(id, dbName, teamName = dbName, eligible = TRUE) {
 
     encFile <- shiny::reactive({
       f <- exportDb(
-        dbName,
+        dbName(),
         compress = input$exportCompress,
         session = session
       )
@@ -83,20 +96,22 @@ exportUCServer <- function(id, dbName, teamName = dbName, eligible = TRUE) {
       ef
     })
 
-    if (eligible) {
-      output$exportDownload <- shiny::downloadHandler(
-        filename = function() {
-          basename(encFile())
-        },
-        content = function(file) {
-          file.copy(encFile(), file)
-          repLogger(
-            session,
-            msg = paste("Db export file", basename(encFile()), "downloaded.")
-          )
-        }
-      )
-    }
+    shiny::observeEvent(eligible(), {
+      if (eligible()) {
+        output$exportDownload <- shiny::downloadHandler(
+          filename = function() {
+            basename(encFile())
+          },
+          content = function(file) {
+            file.copy(encFile(), file)
+            repLogger(
+              session,
+              msg = paste("Db export file", basename(encFile()), "downloaded.")
+            )
+          }
+        )
+      }
+    })
 
     ## UC
     output$exportPidUI <- shiny::renderUI({
@@ -126,7 +141,7 @@ exportUCServer <- function(id, dbName, teamName = dbName, eligible = TRUE) {
       }
     })
     output$exportDownloadUI <- shiny::renderUI({
-      if (length(pubkey()) == 0) {
+      if (!eligible() | length(pubkey()) == 0) {
         shiny::tagList(
           shiny::hr(),
           shiny::h4("Funksjon utilgjengelig"),
