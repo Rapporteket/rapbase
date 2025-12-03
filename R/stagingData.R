@@ -98,7 +98,7 @@ mtimeStagingData <- function(registryName, dbTable = "data") {
 #' @rdname stagingData
 #' @export
 saveStagingData <- function(registryName, dataName, data, dbTable = "data") {
-  b <- wrapStagingData(data) %>%
+  b <- wrapStagingData(data) |>
     blob::as_blob()
 
   dbStagingPrereq("staging")
@@ -232,8 +232,8 @@ NULL
 wrapStagingData <- function(data) {
 
   k <- digest::digest(Sys.getenv("MYSQL_PASSWORD"), algo = "sha256", raw = TRUE)
-  serialize(data, connection = NULL) %>%
-    sship::sym_enc(key = k, iv = NULL) %>%
+  serialize(data, connection = NULL) |>
+    sship::sym_enc(key = k, iv = NULL) |>
     memCompress(type = "bzip2")
 }
 
@@ -241,8 +241,8 @@ wrapStagingData <- function(data) {
 unwrapStagingData <- function(data) {
 
   k <- digest::digest(Sys.getenv("MYSQL_PASSWORD"), algo = "sha256", raw = TRUE)
-  memDecompress(data, type = "bzip2") %>%
-    sship::sym_dec(key = k, iv = NULL) %>%
+  memDecompress(data, type = "bzip2") |>
+    sship::sym_dec(key = k, iv = NULL) |>
     unserialize()
 }
 

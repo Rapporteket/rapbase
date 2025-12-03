@@ -21,6 +21,6 @@ appLog <- data.frame(
   time = time, user = user, name = name, group = group,
   role = role, resh_id = resh_id, message = message,
   stringsAsFactors = FALSE
-) %>% dplyr::mutate(id = as.character(dplyr::row_number()))
+) |> dplyr::mutate(id = as.character(dplyr::row_number()))
 
 usethis::use_data(appLog, overwrite = TRUE)
