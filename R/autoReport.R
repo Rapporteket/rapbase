@@ -405,7 +405,7 @@ runAutoReport <- function(
         rep$email <- unlist(rep$email)
         params <- jsonlite::fromJSON(rep$params)
         package <- rep$package
-        if (!(params$package %in% c("", NULL))) {
+        if (!(is.null(params$package))) {
           message(paste0(
             "Overriding package '",
             package,
