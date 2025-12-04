@@ -397,13 +397,24 @@ runAutoReport <- function(
   for (i in seq_len(dim(reps)[1])) {
     message(paste0(
       "Processing report ", i, " of ", dim(reps)[1],
-      " from package ", reps$package[i], ". Synopsis: ", reps$synopsis[i]
+      " from registry ", reps$package[i], ". Synopsis: ", reps$synopsis[i]
     ))
     tryCatch(
       {
         rep <- reps[i, ] |> as.list()
         rep$email <- unlist(rep$email)
         params <- jsonlite::fromJSON(rep$params)
+        package <- rep$package
+        if (!(params$package %in% c("", NULL))) {
+          message(paste0(
+            "Overriding package '",
+            package,
+            "' with '",
+            params$package,
+            "' as provided in params"
+          ))
+          package <- params$package
+        }
         if (
           as.Date(rep$startDate) <= dato
           && as.Date(rep$terminateDate) > dato
@@ -414,7 +425,7 @@ runAutoReport <- function(
           ) # 'days', 'weeks', 'months', 'years',
         ) {
           # get explicit referenced function and call it
-          f <- rapbase::.getFun(paste0(rep$package, "::", rep$fun))
+          f <- rapbase::.getFun(paste0(package, "::", rep$fun))
           content <- do.call(what = f, args = params)
           if (rep$type == "bulletin") {
             text <- content
