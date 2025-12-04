@@ -75,12 +75,13 @@ exportUCServer <- function(
   shiny::moduleServer(id, function(input, output, session) {
 
     pubkey <- shiny::reactive({
-      shiny::req(input$exportPid)
+      shiny::req(input$exportPid, dbName, eligible)
       keys <- getGithub("keys", input$exportPid)
       sship::pubkey_filter(keys, "rsa")
     })
 
     encFile <- shiny::reactive({
+      shiny::req(dbName, input$exportKey)
       f <- exportDb(
         dbName(),
         compress = input$exportCompress,
@@ -128,6 +129,7 @@ exportUCServer <- function(
       )
     })
     output$exportKeyUI <- shiny::renderUI({
+      shiny::req(pubkey)
       if (length(pubkey()) == 0) {
         shiny::p("No keys found!")
       } else {
@@ -141,6 +143,7 @@ exportUCServer <- function(
       }
     })
     output$exportDownloadUI <- shiny::renderUI({
+      shiny::req(pubkey)
       if (length(pubkey()) == 0) {
         shiny::tagList(
           shiny::hr(),
