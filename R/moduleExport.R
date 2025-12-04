@@ -141,7 +141,7 @@ exportUCServer <- function(
       }
     })
     output$exportDownloadUI <- shiny::renderUI({
-      if (!eligible() | length(pubkey()) == 0) {
+      if (length(pubkey()) == 0) {
         shiny::tagList(
           shiny::hr(),
           shiny::h4("Funksjon utilgjengelig"),
@@ -345,9 +345,7 @@ exportGuideApp <- function() {
 #' @rdname export
 #' @export
 selectListPubkey <- function(pubkey) {
-  if (!is.character(pubkey)) {
-    stop("pubkey must be a character vector, got: ", typeof(pubkey))
-  }
+  if (!is.character(pubkey)) return(list())
   listName <- substr(pubkey, nchar(pubkey) - 7, nchar(pubkey))
   listName <- paste0(substr(pubkey, 1, 8), "...", listName)
   names(pubkey) <- listName
