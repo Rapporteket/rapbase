@@ -54,10 +54,10 @@ test_that("a sample of auto report data can be written to db", {
 
 test_that("sample auto report data can be read from db", {
   check_db()
-  expect_equal(nrow(readAutoReportData()), 7)
+  expect_equal(nrow(readAutoReportData()), 8)
   expect_equal(class(readAutoReportData()), "data.frame")
   writeAutoReportData(config = arSample)
-  expect_equal(nrow(readAutoReportData()), 14)
+  expect_equal(nrow(readAutoReportData()), 16)
 })
 
 # For a valid test make sure there is ONE standard dummy report scheduled
@@ -84,6 +84,19 @@ test_that("Auto reports can be processed weekly", {
     dryRun = TRUE
     ),
     "No emails sent. Content is:",
+    all = FALSE
+  )
+})
+
+
+test_that("Auto reports from another package", {
+  check_db()
+  expect_message(runAutoReport(
+    dato = "2024-03-10",
+    dryRun = TRUE,
+    group = "raptest"
+    ),
+    "Overriding package rapbase with raptest for report generation",
     all = FALSE
   )
 })
