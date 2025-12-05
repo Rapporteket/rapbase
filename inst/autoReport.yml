@@ -99,3 +99,22 @@ cd467ac14dd848b8798a384a3e51512c:
   interval: years
   intervalName:
   runDayOfYear: 171.0
+
+1981dsadfd4c641be535a2b292a6b7b2:
+  synopsis: Test of different package auto report
+  package: raptest
+  fun: .testAutoReport
+  params:
+    aNum: '1'
+    aChar: someString
+    anExp: Sys.Date()
+    package: rapbase
+  owner: ttester
+  ownerName: 'Tore Tester'
+  email: tester@skde.no
+  organization: '999999'
+  startDate: '1979-03-10'
+  terminateDate: '2099-12-31'
+  interval: years
+  intervalName:
+  runDayOfYear: 170.0
