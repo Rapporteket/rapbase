@@ -280,7 +280,7 @@ filterAutoRep <- function(
 #' @examples
 #' .testAutoReport()
 .testAutoReport <- function(aNum = 1, aChar = "a", anExp = Sys.Date(),
-                            bulletin = 0) {
+                            bulletin = 0, ...) {
   if (bulletin == 0) {
     bulletin <- FALSE
   } else {

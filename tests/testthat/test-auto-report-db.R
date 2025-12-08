@@ -89,6 +89,7 @@ test_that("Auto reports can be processed weekly", {
 })
 
 
+# "2025-12-06" is Saturday
 test_that("Auto reports from another package", {
   check_db()
   expect_message(runAutoReport(
@@ -96,7 +97,7 @@ test_that("Auto reports from another package", {
     dryRun = TRUE,
     group = "raptest"
     ),
-    "Overriding package rapbase with raptest for report generation",
+    "Overriding package 'raptest' with 'rapbase' as provided in params",
     all = FALSE
   )
 })
