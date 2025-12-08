@@ -4,7 +4,7 @@
 \alias{.testAutoReport}
 \title{Simple test of automated report}
 \usage{
-.testAutoReport(aNum = 1, aChar = "a", anExp = Sys.Date(), bulletin = 0)
+.testAutoReport(aNum = 1, aChar = "a", anExp = Sys.Date(), bulletin = 0, ...)
 }
 \arguments{
 \item{aNum}{a number}
