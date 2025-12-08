@@ -273,6 +273,7 @@ filterAutoRep <- function(
 #' @param anExp an expression
 #' @param bulletin Integer defining if report is of type bulletin (1) or not
 #' (0). Set to 0 by default
+#' @param ... further arguments (not used)
 #'
 #' @return A simple message listing the contents of the arguments
 #' @export

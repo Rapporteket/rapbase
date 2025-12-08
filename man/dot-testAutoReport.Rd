@@ -15,6 +15,8 @@
 
 \item{bulletin}{Integer defining if report is of type bulletin (1) or not
 (0). Set to 0 by default}
+
+\item{...}{further arguments (not used)}
 }
 \value{
 A simple message listing the contents of the arguments
