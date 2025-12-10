@@ -65,9 +65,34 @@ testAutoReportThird:
   - 30
   - 60
   - 90
+testAutoReportFourth:
+  synopsis: Test, the fourth one
+  type: bulletin
+  package: rapbase
+  fun: rapbase::.testAutoReport
+  params:
+    aNum: 2.0
+    aChar: '3.14'
+    anExp: sessionInfo()
+    bulletin: yes
+  owner: ttester
+  ownerName: Tore Tester
+  email:
+  - <someone@nowhere.com>
+  - jesus@sky.com
+  organization: '999999'
+  startDate: '1900-01-01'
+  terminateDate: '2099-12-31'
+  interval: months
+  intervalName:
+  runDayOfYear:
+  - 30
+  - 60
+  - 90
 5a0e7e28fd4c641be535a2b292a6b7b2:
   synopsis: Test of auto report
   package: rapbase
+  type: subscription
   fun: .testAutoReport
   params:
     aNum: '1'
@@ -85,6 +110,7 @@ testAutoReportThird:
 cd467ac14dd848b8798a384a3e51512c:
   synopsis: Test of expired auto report
   package: rapbase
+  type: subscription
   fun: .testAutoReport
   params:
     aNum: '1'

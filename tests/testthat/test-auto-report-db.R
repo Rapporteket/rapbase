@@ -54,10 +54,10 @@ test_that("a sample of auto report data can be written to db", {
 
 test_that("sample auto report data can be read from db", {
   check_db()
-  expect_equal(nrow(readAutoReportData()), 7)
+  expect_equal(nrow(readAutoReportData()), 9)
   expect_equal(class(readAutoReportData()), "data.frame")
   writeAutoReportData(config = arSample)
-  expect_equal(nrow(readAutoReportData()), 14)
+  expect_equal(nrow(readAutoReportData()), 18)
 })
 
 # For a valid test make sure there is ONE standard dummy report scheduled
