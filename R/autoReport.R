@@ -387,14 +387,20 @@ runAutoReport <- function(
         )
     ) |>
     dplyr::ungroup() |>
-    # nolint start: object_usage_linter
     # combine emails for identical reports
     dplyr::summarise(
       email = list(unique(email)),
-      .by = c(owner, ownerName, package, organization, type, fun,
-        params, synopsis)
+      .by = c(
+        .data$owner,
+        .data$ownerName,
+        .data$package,
+        .data$organization,
+        .data$type,
+        .data$fun,
+        .data$params,
+        .data$synopsis
+      )
     )
-  # nolint end
 
   if (dim(reps)[1] == 0) {
     message(
