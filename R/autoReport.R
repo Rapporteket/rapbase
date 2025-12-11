@@ -379,7 +379,9 @@ runAutoReport <- function(
     dplyr::rowwise() |>
     dplyr::filter(
       # nolint start: vector_logic_linter.
-      # we need && here to ensure no crash if startDate < dato
+      # we need && here to ensure no crash if startDate < dato.
+      # Thus, seq.Date will not be called if one of the first
+      # two conditions is FALSE.
       (as.Date(.data$startDate) <= dato) &&
         (as.Date(.data$terminateDate) > dato) &&
         (dato %in% seq.Date(
