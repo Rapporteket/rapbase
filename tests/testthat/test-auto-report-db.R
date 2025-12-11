@@ -107,25 +107,29 @@ test_that("Auto reports not sent because of no reports this date", {
   expect_message(runAutoReport(
     dato = "2024-12-03",
     dryRun = TRUE
-    ))
+    ),
+    "runAutoReport: No reports to be processed today")
 })
 
 test_that("Auto reports not sent if before start date", {
   check_db()
   expect_message(runAutoReport(
-    dato = "1800-01-01",
+    dato = "1899-01-01",
     dryRun = TRUE
     ),
-    "runAutoReport: Starting processing of auto reports")
+    "runAutoReport: No reports to be processed today")
 })
 
 test_that("Auto reports not sent if after start date", {
   check_db()
-  expect_message(runAutoReport(
+  expect_message(
+    runAutoReport(
     dato = "3000-01-01",
     dryRun = TRUE
     ),
-    "runAutoReport: Finished processing of auto reports")
+    "runAutoReport: No reports to be processed today",
+    all = FALSE
+  )
 })
 
 
