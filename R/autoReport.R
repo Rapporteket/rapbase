@@ -378,27 +378,30 @@ runAutoReport <- function(
     # keep only reports to be run today
     dplyr::rowwise() |>
     dplyr::filter(
-      as.Date(.data$startDate) <= dato &
-        as.Date(.data$terminateDate) > dato &
-        dato %in% seq.Date(
+      # nolint start: vector_logic_linter.
+      # we need && here to ensure no crash if startDate < dato
+      (as.Date(.data$startDate) <= dato) &&
+        (as.Date(.data$terminateDate) > dato) &&
+        (dato %in% seq.Date(
           as.Date(.data$startDate),
           as.Date(dato),
           by = .data$interval
-        )
+        ))
+      # nolint end
     ) |>
     dplyr::ungroup() |>
     # combine emails for identical reports
     dplyr::summarise(
       email = list(unique(email)),
       .by = c(
-        .data$owner,
-        .data$ownerName,
-        .data$package,
-        .data$organization,
-        .data$type,
-        .data$fun,
-        .data$params,
-        .data$synopsis
+        "owner",
+        "ownerName",
+        "package",
+        "organization",
+        "type",
+        "fun",
+        "params",
+        "synopsis"
       )
     )
 
