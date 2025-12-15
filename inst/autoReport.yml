@@ -104,7 +104,7 @@ testAutoReportFourth:
   organization: '999999'
   startDate: '1900-01-01'
   terminateDate: '2099-12-31'
-  interval: years
+  interval: year
   intervalName:
   runDayOfYear: 170.0
 cd467ac14dd848b8798a384a3e51512c:
@@ -122,6 +122,6 @@ cd467ac14dd848b8798a384a3e51512c:
   organization: '999999'
   startDate: '1900-01-01'
   terminateDate: '0000-01-01'
-  interval: years
+  interval: year
   intervalName:
   runDayOfYear: 171.0
