@@ -438,8 +438,13 @@ runAutoReport <- function(
         rep <- reps[i, ] |> as.list()
         rep$email <- unlist(rep$email)
         params <- jsonlite::fromJSON(rep$params)
-        # get explicit referenced function and call it
-        f <- rapbase::.getFun(paste0(rep$package, "::", rep$fun))
+        # get referenced function and call it
+        if (grepl("::", rep$fun)) {
+          # get explicit referenced function and call it
+          f <- rapbase::.getFun(rep$fun)
+        } else {
+          f <- .getFun(paste0(rep$package, "::", rep$fun))
+        }
         content <- do.call(what = f, args = params)
         if (rep$type == "bulletin") {
           text <- content
