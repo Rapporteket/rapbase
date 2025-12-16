@@ -10,16 +10,16 @@
 \usage{
 exportGuideUI(id)
 
-exportGuideServer(id, registryName)
+exportGuideServer(id, dbName)
 
-exportGuideServer2(id, registryName)
+exportGuideServer2(id, dbName)
 
 exportGuideApp()
 }
 \arguments{
 \item{id}{Character string module ID}
 
-\item{registryName}{Character string registry name key}
+\item{dbName}{Character string registry name key}
 }
 \value{
 Functions ui and server representing the (module) app

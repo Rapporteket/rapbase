@@ -16,6 +16,14 @@
 #' @export
 
 rapOpenDbConnection <- function(dbName, dbType = "mysql") {
+  if (Sys.getenv("DB_TYPE") %in% c("mysql", "sqlite")) {
+    message(
+      "Overriding dbType to ",
+      Sys.getenv("DB_TYPE"),
+      " from environment variable DB_TYPE."
+    )
+    dbType <- Sys.getenv("DB_TYPE")
+  }
 
   if (dbType == "mysql") {
     conf <- getDbConfig(dbName)

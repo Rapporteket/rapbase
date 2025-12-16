@@ -72,12 +72,11 @@
 #' returns a list with names "name" and "value" with corresponding reactive
 #' values for the selected organization name and id. This may be used when
 #' parameter values of auto report functions needs to be altered at application
-#' run time. \code{orgList2df} returns a data frame with columns "name" and
-#' "id".
+#' run time.
 #' @name autoReport
 #' @aliases autoReportUI autoReportOrgInput autoReportOrgServer
 #'   autoReportFormatInput autoReportFormatSercer autoReportInput
-#'   autoReportServer autoReportServer2 orgList2df
+#'   autoReportServer autoReportServer2
 #' @examples
 #' ## make a list for report metadata
 #' reports <- list(
@@ -259,11 +258,14 @@ autoReportServer <- function(
     quarter = "Kvartalsvis-quarter",
     year = "\u00C5rlig-year"
   )
+  if (!shiny::is.reactive(reports)) {
+    # make reports reactive if not already
+    reports <- shiny::reactiveVal(reports)
+  }
 
   shiny::moduleServer(id, function(input, output, session) {
     autoReport <- shiny::reactiveValues(
       tab = makeAutoReportTab(
-        session = session,
         namespace = id,
         user = NULL,
         group = registryName,
@@ -271,7 +273,6 @@ autoReportServer <- function(
         type = type,
         mapOrgId = orgList2df(orgs)
       ),
-      report = names(reports)[1],
       org = unlist(orgs, use.names = FALSE)[1],
       freq = defaultFreq,
       email = vector()
@@ -284,7 +285,6 @@ autoReportServer <- function(
     shiny::observeEvent(
       userEvent(),
       autoReport$tab <- makeAutoReportTab(
-        session = session,
         namespace = id,
         user = user$name(),
         group = registryName,
@@ -304,7 +304,7 @@ autoReportServer <- function(
     })
 
     shiny::observeEvent(input$makeAutoReport, {
-      report <- reports[[input$report]]
+      report <- reports()[[input$report]]
       interval <- strsplit(input$freq, "-")[[1]][2]
       paramValues <- report$paramValues
       paramNames <- report$paramNames
@@ -318,7 +318,7 @@ autoReportServer <- function(
       }
       if (!paramValues()[1] == "") {
         stopifnot(length(paramNames()) == length(paramValues()))
-        for (i in seq_len(length(paramNames()))) {
+        for (i in seq_along(paramNames())) {
           paramValues[paramNames == paramNames()[i]] <- paramValues()[i]
         }
       }
@@ -341,7 +341,6 @@ autoReportServer <- function(
       )
       autoReport$tab <-
         makeAutoReportTab(
-          session,
           namespace = id,
           user = user$name(),
           group = registryName,
@@ -354,7 +353,7 @@ autoReportServer <- function(
 
     shiny::observeEvent(input$edit_button, {
       repId <- strsplit(input$edit_button, "__")[[1]][2]
-      rep <- readAutoReportData() %>%
+      rep <- readAutoReportData() |>
         dplyr::filter(id == repId)
       if (nrow(rep) != 1) {
         message("Can not modify (either less or more than 1)")
@@ -365,7 +364,6 @@ autoReportServer <- function(
       autoReport$email <- rep$email
       deleteAutoReport(repId)
       autoReport$tab <- makeAutoReportTab(
-        session,
         namespace = id,
         user = user$name(),
         group = registryName,
@@ -389,7 +387,6 @@ autoReportServer <- function(
       repId <- strsplit(input$del_button, "__")[[1]][2]
       deleteAutoReport(repId)
       autoReport$tab <- makeAutoReportTab(
-        session,
         namespace = id,
         user = user$name(),
         group = registryName,
@@ -401,7 +398,7 @@ autoReportServer <- function(
 
     # outputs
     output$reports <- shiny::renderUI({
-      if (is.null(reports)) {
+      if (is.null(reports())) {
         NULL
       } else {
         shiny::selectInput(
@@ -409,8 +406,8 @@ autoReportServer <- function(
           label = shiny::tags$div(
             shiny::HTML(as.character(shiny::icon("file")), "Velg rapport:")
           ),
-          choices = names(reports),
-          selected = autoReport$report
+          choices = names(reports()),
+          selected = names(reports())[1]
         )
       }
     })
@@ -420,7 +417,7 @@ autoReportServer <- function(
       shiny::HTML(
         paste0(
           "Rapportbeskrivelse:<br/><i>",
-          reports[[input$report]]$synopsis,
+          reports()[[input$report]]$synopsis,
           "</i>"
         )
       )
@@ -513,7 +510,7 @@ autoReportServer <- function(
     })
 
     output$makeAutoReport <- shiny::renderUI({
-      if (is.null(autoReport$report) || !eligible()) {
+      if (is.null(reports()) || !eligible()) {
         NULL
       } else {
         if (type %in% c("subscription")) {
@@ -651,8 +648,7 @@ autoReportServer2 <- function(...) {
   autoReportServer(...)
 }
 
-#' @rdname autoReport
-#' @export
+#' @keywords internal
 orgList2df <- function(orgs) {
   data.frame(
     name = names(orgs),

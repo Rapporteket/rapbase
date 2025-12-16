@@ -1,26 +1,12 @@
-# store current instance and prepare
-currentInstance <- Sys.getenv("R_RAP_INSTANCE")
-currentConfig <- Sys.getenv("R_RAP_CONFIG_PATH")
-
+# store current env var
+currentDbLog <- Sys.getenv("MYSQL_DB_LOG")
 tempdir <- tempdir()
-
-file.copy(system.file("rapbaseConfig.yml", package = "rapbase"), tempdir)
-configFile <- file.path(tempdir, "rapbaseConfig.yml")
-config <- yaml::read_yaml(configFile)
-
-Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
-
-# mocking when run as part of ci
-Sys.setenv(R_RAP_INSTANCE = "DEV")
 
 session <- list()
 attr(session, "class") <- "ShinySession"
 
-# must be last...
-Sys.setenv(R_RAP_CONFIG_PATH = "")
-
 test_that("nothing will be appended if path is not defined", {
-  expect_error(appendLog(
+  expect_warning(appendLog(
     event = data.frame(foo = "bar"), name = ""
   ))
 })
@@ -33,16 +19,9 @@ test_that("error is provided when target is not supported", {
 })
 
 
-# --- logging with database target ---
-Sys.setenv(R_RAP_INSTANCE = currentInstance)
-
-Sys.setenv(R_RAP_CONFIG_PATH = tempdir)
-
 # adjust config and get whatever name of logging database define there
 nameLogDb <- "raplogTest"
-config$r$raplog$target <- "db"
-config$r$raplog$key <- nameLogDb
-yaml::write_yaml(config, configFile)
+Sys.setenv(MYSQL_DB_LOG = nameLogDb)
 
 test_that("env vars needed for testing is present", {
   check_db()
@@ -61,54 +40,69 @@ test_that("tables can be created in logging db", {
   expect_null(rapbase:::createLogDbTabs())
 })
 
-appEvent <- data.frame(
-  time = "2022-03-24 11:16:29",
-  user = "ttester",
-  name = "Tore Tester",
-  group = "rapbase",
-  role = "accessLevel",
-  resh_id = "999999",
-  message = "unit test logging to db",
-  stringsAsFactors = FALSE
-)
 
-test_that("app event can be appended to db", {
+test_that("two app events can be appended to db", {
   check_db()
+  appEvent <- data.frame(
+    time = "2022-03-24 11:16:29",
+    user = "ttester",
+    name = "Tore Tester",
+    group = "rapbase",
+    role = "accessLevel",
+    resh_id = "999999",
+    message = "unit test logging to db",
+    stringsAsFactors = FALSE
+  )
   expect_message(appendLog(event = appEvent, name = "appLog"))
+  appEvent <- data.frame(
+    time = Sys.Date(),
+    user = "btester",
+    name = "B Tester",
+    group = "qwerty",
+    role = "LU",
+    resh_id = "42",
+    message = "Another test logging to db",
+    stringsAsFactors = FALSE
+  )
+  expect_message(appendLog(event = appEvent, name = "appLog"))
+  expect_warning(appendLog(event = appEvent, name = "appLogWrongName"))
 })
 
 test_that("log entries can be read from db", {
   check_db()
   expect_equal(class(rapbase:::readLog(type = "app")), "data.frame")
+  # Only read one of the load entries
   expect_equal(
-    rapbase:::readLog(type = "app", name = "rapbase")$user,
+    rapbase:::readLog(type = "app", app_id = "rapbase")$user,
     "ttester"
+  )
+  # Read both log entries
+  expect_equal(
+    rapbase:::readLog(type = "app")$role,
+    c("accessLevel", "LU")
   )
 })
 
 test_that("log can be sanitized in db", {
   check_db()
   expect_null(rapbase:::sanitizeLog())
-  expect_equal(dim(rapbase:::readLog(type = "app"))[1], 0)
+  expect_equal(dim(rapbase:::readLog(type = "app"))[1], 1)
   expect_equal(dim(rapbase:::readLog(type = "report"))[1], 0)
-})
-
-test_that("append and read errors when target is not known", {
-  check_db()
-  conf <- yaml::read_yaml(file.path(tempdir, "rapbaseConfig.yml"))
-  conf$r$raplog$target <- "unknown"
-  yaml::write_yaml(conf, file.path(tempdir, "rapbaseConfig.yml"))
-  expect_error(appendLog(event = appEvent, name = "appLog"))
-  expect_error(rapbase:::readLog(type = "app"))
-  expect_error(rapbase:::sanitizeLog())
 })
 
 # remove test db
 query_db(paste0("DROP DATABASE ", nameLogDb, ";"))
 
-# Restore instance
-Sys.setenv(R_RAP_CONFIG_PATH = currentConfig)
-Sys.setenv(R_RAP_INSTANCE = currentInstance)
+test_that("sanitizeLog return warning", {
+  expect_warning(rapbase:::sanitizeLog())
+})
+
+test_that("readLog return warning", {
+  expect_warning(rapbase:::readLog(type = "app"))
+})
+
+# Restore env var
+Sys.setenv(MYSQL_DB_LOG = currentDbLog)
 
 test_that("loggerSetup is working", {
   # env-stuff
@@ -171,8 +165,6 @@ test_that("loggerSetup is working", {
       "Test error"
     )
   )
-
-
 
 
   # env-stuff

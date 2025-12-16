@@ -127,7 +127,7 @@ appLogger <- function(session, msg = "No message provided",
   name <- "appLog"
   parent_environment <- environmentName(topenv(.topenv))
   content <- c(
-    getSessionData(session, group = parent_environment),
+    getSessionData(group = parent_environment),
     list(message = msg)
   )
   event <- makeLogRecord(content)
@@ -149,7 +149,7 @@ repLogger <- function(session, msg = "No message provided",
   parent_environment <- environmentName(topenv(.topenv))
   parent_call <- deparse(.topcall, width.cutoff = 160L, nlines = 1L)
   content <- c(
-    getSessionData(session),
+    getSessionData(),
     list(
       environment = parent_environment,
       call = parent_call,
@@ -206,30 +206,27 @@ autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
 #' @param name String defining the name of the log, currently one of "appLog" or
 #' "reportLog".
 #'
-#' @return Provides a new record in the log. If the log does not exist a new
-#' one is created before appending the new record when the log target is
-#' configured to be files. When logging to a database this have to be set up in
-#' advance.
+#' @return Provides a new record in the log database. The database have to be
+#' set up in advance.
 #'
 #' @keywords internal
 #'
 #' @importFrom utils write.table
 
 appendLog <- function(event, name) {
-  config <- getConfig(fileName = "rapbaseConfig.yml")
-  target <- config$r$raplog$target
-
-  if (target == "db") {
-    con <- rapOpenDbConnection(config$r$raplog$key)$con
+  tryCatch({
+    con <- rapOpenDbConnection("raplog")$con
     DBI::dbAppendTable(con, name, event, row.names = NULL)
     rapCloseDbConnection(con)
     con <- NULL
-  } else {
-    stop(paste0(
-      "Target ", target, " is not supported. ",
-      "Log event was not appended!"
+  } , error = function(e) {
+    warning(paste0(
+      "Log entry could not be appended to '", name, "' log!\n",
+      "Please check that configuration is set up properly.\n",
+      "Original error message:\n", e$message, ".\n",
+      "The message that was to be logged:\n", paste(event, collapse = "; ")
     ))
-  }
+  })
 }
 
 
@@ -255,20 +252,19 @@ makeLogRecord <- function(content) {
 #'
 #' Internal function providing session data relevant to logging.
 #'
-#' @param session A shiny session object
 #' @param group Character string providing the name of the app R package name.
 #'   The term "group" is used to relate to the environmental variable
 #'   SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.
 #'
 #' @return A list of relevant log fields
 #' @keywords internal
-getSessionData <- function(session, group = NULL) {
+getSessionData <- function(group = NULL) {
   list(
-    user = rapbase::getUserName(session, group),
-    name = rapbase::getUserFullName(session, group),
-    group = rapbase::getUserGroups(session, group),
-    role = rapbase::getUserRole(session, group),
-    resh_id = rapbase::getUserReshId(session, group)
+    user = rapbase::getUserName(group),
+    name = rapbase::getUserFullName(group),
+    group = rapbase::getUserGroups(group),
+    role = rapbase::getUserRole(group),
+    resh_id = rapbase::getUserReshId(group)
   )
 }
 
@@ -281,7 +277,6 @@ getSessionData <- function(session, group = NULL) {
 #'
 #' @keywords internal
 createLogDbTabs <- function() {
-  conf <- getConfig(fileName = "rapbaseConfig.yml")
 
   fc <- file(system.file("createRaplogTabs.sql", package = "rapbase"), "r")
   t <- readLines(fc)
@@ -289,9 +284,9 @@ createLogDbTabs <- function() {
   sql <- paste0(t, collapse = "\n")
   queries <- strsplit(sql, ";")[[1]]
 
-  con <- rapOpenDbConnection(conf$r$raplog$key)$con
-  for (i in seq_len(length(queries))) {
-    RMariaDB::dbExecute(con, queries[i])
+  con <- rapOpenDbConnection("raplog")$con
+  for (i in seq_along(queries)) {
+    DBI::dbExecute(con, queries[i])
   }
   rapbase::rapCloseDbConnection(con)
   con <- NULL
@@ -316,41 +311,39 @@ createLogDbTabs <- function() {
 readLog <- function(type, name = "", app_id = NULL) {
   stopifnot(type == "report" | type == "app")
 
-  config <- rapbase::getConfig(fileName = "rapbaseConfig.yml")
-  target <- config$r$raplog$target
-
-  if (target == "db") {
+  tryCatch({
     query <- paste0("SELECT * FROM ", type, "Log")
     query <- paste0(query, ";")
-    log <- rapbase::loadRegData(config$r$raplog$key, query)
+    log <- rapbase::loadRegData("raplog", query)
     if (!is.null(app_id)) {
       log <- log[which(log$group == app_id), ]
     }
-    log <- log %>%
+    log <- log |>
       dplyr::select(-"id")
-  } else {
-    stop(paste0(
-      "Log target '", target, "' is not supported. ",
+    invisible(log)
+  } , error = function(e) {
+    warning(paste0(
       "Log could not be read! To remedy, please check that configuration is ",
-      "set up properly."
+      "set up properly.\nOriginal error message:\n", e$message
     ))
-  }
-
-  invisible(log)
+    invisible(NULL)
+  })
 }
 
 #' Sanitize log entries that have reached end of life
 #'
+#' Function that removes log entries older than a given number of days.
+#'
+#' @param eolDays Number of days to keep log entries. Entries older than this
+#' will be removed. Default value is 730 days (2 years).
+#'
 #' @return NULL on success
 #' @export
-sanitizeLog <- function() {
-  conf <- getConfig(fileName = "rapbaseConfig.yml")
-  target <- conf$r$raplog$target
+sanitizeLog <- function(eolDays = 730) {
+  tryCatch({
+    eolDate <- Sys.Date() - eolDays
 
-  if (target == "db") {
-    eolDate <- Sys.Date() - conf$r$raplog$eolDays
-
-    con <- rapOpenDbConnection(conf$r$raplog$key)$con
+    con <- rapOpenDbConnection("raplog")$con
     query <- paste0(
       "DELETE FROM appLog WHERE time < '",
       as.character(eolDate), "';"
@@ -363,13 +356,12 @@ sanitizeLog <- function() {
     DBI::dbExecute(con, query)
     rapCloseDbConnection(con)
     con <- NULL
-  } else {
-    stop(paste0(
-      "Log target '", target, "' is not supported. ",
+    NULL
+  } , error = function(e) {
+    warning(paste0(
       "Log could not be sanitized! ",
       "To remedy, please check that configuration is ",
       "set up properly."
     ))
-  }
-  NULL
+  })
 }

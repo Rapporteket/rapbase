@@ -367,20 +367,54 @@ runAutoReport <- function(
 ) {
 
   # get report candidates
-  reps <- rapbase::readAutoReportData() %>%
-    rapbase::filterAutoRep(by = "type", pass = type)
+  reps <- rapbase::readAutoReportData() |>
+    filterAutoRep(by = "type", pass = type)
   if (!is.null(group)) {
-    reps <- reps %>%
-      rapbase::filterAutoRep(by = "package", pass = group)
+    reps <- reps |>
+      filterAutoRep(by = "package", pass = group)
   }
-  reps <- reps %>%
-    # nolint start: object_usage_linter
+
+  reps <- reps |>
+    # keep only reports to be run today
+    dplyr::rowwise() |>
+    dplyr::filter(
+      # nolint start: vector_logic_linter.
+      # we need && here to ensure no crash if startDate < dato.
+      # Thus, seq.Date will not be called if one of the first
+      # two conditions is FALSE.
+      (as.Date(.data$startDate) <= dato) &&
+        (as.Date(.data$terminateDate) > dato) &&
+        (dato %in% seq.Date(
+          as.Date(.data$startDate),
+          as.Date(dato),
+          by = .data$interval
+        ))
+      # nolint end
+    ) |>
+    dplyr::ungroup() |>
+    # combine emails for identical reports
     dplyr::summarise(
       email = list(unique(email)),
-      .by = c(owner, ownerName, package, organization, type, fun,
-        params, startDate, terminateDate, interval, synopsis)
+      .by = c(
+        "owner",
+        "ownerName",
+        "package",
+        "organization",
+        "type",
+        "fun",
+        "params",
+        "synopsis"
+      )
     )
-  # nolint end
+
+  if (dim(reps)[1] == 0) {
+    message(
+      "runAutoReport: No reports to be processed today (",
+      dato,
+      ifelse(is.null(group), ").", paste0(") from registry ", group, "."))
+    )
+    return(invisible(NULL))
+  }
 
   # standard text for email body
   standardEmailFileName <- "autoReportStandardEmailText.txt"
@@ -401,68 +435,63 @@ runAutoReport <- function(
     ))
     tryCatch(
       {
-        rep <- reps[i, ] %>% as.list()
+        rep <- reps[i, ] |> as.list()
         rep$email <- unlist(rep$email)
         params <- jsonlite::fromJSON(rep$params)
-        if (
-          as.Date(rep$startDate) <= dato
-          && as.Date(rep$terminateDate) > dato
-          && dato %in% seq.Date(
-            as.Date(rep$startDate),
-            as.Date(dato),
-            by = rep$interval
-          ) # 'days', 'weeks', 'months', 'years',
-        ) {
+        # get referenced function and call it
+        if (grepl("::", rep$fun)) {
           # get explicit referenced function and call it
-          f <- rapbase::.getFun(paste0(rep$package, "::", rep$fun))
-          content <- do.call(what = f, args = params)
-          if (rep$type == "bulletin") {
-            text <- content
-            attFile <- NULL
-          } else {
-            attFile <- content
-            if (file.exists(system.file(
-              standardEmailFileName,
-              package = rep$package
-            ))) {
-              # read standard text from package
-              text <- readr::read_file(
-                system.file(
-                  standardEmailFileName,
-                  package = rep$package
-                )
+          f <- rapbase::.getFun(rep$fun)
+        } else {
+          f <- .getFun(paste0(rep$package, "::", rep$fun))
+        }
+        content <- do.call(what = f, args = params)
+        if (rep$type == "bulletin") {
+          text <- content
+          attFile <- NULL
+        } else {
+          attFile <- content
+          if (file.exists(system.file(
+            standardEmailFileName,
+            package = rep$package
+          ))) {
+            # read standard text from package
+            text <- readr::read_file(
+              system.file(
+                standardEmailFileName,
+                package = rep$package
               )
-            } else {
-              text <- stdTxt
-            }
+            )
+          } else {
+            text <- stdTxt
           }
-          if (dryRun) {
-            message(paste("No emails sent. Content is:", content))
-          } else {
-            for (email in rep$email) {
-              message(paste(
-                "Report", i, "of", dim(reps)[1],
-                ". Sending email to:", email
-              ))
-              rapbase::autLogger(
-                user = rep$owner,
-                name = rep$ownerName,
-                registryName = rep$package,
-                reshId = rep$organization,
-                type = rep$type,
-                pkg = rep$package,
-                fun = rep$fun,
-                param = rep$params,
-                msg = paste(
-                  "recipient:",
-                  email
-                )
+        }
+        if (dryRun) {
+          message(paste("No emails sent. Content is:", content))
+        } else {
+          for (email in rep$email) {
+            message(paste(
+              "Report", i, "of", dim(reps)[1],
+              ". Sending email to:", email
+            ))
+            rapbase::autLogger(
+              user = rep$owner,
+              name = rep$ownerName,
+              registryName = rep$package,
+              reshId = rep$organization,
+              type = rep$type,
+              pkg = rep$package,
+              fun = rep$fun,
+              param = rep$params,
+              msg = paste(
+                "recipient:",
+                email
               )
-              rapbase::sendEmail(
-                conf = conf, to = email, subject = rep$synopsis,
-                text = text, attFile = attFile
-              )
-            }
+            )
+            rapbase::sendEmail(
+              conf = conf, to = email, subject = rep$synopsis,
+              text = text, attFile = attFile
+            )
           }
         }
       },
@@ -479,8 +508,7 @@ runAutoReport <- function(
 
 #' Run bulletin auto reports
 #'
-#' This is a wrapper for \code{runAutoReport()} to issue bulletins. Purpose is
-#' to ease simplify fire-in-the-hole at Rapporteket
+#' This is a wrapper for \code{runAutoReport()} to issue bulletins.
 #'
 #' @return  Whatever \code{runAutoReport()} might provide
 #' @export
@@ -516,7 +544,7 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
   s <- seq(from = start, to = end, by = interval)
   # skip redundant end value
   if (length(s) > 1) {
-    s <- s[seq_len(length(s)) - 1]
+    s <- s[seq_along(s) - 1]
   }
   unique(as.integer(format(s, "%j")))
 }
@@ -582,8 +610,7 @@ findNextRunDate <- function(
 #' Make table of automated reports
 #'
 #' Make a table to be rendered in a shiny app providing automated reports
-#' from a given user or registry as obtained from the shiny session
-#' object provided or environmental variables when run inside an app container.
+#' from a given user or registry as obtained from the environmental variables.
 #'
 #' Each table record (line) represents a uniquely defined automated report.
 #' For each line two shiny action buttons are provided to allow
@@ -606,20 +633,19 @@ findNextRunDate <- function(
 #' \href{https://github.com/Rapporteket/rapRegTemplate/blob/main/inst/shinyApps/app1/server.R}{example shiny server function in rapRegTemplate}
 #' on how this function may be implemented.
 #'
-#' @param session A shiny session object
 #' @param namespace String naming namespace. Defaults to \code{character()} in
 #'   which case no namespace will be created. When this function is used by
 #'   shiny modules namespace must be provided.
 #' @param user Character string providing the username. Introduced as a new
 #'   argument when running apps inside containers. Default value is set to
-#'   \code{rapbase::getUserName(session)} to allow backward compatibility.
+#'   \code{rapbase::getUserName()} to allow backward compatibility.
 #' @param group Character string defining the registry, normally corresponding
 #'   to the R package name and the value stemming from the SHINYPROXY_GROUPS
 #'   environment variable. Introduced as a new argument when running apps inside
-#'   containers. Default value is set to \code{rapbase::getUserGroups(session)}
+#'   containers. Default value is set to \code{rapbase::getUserGroups()}
 #'   to allow backward compatibility.
 #' @param orgId Character string or integer defining the organization (id) for
-#'   \code{user}. Default value is set to \code{rapbase::getUserReshId(session)}
+#'   \code{user}. Default value is set to \code{rapbase::getUserReshId()}
 #'   to allow backward compatibility.
 #' @param type Character string defining the type of auto reports to tabulate.
 #'   Must be one of \code{"subscription"}, \code{"dispatchment"} or
@@ -633,29 +659,27 @@ findNextRunDate <- function(
 #'   the last column in the table. FALSE by default.
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
-#' @importFrom dplyr "%>%"
 #' @export
 # nolint end
 
 makeAutoReportTab <- function(
-  session,
   namespace = character(),
-  user = rapbase::getUserName(session),
-  group = rapbase::getUserGroups(session),
-  orgId = rapbase::getUserReshId(session),
+  user = rapbase::getUserName(),
+  group = rapbase::getUserGroups(),
+  orgId = rapbase::getUserReshId(),
   type = "subscription",
   mapOrgId = NULL,
   includeReportId = FALSE
 ) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
-  autoRep <- readAutoReportData() %>%
-    filterAutoRep(by = "package", pass = group) %>%
+  autoRep <- readAutoReportData() |>
+    filterAutoRep(by = "package", pass = group) |>
     filterAutoRep(by = "type", pass = type)
 
   if (type == "subscription") {
-    autoRep <- autoRep %>%
-      filterAutoRep(by = "owner", pass = user) %>%
+    autoRep <- autoRep |>
+      filterAutoRep(by = "owner", pass = user) |>
       filterAutoRep(by = "organization", pass = orgId)
   }
 

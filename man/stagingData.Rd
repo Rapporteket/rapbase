@@ -10,20 +10,22 @@
 \alias{cleanStagingData}
 \title{Staging data functions}
 \usage{
-listStagingData(registryName)
+listStagingData(registryName, dbTable = "data")
 
-mtimeStagingData(registryName)
+mtimeStagingData(registryName, dbTable = "data")
 
-saveStagingData(registryName, dataName, data)
+saveStagingData(registryName, dataName, data, dbTable = "data")
 
-loadStagingData(registryName, dataName)
+loadStagingData(registryName, dataName, dbTable = "data")
 
-deleteStagingData(registryName, dataName)
+deleteStagingData(registryName, dataName, dbTable = "data")
 
-cleanStagingData(eolAge, dryRun = TRUE)
+cleanStagingData(eolAge, dryRun = TRUE, dbTable = "data")
 }
 \arguments{
 \item{registryName}{Character string providing the registry name.}
+
+\item{dbTable}{Character string providing the database table name to be used}
 
 \item{dataName}{Character string providing the data set name.}
 

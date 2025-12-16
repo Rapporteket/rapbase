@@ -31,7 +31,7 @@ createAutoReportTab <- function(nameAutoReportDb) {
 
   con <- rapOpenDbConnection(nameAutoReportDb)[["con"]]
   for (i in seq_len(length(queries))) {
-    RMariaDB::dbExecute(con, queries[i])
+    DBI::dbExecute(con, queries[i])
   }
   rapbase::rapCloseDbConnection(con)
   con <- NULL
@@ -54,10 +54,10 @@ test_that("a sample of auto report data can be written to db", {
 
 test_that("sample auto report data can be read from db", {
   check_db()
-  expect_equal(nrow(readAutoReportData()), 7)
+  expect_equal(nrow(readAutoReportData()), 9)
   expect_equal(class(readAutoReportData()), "data.frame")
   writeAutoReportData(config = arSample)
-  expect_equal(nrow(readAutoReportData()), 14)
+  expect_equal(nrow(readAutoReportData()), 18)
 })
 
 # For a valid test make sure there is ONE standard dummy report scheduled
@@ -107,25 +107,29 @@ test_that("Auto reports not sent because of no reports this date", {
   expect_message(runAutoReport(
     dato = "2024-12-03",
     dryRun = TRUE
-    ))
+    ),
+    "runAutoReport: No reports to be processed today")
 })
 
 test_that("Auto reports not sent if before start date", {
   check_db()
   expect_message(runAutoReport(
-    dato = "1800-01-01",
+    dato = "1899-01-01",
     dryRun = TRUE
     ),
-    "runAutoReport: Starting processing of auto reports")
+    "runAutoReport: No reports to be processed today")
 })
 
 test_that("Auto reports not sent if after start date", {
   check_db()
-  expect_message(runAutoReport(
+  expect_message(
+    runAutoReport(
     dato = "3000-01-01",
     dryRun = TRUE
     ),
-    "runAutoReport: Finished processing of auto reports")
+    "runAutoReport: No reports to be processed today",
+    all = FALSE
+  )
 })
 
 
@@ -275,38 +279,6 @@ test_that("Auto report can be created and written to file", {
     paramValues, owner, email, organization,
     runDayOfYear, dryRun
   ))
-})
-
-test_that("auto report tables (for shiny) can be made", {
-  shinySession <- list(user = "tester")
-  shinySession$groups <- "rapbase"
-  attr(shinySession, "class") <- "ShinySession"
-  mapOrgId <- data.frame(id = "999999", name = "HUS", stringsAsFactors = FALSE)
-
-  check_db()
-  expect_true(is.list(
-    makeAutoReportTab(shinySession,
-      type = "subscription", mapOrgId = mapOrgId,
-      includeReportId = TRUE
-    )
-  ))
-  expect_true(is.list(
-    makeAutoReportTab(shinySession,
-      type = "dispatchment", mapOrgId = mapOrgId,
-      includeReportId = TRUE
-    )
-  ))
-  expect_true(is.list(
-    makeAutoReportTab(shinySession,
-      type = "bulletin", mapOrgId = mapOrgId,
-      includeReportId = TRUE
-    )
-  ))
-
-  expect_true(is.list(
-    makeAutoReportTab(shinySession, type = "dispatchment", mapOrgId)
-  ))
-
 })
 
 
@@ -476,14 +448,14 @@ withr::with_envvar(
 
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
-  con <- RMariaDB::dbConnect(
+  con <- DBI::dbConnect(
     RMariaDB::MariaDB(),
     host = Sys.getenv("MYSQL_HOST"),
     user = Sys.getenv("MYSQL_USER"),
     password = Sys.getenv("MYSQL_PASSWORD"),
     bigint = "integer"
   )
-  RMariaDB::dbExecute(con, paste("DROP DATABASE", nameAutoReportDb))
+  DBI::dbExecute(con, paste("DROP DATABASE", nameAutoReportDb))
   rapbase::rapCloseDbConnection(con)
 }
 

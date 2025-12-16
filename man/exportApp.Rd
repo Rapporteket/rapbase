@@ -4,14 +4,15 @@
 \alias{exportApp}
 \title{Shiny app with database export functionality}
 \usage{
-exportApp(repoName = "", registryName = "data")
+exportApp(teamName = "", dbName = "data")
 }
 \arguments{
-\item{repoName}{Character string registry name key, corresponding to
+\item{teamName}{Character string, corresponding to
 github team name}
 
-\item{registryName}{Character string registry name key, can be used to
-specify name of database if needed.}
+\item{dbName}{Character string, can be used to
+specify name of database if needed. Defaults to "data",
+which will work for most registries.}
 }
 \description{
 Shiny app with database export functionality

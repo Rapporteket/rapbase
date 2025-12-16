@@ -4,51 +4,11 @@
 \alias{userInfo}
 \title{Provide user attributes based on environment context}
 \usage{
-userInfo(
-  entity,
-  shinySession = NULL,
-  devContexts = c("DEV"),
-  testContexts = c("TEST"),
-  prodContexts = c("QA", "QAC", "PRODUCTION", "PRODUCTIONC"),
-  group = NULL
-)
+userInfo(entity)
 }
 \arguments{
 \item{entity}{String defining the element to return. Currently, one of
 'user', groups', 'resh_id', 'role', 'email', 'full_name' or 'phone'.}
-
-\item{shinySession}{Shiny session object (list, NULL by default). Must be
-provided when the source of user attributes is either the shiny app url or
-an external authentication provider. By default this will apply to the
-'TEST', 'QA' and 'PRODUCTION' contexts in which case the shiny session
-object must be provided.}
-
-\item{devContexts}{A character vector providing unique instances to be
-regarded as a development context. In this context user attributes will be
-read from configuration as provided by 'rapbaseConfig.yml'. The instances
-provided cannot overlap instances provided in any other contexts. By
-default set to \code{c("DEV")}.}
-
-\item{testContexts}{A character vector providing unique instances to be
-regarded as a test context. In this context user attributes will be read
-from the url call to a shiny application. Hence, for this context the
-corresponding shiny session object must also be provided. The instances
-provided cannot overlap instances provided in any other contexts. By
-default set to \code{c("TEST")}.}
-
-\item{prodContexts}{A character vector providing unique instances to be
-regarded as a production context. In this context user attributes will be
-read from the shiny session object (on deployment in shiny-server) or, from
-environmental variables (on standalone container deployment). Hence, for
-this context the corresponding shiny session object must also be provided.
-Instances provided cannot overlap instances in any other contexts. By
-default set to \code{c("QA", "QAC", "PRODUCTION", "PRODUCTIONC")}.
-Duplication as seen by the "C" suffix will be needed as long as apps in
-question are to be run on both shiny-server and as standalone containers.}
-
-\item{group}{Character string providing the name of the app R package name.
-The term "group" is used to relate to the environmental variable
-SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.}
 }
 \value{
 String of single user data element
