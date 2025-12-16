@@ -7,6 +7,7 @@
 #'
 title <- function(regTitle = "rapbase") {
   shiny::div(
+    style = "display: inline-block;",
     shiny::a(
       style = paste(
         "vertical-align: middle;",
