@@ -32,7 +32,7 @@ query_db(query = query)
 query <- c(
   paste0("USE ", regName, ";"),
   paste(
-    "CREATE TABLE testTable (id int, someText varchar(50),",
+    "CREATE TABLE testtable (id int, someText varchar(50),",
     "someInt INT, someBigInt BIGINT, someFloat DOUBLE,",
     "someTime DATETIME);"
   )
@@ -43,7 +43,7 @@ query_db(query = query)
 if (is.null(check_db(is_test_that = FALSE))) {
   # add some data to db
   con <- rapOpenDbConnection(regName)$con
-  DBI::dbAppendTable(con, "testTable", testdata, row.names = NULL)
+  DBI::dbAppendTable(con, "testtable", testdata, row.names = NULL)
   rapCloseDbConnection(con)
 }
 
@@ -61,7 +61,7 @@ test_that("A mysql db connection and driver can be provided and cleaned", {
 
 test_that("Data can be queried from (MySQL) db", {
   check_db()
-  query <- "SELECT * FROM testTable"
+  query <- "SELECT * FROM testtable"
   expect_equal(
     loadRegData(regName, query, dbType = "mysql")$id,
     c(1:10)
@@ -74,7 +74,7 @@ test_that("Data can be queried from (MySQL) db", {
 
 test_that("Data can be queried from (MySQL) db with no data", {
   check_db()
-  query <- "SELECT * FROM testTable WHERE id = -1"
+  query <- "SELECT * FROM testtable WHERE id = -1"
   expect_equal(
     length(loadRegData(regName, query, dbType = "mysql")$id),
     0
@@ -83,17 +83,47 @@ test_that("Data can be queried from (MySQL) db with no data", {
 
 test_that("metadata can be queried from db", {
   check_db()
+  testSet <- describeRegistryDb(regName)
   expect_equal(
-    class(describeRegistryDb(regName)),
+    class(testSet),
     "list"
+  )
+  expect_equal(
+    names(testSet$testtable),
+    c("Field", "Type", "Null", "Key", "Default", "Extra")
+  )
+  expect_equal(
+    testSet$testtable$Type,
+    c("int", "varchar(50)", "int", "bigint", "double", "datetime")
   )
 })
 
 test_that("metadata can be queried from some tabs in db", {
   check_db()
+  testSet <- describeRegistryDb(regName, tabs = c("testtable"))
   expect_equal(
-    class(describeRegistryDb(regName, tabs = c("testTable"))),
+    class(testSet),
     "list"
+  )
+  expect_equal(
+    names(testSet$testtable),
+    c("Field", "Type", "Null", "Key", "Default", "Extra")
+  )
+  expect_equal(
+    testSet$testtable$Type,
+    c("int", "varchar(50)", "int", "bigint", "double", "datetime")
+  )
+})
+
+test_that("number of lines can be queried from some tabs in db", {
+  check_db()
+  expect_equal(
+    nlinesRegistryDb(regName, tab = "testtable"),
+    10
+  )
+  expect_warning(
+    nlinesRegistryDb(regName, tab = "wrongtesttable"),
+    "Number of lines in table wrongtesttable could not be retrieved"
   )
 })
 
@@ -104,7 +134,7 @@ test_that("Bigints are returned as integers (not bit64::integer64)", {
     "CREATE DATABASE rapbase;",
     "USE rapbase;",
     paste(
-      "CREATE TABLE testTable (id int, someText varchar(50),",
+      "CREATE TABLE testtable (id int, someText varchar(50),",
       "someInt INT, someBigInt BIGINT, someFloat DOUBLE,",
       "someTime DATETIME);"
     )
@@ -113,7 +143,7 @@ test_that("Bigints are returned as integers (not bit64::integer64)", {
   for (q in query) {
     tmp <- DBI::dbExecute(l$con, q)
   }
-  query <- "SELECT * FROM testTable;"
+  query <- "SELECT * FROM testtable;"
   df <- DBI::dbGetQuery(l$con, query)
   rapCloseDbConnection(l$con)
   l <- NULL
