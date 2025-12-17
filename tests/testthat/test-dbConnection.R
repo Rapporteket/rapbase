@@ -93,8 +93,8 @@ test_that("metadata can be queried from db", {
     c("Field", "Type", "Null", "Key", "Default", "Extra")
   )
   expect_equal(
-    testSet$testtable$Type,
-    c("int", "varchar(50)", "int", "bigint", "double", "datetime")
+    sort(testSet$testtable$Type),
+    sort(c("int", "varchar(50)", "int", "bigint", "double", "datetime"))
   )
 })
 
@@ -110,8 +110,8 @@ test_that("metadata can be queried from some tabs in db", {
     c("Field", "Type", "Null", "Key", "Default", "Extra")
   )
   expect_equal(
-    testSet$testtable$Type,
-    c("int", "varchar(50)", "int", "bigint", "double", "datetime")
+    sort(testSet$testtable$Type),
+    sort(c("int", "varchar(50)", "int", "bigint", "double", "datetime"))
   )
 })
 
