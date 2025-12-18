@@ -33,7 +33,7 @@ createAutoReportTab <- function(nameAutoReportDb) {
   for (i in seq_len(length(queries))) {
     DBI::dbExecute(con, queries[i])
   }
-  rapbase::rapCloseDbConnection(con)
+  rapCloseDbConnection(con)
   con <- NULL
 }
 
@@ -456,7 +456,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
     bigint = "integer"
   )
   DBI::dbExecute(con, paste("DROP DATABASE", nameAutoReportDb))
-  rapbase::rapCloseDbConnection(con)
+  rapCloseDbConnection(con)
 }
 
 # Restore instance

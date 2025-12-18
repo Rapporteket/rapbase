@@ -626,7 +626,7 @@ autoReportServer <- function(
         " sending e-mails. This job was triggered by ", user$fullName()
       )
       dryRun <- !(input$sendEmails)
-      rapbase::runAutoReport(
+      runAutoReport(
         group = registryName,
         dato = dato,
         dryRun = dryRun

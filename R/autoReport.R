@@ -155,7 +155,7 @@ deleteAutoReport <- function(autoReportId) {
 #' }
 readAutoReportData <- function() {
   query <- paste0("SELECT * FROM autoreport;")
-  res <- rapbase::loadRegData("autoreport", query)
+  res <- loadRegData("autoreport", query)
   res
 }
 
@@ -367,7 +367,7 @@ runAutoReport <- function(
 ) {
 
   # get report candidates
-  reps <- rapbase::readAutoReportData() |>
+  reps <- readAutoReportData() |>
     filterAutoRep(by = "type", pass = type)
   if (!is.null(group)) {
     reps <- reps |>
@@ -425,7 +425,7 @@ runAutoReport <- function(
     )
   )
   # get sender from common config
-  conf <- rapbase::getConfig("rapbaseConfig.yml")
+  conf <- getConfig("rapbaseConfig.yml")
 
   message("runAutoReport: Starting processing of auto reports")
   for (i in seq_len(dim(reps)[1])) {
@@ -441,7 +441,7 @@ runAutoReport <- function(
         # get referenced function and call it
         if (grepl("::", rep$fun)) {
           # get explicit referenced function and call it
-          f <- rapbase::.getFun(rep$fun)
+          f <- .getFun(rep$fun)
         } else {
           f <- .getFun(paste0(rep$package, "::", rep$fun))
         }
@@ -474,7 +474,7 @@ runAutoReport <- function(
               "Report", i, "of", dim(reps)[1],
               ". Sending email to:", email
             ))
-            rapbase::autLogger(
+            autLogger(
               user = rep$owner,
               name = rep$ownerName,
               registryName = rep$package,
@@ -488,7 +488,7 @@ runAutoReport <- function(
                 email
               )
             )
-            rapbase::sendEmail(
+            sendEmail(
               conf = conf, to = email, subject = rep$synopsis,
               text = text, attFile = attFile
             )
@@ -664,9 +664,9 @@ findNextRunDate <- function(
 
 makeAutoReportTab <- function(
   namespace = character(),
-  user = rapbase::getUserName(),
-  group = rapbase::getUserGroups(),
-  orgId = rapbase::getUserReshId(),
+  user = getUserName(),
+  group = getUserGroups(),
+  orgId = getUserReshId(),
   type = "subscription",
   mapOrgId = NULL,
   includeReportId = FALSE

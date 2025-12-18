@@ -37,7 +37,7 @@ test_that("a db for logging can be created", {
 
 test_that("tables can be created in logging db", {
   check_db()
-  expect_null(rapbase:::createLogDbTabs())
+  expect_null(createLogDbTabs())
 })
 
 
@@ -70,35 +70,35 @@ test_that("two app events can be appended to db", {
 
 test_that("log entries can be read from db", {
   check_db()
-  expect_equal(class(rapbase:::readLog(type = "app")), "data.frame")
+  expect_equal(class(readLog(type = "app")), "data.frame")
   # Only read one of the load entries
   expect_equal(
-    rapbase:::readLog(type = "app", app_id = "rapbase")$user,
+    readLog(type = "app", app_id = "rapbase")$user,
     "ttester"
   )
   # Read both log entries
   expect_equal(
-    rapbase:::readLog(type = "app")$role,
+    readLog(type = "app")$role,
     c("accessLevel", "LU")
   )
 })
 
 test_that("log can be sanitized in db", {
   check_db()
-  expect_null(rapbase:::sanitizeLog())
-  expect_equal(dim(rapbase:::readLog(type = "app"))[1], 1)
-  expect_equal(dim(rapbase:::readLog(type = "report"))[1], 0)
+  expect_null(sanitizeLog())
+  expect_equal(dim(readLog(type = "app"))[1], 1)
+  expect_equal(dim(readLog(type = "report"))[1], 0)
 })
 
 # remove test db
 query_db(paste0("DROP DATABASE ", nameLogDb, ";"))
 
 test_that("sanitizeLog return warning", {
-  expect_warning(rapbase:::sanitizeLog())
+  expect_warning(sanitizeLog())
 })
 
 test_that("readLog return warning", {
-  expect_warning(rapbase:::readLog(type = "app"))
+  expect_warning(readLog(type = "app"))
 })
 
 # Restore env var
