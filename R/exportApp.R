@@ -9,7 +9,7 @@
 exportApp <- function(teamName = "", dbName = "data") {
   ui <- shiny::navbarPage(
     id = "navbarpage",
-    title = title("Simple export app"),
+    title = rapbase::title("Simple export app"),
     windowTitle = "Simple export app",
     theme = theme(),
     shiny::tabPanel(
