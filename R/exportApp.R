@@ -9,16 +9,9 @@
 exportApp <- function(teamName = "", dbName = "data") {
   ui <- shiny::navbarPage(
     id = "navbarpage",
-    title = shiny::div(shiny::a(shiny::includeHTML(
-      system.file(
-        "www/logo.svg",
-        package = "rapbase"
-      )
-    )
-    ),
-    "Simple export app"),
+    title = rapbase::title("Simple export app"),
     windowTitle = "Simple export app",
-    theme = "rap/bootstrap.css",
+    theme = theme(),
     shiny::tabPanel(
       title = "Info",
       navbarWidgetInput("navbar-widget", selectOrganization = TRUE),
