@@ -23,7 +23,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
   DBI::dbWriteTable(
     conn = con,
     name = "applog",
-    value = rapbase::appLog, append = TRUE, header = TRUE, row.names = FALSE
+    value = appLog, append = TRUE, header = TRUE, row.names = FALSE
   )
   close_db_connection(con)
   con <- NULL
@@ -34,7 +34,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
 test_that("mutated log data are returned as data frame", {
   check_db()
   expect_equal(
-    class(logFormat(rapbase:::readLog(type = "app", name = registryName))),
+    class(logFormat(readLog(type = "app", name = registryName))),
     "data.frame"
   )
 })
@@ -44,7 +44,7 @@ test_that("time framed log data are returned as data frame", {
     class(
       logTimeFrame(
         logFormat(
-          rapbase:::readLog(type = "app", name = registryName)
+          readLog(type = "app", name = registryName)
         ),
         Sys.Date(),
         Sys.Date()
