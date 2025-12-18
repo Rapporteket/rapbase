@@ -109,7 +109,7 @@ exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
 
   }
   if (logAsJson) {
-    rapbase::loggerSetup()
+    loggerSetup()
   }
   shiny::shinyApp(ui, server)
 }
