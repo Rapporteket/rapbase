@@ -5,7 +5,7 @@ Shiny app with database export functionality
 ## Usage
 
 ``` r
-exportApp(teamName = "", dbName = "data")
+exportApp(teamName = "", dbName = "data", logAsJson = TRUE)
 ```
 
 ## Arguments
@@ -18,3 +18,7 @@ exportApp(teamName = "", dbName = "data")
 
   Character string, can be used to specify name of database if needed.
   Defaults to "data", which will work for most registries.
+
+- logAsJson:
+
+  Logical, if TRUE (default) logging will be done in JSON format.
