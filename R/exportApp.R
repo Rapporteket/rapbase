@@ -78,10 +78,6 @@ exportApp <- function(teamName = "", dbName = "data") {
       describeRegistryDb(registryName = dbName)
     })
 
-    meta2 <- shiny::reactive({
-      nlinesRegistryDb(registryName = dbName)
-    })
-
     output$metaControl <- shiny::renderUI({
       tabs <- names(meta())
       shiny::selectInput("metaTab", "Velg tabell:", tabs)
@@ -100,7 +96,10 @@ exportApp <- function(teamName = "", dbName = "data") {
       shiny::h4(paste0(
         input$metaTab,
         " har ",
-        meta2()[[shiny::req(input$metaTab)]]$n_lines,
+        nlinesRegistryDb(
+          registryName = dbName,
+          tab = shiny::req(input$metaTab)
+        ),
         " linjer"
       )
       )
