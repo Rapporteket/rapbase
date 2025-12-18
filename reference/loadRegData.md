@@ -10,7 +10,7 @@ loadRegData(registryName, query, dbType = "mysql")
 
 describeRegistryDb(registryName, tabs = c())
 
-nlinesRegistryDb(registryName, tabs = c())
+nlinesRegistryDb(registryName, tab = "")
 ```
 
 ## Arguments
@@ -35,6 +35,10 @@ nlinesRegistryDb(registryName, tabs = c())
 
   Character vector for optional definition of tables to describe.
   Defaults to an empty vector in which case all tables are used
+
+- tab:
+
+  String name of the table for which to get number of lines
 
 ## Value
 
