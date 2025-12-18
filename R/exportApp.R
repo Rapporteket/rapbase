@@ -5,8 +5,10 @@
 #' @param dbName Character string, can be used to
 #' specify name of database if needed. Defaults to "data",
 #' which will work for most registries.
+#' @param logAsJson Logical, if TRUE (default) logging
+#' will be done in JSON format.
 #' @export
-exportApp <- function(teamName = "", dbName = "data") {
+exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
   ui <- shiny::navbarPage(
     id = "navbarpage",
     title = rapbase::title("Simple export app"),
@@ -105,6 +107,9 @@ exportApp <- function(teamName = "", dbName = "data") {
       )
     })
 
+  }
+  if (logAsJson) {
+    rapbase::loggerSetup()
   }
   shiny::shinyApp(ui, server)
 }
