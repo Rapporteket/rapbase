@@ -4,15 +4,17 @@
 \alias{theme}
 \title{Theme of the app.}
 \usage{
-theme(theme = "flatly")
+theme(theme = "flatly", version = 3)
 }
 \arguments{
-\item{theme}{Name of the theme. See ?shinythemes::shinytheme
+\item{theme}{Name of the theme. See bslib::bootswatch_themes()
 for available themes.}
+
+\item{version}{Version of bootstrap to use (3, 4 or 5).}
 }
 \value{
-a shinytheme object
+a Bootstrap theme object
 }
 \description{
-This is a wrapper around shinythemes::shinytheme
+This is a wrapper around bslib::bs_theme
 }
