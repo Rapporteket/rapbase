@@ -374,6 +374,21 @@ runAutoReport <- function(
       filterAutoRep(by = "package", pass = group)
   }
 
+  if (dim(reps)[1] == 0) {
+    message(
+      "runAutoReport: There is no reports to be processed at all. ",
+      "Thus, after filtering for type (",
+      paste(type, collapse = ", "),
+      ifelse(
+        is.null(group),
+        "),",
+        paste0(") and package/registry (", group, "),")
+      ),
+      " no reports remain."
+    )
+    return(invisible(NULL))
+  }
+
   reps <- reps |>
     # keep only reports to be run today
     dplyr::rowwise() |>
