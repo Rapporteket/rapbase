@@ -132,6 +132,32 @@ test_that("Auto reports not sent if after start date", {
   )
 })
 
+test_that("Auto reports not sent because there is no reports at all", {
+  check_db()
+  expect_message(
+    runAutoReport(
+    dato = "2024-12-02",
+    type = c("nonexistingtype"),
+    dryRun = TRUE
+    ),
+    'after filtering for type \\(nonexistingtype\\), no reports remain.',
+    all = FALSE
+  )
+})
+
+test_that("Auto reports not sent because there is no reports at all", {
+  check_db()
+  expect_message(
+    runAutoReport(
+    dato = "2024-12-02",
+    group = "nonexistinggroup",
+    dryRun = TRUE
+    ),
+    "after filtering for type \\(subscription, dispatchment\\) and package/registry \\(nonexistinggroup\\), no reports remain.",
+    all = FALSE
+  )
+})
+
 
 # Test autoReportServer2 with db.
 # Tests are copied from test-moduleAutoReport.R since the current file
