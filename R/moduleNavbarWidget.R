@@ -18,6 +18,9 @@
 #' @param selectOrganization Logical providing option for selecting among
 #'   available organizations and roles.
 #' @param orgName Character string naming the organization
+#' @param caller Character string naming the environment this function was
+#'   called from. The value is used to display the current version of the
+#'   R package representing the registry at Rapporteket.
 #' @param ... Further arguments, currently not used
 #'
 #' @return Shiny objects, mostly. \code{navbarWidgetServer2()} invisibly returns

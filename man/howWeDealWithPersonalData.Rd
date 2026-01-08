@@ -4,7 +4,7 @@
 \alias{howWeDealWithPersonalData}
 \title{Render text in pop-up}
 \usage{
-howWeDealWithPersonalData(...)
+howWeDealWithPersonalData(..., callerPkg = NULL)
 }
 \arguments{
 \item{...}{Further arguments, currently not used}
