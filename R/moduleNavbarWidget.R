@@ -111,9 +111,8 @@ navbarWidgetServer2 <- function(
   id,
   orgName,
   map_orgname = NULL,
-  ...
+  caller = NULL
 ) {
-
   shiny::moduleServer(id, function(input, output, session) {
 
     user <- userAttribute(map_orgname = map_orgname)
@@ -138,7 +137,7 @@ navbarWidgetServer2 <- function(
     )
 
     # User info in widget
-    userInfo <- howWeDealWithPersonalData()
+    userInfo <- howWeDealWithPersonalData(callerPkg = caller)
     shiny::observeEvent(input$userInfo, {
       shinyalert::shinyalert(
         "Dette vet Rapporteket om deg:",
@@ -342,8 +341,8 @@ appNavbarUserWidget <- function(user = "Undefined person",
 #' @return fragment html info text
 #' @export
 
-howWeDealWithPersonalData <- function(...) {
-  callerPkg <- utils::packageName()
+howWeDealWithPersonalData <- function(..., callerPkg = NULL) {
+
   pkg <- list()
   pkg$name <- as.vector(utils::installed.packages()[, 1])
   pkg$ver <- as.vector(utils::installed.packages()[, 3])
