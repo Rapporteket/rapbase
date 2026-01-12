@@ -39,6 +39,7 @@ Imports:
     kableExtra,
     knitr,
     logger,
+    odbc,
     readr,
     rlang,
     RMariaDB,
