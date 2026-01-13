@@ -15,14 +15,14 @@
 Source:
 [`DESCRIPTION`](https://github.com/Rapporteket/rapbase/blob/main/DESCRIPTION)
 
-Edvardsen A, Thon K, Steindal A (2025). *rapbase: Base Functions and
+Edvardsen A, Thon K, Steindal A (2026). *rapbase: Base Functions and
 Resources for Rapporteket*. R package version 3.1.1,
 <https://github.com/Rapporteket/rapbase>.
 
     @Manual{,
       title = {rapbase: Base Functions and Resources for Rapporteket},
       author = {Are Edvardsen and Kevin Otto Thon and Arnfinn Hykkerud Steindal},
-      year = {2025},
+      year = {2026},
       note = {R package version 3.1.1},
       url = {https://github.com/Rapporteket/rapbase},
     }
