@@ -44,7 +44,7 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
     drv <- odbc::odbc()
     con <- DBI::dbConnect(
       drv,
-      driver = conf$driver,
+      driver = Sys.getenv("MYSQL_DRIVER", "FreeTDS"),
       database = conf$name,
       server = conf$host,
       uid = conf$user,
@@ -103,8 +103,7 @@ getDbConfig <- function(dbName = "data", sqlite = FALSE) {
       host = Sys.getenv("MYSQL_HOST"),
       user = Sys.getenv("MYSQL_USER"),
       pass = Sys.getenv("MYSQL_PASSWORD"),
-      port = as.numeric(Sys.getenv("MYSQL_PORT", "3306")),
-      driver = Sys.getenv("MYSQL_DRIVER", "FreeTDS") # for mssql connections
+      port = as.numeric(Sys.getenv("MYSQL_PORT", "3306"))
     )
     conf$name <- switch(
       dbName,
