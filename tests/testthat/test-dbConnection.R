@@ -152,7 +152,10 @@ test_that("Bigints are returned as integers (not bit64::integer64)", {
 
 test_that("Not yet able to test MSSQL", {
   check_db()
-  expect_error(loadRegData(regName, query, dbType = "mssql"))
+  expect_error(
+    loadRegData(regName, query, dbType = "mssql"),
+    regexp = "ODBC failed with error"
+  )
 })
 
 test_that(paste(
