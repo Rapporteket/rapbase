@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 3.1.1
+Version: 3.2.0
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
