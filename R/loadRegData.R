@@ -13,6 +13,7 @@
 #' "mssql"
 #' @param tabs Character vector for optional definition of tables to describe.
 #' Defaults to an empty vector in which case all tables are used
+#' @param tab String name of the table for which to get number of lines
 #' @return data frame containing registry data or a list with table names and
 #' corresponding fields with attributes
 #' @name loadRegData
@@ -34,45 +35,55 @@ loadRegData <- function(registryName, query, dbType = "mysql") {
 #' @rdname loadRegData
 #' @export
 describeRegistryDb <- function(registryName, tabs = c()) {
-  qGetTabs <- "SHOW TABLES;"
-  qGetDesc <- "DESCRIBE "
 
   desc <- list()
 
   if (length(tabs) == 0) {
-    tabs <- rapbase::loadRegData(
+    rawTable <- loadRegData(
       registryName = registryName,
-      query = qGetTabs
-    )[[1]]
+      query = paste(
+        "SELECT * FROM information_schema.columns",
+        "WHERE table_schema = DATABASE();"
+      )
+    )
+    for (tableName in unique(rawTable$TABLE_NAME)) {
+      desc[[tableName]] <- rawTable |>
+        dplyr::filter(.data$TABLE_NAME == tableName) |>
+        dplyr::transmute(
+          Field = .data$COLUMN_NAME,
+          Type = .data$COLUMN_TYPE,
+          Null = .data$IS_NULLABLE,
+          Key = .data$COLUMN_KEY,
+          Default = .data$COLUMN_DEFAULT,
+          Extra = .data$EXTRA
+        )
+    }
+  } else {
+    for (tab in tabs) {
+      query <- paste0("DESCRIBE ", tab, ";")
+      desc[[tab]] <- loadRegData(registryName, query)
+    }
   }
-
-  for (tab in tabs) {
-    query <- paste0(qGetDesc, tab, ";")
-    desc[[tab]] <- loadRegData(registryName, query)
-  }
-
   desc
 }
 
 #' @rdname loadRegData
 #' @export
-nlinesRegistryDb <- function(registryName, tabs = c()) {
-  qGetTabs <- "SHOW TABLES;"
-  qGetNlines <- "SELECT COUNT(*) AS n_lines FROM "
+nlinesRegistryDb <- function(registryName, tab = "") {
 
-  desc <- list()
-
-  if (length(tabs) == 0) {
-    tabs <- rapbase::loadRegData(
-      registryName = registryName,
-      query = qGetTabs
-    )[[1]]
-  }
-
-  for (tab in tabs) {
-    query <- paste0(qGetNlines, tab, ";")
-    desc[[tab]] <- loadRegData(registryName, query)
-  }
-
-  desc
+  query <- paste0(
+    "SELECT COUNT(*) AS n_lines FROM ",
+    tab, ";"
+  )
+  numLines <- 0
+  tryCatch({
+    numLines <- loadRegData(registryName, query)$n_lines
+  } , error = function(e) {
+    warning(paste0(
+      "Number of lines in table ", tab,
+      " could not be retrieved.\n",
+      "Original error message:\n", e$message, ".\n"
+    ))
+  })
+  numLines
 }
