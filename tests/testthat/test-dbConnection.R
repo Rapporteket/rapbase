@@ -150,12 +150,11 @@ test_that("Bigints are returned as integers (not bit64::integer64)", {
   expect_is(df[["someBigInt"]], "integer")
 })
 
-test_that(paste(
-  "The use of MSSQL in no longer possible with an appropriate",
-  "message"
-), {
-  expect_error(loadRegData(regName, query, dbType = "mssql"),
-               regexp = "Use of MSSQL is no longer supported. Exiting"
+test_that("Not yet able to test MSSQL", {
+  check_db()
+  expect_error(
+    loadRegData(regName, query, dbType = "mssql"),
+    regexp = "ODBC failed with error"
   )
 })
 
