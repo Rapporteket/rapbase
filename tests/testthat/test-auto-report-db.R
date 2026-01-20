@@ -132,7 +132,7 @@ test_that("Auto reports not sent if after start date", {
   )
 })
 
-test_that("Auto reports not sent because there is no reports at all", {
+test_that("Auto reports not sent because there are no reports to be processed", {
   check_db()
   expect_message(
     runAutoReport(
@@ -145,7 +145,7 @@ test_that("Auto reports not sent because there is no reports at all", {
   )
 })
 
-test_that("Auto reports not sent because there is no reports at all", {
+test_that("Auto reports not sent because there are no reports to be processed", {
   check_db()
   expect_message(
     runAutoReport(

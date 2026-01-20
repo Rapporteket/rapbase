@@ -376,7 +376,7 @@ runAutoReport <- function(
 
   if (dim(reps)[1] == 0) {
     message(
-      "runAutoReport: There is no reports to be processed at all. ",
+      "runAutoReport: There are no reports to be processed. ",
       "Thus, after filtering for type (",
       paste(type, collapse = ", "),
       ifelse(
