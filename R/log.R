@@ -214,6 +214,7 @@ autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
 #' @importFrom utils write.table
 
 appendLog <- function(event, name) {
+  message("Logging to raplog-db with message: ", event$message)
   tryCatch({
     con <- rapOpenDbConnection("raplog")$con
     DBI::dbAppendTable(con, name, event, row.names = NULL)
