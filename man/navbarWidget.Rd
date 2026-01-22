@@ -12,7 +12,7 @@ navbarWidgetInput(id, addUserInfo = TRUE, selectOrganization = FALSE)
 
 navbarWidgetServer(id, orgName, ...)
 
-navbarWidgetServer2(id, orgName, map_orgname = NULL, ...)
+navbarWidgetServer2(id, orgName, map_orgname = NULL, caller = NULL)
 
 navbarWidgetApp(orgName = "Org Name")
 }
@@ -33,6 +33,10 @@ available organizations and roles.}
  \item{UnitId}{unit ids}
  \item{orgname}{corresponding organization names}
  }}
+
+\item{caller}{Character string naming the environment this function was
+called from. The value is used to display the current version of the
+R package representing the registry at Rapporteket.}
 }
 \value{
 Shiny objects, mostly. \code{navbarWidgetServer2()} invisibly returns
