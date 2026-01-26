@@ -221,6 +221,7 @@ autoReportInput <- function(id) {
     shiny::htmlOutput(shiny::NS(id, "recipient")),
     shiny::tags$hr(),
     shiny::uiOutput(shiny::NS(id, "makeAutoReport")),
+    shiny::uiOutput(shiny::NS(id, "createReport")),
     shiny::uiOutput(shiny::NS(id, "runAutoreport"))
   )
 }
@@ -579,6 +580,33 @@ autoReportServer <- function(
         sourceFile = system.file("autoReportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
         params = list(registryName = registryName, type = type)
+      )
+    })
+
+
+    output$createReport <- shiny::renderUI({
+      shiny::tagList(
+        shiny::hr(),
+        shiny::h3("Lag rapport"),
+        shiny::p("Lag rapport som skal sendes automatisk p\u00E5 e-post."),
+        shiny::actionButton(
+          inputId = shiny::NS(id, "create_report"),
+          label = "Lag rapport",
+          icon = shiny::icon("file"),
+          onclick = "this.disabled=true;"
+        )
+      )
+    })
+    shiny::observeEvent(input$create_report, {
+      runAutoReport(
+        group = registryName,
+        dato = dato,
+        dryRun = dryRun
+      )
+      # reactivate button
+      shiny::updateActionButton(
+        inputId = "create_report",
+        disabled = FALSE
       )
     })
 
