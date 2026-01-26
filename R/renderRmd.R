@@ -44,7 +44,8 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
   stopifnot(template %in% c("default", "document"))
 
   # do work in tempdir and return to origin on exit
-  owd <- setwd(tempdir())
+  owd <- getwd()
+  setwd(tempdir())
   on.exit(setwd(owd))
 
   # copy all files to temporary workdir
