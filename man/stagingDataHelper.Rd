@@ -7,6 +7,7 @@
 \alias{dbStagingProcess}
 \alias{wrapStagingData}
 \alias{unwrapStagingData}
+\alias{dbStagingCreate}
 \title{Data staging helper (internal) functions}
 \usage{
 wrapStagingData(data)
@@ -18,6 +19,8 @@ dbStagingPrereq(key)
 dbStagingConnection(key = NULL, con = NULL, init = FALSE)
 
 dbStagingProcess(key, query, params = list(), statement = FALSE)
+
+dbStagingCreate()
 }
 \arguments{
 \item{data}{A data object that is to be added to or collected from staging.}

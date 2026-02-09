@@ -36,7 +36,11 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
       password = conf$pass,
       bigint = "integer"
     )
-    message("Connected to database: ", conf$name)
+    if (is.null(dbName)) {
+      message("Connected to MySQL server at ", conf$host)
+    } else {
+      message("Connected to database: ", conf$name)
+    }
     # ensure utf8 encoding
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
   } else if (dbType == "mssql") {
@@ -105,14 +109,18 @@ getDbConfig <- function(dbName = "data", sqlite = FALSE) {
       pass = Sys.getenv("MYSQL_PASSWORD"),
       port = as.numeric(Sys.getenv("MYSQL_PORT", "3306"))
     )
-    conf$name <- switch(
-      dbName,
-      "raplog" = Sys.getenv("MYSQL_DB_LOG"),
-      "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
-      "staging" = Sys.getenv("MYSQL_DB_STAGING"),
-      "data" = Sys.getenv("MYSQL_DB_DATA"),
-      dbName
-    )
+    if (is.null(dbName)) {
+      conf$name <- NULL
+    } else {
+      conf$name <- switch(
+        dbName,
+        "raplog" = Sys.getenv("MYSQL_DB_LOG"),
+        "autoreport" = Sys.getenv("MYSQL_DB_AUTOREPORT"),
+        "staging" = Sys.getenv("MYSQL_DB_STAGING"),
+        "data" = Sys.getenv("MYSQL_DB_DATA"),
+        dbName
+      )
+    }
   } else {
     stop(paste0(
       "Could not connect to database because the enviroment

@@ -300,3 +300,19 @@ dbStagingProcess <- function(key, query, params = list(), statement = FALSE) {
 
   invisible(df)
 }
+
+#' @rdname stagingDataHelper
+dbStagingCreate <- function() {
+  dbStagingKey <- Sys.getenv("MYSQL_DB_STAGING")
+  createDb(dbStagingKey)
+  con <- rapOpenDbConnection(dbName = dbStagingKey)$con
+  fc <- file(system.file("createStagingTab.sql", package = "rapbase"), "r")
+  t <- readLines(fc)
+  close(fc)
+  sql <- paste0(t, collapse = "\n")
+  queries <- c(
+    strsplit(sql, ";")[[1]]
+  )
+  DBI::dbExecute(con, queries)
+  rapCloseDbConnection(con)
+}
