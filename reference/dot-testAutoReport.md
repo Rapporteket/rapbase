@@ -36,5 +36,5 @@ A simple message listing the contents of the arguments
 
 ``` r
 .testAutoReport()
-#> [1] "/tmp/RtmpJqStUp/file1bb81bf13a26.txt"
+#> [1] "/tmp/RtmpHh7ctt/file1dfb2fcfd2f0.txt"
 ```
