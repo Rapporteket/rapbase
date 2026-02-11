@@ -9,7 +9,7 @@
 #' @param to Character vector containing email addresses. May also contain
 #' full names like '\code{Jane Doe <janed@nowhere.com>}'
 #' @param subject Character string providing email subject.
-#' @param text Character string providing the plain email text
+#' @param text Character string providing the plain email text in HTML format.
 #' @param attFile Character string providing the full file path to an
 #' attachment. Default is NULL in which case no attachment is made
 #'
