@@ -28,9 +28,9 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
   to <- gsub(" ", "\\ ", to, fixed = TRUE)
 
   if (is.null(attFile)) {
-    body <- list(text)
+    body <- list(sendmailR::mime_part_html(text))
   } else {
-    body <- list(text, sendmailR::mime_part(attFile))
+    body <- list(sendmailR::mime_part_html(text), sendmailR::mime_part(attFile))
   }
 
   message(paste0(
