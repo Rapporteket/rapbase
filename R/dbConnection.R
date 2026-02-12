@@ -47,9 +47,8 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
       driver = Sys.getenv("MYSQL_DRIVER", "FreeTDS"),
       database = conf$name,
       server = conf$host,
-      uid = conf$user,
-      pwd = conf$pass,
-      port = conf$port
+      TrustedConnection = "Yes",
+      Timeout = 10
     )
     message("Connected to mssql-database: ", conf$name)
   } else if (dbType == "sqlite") {
