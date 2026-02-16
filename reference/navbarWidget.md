@@ -11,7 +11,7 @@ navbarWidgetInput(id, addUserInfo = TRUE, selectOrganization = FALSE)
 
 navbarWidgetServer(id, orgName, ...)
 
-navbarWidgetServer2(id, orgName, map_orgname = NULL, ...)
+navbarWidgetServer2(id, orgName, map_orgname = NULL, caller = NULL)
 
 navbarWidgetApp(orgName = "Org Name")
 ```
@@ -50,6 +50,12 @@ navbarWidgetApp(orgName = "Org Name")
   orgname
 
   :   corresponding organization names
+
+- caller:
+
+  Character string naming the environment this function was called from.
+  The value is used to display the current version of the R package
+  representing the registry at Rapporteket.
 
 ## Value
 

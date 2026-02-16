@@ -48,7 +48,7 @@ number of code lines for each registry.</p>
 <span></span>
 <span><span class="fu">navbarWidgetServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">orgName</span>, <span class="va">...</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">navbarWidgetServer2</span><span class="op">(</span><span class="va">id</span>, <span class="va">orgName</span>, map_orgname <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">...</span><span class="op">)</span></span>
+<span><span class="fu">navbarWidgetServer2</span><span class="op">(</span><span class="va">id</span>, <span class="va">orgName</span>, map_orgname <span class="op">=</span> <span class="cn">NULL</span>, caller <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">navbarWidgetApp</span><span class="op">(</span>orgName <span class="op">=</span> <span class="st">"Org Name"</span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -87,6 +87,12 @@ available organizations and roles.</p></dd>
 
 
 </dl></dd>
+
+
+<dt id="arg-caller">caller<a class="anchor" aria-label="anchor" href="#arg-caller"></a></dt>
+<dd><p>Character string naming the environment this function was
+called from. The value is used to display the current version of the
+R package representing the registry at Rapporteket.</p></dd>
 
 </dl></div>
     <div class="section level2">
