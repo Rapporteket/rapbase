@@ -6,7 +6,7 @@ databases Underlying this function is rapbase::RapporteketDbConnection
 ## Usage
 
 ``` r
-loadRegData(registryName, query, dbType = "mysql")
+loadRegData(registryName = "data", query, dbType = "mysql")
 
 describeRegistryDb(registryName, tabs = c())
 
