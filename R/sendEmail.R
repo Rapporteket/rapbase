@@ -9,7 +9,7 @@
 #' @param to Character vector containing email addresses. May also contain
 #' full names like '\code{Jane Doe <janed@nowhere.com>}'
 #' @param subject Character string providing email subject.
-#' @param text Character string providing the plain email text
+#' @param text Character string providing the plain email text in HTML format.
 #' @param attFile Character string providing the full file path to an
 #' attachment. Default is NULL in which case no attachment is made
 #'
@@ -28,9 +28,9 @@ sendEmail <- function(conf, to, subject, text, attFile = NULL) {
   to <- gsub(" ", "\\ ", to, fixed = TRUE)
 
   if (is.null(attFile)) {
-    body <- list(text)
+    body <- list(sendmailR::mime_part_html(text))
   } else {
-    body <- list(text, sendmailR::mime_part(attFile))
+    body <- list(sendmailR::mime_part_html(text), sendmailR::mime_part(attFile))
   }
 
   message(paste0(

@@ -432,7 +432,7 @@ runAutoReport <- function(
   }
 
   # standard text for email body
-  standardEmailFileName <- "autoReportStandardEmailText.txt"
+  standardEmailFileName <- "autoReportStandardEmailText.html"
   stdTxt <- readr::read_file(
     system.file(
       standardEmailFileName,
