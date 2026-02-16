@@ -6,7 +6,7 @@
 \alias{nlinesRegistryDb}
 \title{Provider of data for registries at Rapporteket}
 \usage{
-loadRegData(registryName, query, dbType = "mysql")
+loadRegData(registryName = "data", query, dbType = "mysql")
 
 describeRegistryDb(registryName, tabs = c())
 
