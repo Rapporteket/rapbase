@@ -40,15 +40,14 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
     # ensure utf8 encoding
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
   } else if (dbType == "mssql") {
-    conf <- getDbConfig(dbName)
-    if (requireNamespace("odbc", quietly = TRUE)) {
-      drv <- odbc::odbc()
-    } else {
+    if (!requireNamespace("odbc", quietly = TRUE)) {
       stop(paste(
         "Package 'odbc' is required to connect to MSSQL databases.",
         "Please install it."
       ))
     }
+    conf <- getDbConfig(dbName)
+    drv <- odbc::odbc()
     con <- DBI::dbConnect(
       drv,
       driver = Sys.getenv("MYSQL_DRIVER", "FreeTDS"),
@@ -59,15 +58,14 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
     )
     message("Connected to mssql-database: ", conf$name)
   } else if (dbType == "sqlite") {
-    conf <- getDbConfig(dbName, sqlite = TRUE)
-    if (requireNamespace("RSQLite", quietly = TRUE)) {
-      drv <- RSQLite::SQLite()
-    } else {
+    if (!requireNamespace("RSQLite", quietly = TRUE)) {
       stop(paste(
         "Package 'RSQLite' is required to connect to SQLite databases.",
         "Please install it."
       ))
     }
+    drv <- RSQLite::SQLite()
+    conf <- getDbConfig(dbName, sqlite = TRUE)
     con <- DBI::dbConnect(
       drv,
       dbname = conf$name
