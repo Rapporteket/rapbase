@@ -64,8 +64,8 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
         "Please install it."
       ))
     }
-    drv <- RSQLite::SQLite()
     conf <- getDbConfig(dbName, sqlite = TRUE)
+    drv <- RSQLite::SQLite()
     con <- DBI::dbConnect(
       drv,
       dbname = conf$name
