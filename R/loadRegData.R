@@ -23,7 +23,7 @@ NULL
 
 #' @rdname loadRegData
 #' @export
-loadRegData <- function(registryName, query, dbType = "mysql") {
+loadRegData <- function(registryName = "data", query, dbType = "mysql") {
   dbList <- rapOpenDbConnection(registryName, dbType)
   regData <- DBI::dbGetQuery(dbList$con, query)
   rapCloseDbConnection(dbList$con)
