@@ -40,13 +40,11 @@ Imports:
     kableExtra,
     knitr,
     logger,
-    odbc,
     readr,
     rlang,
     RMariaDB,
     rmarkdown,
     rpivotTable,
-    RSQLite,
     sendmailR,
     shiny,
     shinyalert,
@@ -59,6 +57,8 @@ BugReports: https://github.com/Rapporteket/rapbase/issues
 Suggests:
     httptest,
     lifecycle,
+    odbc,
+    RSQLite,
     rvest,
     testthat,
     withr
