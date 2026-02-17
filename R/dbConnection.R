@@ -44,7 +44,10 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
     if (requireNamespace("odbc", quietly = TRUE)) {
       drv <- odbc::odbc()
     } else {
-      stop("Package 'odbc' is required to connect to MSSQL databases. Please install it.")
+      stop(paste(
+        "Package 'odbc' is required to connect to MSSQL databases.",
+        "Please install it."
+      ))
     }
     con <- DBI::dbConnect(
       drv,
@@ -60,7 +63,10 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
     if (requireNamespace("RSQLite", quietly = TRUE)) {
       drv <- RSQLite::SQLite()
     } else {
-      stop("Package 'RSQLite' is required to connect to SQLite databases. Please install it.")
+      stop(paste(
+        "Package 'RSQLite' is required to connect to SQLite databases.",
+        "Please install it."
+      ))
     }
     con <- DBI::dbConnect(
       drv,
