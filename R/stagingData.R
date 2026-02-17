@@ -98,6 +98,12 @@ mtimeStagingData <- function(registryName, dbTable = "data") {
 #' @rdname stagingData
 #' @export
 saveStagingData <- function(registryName, dataName, data, dbTable = "data") {
+  if (!requireNamespace("blob", quietly = TRUE)) {
+    stop(paste(
+      "Package 'blob' is required to save staging data.",
+      "Please install it."
+    ))
+  }
   b <- wrapStagingData(data) |>
     blob::as_blob()
 

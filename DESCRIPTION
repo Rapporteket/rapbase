@@ -29,7 +29,6 @@ LazyData: true
 Depends:
     R (>= 4.1.0)
 Imports:
-    blob,
     bookdown,
     bslib,
     DBI,
@@ -55,6 +54,7 @@ RoxygenNote: 7.3.3
 URL: https://github.com/Rapporteket/rapbase
 BugReports: https://github.com/Rapporteket/rapbase/issues
 Suggests:
+    blob,
     httptest,
     lifecycle,
     odbc,
