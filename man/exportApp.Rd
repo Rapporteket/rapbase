@@ -4,7 +4,7 @@
 \alias{exportApp}
 \title{Shiny app with database export functionality}
 \usage{
-exportApp(teamName = "", dbName = "data")
+exportApp(teamName = "", dbName = "data", logAsJson = TRUE)
 }
 \arguments{
 \item{teamName}{Character string, corresponding to
@@ -13,6 +13,9 @@ github team name}
 \item{dbName}{Character string, can be used to
 specify name of database if needed. Defaults to "data",
 which will work for most registries.}
+
+\item{logAsJson}{Logical, if TRUE (default) logging
+will be done in JSON format.}
 }
 \description{
 Shiny app with database export functionality

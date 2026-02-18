@@ -4,10 +4,14 @@
 \alias{howWeDealWithPersonalData}
 \title{Render text in pop-up}
 \usage{
-howWeDealWithPersonalData(...)
+howWeDealWithPersonalData(..., callerPkg = NULL)
 }
 \arguments{
 \item{...}{Further arguments, currently not used}
+
+\item{callerPkg}{Character string naming the package this function was
+called from. The value is used to display the current version of the
+R package representing the registry at Rapporteket.}
 }
 \value{
 fragment html info text

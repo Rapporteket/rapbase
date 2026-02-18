@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 3.1.0
+Version: 3.2.0
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -31,6 +31,7 @@ Depends:
 Imports:
     blob,
     bookdown,
+    bslib,
     DBI,
     digest,
     dplyr,
@@ -39,6 +40,7 @@ Imports:
     kableExtra,
     knitr,
     logger,
+    odbc,
     readr,
     rlang,
     RMariaDB,
@@ -48,7 +50,6 @@ Imports:
     sendmailR,
     shiny,
     shinyalert,
-    shinythemes,
     sship (>= 0.9.0),
     utils,
     yaml

@@ -368,22 +368,71 @@ runAutoReport <- function(
 
   # get report candidates
   reps <- rapbase::readAutoReportData() |>
-    rapbase::filterAutoRep(by = "type", pass = type)
+    filterAutoRep(by = "type", pass = type)
   if (!is.null(group)) {
     reps <- reps |>
-      rapbase::filterAutoRep(by = "package", pass = group)
+      filterAutoRep(by = "package", pass = group)
   }
+
+  if (dim(reps)[1] == 0) {
+    message(
+      "runAutoReport: There are no reports to be processed. ",
+      "Thus, after filtering for type (",
+      paste(type, collapse = ", "),
+      ifelse(
+        is.null(group),
+        "),",
+        paste0(") and package/registry (", group, "),")
+      ),
+      " no reports remain."
+    )
+    return(invisible(NULL))
+  }
+
   reps <- reps |>
-    # nolint start: object_usage_linter
+    # keep only reports to be run today
+    dplyr::rowwise() |>
+    dplyr::filter(
+      # nolint start: vector_logic_linter.
+      # we need && here to ensure no crash if startDate < dato.
+      # Thus, seq.Date will not be called if one of the first
+      # two conditions is FALSE.
+      (as.Date(.data$startDate) <= dato) &&
+        (as.Date(.data$terminateDate) > dato) &&
+        (dato %in% seq.Date(
+          as.Date(.data$startDate),
+          as.Date(dato),
+          by = .data$interval
+        ))
+      # nolint end
+    ) |>
+    dplyr::ungroup() |>
+    # combine emails for identical reports
     dplyr::summarise(
       email = list(unique(email)),
-      .by = c(owner, ownerName, package, organization, type, fun,
-        params, startDate, terminateDate, interval, synopsis)
+      .by = c(
+        "owner",
+        "ownerName",
+        "package",
+        "organization",
+        "type",
+        "fun",
+        "params",
+        "synopsis"
+      )
     )
-  # nolint end
+
+  if (dim(reps)[1] == 0) {
+    message(
+      "runAutoReport: No reports to be processed today (",
+      dato,
+      ifelse(is.null(group), ").", paste0(") from registry ", group, "."))
+    )
+    return(invisible(NULL))
+  }
 
   # standard text for email body
-  standardEmailFileName <- "autoReportStandardEmailText.txt"
+  standardEmailFileName <- "autoReportStandardEmailText.html"
   stdTxt <- readr::read_file(
     system.file(
       standardEmailFileName,
@@ -404,65 +453,60 @@ runAutoReport <- function(
         rep <- reps[i, ] |> as.list()
         rep$email <- unlist(rep$email)
         params <- jsonlite::fromJSON(rep$params)
-        if (
-          as.Date(rep$startDate) <= dato
-          && as.Date(rep$terminateDate) > dato
-          && dato %in% seq.Date(
-            as.Date(rep$startDate),
-            as.Date(dato),
-            by = rep$interval
-          ) # 'days', 'weeks', 'months', 'years',
-        ) {
+        # get referenced function and call it
+        if (grepl("::", rep$fun)) {
           # get explicit referenced function and call it
-          f <- rapbase::.getFun(paste0(rep$package, "::", rep$fun))
-          content <- do.call(what = f, args = params)
-          if (rep$type == "bulletin") {
-            text <- content
-            attFile <- NULL
-          } else {
-            attFile <- content
-            if (file.exists(system.file(
-              standardEmailFileName,
-              package = rep$package
-            ))) {
-              # read standard text from package
-              text <- readr::read_file(
-                system.file(
-                  standardEmailFileName,
-                  package = rep$package
-                )
+          f <- rapbase::.getFun(rep$fun)
+        } else {
+          f <- .getFun(paste0(rep$package, "::", rep$fun))
+        }
+        content <- do.call(what = f, args = params)
+        if (rep$type == "bulletin") {
+          text <- content
+          attFile <- NULL
+        } else {
+          attFile <- content
+          if (file.exists(system.file(
+            standardEmailFileName,
+            package = rep$package
+          ))) {
+            # read standard text from package
+            text <- readr::read_file(
+              system.file(
+                standardEmailFileName,
+                package = rep$package
               )
-            } else {
-              text <- stdTxt
-            }
+            )
+          } else {
+            text <- stdTxt
           }
-          if (dryRun) {
-            message(paste("No emails sent. Content is:", content))
-          } else {
-            for (email in rep$email) {
-              message(paste(
-                "Report", i, "of", dim(reps)[1],
-                ". Sending email to:", email
-              ))
-              rapbase::autLogger(
-                user = rep$owner,
-                name = rep$ownerName,
-                registryName = rep$package,
-                reshId = rep$organization,
-                type = rep$type,
-                pkg = rep$package,
-                fun = rep$fun,
-                param = rep$params,
-                msg = paste(
-                  "recipient:",
-                  email
-                )
+        }
+        if (dryRun) {
+          message(paste("No emails sent. Content is:", content))
+        } else {
+          for (email in rep$email) {
+            message(paste(
+              "Report", i, "of", dim(reps)[1],
+              ". Sending email to:", email
+            ))
+            rapbase::autLogger(
+              user = rep$owner,
+              name = rep$ownerName,
+              registryName = rep$package,
+              reshId = rep$organization,
+              type = rep$type,
+              pkg = rep$package,
+              fun = rep$fun,
+              param = rep$params,
+              msg = paste(
+                "recipient:",
+                email
               )
-              rapbase::sendEmail(
-                conf = conf, to = email, subject = rep$synopsis,
-                text = text, attFile = attFile
-              )
-            }
+            )
+            rapbase::sendEmail(
+              conf = conf, to = email, subject = rep$synopsis,
+              text = text, attFile = attFile
+            )
           }
         }
       },
