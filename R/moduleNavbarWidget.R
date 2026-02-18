@@ -350,8 +350,8 @@ appNavbarUserWidget <- function(user = "Undefined person",
 howWeDealWithPersonalData <- function(..., callerPkg = NULL) {
 
   pkg <- list()
-  pkg$name <- as.vector(installed.packages()[, 1])
-  pkg$ver <- as.vector(installed.packages()[, 3])
+  pkg$name <- as.vector(utils::installed.packages()[, 1])
+  pkg$ver <- as.vector(utils::installed.packages()[, 3])
 
   pkgs <- intersect(c("shiny", "rapbase"), pkg$name)
 
