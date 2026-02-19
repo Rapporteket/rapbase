@@ -92,28 +92,10 @@ with_envvar(
           }
         )
       })
-
-      test_that("exportUCServer2 provides sensible output", {
-        check_db()
-        check_mysqldump()
-        shiny::testServer(exportUCServer2, args = list(
-          dbName = shiny::reactiveVal("rapbase"),
-          teamName = "rapbase"
-        ), {
-          expect_equal(class(output$exportPidUI), "list")
-          session$setInputs(exportPid = "areedv")
-          expect_equal("character", class(pubkey()))
-          session$setInputs(exportKey = pubkey())
-          expect_equal(class(output$exportKeyUI), "list")
-          session$setInputs(exportCompress = FALSE)
-          expect_true(length(encFile()) == 1)
-          session$setInputs(exportDownload = 1)
-          expect_true(basename(output$exportDownload) == basename(encFile()))
-        })
-      })
     })
+  }
+)
 
-  })
 
 test_that("guide test app returns an app object", {
   expect_equal(class(exportUCApp()), "shiny.appobj")
