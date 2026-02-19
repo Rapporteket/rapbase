@@ -81,7 +81,7 @@ navbarWidgetInput <- function(id,
 #' @export
 navbarWidgetServer <- function(id, orgName, ...) {
   shiny::moduleServer(id, function(input, output, session) {
-    output$name <- shiny::renderText(rapbase::getUserFullName())
+    output$name <- shiny::renderText(getUserFullName())
     output$affiliation <- shiny::renderText(
       paste(orgName, getUserRole(), sep = ", ")
     )
@@ -96,7 +96,7 @@ navbarWidgetServer <- function(id, orgName, ...) {
         closeOnEsc = TRUE,
         closeOnClickOutside = TRUE,
         html = TRUE,
-        confirmButtonText = rapbase::noOptOutOk()
+        confirmButtonText = noOptOutOk()
       )
     })
   })
@@ -149,7 +149,7 @@ navbarWidgetServer2 <- function(
         closeOnEsc = TRUE,
         closeOnClickOutside = TRUE,
         html = TRUE,
-        confirmButtonText = rapbase::noOptOutOk()
+        confirmButtonText = noOptOutOk()
       )
     })
 
