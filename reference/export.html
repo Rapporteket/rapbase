@@ -46,7 +46,12 @@ relevant helper functions</p>
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">exportUCInput</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">exportUCServer</span><span class="op">(</span><span class="va">id</span>, <span class="va">dbName</span>, teamName <span class="op">=</span> <span class="va">dbName</span>, eligible <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu">exportUCServer</span><span class="op">(</span></span>
+<span>  <span class="va">id</span>,</span>
+<span>  <span class="va">dbName</span>,</span>
+<span>  teamName <span class="op">=</span> <span class="va">dbName</span>,</span>
+<span>  eligible <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">exportUCServer2</span><span class="op">(</span><span class="va">id</span>, <span class="va">dbName</span>, <span class="va">teamName</span>, eligible <span class="op">=</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">reactiveVal</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>

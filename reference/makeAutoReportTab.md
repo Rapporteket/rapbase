@@ -9,9 +9,9 @@ variables.
 ``` r
 makeAutoReportTab(
   namespace = character(),
-  user = rapbase::getUserName(),
-  group = rapbase::getUserGroups(),
-  orgId = rapbase::getUserReshId(),
+  user = getUserName(),
+  group = getUserGroups(),
+  orgId = getUserReshId(),
   type = "subscription",
   mapOrgId = NULL,
   includeReportId = FALSE
