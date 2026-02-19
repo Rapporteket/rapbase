@@ -41,6 +41,7 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
   } else if (dbType == "mssql") {
     conf <- getDbConfig(dbName)
+    rlang::check_installed("odbc")
     drv <- odbc::odbc()
     con <- DBI::dbConnect(
       drv,
@@ -53,6 +54,7 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
     message("Connected to mssql-database: ", conf$name)
   } else if (dbType == "sqlite") {
     conf <- getDbConfig(dbName, sqlite = TRUE)
+    rlang::check_installed("RSQLite")
     drv <- RSQLite::SQLite()
     con <- DBI::dbConnect(
       drv,
