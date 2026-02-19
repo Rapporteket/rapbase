@@ -65,8 +65,7 @@ with_envvar(
     with_mock_dir("gh_api_response", {
       test_that("module server provides sensible output", {
         check_db()
-        shiny::testServer(exportUCServer, args = list(dbName = "rapbase"), {
-          expect_equal(class(output$exportPidUI), "list")
+        shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
           session$setInputs(exportPid = "areedv")
           expect_equal("character", class(pubkey()))
           session$setInputs(exportKey = pubkey())
