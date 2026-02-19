@@ -15,6 +15,17 @@ check_db <- function(is_test_that = TRUE) {
   }
 }
 
+# Define Sys.setenv(RUN_MYSQLDUMP = "false") before
+# running tests on environments where mysqldump is not functional,
+# to prevent test failures due to non-functional mysqldump.
+check_mysqldump <- function() {
+  if (Sys.getenv("RUN_MYSQLDUMP") == "false") {
+    testthat::skip("Possible non-functional mysqldump")
+  } else {
+    NULL
+  }
+}
+
 # Send a query to db
 query_db <- function(query, ...) {
   if (is.null(check_db(is_test_that = FALSE))) {
