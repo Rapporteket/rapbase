@@ -67,7 +67,8 @@ with_envvar(
       test_that("module server provides sensible output", {
         check_db()
         check_mysqldump()
-        shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
+        shiny::testServer(exportUCServer, args = list(dbName = "rapbase"), {
+          expect_equal(class(output$exportPidUI), "list")
           session$setInputs(exportPid = "areedv")
           expect_equal("character", class(pubkey()))
           session$setInputs(exportKey = pubkey())

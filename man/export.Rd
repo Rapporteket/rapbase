@@ -12,12 +12,7 @@
 \usage{
 exportUCInput(id)
 
-exportUCServer(
-  id,
-  dbName,
-  teamName = dbName,
-  eligible = shiny::reactiveVal(TRUE)
-)
+exportUCServer(id, dbName, teamName = dbName, eligible = TRUE)
 
 exportUCServer2(id, dbName, teamName, eligible = shiny::reactiveVal(TRUE))
 
