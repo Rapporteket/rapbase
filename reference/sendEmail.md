@@ -28,7 +28,7 @@ sendEmail(conf, to, subject, text, attFile = NULL)
 
 - text:
 
-  Character string providing the plain email text
+  Character string providing the plain email text in HTML format.
 
 - attFile:
 
