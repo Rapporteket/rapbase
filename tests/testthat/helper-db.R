@@ -27,9 +27,9 @@ check_mysqldump <- function() {
 }
 
 # Send a query to db
-query_db <- function(query, ...) {
+query_db <- function(query) {
   if (is.null(check_db(is_test_that = FALSE))) {
-    con <- connect_db(...)
+    con <- connect_db()
     for (q in query) {
       DBI::dbExecute(con, q)
     }
@@ -39,14 +39,13 @@ query_db <- function(query, ...) {
 }
 
 # Connect to database server
-connect_db <- function(...) {
-  con <- DBI::dbConnect(
+connect_db <- function() {
+  DBI::dbConnect(
     RMariaDB::MariaDB(),
     host = Sys.getenv("MYSQL_HOST"),
     user = Sys.getenv("MYSQL_USER"),
     password = Sys.getenv("MYSQL_PASSWORD"),
-    bigint = "integer",
-    ...
+    bigint = "integer"
   )
 }
 
