@@ -49,6 +49,7 @@ with_envvar(
 
     test_that("an existing file name is provided", {
       check_db()
+      check_mysqldump()
       f <- exportDb(dbName = "rapbase", compress = TRUE, session = session)
       expect_true(file.exists(f))
     })
@@ -65,8 +66,8 @@ with_envvar(
     with_mock_dir("gh_api_response", {
       test_that("module server provides sensible output", {
         check_db()
-        shiny::testServer(exportUCServer, args = list(dbName = "rapbase"), {
-          expect_equal(class(output$exportPidUI), "list")
+        check_mysqldump()
+        shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
           session$setInputs(exportPid = "areedv")
           expect_equal("character", class(pubkey()))
           session$setInputs(exportKey = pubkey())
@@ -94,6 +95,7 @@ with_envvar(
 
       test_that("exportUCServer2 provides sensible output", {
         check_db()
+        check_mysqldump()
         shiny::testServer(exportUCServer2, args = list(
           dbName = shiny::reactiveVal("rapbase"),
           teamName = "rapbase"

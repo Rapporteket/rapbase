@@ -64,18 +64,35 @@ exportUCInput <- function(id) {
 
 #' @rdname export
 #' @export
-exportUCServer <- function(id, dbName, teamName = dbName, eligible = TRUE) {
+exportUCServer <- function(
+  id, dbName, teamName = NULL,
+  eligible = shiny::reactiveVal(TRUE)
+) {
+  if (!shiny::is.reactive(eligible)) {
+    # make eligible reactive if not already
+    eligible <- shiny::reactiveVal(eligible)
+  }
+
+  if (!shiny::is.reactive(dbName)) {
+    if (is.null(teamName)) {
+      teamName <- dbName
+    }
+    # make dbName reactive if not already
+    dbName <- shiny::reactiveVal(dbName)
+  }
+
   shiny::moduleServer(id, function(input, output, session) {
 
     pubkey <- shiny::reactive({
-      shiny::req(input$exportPid)
+      shiny::req(input$exportPid, dbName, eligible)
       keys <- getGithub("keys", input$exportPid)
       sship::pubkey_filter(keys, "rsa")
     })
 
     encFile <- shiny::reactive({
+      shiny::req(dbName, input$exportKey)
       f <- exportDb(
-        dbName,
+        dbName(),
         compress = input$exportCompress,
         noData = input$excludeData,
         session = session
@@ -90,20 +107,22 @@ exportUCServer <- function(id, dbName, teamName = dbName, eligible = TRUE) {
       ef
     })
 
-    if (eligible) {
-      output$exportDownload <- shiny::downloadHandler(
-        filename = function() {
-          basename(encFile())
-        },
-        content = function(file) {
-          file.copy(encFile(), file)
-          repLogger(
-            session,
-            msg = paste("Db export file", basename(encFile()), "downloaded.")
-          )
-        }
-      )
-    }
+    shiny::observeEvent(eligible(), {
+      if (eligible()) {
+        output$exportDownload <- shiny::downloadHandler(
+          filename = function() {
+            basename(encFile())
+          },
+          content = function(file) {
+            file.copy(encFile(), file)
+            repLogger(
+              session,
+              msg = paste("Db export file", basename(encFile()), "downloaded.")
+            )
+          }
+        )
+      }
+    })
 
     ## UC
     output$exportPidUI <- shiny::renderUI({
@@ -120,6 +139,7 @@ exportUCServer <- function(id, dbName, teamName = dbName, eligible = TRUE) {
       )
     })
     output$exportKeyUI <- shiny::renderUI({
+      shiny::req(pubkey)
       if (length(pubkey()) == 0) {
         shiny::p("No keys found!")
       } else {
@@ -133,6 +153,7 @@ exportUCServer <- function(id, dbName, teamName = dbName, eligible = TRUE) {
       }
     })
     output$exportDownloadUI <- shiny::renderUI({
+      shiny::req(pubkey)
       if (length(pubkey()) == 0) {
         shiny::tagList(
           shiny::hr(),
@@ -337,6 +358,7 @@ exportGuideApp <- function() {
 #' @rdname export
 #' @export
 selectListPubkey <- function(pubkey) {
+  if (!is.character(pubkey)) return(list())
   listName <- substr(pubkey, nchar(pubkey) - 7, nchar(pubkey))
   listName <- paste0(substr(pubkey, 1, 8), "...", listName)
   names(pubkey) <- listName

@@ -18,6 +18,9 @@
 #' @param selectOrganization Logical providing option for selecting among
 #'   available organizations and roles.
 #' @param orgName Character string naming the organization
+#' @param caller Character string naming the environment this function was
+#'   called from. The value is used to display the current version of the
+#'   R package representing the registry at Rapporteket.
 #' @param ... Further arguments, currently not used
 #'
 #' @return Shiny objects, mostly. \code{navbarWidgetServer2()} invisibly returns
@@ -78,7 +81,7 @@ navbarWidgetInput <- function(id,
 #' @export
 navbarWidgetServer <- function(id, orgName, ...) {
   shiny::moduleServer(id, function(input, output, session) {
-    output$name <- shiny::renderText(rapbase::getUserFullName())
+    output$name <- shiny::renderText(getUserFullName())
     output$affiliation <- shiny::renderText(
       paste(orgName, getUserRole(), sep = ", ")
     )
@@ -93,7 +96,7 @@ navbarWidgetServer <- function(id, orgName, ...) {
         closeOnEsc = TRUE,
         closeOnClickOutside = TRUE,
         html = TRUE,
-        confirmButtonText = rapbase::noOptOutOk()
+        confirmButtonText = noOptOutOk()
       )
     })
   })
@@ -111,9 +114,8 @@ navbarWidgetServer2 <- function(
   id,
   orgName,
   map_orgname = NULL,
-  ...
+  caller = NULL
 ) {
-
   shiny::moduleServer(id, function(input, output, session) {
 
     user <- userAttribute(map_orgname = map_orgname)
@@ -138,7 +140,7 @@ navbarWidgetServer2 <- function(
     )
 
     # User info in widget
-    userInfo <- howWeDealWithPersonalData()
+    userInfo <- howWeDealWithPersonalData(callerPkg = caller)
     shiny::observeEvent(input$userInfo, {
       shinyalert::shinyalert(
         "Dette vet Rapporteket om deg:",
@@ -147,7 +149,7 @@ navbarWidgetServer2 <- function(
         closeOnEsc = TRUE,
         closeOnClickOutside = TRUE,
         html = TRUE,
-        confirmButtonText = rapbase::noOptOutOk()
+        confirmButtonText = noOptOutOk()
       )
     })
 
@@ -325,8 +327,7 @@ appNavbarUserWidget <- function(user = "Undefined person",
       userInfo,
       user,
       org,
-      "</div>');\n",
-      "console.log(header)"
+      "</div>');\n"
     )
 
   shiny::tags$script(shiny::HTML(txtWidget))
@@ -337,13 +338,16 @@ appNavbarUserWidget <- function(user = "Undefined person",
 #'
 #' Render text on how Rapporteket deals with personal data
 #'
+#' @param callerPkg Character string naming the package this function was
+#'   called from. The value is used to display the current version of the
+#'   R package representing the registry at Rapporteket.
 #' @param ... Further arguments, currently not used
 #'
 #' @return fragment html info text
 #' @export
 
-howWeDealWithPersonalData <- function(...) {
-  callerPkg <- utils::packageName()
+howWeDealWithPersonalData <- function(..., callerPkg = NULL) {
+
   pkg <- list()
   pkg$name <- as.vector(utils::installed.packages()[, 1])
   pkg$ver <- as.vector(utils::installed.packages()[, 3])

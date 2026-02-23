@@ -5,20 +5,15 @@
 #' @param dbName Character string, can be used to
 #' specify name of database if needed. Defaults to "data",
 #' which will work for most registries.
+#' @param logAsJson Logical, if TRUE (default) logging
+#' will be done in JSON format.
 #' @export
-exportApp <- function(teamName = "", dbName = "data") {
+exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
   ui <- shiny::navbarPage(
     id = "navbarpage",
-    title = shiny::div(shiny::a(shiny::includeHTML(
-      system.file(
-        "www/logo.svg",
-        package = "rapbase"
-      )
-    )
-    ),
-    "Simple export app"),
+    title = rapbase::title("Simple export app"),
     windowTitle = "Simple export app",
-    theme = "rap/bootstrap.css",
+    theme = theme(),
     shiny::tabPanel(
       title = "Info",
       navbarWidgetInput("navbar-widget", selectOrganization = TRUE),
@@ -85,10 +80,6 @@ exportApp <- function(teamName = "", dbName = "data") {
       describeRegistryDb(registryName = dbName)
     })
 
-    meta2 <- shiny::reactive({
-      nlinesRegistryDb(registryName = dbName)
-    })
-
     output$metaControl <- shiny::renderUI({
       tabs <- names(meta())
       shiny::selectInput("metaTab", "Velg tabell:", tabs)
@@ -107,12 +98,18 @@ exportApp <- function(teamName = "", dbName = "data") {
       shiny::h4(paste0(
         input$metaTab,
         " har ",
-        meta2()[[shiny::req(input$metaTab)]]$n_lines,
+        nlinesRegistryDb(
+          registryName = dbName,
+          tab = shiny::req(input$metaTab)
+        ),
         " linjer"
       )
       )
     })
 
+  }
+  if (logAsJson) {
+    loggerSetup()
   }
   shiny::shinyApp(ui, server)
 }

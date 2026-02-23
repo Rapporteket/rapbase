@@ -15,7 +15,7 @@ full names like '\code{Jane Doe <janed@nowhere.com>}'}
 
 \item{subject}{Character string providing email subject.}
 
-\item{text}{Character string providing the plain email text}
+\item{text}{Character string providing the plain email text in HTML format.}
 
 \item{attFile}{Character string providing the full file path to an
 attachment. Default is NULL in which case no attachment is made}

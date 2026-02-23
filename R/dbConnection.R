@@ -16,7 +16,7 @@
 #' @export
 
 rapOpenDbConnection <- function(dbName, dbType = "mysql") {
-  if (Sys.getenv("DB_TYPE") %in% c("mysql", "sqlite")) {
+  if (Sys.getenv("DB_TYPE") %in% c("mysql", "sqlite", "mssql")) {
     message(
       "Overriding dbType to ",
       Sys.getenv("DB_TYPE"),
@@ -40,9 +40,21 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
     # ensure utf8 encoding
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
   } else if (dbType == "mssql") {
-    stop("Use of MSSQL is no longer supported. Exiting")
+    conf <- getDbConfig(dbName)
+    rlang::check_installed("odbc")
+    drv <- odbc::odbc()
+    con <- DBI::dbConnect(
+      drv,
+      driver = Sys.getenv("MYSQL_DRIVER", "FreeTDS"),
+      database = conf$name,
+      server = conf$host,
+      TrustedConnection = "Yes",
+      Timeout = 10
+    )
+    message("Connected to mssql-database: ", conf$name)
   } else if (dbType == "sqlite") {
     conf <- getDbConfig(dbName, sqlite = TRUE)
+    rlang::check_installed("RSQLite")
     drv <- RSQLite::SQLite()
     con <- DBI::dbConnect(
       drv,

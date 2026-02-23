@@ -214,6 +214,7 @@ autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
 #' @importFrom utils write.table
 
 appendLog <- function(event, name) {
+  message("Logging to raplog-db with message: ", event$message)
   tryCatch({
     con <- rapOpenDbConnection("raplog")$con
     DBI::dbAppendTable(con, name, event, row.names = NULL)
@@ -260,11 +261,11 @@ makeLogRecord <- function(content) {
 #' @keywords internal
 getSessionData <- function(group = NULL) {
   list(
-    user = rapbase::getUserName(group),
-    name = rapbase::getUserFullName(group),
-    group = rapbase::getUserGroups(group),
-    role = rapbase::getUserRole(group),
-    resh_id = rapbase::getUserReshId(group)
+    user = getUserName(group),
+    name = getUserFullName(group),
+    group = getUserGroups(group),
+    role = getUserRole(group),
+    resh_id = getUserReshId(group)
   )
 }
 
@@ -288,7 +289,7 @@ createLogDbTabs <- function() {
   for (i in seq_along(queries)) {
     DBI::dbExecute(con, queries[i])
   }
-  rapbase::rapCloseDbConnection(con)
+  rapCloseDbConnection(con)
   con <- NULL
 }
 
@@ -314,7 +315,7 @@ readLog <- function(type, name = "", app_id = NULL) {
   tryCatch({
     query <- paste0("SELECT * FROM ", type, "Log")
     query <- paste0(query, ";")
-    log <- rapbase::loadRegData("raplog", query)
+    log <- loadRegData("raplog", query)
     if (!is.null(app_id)) {
       log <- log[which(log$group == app_id), ]
     }

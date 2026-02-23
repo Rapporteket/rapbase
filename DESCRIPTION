@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 3.1.0
+Version: 3.3.1
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -29,8 +29,8 @@ LazyData: true
 Depends:
     R (>= 4.1.0)
 Imports:
-    blob,
     bookdown,
+    bslib,
     DBI,
     digest,
     dplyr,
@@ -44,11 +44,9 @@ Imports:
     RMariaDB,
     rmarkdown,
     rpivotTable,
-    RSQLite,
     sendmailR,
     shiny,
     shinyalert,
-    shinythemes,
     sship (>= 0.9.0),
     utils,
     yaml
@@ -56,9 +54,11 @@ RoxygenNote: 7.3.3
 URL: https://github.com/Rapporteket/rapbase
 BugReports: https://github.com/Rapporteket/rapbase/issues
 Suggests:
+    blob,
     httptest,
     lifecycle,
+    odbc,
+    RSQLite,
     rvest,
     testthat,
     withr
-VignetteBuilder: knitr

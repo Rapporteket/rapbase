@@ -98,6 +98,7 @@ mtimeStagingData <- function(registryName, dbTable = "data") {
 #' @rdname stagingData
 #' @export
 saveStagingData <- function(registryName, dataName, data, dbTable = "data") {
+  rlang::check_installed("blob")
   b <- wrapStagingData(data) |>
     blob::as_blob()
 
