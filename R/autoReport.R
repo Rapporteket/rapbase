@@ -189,7 +189,8 @@ writeAutoReportData <- function(config) {
         id = digest::digest(
           paste0(
             email,
-            as.character(as.integer(as.POSIXct(Sys.time())))
+            as.character(as.integer(as.POSIXct(Sys.time()))),
+            as.character(runif(1))
           )
         ),
         synopsis = element$synopsis,

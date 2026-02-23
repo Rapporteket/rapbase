@@ -1,6 +1,6 @@
 /* Database: Autoreport */
 CREATE TABLE autoreport (
-  id varchar(255) PRIMARY KEY,
+  id varchar(255) NOT NULL,
   synopsis varchar(255) DEFAULT NULL,
   package varchar(255) DEFAULT NULL,
   fun varchar(255) DEFAULT NULL,
@@ -14,5 +14,6 @@ CREATE TABLE autoreport (
   runDayOfYear varchar(255) DEFAULT NULL,
   type varchar(255) DEFAULT NULL,
   ownerName varchar(255) DEFAULT NULL,
-  startDate varchar(255) DEFAULT NULL
+  startDate varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 );
