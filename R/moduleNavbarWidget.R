@@ -327,8 +327,7 @@ appNavbarUserWidget <- function(user = "Undefined person",
       userInfo,
       user,
       org,
-      "</div>');\n",
-      "console.log(header)"
+      "</div>');\n"
     )
 
   shiny::tags$script(shiny::HTML(txtWidget))
