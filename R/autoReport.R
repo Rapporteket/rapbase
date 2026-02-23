@@ -190,7 +190,7 @@ writeAutoReportData <- function(config) {
           paste0(
             email,
             as.character(as.integer(as.POSIXct(Sys.time()))),
-            as.character(runif(1))
+            sample(c(0:9, letters, LETTERS), 10, replace = TRUE)
           )
         ),
         synopsis = element$synopsis,
