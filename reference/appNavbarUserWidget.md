@@ -79,5 +79,5 @@ Example of use in shiny (pseudo code):
 appNavbarUserWidget()
 #> <script>var header = $('.navbar> .container-fluid');
 #> header.append('<div class="navbar-brand" style="float:right;vertical-align:super;font-size:65%">Undefined personUndefined organization</div>');
-#> console.log(header)</script>
+#> </script>
 ```
