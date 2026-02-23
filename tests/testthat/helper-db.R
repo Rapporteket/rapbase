@@ -39,13 +39,14 @@ query_db <- function(query) {
 }
 
 # Connect to database server
-connect_db <- function() {
+connect_db <- function(...) {
   DBI::dbConnect(
     RMariaDB::MariaDB(),
     host = Sys.getenv("MYSQL_HOST"),
     user = Sys.getenv("MYSQL_USER"),
     password = Sys.getenv("MYSQL_PASSWORD"),
-    bigint = "integer"
+    bigint = "integer",
+    ...
   )
 }
 
