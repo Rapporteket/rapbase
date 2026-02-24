@@ -14,7 +14,7 @@ exportUCInput(id)
 exportUCServer(
   id,
   dbName,
-  teamName = dbName,
+  teamName = NULL,
   eligible = shiny::reactiveVal(TRUE)
 )
 

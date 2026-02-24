@@ -59,7 +59,7 @@ exportUCInput <- function(id) {
 #' @rdname export
 #' @export
 exportUCServer <- function(
-  id, dbName, teamName = dbName,
+  id, dbName, teamName = NULL,
   eligible = shiny::reactiveVal(TRUE)
 ) {
   if (!shiny::is.reactive(eligible)) {
@@ -68,6 +68,9 @@ exportUCServer <- function(
   }
 
   if (!shiny::is.reactive(dbName)) {
+    if (is.null(teamName)) {
+      teamName <- dbName
+    }
     # make dbName reactive if not already
     dbName <- shiny::reactiveVal(dbName)
   }
