@@ -210,8 +210,6 @@ autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
 #' set up in advance.
 #'
 #' @keywords internal
-#'
-#' @importFrom utils write.table
 
 appendLog <- function(event, name) {
   message("Logging to raplog-db with message: ", event$message)
