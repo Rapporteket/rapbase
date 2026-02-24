@@ -1,4 +1,4 @@
-with_mock_dir("gh_api_response", {
+httptest::with_mock_dir("gh_api_response", {
   test_that("guide UI returns a shiny tag object", {
     expect_equal(class(statsGuideUI("id")), "shiny.tag")
   })

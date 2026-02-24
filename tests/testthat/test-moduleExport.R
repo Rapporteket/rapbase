@@ -40,7 +40,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
   create_log_db(dbLogKey)
 }
 
-with_envvar(
+withr::with_envvar(
   new = c(
     "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LU\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
     "FALK_APP_ID" = "80"
@@ -63,7 +63,7 @@ with_envvar(
     # To recreate the stored responses delete the 'gh_api_response' directory
     # recursively and re-run these tests
 
-    with_mock_dir("gh_api_response", {
+    httptest::with_mock_dir("gh_api_response", {
       test_that("module server provides sensible output", {
         check_db()
         check_mysqldump()
