@@ -5,6 +5,7 @@
 \alias{appLogger}
 \alias{repLogger}
 \alias{autLogger}
+\alias{repLogger2}
 \title{Log user events in shiny applications at Rapporteket}
 \usage{
 appLogger(
@@ -16,6 +17,15 @@ appLogger(
 
 repLogger(
   session,
+  msg = "No message provided",
+  .topcall = sys.call(-1),
+  .topenv = parent.frame(),
+  role = NULL,
+  resh_id = NULL
+)
+
+repLogger2(
+  user,
   msg = "No message provided",
   .topcall = sys.call(-1),
   .topenv = parent.frame()
@@ -168,6 +178,11 @@ try(appLogger(list()))
 \donttest{
 # Depend on the environment variable R_RAP_CONFIG_PATH being set
 try(repLogger(list()))
+}
+
+\donttest{
+# Depend on the environment variable R_RAP_CONFIG_PATH being set
+try(repLogger2(list()))
 }
 
 \donttest{
