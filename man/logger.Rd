@@ -19,9 +19,7 @@ repLogger(
   session,
   msg = "No message provided",
   .topcall = sys.call(-1),
-  .topenv = parent.frame(),
-  role = NULL,
-  resh_id = NULL
+  .topenv = parent.frame()
 )
 
 repLogger2(
