@@ -170,6 +170,9 @@ repLogger <- function(session, msg = "No message provided",
 #'
 repLogger2 <- function(user, msg = "No message provided",
                        .topcall = sys.call(-1), .topenv = parent.frame()) {
+  stopifnot(
+    all(unlist(lapply(user, shiny::is.reactive), use.names = FALSE))
+  )
   name <- "reportLog"
   parent_environment <- environmentName(topenv(.topenv))
   parent_call <- deparse(.topcall, width.cutoff = 160L, nlines = 1L)
