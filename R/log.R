@@ -144,20 +144,12 @@ appLogger <- function(session, msg = "No message provided",
 #' }
 #'
 repLogger <- function(session, msg = "No message provided",
-                      .topcall = sys.call(-1), .topenv = parent.frame(),
-                      role = NULL, resh_id = NULL) {
+                      .topcall = sys.call(-1), .topenv = parent.frame()) {
   name <- "reportLog"
   parent_environment <- environmentName(topenv(.topenv))
   parent_call <- deparse(.topcall, width.cutoff = 160L, nlines = 1L)
-  sessionData <- getSessionData()
-  if (!is.null(role)) {
-    sessionData$role <- role
-  }
-  if (!is.null(resh_id)) {
-    sessionData$resh_id <- resh_id
-  }
   content <- c(
-    sessionData,
+    getSessionData(),
     list(
       environment = parent_environment,
       call = parent_call,
