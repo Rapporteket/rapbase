@@ -56,8 +56,8 @@ Handle logging
 - [`logShinyInputChanges()`](logShinyInputChanges.md) : Wrapper around
   logger::log_shiny_input_changes
 - [`appLogger()`](logger.md) [`repLogger()`](logger.md)
-  [`autLogger()`](logger.md) : Log user events in shiny applications at
-  Rapporteket
+  [`repLogger2()`](logger.md) [`autLogger()`](logger.md) : Log user
+  events in shiny applications at Rapporteket
 - [`sanitizeLog()`](sanitizeLog.md) : Sanitize log entries that have
   reached end of life
 

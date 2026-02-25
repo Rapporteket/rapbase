@@ -23,6 +23,13 @@ repLogger(
   .topenv = parent.frame()
 )
 
+repLogger2(
+  user,
+  msg = "No message provided",
+  .topcall = sys.call(-1),
+  .topenv = parent.frame()
+)
+
 autLogger(
   user,
   name,
@@ -206,6 +213,12 @@ try(appLogger(list()))
 try(repLogger(list()))
 #> Error in userAttribute() : 
 #>   Environmental variables FALK_EXTENDED_USER_RIGHTS and FALK_APP_ID must both be set!
+# }
+
+# \donttest{
+# Depend on the environment variable R_RAP_CONFIG_PATH being set
+try(repLogger2(list()))
+#> Error in user$name() : attempt to apply non-function
 # }
 
 # \donttest{
