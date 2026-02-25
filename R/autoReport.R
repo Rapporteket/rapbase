@@ -131,12 +131,21 @@ deleteAutoReport <- function(autoReportId) {
       autoReportId
     )
   )
-  query <- paste0(
-    "DELETE FROM autoreport ",
-    " WHERE id = '",
-    autoReportId,
-    "';"
-  )
+  ids <- strsplit(autoReportId[1], "\n")[[1]]
+  ids <- trimws(ids)
+
+  if (length(ids) == 1) {
+    query <- paste0(
+      "DELETE FROM autoreport WHERE id = '", ids, "';"
+    )
+  } else {
+    query <- paste0(
+      "DELETE FROM autoreport WHERE id IN ('",
+      paste(ids, collapse = "', '"),
+      "');"
+    )
+  }
+
   dbConnect <- rapOpenDbConnection("autoreport")
   DBI::dbExecute(dbConnect$con, query)
   rapCloseDbConnection(dbConnect$con)
@@ -692,7 +701,13 @@ makeAutoReportTab <- function(
   autoRep <- readAutoReportData() |>
     filterAutoRep(by = "package", pass = group) |>
     filterAutoRep(by = "type", pass = type)
-
+  autoRep <- autoRep |>
+    dplyr::group_by(dplyr::across(-dplyr::all_of(c("id", "email")))) |>
+    dplyr::summarise(
+      id    = paste(unique(.data$id), collapse = "\n"),
+      email = paste(unique(.data$email), collapse = "\n"),
+      .groups = "drop"
+    )
   if (type == "subscription") {
     autoRep <- autoRep |>
       filterAutoRep(by = "owner", pass = user) |>

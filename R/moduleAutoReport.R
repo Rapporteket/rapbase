@@ -353,12 +353,10 @@ autoReportServer <- function(
 
     shiny::observeEvent(input$edit_button, {
       repId <- strsplit(input$edit_button, "__")[[1]][2]
+      repIdSplit <- strsplit(repId[1], "\n")[[1]]
       rep <- readAutoReportData() |>
-        dplyr::filter(id == repId)
-      if (nrow(rep) != 1) {
-        message("Can not modify (either less or more than 1)")
-        return(NULL)
-      }
+        dplyr::filter(id %in% repIdSplit)
+
       autoReport$org <- rep$organization
       autoReport$freq <- paste0(rep$intervalName, "-", rep$interval)
       autoReport$email <- rep$email
@@ -372,15 +370,6 @@ autoReportServer <- function(
         mapOrgId = orgList2df(orgs)
       )
 
-      if (rep$type == "subscription") {
-
-      }
-      if (rep$type == "dispatchment") {
-
-      }
-      if (rep$type == "bulletin") {
-
-      }
     })
 
     shiny::observeEvent(input$del_button, {
