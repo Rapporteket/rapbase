@@ -90,6 +90,29 @@ test_that("log can be sanitized in db", {
   expect_equal(dim(readLog(type = "report"))[1], 0)
 })
 
+test_that("repLogger2 works without errors", {
+  check_db()
+  # Mock a Shiny server function
+  test_server <- function(input, output, session) {
+    # Mock a Shiny object
+    shiny_user <- c(
+      name = shiny::reactive("name"),
+      fullName = shiny::reactive("fullName"),
+      group = shiny::reactive("group"),
+      role = shiny::reactive("role"),
+      org = shiny::reactive("org")
+    )
+  }
+  shiny::testServer(test_server, {
+    # Call the function and check for errors
+    expect_message(
+      repLogger2(user = shiny_user, msg = "Test message"),
+      "Test message"
+    )
+    expect_equal(readLog(type = "report")$message, "Test message")
+  })
+})
+
 # remove test db
 query_db(paste0("DROP DATABASE ", nameLogDb, ";"))
 

@@ -160,6 +160,48 @@ repLogger <- function(session, msg = "No message provided",
   appendLog(event, name)
 }
 
+#' @rdname logger
+#' @export
+#' @examples
+#' \donttest{
+#' # Depend on the environment variable R_RAP_CONFIG_PATH being set
+#' try(repLogger2(list()))
+#' }
+#'
+repLogger2 <- function(user, msg = "No message provided",
+                       .topcall = sys.call(-1), .topenv = parent.frame()) {
+  stopifnot(
+    all(unlist(lapply(user, shiny::is.reactive), use.names = FALSE))
+  )
+  name <- "reportLog"
+  parent_environment <- environmentName(topenv(.topenv))
+  parent_call <- deparse(.topcall, width.cutoff = 160L, nlines = 1L)
+  shiny::req(
+    user$name(),
+    user$fullName(),
+    user$group(),
+    user$role(),
+    user$org()
+  )
+  sessionData <- list(
+    user = user$name(),
+    name = user$fullName(),
+    group = user$group(),
+    role = user$role(),
+    resh_id = user$org()
+  )
+  content <- c(
+    sessionData,
+    list(
+      environment = parent_environment,
+      call = parent_call,
+      message = msg
+    )
+  )
+  event <- makeLogRecord(content)
+  appendLog(event, name)
+}
+
 
 #' @rdname logger
 #' @export
