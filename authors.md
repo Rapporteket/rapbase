@@ -10,19 +10,21 @@
 - **Arnfinn Hykkerud Steindal**. Author.
   [](https://orcid.org/0000-0002-4088-7860)
 
+- **Petter Linberg**. Author.
+
 ## Citation
 
 Source:
 [`DESCRIPTION`](https://github.com/Rapporteket/rapbase/blob/main/DESCRIPTION)
 
-Edvardsen A, Thon K, Steindal A (2026). *rapbase: Base Functions and
-Resources for Rapporteket*. R package version 3.3.1,
+Edvardsen A, Thon K, Steindal A, Linberg P (2026). *rapbase: Base
+Functions and Resources for Rapporteket*. R package version 3.4.0,
 <https://github.com/Rapporteket/rapbase>.
 
     @Manual{,
       title = {rapbase: Base Functions and Resources for Rapporteket},
-      author = {Are Edvardsen and Kevin Otto Thon and Arnfinn Hykkerud Steindal},
+      author = {Are Edvardsen and Kevin Otto Thon and Arnfinn Hykkerud Steindal and Petter Linberg},
       year = {2026},
-      note = {R package version 3.3.1},
+      note = {R package version 3.4.0},
       url = {https://github.com/Rapporteket/rapbase},
     }
