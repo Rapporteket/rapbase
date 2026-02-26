@@ -321,7 +321,21 @@ test_that("Auto report can be deleted", {
   expect_true(is.na(names(readAutoReportData())[reportId]))
 })
 
+email <- c("tester@skde.no", "tester2@skde.no")
 
+test_that("Multiple auto reports can be deleted", {
+  check_db()
+  createAutoReport(synopsis, package, type, fun, paramNames,
+                   paramValues, owner, ownerName, email, organization,
+                   runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
+                   startDate = as.character(Sys.Date() + 1)
+  )
+  rd <- readAutoReportData()
+  reportId <- names(rd)[length(rd)]
+  multipleID <- paste0(names(rd)[length(rd)], "\n111111")
+  expect_message(deleteAutoReport(multipleID))
+  expect_true(is.na(names(readAutoReportData())[reportId]))
+})
 
 withr::with_envvar(
   new = c(

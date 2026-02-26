@@ -357,7 +357,7 @@ autoReportServer <- function(
       rep <- readAutoReportData() |>
         dplyr::filter(id %in% repIdSplit)
       if (nrow(rep) == 0) {
-        message("Can not modify (either less or more than 1)")
+        message("Can not modify (0 rows)")
       }
 
       autoReport$org <- rep$organization
