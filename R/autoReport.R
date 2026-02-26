@@ -131,20 +131,13 @@ deleteAutoReport <- function(autoReportId) {
       autoReportId
     )
   )
-  ids <- strsplit(autoReportId[1], "\n")[[1]]
-  ids <- trimws(ids)
+  ids <- strsplit(autoReportId[1], "\n")[[1]] |> trimws()
 
-  if (length(ids) == 1) {
-    query <- paste0(
-      "DELETE FROM autoreport WHERE id = '", ids, "';"
-    )
-  } else {
-    query <- paste0(
-      "DELETE FROM autoreport WHERE id IN ('",
-      paste(ids, collapse = "', '"),
-      "');"
-    )
-  }
+  query <- paste0(
+    "DELETE FROM autoreport WHERE id IN ('",
+    paste(ids, collapse = "', '"),
+    "');"
+  )
 
   dbConnect <- rapOpenDbConnection("autoreport")
   DBI::dbExecute(dbConnect$con, query)
