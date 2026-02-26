@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 3.3.1
+Version: 3.4.0
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -16,7 +16,11 @@ Authors@R: c(
            family = "Steindal",
            role = c("aut"),
            email = "arnfinn.steindal@gmail.com",
-           comment = c(ORCID = "0000-0002-4088-7860")))
+           comment = c(ORCID = "0000-0002-4088-7860")),
+    person(given = "Petter",
+           family = "Linberg",
+           role = c("aut"),
+           email = "petter.linberg@helse-nord.no"))
 Maintainer: Arnfinn Hykkerud Steindal <arnfinn.steindal@gmail.com>
 Description: Provide common functions and resources for registry specific
     R-packages at Rapporteket
