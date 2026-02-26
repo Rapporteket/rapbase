@@ -356,6 +356,9 @@ autoReportServer <- function(
       repIdSplit <- strsplit(repId[1], "\n")[[1]]
       rep <- readAutoReportData() |>
         dplyr::filter(id %in% repIdSplit)
+      if (nrow(rep) == 0) {
+        message("Can not modify (either less or more than 1)")
+      }
 
       autoReport$org <- rep$organization
       autoReport$freq <- paste0(rep$intervalName, "-", rep$interval)
