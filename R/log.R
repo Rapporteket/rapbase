@@ -160,13 +160,46 @@ repLogger <- function(session, msg = "No message provided",
   appendLog(event, name)
 }
 
-#' @rdname logger
+#' Log report events in shiny applications at Rapporteket.
+#'
+#' Updated version of \code{repLogger()} to be used
+#' in reactive contexts where user data is
+#' provided as reactive values. This is the case for
+#' the when \code{user <- navbarWidgetServer2} which
+#' the way of providing user data in shiny applications
+#' at Rapporteket. The use of the original \code{repLogger()}
+#' should be changed to \code{repLogger2} as
+#' \code{repLogger()} doesn't handle change of user roles
+#' during a session, which can happen in the shiny
+#' applications at Rapporteket.
+#'
+#' @param user This needs to be a navbarWidgetServer2 object.
+#'   Make sure to be in a reactive context when calling this function.
+#' @param msg String providing a description of the event to be logged.
+#'   Default value is 'No message provided'.
+#' @param .topcall Parent call (if any) calling this function.
+#'   Used to provide the function call with arguments.
+#'   Default value is \code{sys.call(-1)}.
+#' @param .topenv Name of the parent environment calling this function.
+#'   Used to provide package name (\emph{i.e.} register)
+#'   this function was called from. Default value is \code{parent.frame()}.
+#'
 #' @export
 #' @examples
 #' \donttest{
-#' # Depend on the environment variable R_RAP_CONFIG_PATH being set
-#' try(repLogger2(list()))
+#' # Inside a reactive context, for example within a
+#' # downloadHandler() function, you can call:
+#' rapbase::repLogger2(user, msg = "This is a test")
+#' # make sure user exists inside server modules
+#' # by passing it as an argument to the module server function:
+#' module_server <- function(id, user) { ... }
 #' }
+#' @note If you are in the main shiny server, you can call \code{user}
+#' without passing
+#' it as an argument to the server function, as \code{user} is available
+#' in the main server environment. However, if you are in a module server
+#' function, you need to pass \code{user} as an argument to
+#' the module server function before you call \code{repLogger2(user)}.
 #'
 repLogger2 <- function(user, msg = "No message provided",
                        .topcall = sys.call(-1), .topenv = parent.frame()) {
