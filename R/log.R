@@ -187,7 +187,7 @@ repLogger <- function(session, msg = "No message provided",
 #' @name repLogger2
 #' @export
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' # Inside a reactive context, for example within a
 #' # downloadHandler() function, you can call:
 #' rapbase::repLogger2(user, msg = "This is a test")

@@ -47,7 +47,7 @@ function, you need to pass \code{user} as an argument to
 the module server function before you call \code{repLogger2(user)}.
 }
 \examples{
-\donttest{
+\dontrun{
 # Inside a reactive context, for example within a
 # downloadHandler() function, you can call:
 rapbase::repLogger2(user, msg = "This is a test")
