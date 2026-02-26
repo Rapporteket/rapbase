@@ -39,10 +39,11 @@ during a session, which can happen in the shiny
 applications at Rapporteket.
 }
 \note{
-If you are in the main shiny server, you can call \code{user} without passing 
-it as an argument to the server function, as \code{user} is available 
-in the main server environment. However, if you are in a module server 
-function, you need to pass \code{user} as an argument to 
+If you are in the main shiny server, you can call \code{user}
+without passing
+it as an argument to the server function, as \code{user} is available
+in the main server environment. However, if you are in a module server
+function, you need to pass \code{user} as an argument to
 the module server function before you call \code{repLogger2(user)}.
 }
 \examples{

@@ -184,6 +184,7 @@ repLogger <- function(session, msg = "No message provided",
 #'   Used to provide package name (\emph{i.e.} register)
 #'   this function was called from. Default value is \code{parent.frame()}.
 #'
+#' @name repLogger2
 #' @export
 #' @examples
 #' \donttest{

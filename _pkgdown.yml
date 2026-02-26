@@ -54,6 +54,7 @@ reference:
     - loggerSetup
     - logShinyInputChanges
     - logger
+    - repLogger2
     - sanitizeLog
 
   - title: Automated reports
