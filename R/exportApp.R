@@ -32,30 +32,29 @@ exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
       orgName = "exportApp"
     )
 
-    shiny::observeEvent(
-      shiny::req(user$role()), {
-        if (user$role() != "SC") {
-          shiny::removeTab("navbarpage", target = "Eksport")
-        } else {
-          shiny::insertTab(
-            "navbarpage",
-            shiny::tabPanel(
-              title = "Eksport",
-              value = "exportPanel",
-              shiny::sidebarLayout(
-                shiny::sidebarPanel(
-                  shiny::uiOutput("exportSidebarPanel")
-                ),
-                shiny::mainPanel(
-                  shiny::uiOutput("exportMainPanel")
-                )
+    shiny::observeEvent(user$role(), {
+      if (user$role() != "SC") {
+        shiny::removeTab("navbarpage", target = "Eksport")
+      } else {
+        shiny::insertTab(
+          "navbarpage",
+          shiny::tabPanel(
+            title = "Eksport",
+            value = "exportPanel",
+            shiny::sidebarLayout(
+              shiny::sidebarPanel(
+                shiny::uiOutput("exportSidebarPanel")
+              ),
+              shiny::mainPanel(
+                shiny::uiOutput("exportMainPanel")
               )
-            ),
-            target = "Info",
-            position = "after"
-          )
-        }
+            )
+          ),
+          target = "Info",
+          position = "after"
+        )
       }
+    }
     )
 
     # User control
