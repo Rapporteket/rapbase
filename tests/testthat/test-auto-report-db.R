@@ -237,6 +237,11 @@ if (is.null(check_db(is_test_that = FALSE))) {
             expect_equal(autoReport$email[1], "true@email.no")
             session$setInputs(delEmail = 1)
             expect_equal(length(autoReport$email), 0)
+            session$setInputs(email = c("true@email.no", "true@email.com"))
+            session$setInputs(addEmail = 1)
+            expect_equal(autoReport$email, c("true@email.no", "true@email.com"))
+            session$setInputs(editEmail = 1)
+            expect_equal(length(autoReport$email), 2)
           }
         )
       })
