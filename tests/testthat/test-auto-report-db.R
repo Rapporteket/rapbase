@@ -265,7 +265,21 @@ if (is.null(check_db(is_test_that = FALSE))) {
           }
         )
       })
-
+      test_that("edit click sends id", {
+        check_db()
+        test_df <- readAutoReportData()
+        shiny::testServer(autoReportServer,
+          args = list(
+            registryName = registryName, type = type,
+            org = shiny::reactive(100082),
+            reports = reports, orgs = orgs, user = user
+          ),
+          {
+          reportID <- test_df$id[1]
+          session$setInputs(edit_button = session$ns(paste0("edit__", test_df$id[1])))
+          expect_true(is.na(names(readAutoReportData())[reportID]))
+        })
+      })
       test_that("no submit button is provided when module is not eligible", {
         shiny::testServer(
           autoReportServer,
