@@ -34,7 +34,7 @@ exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
 
     shiny::observeEvent(user$role(), {
       if (user$role() != "SC") {
-        shiny::removeTab("navbarpage", target = "exportPanel")
+        shiny::removeTab(inputId = "navbarpage", target = "exportPanel")
       } else {
         shiny::appendTab(
           "navbarpage",
