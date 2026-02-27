@@ -35,6 +35,7 @@ exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
     shiny::observeEvent(user$role(), {
       if (user$role() != "SC") {
         shiny::removeTab(inputId = "navbarpage", target = "exportPanel")
+        shiny::removeTab(inputId = "navbarpage", target = "downloadPanel")
       } else {
         shiny::appendTab(
           "navbarpage",
@@ -51,9 +52,44 @@ exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
             )
           )
         )
+        shiny::appendTab(
+          "navbarpage",
+          shiny::tabPanel(
+            title = "Last ned tabell",
+            value = "downloadPanel",
+            shiny::sidebarLayout(
+              shiny::sidebarPanel(
+                shiny::uiOutput("downloadSidebarPanel")
+              ),
+              shiny::mainPanel(
+                shiny::uiOutput("downloadMainPanel")
+              )
+            )
+          )
+        )
       }
     }
     )
+
+    ##################
+    # Download table #
+    ##################
+    # User control
+    output$downloadSidebarPanel <- shiny::renderUI({
+      if (user$role() == "SC") {
+        shiny::uiOutput("metaControl")
+      } else {
+        return(NULL)
+      }
+    })
+    output$downloadMainPanel <- shiny::renderUI({
+      if (user$role() == "SC") {
+        shiny::uiOutput("n_lines")
+      } else {
+        return(NULL)
+      }
+    })
+
 
     # User control
     output$exportSidebarPanel <- shiny::renderUI({
