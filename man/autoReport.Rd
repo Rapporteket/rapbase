@@ -91,7 +91,7 @@ report GUI. Must be one of
 
 \item{user}{List of shiny reactive values providing user metadata and
 privileges corresponding to the return value of
-\code{\link{navbarWidgetServer}}.}
+\code{\link{navbarWidgetServer2}}.}
 
 \item{runAutoReportButton}{Logical defining if runAutoReport button should
 be made available in the GUI. Default is FALSE. If TRUE, a button will be

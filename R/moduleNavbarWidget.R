@@ -21,13 +21,12 @@
 #' @param caller Character string naming the environment this function was
 #'   called from. The value is used to display the current version of the
 #'   R package representing the registry at Rapporteket.
-#' @param ... Further arguments, currently not used
 #'
 #' @return Shiny objects, mostly. \code{navbarWidgetServer2()} invisibly returns
 #'   a list of reactive values representing user metadata and privileges. See
 #'   \code{\link{userAttribute}} for further details on these values.
 #' @name navbarWidget
-#' @aliases navbarWidgetInput navbarWidgetServer navbarWidgetServer2
+#' @aliases navbarWidgetInput navbarWidgetServer2
 #'   navbarWidgetApp
 #' @examples
 #' ## client user interface function
@@ -45,7 +44,7 @@
 #'
 #' ## server function
 #' server <- function(input, output, session) {
-#'   navbarWidgetServer("testWidget", orgName = "Test org")
+#'   navbarWidgetServer2("testWidget", orgName = "Test org")
 #' }
 #'
 #' ## run the app in an interactive session and a Rapporteket like environment
@@ -76,32 +75,6 @@ navbarWidgetInput <- function(id,
     )
   )
 }
-
-#' @rdname navbarWidget
-#' @export
-navbarWidgetServer <- function(id, orgName, ...) {
-  shiny::moduleServer(id, function(input, output, session) {
-    output$name <- shiny::renderText(getUserFullName())
-    output$affiliation <- shiny::renderText(
-      paste(orgName, getUserRole(), sep = ", ")
-    )
-
-    # User info in widget
-    userInfo <- howWeDealWithPersonalData()
-    shiny::observeEvent(input$userInfo, {
-      shinyalert::shinyalert(
-        "Dette vet Rapporteket om deg:",
-        userInfo,
-        type = "", imageUrl = "rap/logo.svg",
-        closeOnEsc = TRUE,
-        closeOnClickOutside = TRUE,
-        html = TRUE,
-        confirmButtonText = noOptOutOk()
-      )
-    })
-  })
-}
-
 
 #' @rdname navbarWidget
 #' @param map_orgname A data.frame containing two columns:
@@ -237,7 +210,7 @@ navbarWidgetApp <- function(orgName = "Org Name") {
     )
   )
   server <- function(input, output, session) {
-    navbarWidgetServer("testWidget", orgName = orgName)
+    navbarWidgetServer2("testWidget", orgName = orgName)
   }
 
   shiny::shinyApp(ui, server)
