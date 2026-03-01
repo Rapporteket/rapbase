@@ -15,6 +15,8 @@
 #' @param pubkey Character vector with public keys
 #' @param compress Logical if export data is to be compressed (using gzip).
 #' FALSE by default.
+#' @param noData Logical if data is to be excluded from export.
+#' FALSE by default.
 #' @param session Shiny session object
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
@@ -52,6 +54,10 @@ exportUCInput <- function(id) {
     shiny::uiOutput(shiny::NS(id, "exportPidUI")),
     shiny::uiOutput(shiny::NS(id, "exportKeyUI")),
     shiny::checkboxInput(shiny::NS(id, "exportCompress"), "Komprimer eksport"),
+    shiny::checkboxInput(
+      shiny::NS(id, "excludeData"),
+      "Ikke inkluder data"
+    ),
     shiny::uiOutput(shiny::NS(id, "exportDownloadUI"))
   )
 }
@@ -88,6 +94,7 @@ exportUCServer <- function(
       f <- exportDb(
         dbName(),
         compress = input$exportCompress,
+        noData = input$excludeData,
         session = session
       )
       message(paste("Dump file size:", file.size(f)))
@@ -361,7 +368,7 @@ selectListPubkey <- function(pubkey) {
 
 #' @rdname export
 #' @export
-exportDb <- function(dbName, compress = FALSE, session) {
+exportDb <- function(dbName, compress = FALSE, noData = FALSE, session) {
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
@@ -370,7 +377,8 @@ exportDb <- function(dbName, compress = FALSE, session) {
 
   cmd <- paste0(
     "mysqldump ",
-    "--no-tablespaces --single-transaction --add-drop-database "
+    "--no-tablespaces --single-transaction --add-drop-database ",
+    ifelse(noData, "--no-data ", "")
   )
   cmd <- sprintf(
     "%s -B -u %s -p'%s' -h %s %s > %s",

@@ -25,7 +25,7 @@ exportUCApp(dbName = "rapbase")
 
 selectListPubkey(pubkey)
 
-exportDb(dbName, compress = FALSE, session)
+exportDb(dbName, compress = FALSE, noData = FALSE, session)
 }
 \arguments{
 \item{id}{Character string module ID}
@@ -43,6 +43,9 @@ restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 \item{pubkey}{Character vector with public keys}
 
 \item{compress}{Logical if export data is to be compressed (using gzip).
+FALSE by default.}
+
+\item{noData}{Logical if data is to be excluded from export.
 FALSE by default.}
 
 \item{session}{Shiny session object}
