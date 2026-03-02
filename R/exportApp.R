@@ -24,19 +24,6 @@ exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
           shiny::htmlOutput("metaData")
         )
       )
-    ),
-    shiny::tabPanel(
-      title = "Eksport",
-      value = "exportPanel",
-      shiny::sidebarLayout(
-        shiny::sidebarPanel(
-          shiny::uiOutput("exportSidebarPanel")
-        ),
-        shiny::mainPanel(
-          shiny::uiOutput("exportMainPanel")
-
-        )
-      )
     )
   )
   server <- function(input, output, session) {
@@ -46,12 +33,27 @@ exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
     )
 
     shiny::observeEvent(user$role(), {
-      if (user$role() == "SC") {
-        shiny::showTab(inputId = "navbarpage", target = "exportPanel")
+      if (user$role() != "SC") {
+        shiny::removeTab(inputId = "navbarpage", target = "exportPanel")
       } else {
-        shiny::hideTab(inputId = "navbarpage", target = "exportPanel")
+        shiny::appendTab(
+          "navbarpage",
+          shiny::tabPanel(
+            title = "Eksport",
+            value = "exportPanel",
+            shiny::sidebarLayout(
+              shiny::sidebarPanel(
+                shiny::uiOutput("exportSidebarPanel")
+              ),
+              shiny::mainPanel(
+                shiny::uiOutput("exportMainPanel")
+              )
+            )
+          )
+        )
       }
-    })
+    }
+    )
 
     # User control
     output$exportSidebarPanel <- shiny::renderUI({
