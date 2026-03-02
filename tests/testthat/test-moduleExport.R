@@ -92,6 +92,24 @@ with_envvar(
           }
         )
       })
+      test_that("exportUCServer provides sensible output, again", {
+        check_db()
+        check_mysqldump()
+        shiny::testServer(exportUCServer, args = list(
+          dbName = shiny::reactiveVal("rapbase"),
+          teamName = "rapbase"
+        ), {
+          expect_equal(class(output$exportPidUI), "list")
+          session$setInputs(exportPid = "areedv")
+          expect_equal("character", class(pubkey()))
+          session$setInputs(exportKey = pubkey())
+          expect_equal(class(output$exportKeyUI), "list")
+          session$setInputs(exportCompress = FALSE)
+          expect_true(length(encFile()) == 1)
+          session$setInputs(exportDownload = 1)
+          expect_true(basename(output$exportDownload) == basename(encFile()))
+        })
+      })
     })
   }
 )
