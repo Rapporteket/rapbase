@@ -237,6 +237,11 @@ if (is.null(check_db(is_test_that = FALSE))) {
             expect_equal(autoReport$email[1], "true@email.no")
             session$setInputs(delEmail = 1)
             expect_equal(length(autoReport$email), 0)
+            session$setInputs(email = c("true@email.no", "true@email.com"))
+            session$setInputs(addEmail = 1)
+            expect_equal(autoReport$email, c("true@email.no", "true@email.com"))
+            session$setInputs(editEmail = 1)
+            expect_equal(length(autoReport$email), 2)
           }
         )
       })
@@ -260,7 +265,21 @@ if (is.null(check_db(is_test_that = FALSE))) {
           }
         )
       })
-
+      test_that("edit click sends id", {
+        check_db()
+        test_df <- readAutoReportData()
+        shiny::testServer(autoReportServer,
+          args = list(
+            registryName = registryName, type = type,
+            org = shiny::reactive(100082),
+            reports = reports, orgs = orgs, user = user
+          ),
+          {
+          reportID <- test_df$id[1]
+          session$setInputs(edit_button = session$ns(paste0("edit__", test_df$id[1])))
+          expect_true(is.na(names(readAutoReportData())[reportID]))
+        })
+      })
       test_that("no submit button is provided when module is not eligible", {
         shiny::testServer(
           autoReportServer,
@@ -321,7 +340,21 @@ test_that("Auto report can be deleted", {
   expect_true(is.na(names(readAutoReportData())[reportId]))
 })
 
+email <- c("tester@skde.no", "tester2@skde.no")
 
+test_that("Multiple auto reports can be deleted", {
+  check_db()
+  createAutoReport(synopsis, package, type, fun, paramNames,
+                   paramValues, owner, ownerName, email, organization,
+                   runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
+                   startDate = as.character(Sys.Date() + 1)
+  )
+  rd <- readAutoReportData()
+  reportId <- names(rd)[length(rd)]
+  multipleID <- paste0(names(rd)[length(rd)], "\n111111")
+  expect_message(deleteAutoReport(multipleID))
+  expect_true(is.na(names(readAutoReportData())[reportId]))
+})
 
 withr::with_envvar(
   new = c(
