@@ -16,8 +16,6 @@ exportUCServer(
   eligible = shiny::reactiveVal(TRUE)
 )
 
-exportUCServer2(id, dbName, teamName, eligible = shiny::reactiveVal(TRUE))
-
 exportUCApp(dbName = "rapbase")
 
 selectListPubkey(pubkey)
