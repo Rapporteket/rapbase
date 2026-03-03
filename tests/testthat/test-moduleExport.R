@@ -111,10 +111,10 @@ with_envvar(
           }
         )
       })
-      test_that("exportUCServer2 provides sensible output", {
+      test_that("exportUCServer provides sensible output, again", {
         check_db()
         check_mysqldump()
-        shiny::testServer(exportUCServer2, args = list(
+        shiny::testServer(exportUCServer, args = list(
           dbName = shiny::reactiveVal("rapbase"),
           teamName = "rapbase"
         ), {
@@ -130,8 +130,9 @@ with_envvar(
         })
       })
     })
+  }
+)
 
-  })
 
 test_that("guide test app returns an app object", {
   expect_equal(class(exportUCApp()), "shiny.appobj")
