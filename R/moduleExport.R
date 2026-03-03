@@ -423,8 +423,6 @@ queryToRdsFile <- function(dbName, query, compress = FALSE, session) {
     gz <- gzfile(out, open = "wb")
     on.exit(close(gz), add = TRUE)
     saveRDS(dat, gz)
-
-    close(gz)
   } else {
     saveRDS(dat, out)
   }
@@ -434,5 +432,4 @@ queryToRdsFile <- function(dbName, query, compress = FALSE, session) {
     repLogger(session, msg = paste(conf$name, "Query RDS created."))
   }
   out
-  
 }
