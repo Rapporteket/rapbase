@@ -36,8 +36,8 @@ services:
     volumes:
       - ~/.ssh:/home/rstudio/.ssh
       - ~/.gitconfig:/home/rstudio/.gitconfig
-      - ../rapbase/.:/home/rstudio/rapbase
-      - .:/home/rstudio/rapregtemplate
+      - .:/home/rstudio/rapbase
+      - ../rapregtemplate/.:/home/rstudio/rapregtemplate
     ports:
       - "8787:8787"
     restart: "no"
