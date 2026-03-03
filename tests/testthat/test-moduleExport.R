@@ -74,6 +74,7 @@ with_envvar(
         check_mysqldump()
         shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
           session$setInputs(exportPid = "areedv")
+          session$setInputs(fullDb = "Hele database")
           expect_equal("character", class(pubkey()))
           session$setInputs(exportKey = pubkey())
           expect_equal(class(output$exportKeyUI), "list")
