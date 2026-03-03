@@ -77,14 +77,19 @@ exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
     # User control
     output$downloadSidebarPanel <- shiny::renderUI({
       if (user$role() == "SC") {
-        shiny::uiOutput("metaControl")
+        shiny::tagList(
+          shiny::uiOutput("dataTabNames")
+        )
       } else {
         return(NULL)
       }
     })
     output$downloadMainPanel <- shiny::renderUI({
       if (user$role() == "SC") {
-        shiny::uiOutput("n_lines")
+        shiny::tagList(
+          shiny::uiOutput("n_lines"),
+          shiny::htmlOutput("exampleTableUI")
+        )
       } else {
         return(NULL)
       }
@@ -143,6 +148,26 @@ exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
         " linjer"
       )
       )
+    })
+
+    output$dataTabNames <- shiny::renderUI({
+      tabs <- names(meta())
+      shiny::selectInput("dataTab", "Velg tabell:", tabs)
+    })
+
+    output$exampleTable <- DT::renderDataTable({
+      shiny::req(input$dataTab)
+      query <- paste0(
+        "SELECT * FROM ", input$dataTab, " LIMIT 10;"
+      )
+      loadRegData(registryName = dbName, query = query)
+    }, options = list(
+      pageLength = 10,
+      searching = FALSE
+    ))
+
+    output$exampleTableUI <- shiny::renderUI({
+      DT::dataTableOutput("exampleTable")
     })
 
   }

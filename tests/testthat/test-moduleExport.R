@@ -53,7 +53,12 @@ with_envvar(
       f <- exportDb(dbName = "rapbase", compress = TRUE, session = session)
       expect_true(file.exists(f))
     })
-
+    
+    test_that("query in queryToRdsFile returns a file name", {
+      check_db()
+      f <- queryToRdsFile(dbName = "rapbase", query = "SELECT * FROM testTable;", session = session)
+      expect_true(file.exists(f))
+    })
 
     # The remaining test the corresponding shiny modules
     test_that("export UC input returns a shiny tag list", {
@@ -78,6 +83,20 @@ with_envvar(
           expect_true(basename(output$exportDownload) == basename(encFile()))
         })
       })
+
+      test_that("Check if query is string", {
+        check_db()
+        shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
+          session$setInputs(exportPid = "areedv")
+          session$setInputs(exportKey = pubkey())
+          session$setInputs(fullDb = "Enkelttabell")
+          session$setInputs(dataTab = "testTable")
+          session$setInputs(exportCompress = TRUE)
+          expect_equal(class(downloadDataQuery()), "character")
+          session$setInputs(exportDownload = 1)
+          expect_true(basename(output$exportDownload) == basename(encFile()))
+        })
+      })
       test_that("download is prevented when module is not eligible", {
         check_db()
         shiny::testServer(
@@ -92,7 +111,6 @@ with_envvar(
           }
         )
       })
-
       test_that("exportUCServer2 provides sensible output", {
         check_db()
         check_mysqldump()
