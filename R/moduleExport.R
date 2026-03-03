@@ -231,7 +231,7 @@ exportUCServer <- function(
         shiny::dateRangeInput(
           ns("dateRange"),
           "Velg datofilter:",
-          start = Sys.Date() - lubridate::years(2),
+          start = as.Date(paste0(format(Sys.Date(), "%Y"), "-01-01")),
           end = Sys.Date()
         )
       }

@@ -43,7 +43,6 @@ Imports:
     kableExtra,
     knitr,
     logger,
-    lubridate,
     readr,
     rlang,
     RMariaDB,
