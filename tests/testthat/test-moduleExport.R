@@ -118,6 +118,7 @@ with_envvar(
           dbName = shiny::reactiveVal("rapbase"),
           teamName = "rapbase"
         ), {
+          session$setInputs(fullDb = "Hele database")
           expect_equal(class(output$exportPidUI), "list")
           session$setInputs(exportPid = "areedv")
           expect_equal("character", class(pubkey()))
