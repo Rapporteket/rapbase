@@ -49,8 +49,7 @@ NULL
 #' @export
 exportUCInput <- function(id) {
   shiny::tagList(
-    shiny::radioButtons(shiny::NS(id, "fullDb"), "",
-                        c("Hele databasen", "Enkelttabell"), inline = TRUE),
+    shiny::uiOutput(shiny::NS(id, "exportFullDbOrTable")),
     shiny::uiOutput(shiny::NS(id, "exportTable")),
     shiny::uiOutput(shiny::NS(id, "exportPidUI")),
     shiny::uiOutput(shiny::NS(id, "exportKeyUI")),
@@ -131,6 +130,19 @@ exportUCServer <- function(
 
 
     ## UC
+    output$exportFullDbOrTable <- shiny::renderUI({
+      shiny::req(pubkey, eligible)
+      if (length(pubkey()) == 0 | !eligible()) {
+        NULL
+      } else {
+        shiny::radioButtons(
+          shiny::NS(id, "fullDb"),
+          "",
+          c("Hele databasen", "Enkelttabell"),
+          inline = TRUE
+        )
+      }
+    })
     output$exportPidUI <- shiny::renderUI({
       shiny::req(eligible)
       teamMembers <- tryCatch(
