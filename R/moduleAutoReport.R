@@ -62,7 +62,7 @@
 #'   "month".
 #' @param user List of shiny reactive values providing user metadata and
 #'   privileges corresponding to the return value of
-#'   \code{\link{navbarWidgetServer}}.
+#'   \code{\link{navbarWidgetServer2}}.
 #' @param runAutoReportButton Logical defining if runAutoReport button should
 #'   be made available in the GUI. Default is FALSE. If TRUE, a button will be
 #'   made available to trigger running all auto reports for a given date. This
@@ -353,12 +353,14 @@ autoReportServer <- function(
 
     shiny::observeEvent(input$edit_button, {
       repId <- strsplit(input$edit_button, "__")[[1]][2]
+      repIdSplit <- strsplit(repId[1], "\n")[[1]]
       rep <- readAutoReportData() |>
-        dplyr::filter(id == repId)
-      if (nrow(rep) != 1) {
-        message("Can not modify (either less or more than 1)")
+        dplyr::filter(id %in% repIdSplit)
+      if (nrow(rep) == 0) {
+        message("Can not modify (0 rows)")
         return(NULL)
       }
+
       autoReport$org <- rep$organization
       autoReport$freq <- paste0(rep$intervalName, "-", rep$interval)
       autoReport$email <- rep$email
@@ -372,15 +374,6 @@ autoReportServer <- function(
         mapOrgId = orgList2df(orgs)
       )
 
-      if (rep$type == "subscription") {
-
-      }
-      if (rep$type == "dispatchment") {
-
-      }
-      if (rep$type == "bulletin") {
-
-      }
     })
 
     shiny::observeEvent(input$del_button, {

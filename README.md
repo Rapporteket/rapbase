@@ -2,10 +2,12 @@
 
 <!-- badges: start -->
 [![Version](https://img.shields.io/github/v/release/rapporteket/rapbase?sort=semver)](https://github.com/rapporteket/rapbase/releases)
+[![CRAN status](https://www.r-pkg.org/badges/version/rapbase)](https://CRAN.R-project.org/package=rapbase)
 [![R-CMD-check](https://github.com/Rapporteket/rapbase/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Rapporteket/rapbase/actions/workflows/R-CMD-check.yaml)
 [![codecov.io](https://codecov.io/gh/Rapporteket/rapbase/branch/main/graph/badge.svg)](https://app.codecov.io/gh/rapporteket/rapbase?branch=main)
-[![CRAN status](https://www.r-pkg.org/badges/version/rapbase)](https://CRAN.R-project.org/package=rapbase)
 [![Lifecycle: stable](https://img.shields.io/badge/lifecycle-stable-green.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+[![GitHub open issues](https://img.shields.io/github/issues/rapporteket/rapbase.svg)](https://github.com/rapporteket/rapbase/issues)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![Doc](https://img.shields.io/badge/Doc--grey.svg)](https://rapporteket.github.io/rapbase/)
 <!-- badges: end -->
 
