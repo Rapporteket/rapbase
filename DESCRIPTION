@@ -1,7 +1,7 @@
 Package: rapbase
 Type: Package
 Title: Base Functions and Resources for Rapporteket
-Version: 2.4.0
+Version: 3.4.0
 Authors@R: c(
     person(given = "Are",
            family = "Edvardsen",
@@ -16,7 +16,11 @@ Authors@R: c(
            family = "Steindal",
            role = c("aut"),
            email = "arnfinn.steindal@gmail.com",
-           comment = c(ORCID = "0000-0002-4088-7860")))
+           comment = c(ORCID = "0000-0002-4088-7860")),
+    person(given = "Petter",
+           family = "Linberg",
+           role = c("aut"),
+           email = "petter.linberg@helse-nord.no"))
 Maintainer: Arnfinn Hykkerud Steindal <arnfinn.steindal@gmail.com>
 Description: Provide common functions and resources for registry specific
     R-packages at Rapporteket
@@ -29,8 +33,8 @@ LazyData: true
 Depends:
     R (>= 4.1.0)
 Imports:
-    blob,
     bookdown,
+    bslib,
     DBI,
     digest,
     dplyr,
@@ -44,11 +48,9 @@ Imports:
     RMariaDB,
     rmarkdown,
     rpivotTable,
-    RSQLite,
     sendmailR,
     shiny,
     shinyalert,
-    shinythemes,
     sship (>= 0.9.0),
     utils,
     yaml
@@ -56,9 +58,11 @@ RoxygenNote: 7.3.3
 URL: https://github.com/Rapporteket/rapbase
 BugReports: https://github.com/Rapporteket/rapbase/issues
 Suggests:
+    blob,
     httptest,
     lifecycle,
+    odbc,
+    RSQLite,
     rvest,
     testthat,
     withr
-VignetteBuilder: knitr

@@ -1,26 +1,22 @@
 #' Shiny app with database export functionality
 #'
-#' @param repoName Character string registry name key, corresponding to
+#' @param teamName Character string, corresponding to
 #' github team name
-#' @param registryName Character string registry name key, can be used to
-#' specify name of database if needed.
+#' @param dbName Character string, can be used to
+#' specify name of database if needed. Defaults to "data",
+#' which will work for most registries.
+#' @param logAsJson Logical, if TRUE (default) logging
+#' will be done in JSON format.
 #' @export
-exportApp <- function(repoName = "", registryName = "data") {
+exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
   ui <- shiny::navbarPage(
     id = "navbarpage",
-    title = shiny::div(shiny::a(shiny::includeHTML(
-      system.file(
-        "www/logo.svg",
-        package = "rapbase"
-      )
-    )
-    ),
-    "Simple export app"),
+    title = rapbase::title("Simple export app"),
     windowTitle = "Simple export app",
-    theme = "rap/bootstrap.css",
+    theme = theme(),
     shiny::tabPanel(
       title = "Info",
-      rapbase::navbarWidgetInput("navbar-widget", selectOrganization = TRUE),
+      navbarWidgetInput("navbar-widget", selectOrganization = TRUE),
       shiny::sidebarLayout(
         shiny::sidebarPanel(shiny::uiOutput("metaControl")),
         shiny::mainPanel(
@@ -28,66 +24,62 @@ exportApp <- function(repoName = "", registryName = "data") {
           shiny::htmlOutput("metaData")
         )
       )
-    ),
-    shiny::tabPanel(
-      title = "Eksport",
-      value = "exportPanel",
-      shiny::sidebarLayout(
-        shiny::sidebarPanel(
-          shiny::uiOutput("exportSidebarPanel")
-        ),
-        shiny::mainPanel(
-          shiny::uiOutput("exportMainPanel")
-
-        )
-      )
     )
   )
   server <- function(input, output, session) {
-    user <- rapbase::navbarWidgetServer2(
+    user <- navbarWidgetServer2(
       id = "navbar-widget",
-      orgName = repoName,
-      caller = repoName
+      orgName = "exportApp"
     )
 
     shiny::observeEvent(user$role(), {
-      if (user$role() == "SC") {
-        shiny::showTab(inputId = "navbarpage", target = "exportPanel")
+      if (user$role() != "SC") {
+        shiny::removeTab(inputId = "navbarpage", target = "exportPanel")
       } else {
-        shiny::hideTab(inputId = "navbarpage", target = "exportPanel")
+        shiny::appendTab(
+          "navbarpage",
+          shiny::tabPanel(
+            title = "Eksport",
+            value = "exportPanel",
+            shiny::sidebarLayout(
+              shiny::sidebarPanel(
+                shiny::uiOutput("exportSidebarPanel")
+              ),
+              shiny::mainPanel(
+                shiny::uiOutput("exportMainPanel")
+              )
+            )
+          )
+        )
       }
-    })
+    }
+    )
 
     # User control
     output$exportSidebarPanel <- shiny::renderUI({
       if (user$role() == "SC") {
-        rapbase::exportUCInput("export")
+        exportUCInput("export")
       } else {
         return(NULL)
       }
     })
 
-    rapbase::exportUCServer("export", registryName = registryName,
-                            repoName = repoName)
+    exportUCServer("export", dbName = dbName, teamName = teamName)
 
     # User guide
     output$exportMainPanel <- shiny::renderUI({
       if (user$role() == "SC") {
-        rapbase::exportGuideUI("exportGuide")
+        exportGuideUI("exportGuide")
       } else {
         return(NULL)
       }
     })
 
-    rapbase::exportGuideServer("exportGuide", repoName)
+    exportGuideServer("exportGuide", dbName)
 
     ## Metadata
     meta <- shiny::reactive({
-      rapbase::describeRegistryDb(registryName = registryName)
-    })
-
-    meta2 <- shiny::reactive({
-      rapbase::nlinesRegistryDb(registryName = registryName)
+      describeRegistryDb(registryName = dbName)
     })
 
     output$metaControl <- shiny::renderUI({
@@ -108,12 +100,18 @@ exportApp <- function(repoName = "", registryName = "data") {
       shiny::h4(paste0(
         input$metaTab,
         " har ",
-        meta2()[[shiny::req(input$metaTab)]]$n_lines,
+        nlinesRegistryDb(
+          registryName = dbName,
+          tab = shiny::req(input$metaTab)
+        ),
         " linjer"
       )
       )
     })
 
+  }
+  if (logAsJson) {
+    loggerSetup()
   }
   shiny::shinyApp(ui, server)
 }

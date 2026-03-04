@@ -160,6 +160,82 @@ repLogger <- function(session, msg = "No message provided",
   appendLog(event, name)
 }
 
+#' Log report events in shiny applications at Rapporteket.
+#'
+#' Updated version of \code{repLogger()} to be used
+#' in reactive contexts where user data is
+#' provided as reactive values. This is the case for
+#' the when \code{user <- navbarWidgetServer2} which
+#' the way of providing user data in shiny applications
+#' at Rapporteket. The use of the original \code{repLogger()}
+#' should be changed to \code{repLogger2} as
+#' \code{repLogger()} doesn't handle change of user roles
+#' during a session, which can happen in the shiny
+#' applications at Rapporteket.
+#'
+#' @param user This needs to be a navbarWidgetServer2 object.
+#'   Make sure to be in a reactive context when calling this function.
+#' @param msg String providing a description of the event to be logged.
+#'   Default value is 'No message provided'.
+#' @param .topcall Parent call (if any) calling this function.
+#'   Used to provide the function call with arguments.
+#'   Default value is \code{sys.call(-1)}.
+#' @param .topenv Name of the parent environment calling this function.
+#'   Used to provide package name (\emph{i.e.} register)
+#'   this function was called from. Default value is \code{parent.frame()}.
+#'
+#' @name repLogger2
+#' @export
+#' @examples
+#' \dontrun{
+#' # Inside a reactive context, for example within a
+#' # downloadHandler() function, you can call:
+#' rapbase::repLogger2(user, msg = "This is a test")
+#' # make sure user exists inside server modules
+#' # by passing it as an argument to the module server function:
+#' module_server <- function(id, user) { ... }
+#' }
+#' @note If you are in the main shiny server, you can call \code{user}
+#' without passing
+#' it as an argument to the server function, as \code{user} is available
+#' in the main server environment. However, if you are in a module server
+#' function, you need to pass \code{user} as an argument to
+#' the module server function before you call \code{repLogger2(user)}.
+#'
+repLogger2 <- function(user, msg = "No message provided",
+                       .topcall = sys.call(-1), .topenv = parent.frame()) {
+  stopifnot(
+    all(unlist(lapply(user, shiny::is.reactive), use.names = FALSE))
+  )
+  name <- "reportLog"
+  parent_environment <- environmentName(topenv(.topenv))
+  parent_call <- deparse(.topcall, width.cutoff = 160L, nlines = 1L)
+  shiny::req(
+    user$name(),
+    user$fullName(),
+    user$group(),
+    user$role(),
+    user$org()
+  )
+  sessionData <- list(
+    user = user$name(),
+    name = user$fullName(),
+    group = user$group(),
+    role = user$role(),
+    resh_id = user$org()
+  )
+  content <- c(
+    sessionData,
+    list(
+      environment = parent_environment,
+      call = parent_call,
+      message = msg
+    )
+  )
+  event <- makeLogRecord(content)
+  appendLog(event, name)
+}
+
 
 #' @rdname logger
 #' @export
@@ -206,30 +282,28 @@ autLogger <- function(user, name, registryName, reshId, type, pkg, fun, param,
 #' @param name String defining the name of the log, currently one of "appLog" or
 #' "reportLog".
 #'
-#' @return Provides a new record in the log. If the log does not exist a new
-#' one is created before appending the new record when the log target is
-#' configured to be files. When logging to a database this have to be set up in
-#' advance.
+#' @return Provides a new record in the log database. The database have to be
+#' set up in advance.
 #'
 #' @keywords internal
 #'
 #' @importFrom utils write.table
 
 appendLog <- function(event, name) {
-  config <- getConfig(fileName = "rapbaseConfig.yml")
-  target <- config$r$raplog$target
-
-  if (target == "db") {
-    con <- rapOpenDbConnection(config$r$raplog$key)$con
+  message("Logging to raplog-db with message: ", event$message)
+  tryCatch({
+    con <- rapOpenDbConnection("raplog")$con
     DBI::dbAppendTable(con, name, event, row.names = NULL)
     rapCloseDbConnection(con)
     con <- NULL
-  } else {
-    stop(paste0(
-      "Target ", target, " is not supported. ",
-      "Log event was not appended!"
+  } , error = function(e) {
+    warning(paste0(
+      "Log entry could not be appended to '", name, "' log!\n",
+      "Please check that configuration is set up properly.\n",
+      "Original error message:\n", e$message, ".\n",
+      "The message that was to be logged:\n", paste(event, collapse = "; ")
     ))
-  }
+  })
 }
 
 
@@ -263,11 +337,11 @@ makeLogRecord <- function(content) {
 #' @keywords internal
 getSessionData <- function(group = NULL) {
   list(
-    user = rapbase::getUserName(group),
-    name = rapbase::getUserFullName(group),
-    group = rapbase::getUserGroups(group),
-    role = rapbase::getUserRole(group),
-    resh_id = rapbase::getUserReshId(group)
+    user = getUserName(group),
+    name = getUserFullName(group),
+    group = getUserGroups(group),
+    role = getUserRole(group),
+    resh_id = getUserReshId(group)
   )
 }
 
@@ -280,7 +354,6 @@ getSessionData <- function(group = NULL) {
 #'
 #' @keywords internal
 createLogDbTabs <- function() {
-  conf <- getConfig(fileName = "rapbaseConfig.yml")
 
   fc <- file(system.file("createRaplogTabs.sql", package = "rapbase"), "r")
   t <- readLines(fc)
@@ -288,11 +361,11 @@ createLogDbTabs <- function() {
   sql <- paste0(t, collapse = "\n")
   queries <- strsplit(sql, ";")[[1]]
 
-  con <- rapOpenDbConnection(conf$r$raplog$key)$con
-  for (i in seq_len(length(queries))) {
-    RMariaDB::dbExecute(con, queries[i])
+  con <- rapOpenDbConnection("raplog")$con
+  for (i in seq_along(queries)) {
+    DBI::dbExecute(con, queries[i])
   }
-  rapbase::rapCloseDbConnection(con)
+  rapCloseDbConnection(con)
   con <- NULL
 }
 
@@ -315,41 +388,39 @@ createLogDbTabs <- function() {
 readLog <- function(type, name = "", app_id = NULL) {
   stopifnot(type == "report" | type == "app")
 
-  config <- rapbase::getConfig(fileName = "rapbaseConfig.yml")
-  target <- config$r$raplog$target
-
-  if (target == "db") {
+  tryCatch({
     query <- paste0("SELECT * FROM ", type, "Log")
     query <- paste0(query, ";")
-    log <- rapbase::loadRegData(config$r$raplog$key, query)
+    log <- loadRegData("raplog", query)
     if (!is.null(app_id)) {
       log <- log[which(log$group == app_id), ]
     }
-    log <- log %>%
+    log <- log |>
       dplyr::select(-"id")
-  } else {
-    stop(paste0(
-      "Log target '", target, "' is not supported. ",
+    invisible(log)
+  } , error = function(e) {
+    warning(paste0(
       "Log could not be read! To remedy, please check that configuration is ",
-      "set up properly."
+      "set up properly.\nOriginal error message:\n", e$message
     ))
-  }
-
-  invisible(log)
+    invisible(NULL)
+  })
 }
 
 #' Sanitize log entries that have reached end of life
 #'
+#' Function that removes log entries older than a given number of days.
+#'
+#' @param eolDays Number of days to keep log entries. Entries older than this
+#' will be removed. Default value is 730 days (2 years).
+#'
 #' @return NULL on success
 #' @export
-sanitizeLog <- function() {
-  conf <- getConfig(fileName = "rapbaseConfig.yml")
-  target <- conf$r$raplog$target
+sanitizeLog <- function(eolDays = 730) {
+  tryCatch({
+    eolDate <- Sys.Date() - eolDays
 
-  if (target == "db") {
-    eolDate <- Sys.Date() - conf$r$raplog$eolDays
-
-    con <- rapOpenDbConnection(conf$r$raplog$key)$con
+    con <- rapOpenDbConnection("raplog")$con
     query <- paste0(
       "DELETE FROM appLog WHERE time < '",
       as.character(eolDate), "';"
@@ -362,13 +433,12 @@ sanitizeLog <- function() {
     DBI::dbExecute(con, query)
     rapCloseDbConnection(con)
     con <- NULL
-  } else {
-    stop(paste0(
-      "Log target '", target, "' is not supported. ",
+    NULL
+  } , error = function(e) {
+    warning(paste0(
       "Log could not be sanitized! ",
       "To remedy, please check that configuration is ",
       "set up properly."
     ))
-  }
-  NULL
+  })
 }

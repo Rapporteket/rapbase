@@ -75,7 +75,7 @@ mst <- function(tab, col_names = colnames(tab), type = "pdf", cap = "",
       format = "latex", col.names = col_names, caption = cap,
       label = label, digits = digs,
       align = align, booktabs = TRUE
-    ) %>%
+    ) |>
       kableExtra::kable_styling(latex_options = lo, font_size = fs)
   }
 
@@ -84,7 +84,7 @@ mst <- function(tab, col_names = colnames(tab), type = "pdf", cap = "",
       format = "html", col.names = col_names, caption = cap,
       label = label, digits = digs,
       align = align
-    ) %>%
+    ) |>
       kableExtra::kable_styling(
         bootstrap_options = c("striped", "hover", "condensed"),
         full_width = FALSE

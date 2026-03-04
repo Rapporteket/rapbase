@@ -16,7 +16,7 @@
 getGithub <- function(what, value, .token = NULL) {
   stopifnot(what %in% c("contributors", "members", "keys"))
 
-  conf <- rapbase::getConfig("rapbaseConfig.yml")
+  conf <- getConfig("rapbaseConfig.yml")
 
   if (what %in% c("contributors")) {
     endpoint <- paste0("/repos/rapporteket/", value, "/contributors")

@@ -4,11 +4,15 @@
 \alias{sanitizeLog}
 \title{Sanitize log entries that have reached end of life}
 \usage{
-sanitizeLog()
+sanitizeLog(eolDays = 730)
+}
+\arguments{
+\item{eolDays}{Number of days to keep log entries. Entries older than this
+will be removed. Default value is 730 days (2 years).}
 }
 \value{
 NULL on success
 }
 \description{
-Sanitize log entries that have reached end of life
+Function that removes log entries older than a given number of days.
 }

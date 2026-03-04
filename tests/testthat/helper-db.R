@@ -15,21 +15,32 @@ check_db <- function(is_test_that = TRUE) {
   }
 }
 
+# Define Sys.setenv(RUN_MYSQLDUMP = "false") before
+# running tests on environments where mysqldump is not functional,
+# to prevent test failures due to non-functional mysqldump.
+check_mysqldump <- function() {
+  if (Sys.getenv("RUN_MYSQLDUMP") == "false") {
+    testthat::skip("Possible non-functional mysqldump")
+  } else {
+    NULL
+  }
+}
+
 # Send a query to db
-query_db <- function(query, ...) {
+query_db <- function(query) {
   if (is.null(check_db(is_test_that = FALSE))) {
-    con <- connect_db(...)
+    con <- connect_db()
     for (q in query) {
-      RMariaDB::dbExecute(con, q)
+      DBI::dbExecute(con, q)
     }
-    RMariaDB::dbDisconnect(con)
+    DBI::dbDisconnect(con)
     con <- NULL
   }
 }
 
 # Connect to database server
 connect_db <- function(...) {
-  con <- RMariaDB::dbConnect(
+  DBI::dbConnect(
     RMariaDB::MariaDB(),
     host = Sys.getenv("MYSQL_HOST"),
     user = Sys.getenv("MYSQL_USER"),

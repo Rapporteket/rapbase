@@ -31,9 +31,9 @@ createAutoReportTab <- function(nameAutoReportDb) {
 
   con <- rapOpenDbConnection(nameAutoReportDb)[["con"]]
   for (i in seq_len(length(queries))) {
-    RMariaDB::dbExecute(con, queries[i])
+    DBI::dbExecute(con, queries[i])
   }
-  rapbase::rapCloseDbConnection(con)
+  rapCloseDbConnection(con)
   con <- NULL
 }
 
@@ -54,10 +54,10 @@ test_that("a sample of auto report data can be written to db", {
 
 test_that("sample auto report data can be read from db", {
   check_db()
-  expect_equal(nrow(readAutoReportData()), 7)
+  expect_equal(nrow(readAutoReportData()), 9)
   expect_equal(class(readAutoReportData()), "data.frame")
   writeAutoReportData(config = arSample)
-  expect_equal(nrow(readAutoReportData()), 14)
+  expect_equal(nrow(readAutoReportData()), 18)
 })
 
 # For a valid test make sure there is ONE standard dummy report scheduled
@@ -107,25 +107,55 @@ test_that("Auto reports not sent because of no reports this date", {
   expect_message(runAutoReport(
     dato = "2024-12-03",
     dryRun = TRUE
-    ))
+    ),
+    "runAutoReport: No reports to be processed today")
 })
 
 test_that("Auto reports not sent if before start date", {
   check_db()
   expect_message(runAutoReport(
-    dato = "1800-01-01",
+    dato = "1899-01-01",
     dryRun = TRUE
     ),
-    "runAutoReport: Starting processing of auto reports")
+    "runAutoReport: No reports to be processed today")
 })
 
 test_that("Auto reports not sent if after start date", {
   check_db()
-  expect_message(runAutoReport(
+  expect_message(
+    runAutoReport(
     dato = "3000-01-01",
     dryRun = TRUE
     ),
-    "runAutoReport: Finished processing of auto reports")
+    "runAutoReport: No reports to be processed today",
+    all = FALSE
+  )
+})
+
+test_that("Auto reports not sent because there are no reports to be processed", {
+  check_db()
+  expect_message(
+    runAutoReport(
+    dato = "2024-12-02",
+    type = c("nonexistingtype"),
+    dryRun = TRUE
+    ),
+    'after filtering for type \\(nonexistingtype\\), no reports remain.',
+    all = FALSE
+  )
+})
+
+test_that("Auto reports not sent because there are no reports to be processed", {
+  check_db()
+  expect_message(
+    runAutoReport(
+    dato = "2024-12-02",
+    group = "nonexistinggroup",
+    dryRun = TRUE
+    ),
+    "after filtering for type \\(subscription, dispatchment\\) and package/registry \\(nonexistinggroup\\), no reports remain.",
+    all = FALSE
+  )
 })
 
 
@@ -207,6 +237,11 @@ if (is.null(check_db(is_test_that = FALSE))) {
             expect_equal(autoReport$email[1], "true@email.no")
             session$setInputs(delEmail = 1)
             expect_equal(length(autoReport$email), 0)
+            session$setInputs(email = c("true@email.no", "true@email.com"))
+            session$setInputs(addEmail = 1)
+            expect_equal(autoReport$email, c("true@email.no", "true@email.com"))
+            session$setInputs(editEmail = 1)
+            expect_equal(length(autoReport$email), 2)
           }
         )
       })
@@ -230,7 +265,21 @@ if (is.null(check_db(is_test_that = FALSE))) {
           }
         )
       })
-
+      test_that("edit click sends id", {
+        check_db()
+        test_df <- readAutoReportData()
+        shiny::testServer(autoReportServer,
+          args = list(
+            registryName = registryName, type = type,
+            org = shiny::reactive(100082),
+            reports = reports, orgs = orgs, user = user
+          ),
+          {
+          reportID <- test_df$id[1]
+          session$setInputs(edit_button = session$ns(paste0("edit__", test_df$id[1])))
+          expect_true(is.na(names(readAutoReportData())[reportID]))
+        })
+      })
       test_that("no submit button is provided when module is not eligible", {
         shiny::testServer(
           autoReportServer,
@@ -291,7 +340,21 @@ test_that("Auto report can be deleted", {
   expect_true(is.na(names(readAutoReportData())[reportId]))
 })
 
+email <- c("tester@skde.no", "tester2@skde.no")
 
+test_that("Multiple auto reports can be deleted", {
+  check_db()
+  createAutoReport(synopsis, package, type, fun, paramNames,
+                   paramValues, owner, ownerName, email, organization,
+                   runDayOfYear = as.numeric(format(Sys.Date(), "%j")),
+                   startDate = as.character(Sys.Date() + 1)
+  )
+  rd <- readAutoReportData()
+  reportId <- names(rd)[length(rd)]
+  multipleID <- paste0(names(rd)[length(rd)], "\n111111")
+  expect_message(deleteAutoReport(multipleID))
+  expect_true(is.na(names(readAutoReportData())[reportId]))
+})
 
 withr::with_envvar(
   new = c(
@@ -444,15 +507,15 @@ withr::with_envvar(
 
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {
-  con <- RMariaDB::dbConnect(
+  con <- DBI::dbConnect(
     RMariaDB::MariaDB(),
     host = Sys.getenv("MYSQL_HOST"),
     user = Sys.getenv("MYSQL_USER"),
     password = Sys.getenv("MYSQL_PASSWORD"),
     bigint = "integer"
   )
-  RMariaDB::dbExecute(con, paste("DROP DATABASE", nameAutoReportDb))
-  rapbase::rapCloseDbConnection(con)
+  DBI::dbExecute(con, paste("DROP DATABASE", nameAutoReportDb))
+  rapCloseDbConnection(con)
 }
 
 # Restore instance

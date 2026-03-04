@@ -14,10 +14,8 @@ is to be logged.}
 "reportLog".}
 }
 \value{
-Provides a new record in the log. If the log does not exist a new
-one is created before appending the new record when the log target is
-configured to be files. When logging to a database this have to be set up in
-advance.
+Provides a new record in the log database. The database have to be
+set up in advance.
 }
 \description{
 Internal function adding a record to the log.

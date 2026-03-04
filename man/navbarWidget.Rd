@@ -3,16 +3,13 @@
 \name{navbarWidget}
 \alias{navbarWidget}
 \alias{navbarWidgetInput}
-\alias{navbarWidgetServer}
 \alias{navbarWidgetServer2}
 \alias{navbarWidgetApp}
 \title{Shiny modules providing GUI and server logic for user info widget}
 \usage{
 navbarWidgetInput(id, addUserInfo = TRUE, selectOrganization = FALSE)
 
-navbarWidgetServer(id, orgName, ...)
-
-navbarWidgetServer2(id, orgName, map_orgname = NULL, ...)
+navbarWidgetServer2(id, orgName, map_orgname = NULL, caller = NULL)
 
 navbarWidgetApp(orgName = "Org Name")
 }
@@ -26,13 +23,15 @@ available organizations and roles.}
 
 \item{orgName}{Character string naming the organization}
 
-\item{...}{Further arguments, currently not used}
-
 \item{map_orgname}{A data.frame containing two columns:
 \describe{
  \item{UnitId}{unit ids}
  \item{orgname}{corresponding organization names}
  }}
+
+\item{caller}{Character string naming the environment this function was
+called from. The value is used to display the current version of the
+R package representing the registry at Rapporteket.}
 }
 \value{
 Shiny objects, mostly. \code{navbarWidgetServer2()} invisibly returns
@@ -70,7 +69,7 @@ ui <- shiny::tagList(
 
 ## server function
 server <- function(input, output, session) {
-  navbarWidgetServer("testWidget", orgName = "Test org")
+  navbarWidgetServer2("testWidget", orgName = "Test org")
 }
 
 ## run the app in an interactive session and a Rapporteket like environment

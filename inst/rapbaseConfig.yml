@@ -1,24 +1,6 @@
 ## Configuration of the R package 'rapbase', yaml formatted
 ## May contain anything, but try to keep some sensible structure and tidyness
 
-r :
-
-  # Activity logging
-  raplog:
-    eolDays: 730
-    target: db
-    key: raplogTest
-
-  # User data for testing purposes
-  testUser :
-    user : ttester
-    groups : rapbase
-    role : accessLevel
-    resh_id : '999999'
-    email: rapporteket@skde.no
-    full_name: Tore Tester
-    phone: '04050607'
-
 ## Network
 network :
 

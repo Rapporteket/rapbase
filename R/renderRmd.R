@@ -44,6 +44,7 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
   stopifnot(template %in% c("default", "document"))
 
   # do work in tempdir and return to origin on exit
+  # setwd returns the current directory before the change
   owd <- setwd(tempdir())
   on.exit(setwd(owd))
 

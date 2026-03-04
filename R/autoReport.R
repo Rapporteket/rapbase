@@ -131,12 +131,14 @@ deleteAutoReport <- function(autoReportId) {
       autoReportId
     )
   )
+  ids <- strsplit(autoReportId[1], "\n")[[1]] |> trimws()
+
   query <- paste0(
-    "DELETE FROM autoreport ",
-    " WHERE id = '",
-    autoReportId,
-    "';"
+    "DELETE FROM autoreport WHERE id IN ('",
+    paste(ids, collapse = "', '"),
+    "');"
   )
+
   dbConnect <- rapOpenDbConnection("autoreport")
   DBI::dbExecute(dbConnect$con, query)
   rapCloseDbConnection(dbConnect$con)
@@ -155,7 +157,7 @@ deleteAutoReport <- function(autoReportId) {
 #' }
 readAutoReportData <- function() {
   query <- paste0("SELECT * FROM autoreport;")
-  res <- rapbase::loadRegData("autoreport", query)
+  res <- loadRegData("autoreport", query)
   res
 }
 
@@ -189,7 +191,8 @@ writeAutoReportData <- function(config) {
         id = digest::digest(
           paste0(
             email,
-            as.character(as.integer(as.POSIXct(Sys.time())))
+            as.character(as.integer(as.POSIXct(Sys.time()))),
+            sample(c(0:9, letters, LETTERS), 10, replace = TRUE)
           )
         ),
         synopsis = element$synopsis,
@@ -367,23 +370,72 @@ runAutoReport <- function(
 ) {
 
   # get report candidates
-  reps <- rapbase::readAutoReportData() %>%
-    rapbase::filterAutoRep(by = "type", pass = type)
+  reps <- readAutoReportData() |>
+    filterAutoRep(by = "type", pass = type)
   if (!is.null(group)) {
-    reps <- reps %>%
-      rapbase::filterAutoRep(by = "package", pass = group)
+    reps <- reps |>
+      filterAutoRep(by = "package", pass = group)
   }
-  reps <- reps %>%
-    # nolint start: object_usage_linter
+
+  if (dim(reps)[1] == 0) {
+    message(
+      "runAutoReport: There are no reports to be processed. ",
+      "Thus, after filtering for type (",
+      paste(type, collapse = ", "),
+      ifelse(
+        is.null(group),
+        "),",
+        paste0(") and package/registry (", group, "),")
+      ),
+      " no reports remain."
+    )
+    return(invisible(NULL))
+  }
+
+  reps <- reps |>
+    # keep only reports to be run today
+    dplyr::rowwise() |>
+    dplyr::filter(
+      # nolint start: vector_logic_linter.
+      # we need && here to ensure no crash if startDate < dato.
+      # Thus, seq.Date will not be called if one of the first
+      # two conditions is FALSE.
+      (as.Date(.data$startDate) <= dato) &&
+        (as.Date(.data$terminateDate) > dato) &&
+        (dato %in% seq.Date(
+          as.Date(.data$startDate),
+          as.Date(dato),
+          by = .data$interval
+        ))
+      # nolint end
+    ) |>
+    dplyr::ungroup() |>
+    # combine emails for identical reports
     dplyr::summarise(
       email = list(unique(email)),
-      .by = c(owner, ownerName, package, organization, type, fun,
-        params, startDate, terminateDate, interval, synopsis)
+      .by = c(
+        "owner",
+        "ownerName",
+        "package",
+        "organization",
+        "type",
+        "fun",
+        "params",
+        "synopsis"
+      )
     )
-  # nolint end
+
+  if (dim(reps)[1] == 0) {
+    message(
+      "runAutoReport: No reports to be processed today (",
+      dato,
+      ifelse(is.null(group), ").", paste0(") from registry ", group, "."))
+    )
+    return(invisible(NULL))
+  }
 
   # standard text for email body
-  standardEmailFileName <- "autoReportStandardEmailText.txt"
+  standardEmailFileName <- "autoReportStandardEmailText.html"
   stdTxt <- readr::read_file(
     system.file(
       standardEmailFileName,
@@ -391,7 +443,7 @@ runAutoReport <- function(
     )
   )
   # get sender from common config
-  conf <- rapbase::getConfig("rapbaseConfig.yml")
+  conf <- getConfig("rapbaseConfig.yml")
 
   message("runAutoReport: Starting processing of auto reports")
   for (i in seq_len(dim(reps)[1])) {
@@ -401,68 +453,63 @@ runAutoReport <- function(
     ))
     tryCatch(
       {
-        rep <- reps[i, ] %>% as.list()
+        rep <- reps[i, ] |> as.list()
         rep$email <- unlist(rep$email)
         params <- jsonlite::fromJSON(rep$params)
-        if (
-          as.Date(rep$startDate) <= dato
-          && as.Date(rep$terminateDate) > dato
-          && dato %in% seq.Date(
-            as.Date(rep$startDate),
-            as.Date(dato),
-            by = rep$interval
-          ) # 'days', 'weeks', 'months', 'years',
-        ) {
+        # get referenced function and call it
+        if (grepl("::", rep$fun)) {
           # get explicit referenced function and call it
-          f <- rapbase::.getFun(paste0(rep$package, "::", rep$fun))
-          content <- do.call(what = f, args = params)
-          if (rep$type == "bulletin") {
-            text <- content
-            attFile <- NULL
-          } else {
-            attFile <- content
-            if (file.exists(system.file(
-              standardEmailFileName,
-              package = rep$package
-            ))) {
-              # read standard text from package
-              text <- readr::read_file(
-                system.file(
-                  standardEmailFileName,
-                  package = rep$package
-                )
+          f <- .getFun(rep$fun)
+        } else {
+          f <- .getFun(paste0(rep$package, "::", rep$fun))
+        }
+        content <- do.call(what = f, args = params)
+        if (rep$type == "bulletin") {
+          text <- content
+          attFile <- NULL
+        } else {
+          attFile <- content
+          if (file.exists(system.file(
+            standardEmailFileName,
+            package = rep$package
+          ))) {
+            # read standard text from package
+            text <- readr::read_file(
+              system.file(
+                standardEmailFileName,
+                package = rep$package
               )
-            } else {
-              text <- stdTxt
-            }
+            )
+          } else {
+            text <- stdTxt
           }
-          if (dryRun) {
-            message(paste("No emails sent. Content is:", content))
-          } else {
-            for (email in rep$email) {
-              message(paste(
-                "Report", i, "of", dim(reps)[1],
-                ". Sending email to:", email
-              ))
-              rapbase::autLogger(
-                user = rep$owner,
-                name = rep$ownerName,
-                registryName = rep$package,
-                reshId = rep$organization,
-                type = rep$type,
-                pkg = rep$package,
-                fun = rep$fun,
-                param = rep$params,
-                msg = paste(
-                  "recipient:",
-                  email
-                )
+        }
+        if (dryRun) {
+          message(paste("No emails sent. Content is:", content))
+        } else {
+          for (email in rep$email) {
+            message(paste(
+              "Report", i, "of", dim(reps)[1],
+              ". Sending email to:", email
+            ))
+            autLogger(
+              user = rep$owner,
+              name = rep$ownerName,
+              registryName = rep$package,
+              reshId = rep$organization,
+              type = rep$type,
+              pkg = rep$package,
+              fun = rep$fun,
+              param = rep$params,
+              msg = paste(
+                "recipient:",
+                email
               )
-              rapbase::sendEmail(
-                conf = conf, to = email, subject = rep$synopsis,
-                text = text, attFile = attFile
-              )
-            }
+            )
+            sendEmail(
+              conf = conf, to = email, subject = rep$synopsis,
+              text = text, attFile = attFile
+            )
           }
         }
       },
@@ -479,8 +526,7 @@ runAutoReport <- function(
 
 #' Run bulletin auto reports
 #'
-#' This is a wrapper for \code{runAutoReport()} to issue bulletins. Purpose is
-#' to ease simplify fire-in-the-hole at Rapporteket
+#' This is a wrapper for \code{runAutoReport()} to issue bulletins.
 #'
 #' @return  Whatever \code{runAutoReport()} might provide
 #' @export
@@ -516,7 +562,7 @@ makeRunDayOfYearSequence <- function(startDay = Sys.Date(), interval) {
   s <- seq(from = start, to = end, by = interval)
   # skip redundant end value
   if (length(s) > 1) {
-    s <- s[seq_len(length(s)) - 1]
+    s <- s[seq_along(s) - 1]
   }
   unique(as.integer(format(s, "%j")))
 }
@@ -631,28 +677,33 @@ findNextRunDate <- function(
 #'   the last column in the table. FALSE by default.
 #'
 #' @return Matrix providing a table to be rendered in a shiny app
-#' @importFrom dplyr "%>%"
 #' @export
 # nolint end
 
 makeAutoReportTab <- function(
   namespace = character(),
-  user = rapbase::getUserName(),
-  group = rapbase::getUserGroups(),
-  orgId = rapbase::getUserReshId(),
+  user = getUserName(),
+  group = getUserGroups(),
+  orgId = getUserReshId(),
   type = "subscription",
   mapOrgId = NULL,
   includeReportId = FALSE
 ) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
 
-  autoRep <- readAutoReportData() %>%
-    filterAutoRep(by = "package", pass = group) %>%
+  autoRep <- readAutoReportData() |>
+    filterAutoRep(by = "package", pass = group) |>
     filterAutoRep(by = "type", pass = type)
-
+  autoRep <- autoRep |>
+    dplyr::group_by(dplyr::across(-dplyr::all_of(c("id", "email")))) |>
+    dplyr::summarise(
+      id    = paste(unique(.data$id), collapse = "\n"),
+      email = paste(unique(.data$email), collapse = "\n"),
+      .groups = "drop"
+    )
   if (type == "subscription") {
-    autoRep <- autoRep %>%
-      filterAutoRep(by = "owner", pass = user) %>%
+    autoRep <- autoRep |>
+      filterAutoRep(by = "owner", pass = user) |>
       filterAutoRep(by = "organization", pass = orgId)
   }
 

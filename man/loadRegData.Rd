@@ -6,11 +6,11 @@
 \alias{nlinesRegistryDb}
 \title{Provider of data for registries at Rapporteket}
 \usage{
-loadRegData(registryName, query, dbType = "mysql")
+loadRegData(registryName = "data", query, dbType = "mysql")
 
 describeRegistryDb(registryName, tabs = c())
 
-nlinesRegistryDb(registryName, tabs = c())
+nlinesRegistryDb(registryName, tab = "")
 }
 \arguments{
 \item{registryName}{String providing the name of the database to connect to.
@@ -26,6 +26,8 @@ none of these are set, it will use the name provided.}
 
 \item{tabs}{Character vector for optional definition of tables to describe.
 Defaults to an empty vector in which case all tables are used}
+
+\item{tab}{String name of the table for which to get number of lines}
 }
 \value{
 data frame containing registry data or a list with table names and
