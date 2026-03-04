@@ -237,22 +237,6 @@ exportUCServer <- function(
       }
     })
 
-    output$exampleTable <- DT::renderDataTable({
-      shiny::req(input$dataTab)
-      query <- paste0(
-        "SELECT * FROM ", input$dataTab, " LIMIT 10;"
-      )
-      loadRegData(registryName = dbName(), query = query)
-    }, options = list(
-      pageLength = 10,
-      searching = FALSE
-    ))
-
-    output$exampleTableUI <- shiny::renderUI({
-      DT::dataTableOutput("exampleTable")
-    })
-
-
     downloadDataQuery <- shiny::reactive({
       shiny::req(input$dataTab)
       base_sql <- paste0("SELECT * FROM ", input$dataTab)
