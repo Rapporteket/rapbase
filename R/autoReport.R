@@ -222,13 +222,36 @@ writeAutoReportData <- function(config) {
       )
     }
   }
-  message(paste0("Add auto report data to database, ",
-                 nrow(dataframe), " entries."))
+
+  # Filter out rows already in database
+  colsExceptId <- setdiff(names(dataframe), "id")
+
+  # to avoid crash for "interval" col, wrap col names in "`"
+  q <- function(x) paste0("`", gsub("`", "``", x), "`")
+  query <- sprintf(
+    "SELECT DISTINCT %s FROM %s",
+    paste(q(colsExceptId), collapse = ", "),
+    q("autoreport")
+  )
   con <- rapOpenDbConnection("autoreport")$con
-  DBI::dbAppendTable(con, "autoreport", dataframe, row.names = NULL)
+  distinctData <- DBI::dbGetQuery(con, query)
+
+  dataframe <- dataframe |>
+    dplyr::distinct(
+      dplyr::across(dplyr::all_of(colsExceptId)), .keep_all = TRUE
+    ) |>
+    dplyr::anti_join(distinctData, by = colsExceptId)
+
+  if (nrow(dataframe) == 0) {
+    message(paste0("Submition already exists in database."))
+  } else {
+    message(
+      paste0("Add auto report data to database, ", nrow(dataframe), " entries.")
+    )
+    DBI::dbAppendTable(con, "autoreport", dataframe, row.names = NULL)
+  }
   rapCloseDbConnection(con)
 }
-
 
 #' Filter auto report data
 #'
