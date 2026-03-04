@@ -98,6 +98,21 @@ with_envvar(
           expect_true(basename(output$exportDownload) == basename(encFile()))
         })
       })
+
+      test_that("Check if daterange is added to query", {
+        check_db()
+        shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
+          session$setInputs(exportPid = "areedv")
+          session$setInputs(exportKey = pubkey())
+          session$setInputs(fullDb = "Enkelttabell")
+          session$setInputs(dataTab = "testTable")
+          lenBaseQuery <- nchar(downloadDataQuery())
+          session$setInputs(dateColSelect = "someTime")
+          session$setInputs(dateRange = c("2024-01-01", "2024-12-31"))
+          expect_equal(class(downloadDataQuery()), "character")
+          expect_true(nchar(downloadDataQuery())>lenBaseQuery)
+        })
+      })
       test_that("download is prevented when module is not eligible", {
         check_db()
         shiny::testServer(
