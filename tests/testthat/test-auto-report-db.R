@@ -57,9 +57,16 @@ test_that("sample auto report data can be read from db", {
   expect_equal(nrow(readAutoReportData()), 9)
   expect_equal(class(readAutoReportData()), "data.frame")
   writeAutoReportData(config = arSample)
-  expect_equal(nrow(readAutoReportData()), 18)
+  expect_equal(nrow(readAutoReportData()), 9)
 })
 
+test_that("duplicate rows are removed, unique rows are written to db", {
+  #modify one row, expect one more row in database
+  check_db()
+  arSample$testAutoReportSecond$ownerName <- "Torvald Tester"
+  writeAutoReportData(config = arSample)
+  expect_equal(nrow(readAutoReportData()), 10)
+})
 # For a valid test make sure there is ONE standard dummy report scheduled
 # monthly and with start date first of some month.
 # 1 January 1900 is a Monday
