@@ -9,8 +9,6 @@ complexity and number of code lines for each registry.
 ``` r
 navbarWidgetInput(id, addUserInfo = TRUE, selectOrganization = FALSE)
 
-navbarWidgetServer(id, orgName, ...)
-
 navbarWidgetServer2(id, orgName, map_orgname = NULL, caller = NULL)
 
 navbarWidgetApp(orgName = "Org Name")
@@ -34,10 +32,6 @@ navbarWidgetApp(orgName = "Org Name")
 - orgName:
 
   Character string naming the organization
-
-- ...:
-
-  Further arguments, currently not used
 
 - map_orgname:
 
@@ -93,7 +87,7 @@ ui <- shiny::tagList(
 
 ## server function
 server <- function(input, output, session) {
-  navbarWidgetServer("testWidget", orgName = "Test org")
+  navbarWidgetServer2("testWidget", orgName = "Test org")
 }
 
 ## run the app in an interactive session and a Rapporteket like environment

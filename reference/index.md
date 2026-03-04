@@ -104,7 +104,6 @@ Handle automated reports
 Helper functions to be used by shiny apps
 
 - [`navbarWidgetInput()`](navbarWidget.md)
-  [`navbarWidgetServer()`](navbarWidget.md)
   [`navbarWidgetServer2()`](navbarWidget.md)
   [`navbarWidgetApp()`](navbarWidget.md) : Shiny modules providing GUI
   and server logic for user info widget

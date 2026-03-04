@@ -107,7 +107,7 @@ autoReportServer2(...)
 
   List of shiny reactive values providing user metadata and privileges
   corresponding to the return value of
-  [`navbarWidgetServer`](navbarWidget.md).
+  [`navbarWidgetServer2`](navbarWidget.md).
 
 - runAutoReportButton:
 
