@@ -49,6 +49,9 @@ NULL
 #' @export
 exportUCInput <- function(id) {
   shiny::tagList(
+    shiny::radioButtons(shiny::NS(id, "fullDb"), "",
+                        c("Hele databasen", "Enkelttabell"), inline = TRUE),
+    shiny::uiOutput(shiny::NS(id, "exportTable")),
     shiny::uiOutput(shiny::NS(id, "exportPidUI")),
     shiny::uiOutput(shiny::NS(id, "exportKeyUI")),
     shiny::uiOutput(shiny::NS(id, "exportCompressUI")),
@@ -62,6 +65,8 @@ exportUCServer <- function(
   id, dbName, teamName = NULL,
   eligible = shiny::reactiveVal(TRUE)
 ) {
+  ns <- shiny::NS(id)
+
   if (!shiny::is.reactive(eligible)) {
     # make eligible reactive if not already
     eligible <- shiny::reactiveVal(eligible)
@@ -84,19 +89,30 @@ exportUCServer <- function(
     })
 
     encFile <- shiny::reactive({
-      shiny::req(dbName, input$exportKey)
-      f <- exportDb(
-        dbName(),
-        compress = input$exportCompress,
-        session = session
-      )
-      message(paste("Dump file size:", file.size(f)))
+      shiny::req(dbName(), input$exportKey)
+      if (input$fullDb == "Hele databasen") {
+        f <- exportDb(
+          dbName(),
+          compress = input$exportCompress,
+          session = session
+        )
+      } else {
+        f <- queryToRdsFile(
+          dbName(),
+          downloadDataQuery(),
+          compress = input$exportCompress,
+          session = session
+        )
+      }
+
+      message(paste("Plain file size:", file.size(f)))
       ef <- sship::enc(
-        f,
-        pid = NULL,
+        filename      = f,
+        pid           = NULL,
         pubkey_holder = NULL,
-        pubkey = input$exportKey
+        pubkey        = input$exportKey
       )
+
       ef
     })
 
@@ -112,6 +128,7 @@ exportUCServer <- function(
         )
       }
     )
+
 
     ## UC
     output$exportPidUI <- shiny::renderUI({
@@ -188,6 +205,91 @@ exportUCServer <- function(
         )
       }
     })
+
+    shiny::observeEvent(input$fullDb, {
+      if (input$fullDb == "Hele databasen") {
+        output$exportTable <- NULL
+      } else {
+        output$exportTable <- shiny::renderUI({
+          shiny::tagList(
+            shiny::uiOutput(ns("dataTabNames")),
+            shiny::uiOutput(ns("dateTimeCols")),
+            shiny::uiOutput(ns("dateFilterUI"))
+          )
+        })
+      }
+    })
+
+    meta <- shiny::reactive({
+      describeRegistryDb(registryName = dbName())
+    })
+
+    output$dataTabNames <- shiny::renderUI({
+      tabs <- names(meta())
+      shiny::selectInput(
+        inputId = ns("dataTab"),
+        label = "Velg tabell:",
+        choices = tabs,
+        selected = tabs[1]
+      )
+    })
+
+    output$dateTimeCols <- shiny::renderUI({
+      query <- paste0("SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE DATA_TYPE IN (
+            'date',
+            'datetime',
+            'datetime2',
+            'smalldatetime',
+            'datetimeoffset'
+        )
+        AND TABLE_NAME = '", input$dataTab, "';")
+      dateTimeCols <- loadRegData(registryName = dbName(), query)
+      dateTimeCols <- c("Ingen datofilter", dateTimeCols$COLUMN_NAME)
+      shiny::selectInput(ns("dateColSelect"), "Velg datofilter:", dateTimeCols)
+    })
+
+    output$dateFilterUI <- shiny::renderUI({
+      shiny::req(input$dateColSelect)
+      if (input$dateColSelect != "Ingen datofilter") {
+        shiny::dateRangeInput(
+          ns("dateRange"),
+          "Velg datofilter:",
+          start = as.Date(paste0(format(Sys.Date(), "%Y"), "-01-01")),
+          end = Sys.Date()
+        )
+      }
+    })
+
+    downloadDataQuery <- shiny::reactive({
+      shiny::req(input$dataTab)
+      base_sql <- paste0("SELECT * FROM ", input$dataTab)
+
+      # No filter selected
+      if (is.null(input$dateColSelect) ||
+            input$dateColSelect == "Ingen datofilter") {
+        return(paste0(base_sql, ";"))
+      }
+
+      shiny::req(input$dateRange)
+      shiny::req(!any(is.na(input$dateRange)))
+
+      start <- input$dateRange[1]
+      end   <- input$dateRange[2]
+
+      paste0(
+        base_sql,
+        " WHERE ",
+        input$dateColSelect,
+        " >= '", start,
+        "' AND ",
+        input$dateColSelect,
+        " < DATE_ADD('", end, "', INTERVAL 1 DAY);"
+      )
+
+    })
+
   })
 }
 
@@ -319,4 +421,24 @@ exportDb <- function(dbName, compress = FALSE, session) {
   repLogger(session, msg = paste(conf$name, "Db dump created."))
 
   invisible(f)
+}
+
+queryToRdsFile <- function(dbName, query, compress = FALSE, session) {
+  dat <- loadRegData(registryName = dbName, query = query)
+
+  out <- tempfile(fileext = if (compress) ".rds.gz" else ".rds")
+
+  if (compress) {
+    gz <- gzfile(out, open = "wb")
+    on.exit(close(gz), add = TRUE)
+    saveRDS(dat, gz)
+  } else {
+    saveRDS(dat, out)
+  }
+  conf <- getDbConfig(dbName)
+  if (!is.null(session)) {
+    conf <- getDbConfig(dbName)
+    repLogger(session, msg = paste(conf$name, "Query RDS created."))
+  }
+  out
 }

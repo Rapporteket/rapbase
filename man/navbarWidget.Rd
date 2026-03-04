@@ -3,14 +3,11 @@
 \name{navbarWidget}
 \alias{navbarWidget}
 \alias{navbarWidgetInput}
-\alias{navbarWidgetServer}
 \alias{navbarWidgetServer2}
 \alias{navbarWidgetApp}
 \title{Shiny modules providing GUI and server logic for user info widget}
 \usage{
 navbarWidgetInput(id, addUserInfo = TRUE, selectOrganization = FALSE)
-
-navbarWidgetServer(id, orgName, ...)
 
 navbarWidgetServer2(id, orgName, map_orgname = NULL, caller = NULL)
 
@@ -25,8 +22,6 @@ navbarWidgetApp(orgName = "Org Name")
 available organizations and roles.}
 
 \item{orgName}{Character string naming the organization}
-
-\item{...}{Further arguments, currently not used}
 
 \item{map_orgname}{A data.frame containing two columns:
 \describe{
@@ -74,7 +69,7 @@ ui <- shiny::tagList(
 
 ## server function
 server <- function(input, output, session) {
-  navbarWidgetServer("testWidget", orgName = "Test org")
+  navbarWidgetServer2("testWidget", orgName = "Test org")
 }
 
 ## run the app in an interactive session and a Rapporteket like environment
