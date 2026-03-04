@@ -50,7 +50,7 @@ NULL
 exportUCInput <- function(id) {
   shiny::tagList(
     shiny::radioButtons(shiny::NS(id, "fullDb"), "",
-                        c("Hele database", "Enkelttabell"), inline = TRUE),
+                        c("Hele databasen", "Enkelttabell"), inline = TRUE),
     shiny::uiOutput(shiny::NS(id, "exportTable")),
     shiny::uiOutput(shiny::NS(id, "exportPidUI")),
     shiny::uiOutput(shiny::NS(id, "exportKeyUI")),
@@ -90,7 +90,7 @@ exportUCServer <- function(
 
     encFile <- shiny::reactive({
       shiny::req(dbName(), input$exportKey)
-      if (input$fullDb == "Hele database") {
+      if (input$fullDb == "Hele databasen") {
         f <- exportDb(
           dbName(),
           compress = input$exportCompress,
@@ -182,7 +182,7 @@ exportUCServer <- function(
     })
 
     shiny::observeEvent(input$fullDb, {
-      if (input$fullDb == "Hele database") {
+      if (input$fullDb == "Hele databasen") {
         output$exportTable <- NULL
       } else {
         output$exportTable <- shiny::renderUI({

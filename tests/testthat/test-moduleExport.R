@@ -74,7 +74,7 @@ with_envvar(
         check_mysqldump()
         shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
           session$setInputs(exportPid = "areedv")
-          session$setInputs(fullDb = "Hele database")
+          session$setInputs(fullDb = "Hele databasen")
           expect_equal("character", class(pubkey()))
           session$setInputs(exportKey = pubkey())
           expect_equal(class(output$exportKeyUI), "list")
@@ -119,7 +119,7 @@ with_envvar(
           dbName = shiny::reactiveVal("rapbase"),
           teamName = "rapbase"
         ), {
-          session$setInputs(fullDb = "Hele database")
+          session$setInputs(fullDb = "Hele databasen")
           expect_equal(class(output$exportPidUI), "list")
           session$setInputs(exportPid = "areedv")
           expect_equal("character", class(pubkey()))
