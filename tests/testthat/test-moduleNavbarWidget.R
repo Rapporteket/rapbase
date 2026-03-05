@@ -12,7 +12,7 @@ test_that("test app returns an app object", {
 
 
 ## new widget for shinyproxy container instances
-with_envvar(
+withr::with_envvar(
   new = c(
     "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LU\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
     "FALK_APP_ID" = "80",
