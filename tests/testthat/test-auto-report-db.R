@@ -272,20 +272,61 @@ if (is.null(check_db(is_test_that = FALSE))) {
           }
         )
       })
-      test_that("edit click sends id", {
+      test_that("edit click edits after confirm", {
         check_db()
         test_df <- readAutoReportData()
-        shiny::testServer(autoReportServer,
+
+        shiny::testServer(
+          autoReportServer,
           args = list(
             registryName = registryName, type = type,
             org = shiny::reactive(100082),
             reports = reports, orgs = orgs, user = user
           ),
           {
-          reportID <- test_df$id[1]
-          session$setInputs(edit_button = session$ns(paste0("edit__", test_df$id[1])))
-          expect_true(is.na(names(readAutoReportData())[reportID]))
-        })
+            reportID <- test_df$id[1]
+            session$setInputs(
+              edit_button = list(
+                id = session$ns(paste0("edit__", reportID)),
+                nonce = 1
+              )
+            )
+            expect_equal(
+              strsplit(input$edit_button$id, "__", fixed = TRUE)[[1]][2],
+              as.character(reportID)
+            )
+            session$setInputs(confirm_edit = 1)
+            expect_false(reportID %in% readAutoReportData()$id)
+          }
+        )
+      })
+      test_that("delete click deletes report after confirm", {
+        check_db()
+        test_df <- readAutoReportData()
+
+        shiny::testServer(
+          autoReportServer,
+          args = list(
+            registryName = registryName, type = type,
+            org = shiny::reactive(111111),
+            reports = reports, orgs = orgs, user = user
+          ),
+          {
+            reportID <- test_df$id[1]
+            session$setInputs(
+              del_button = list(
+                id = session$ns(paste0("del__", reportID)),
+                nonce = 1
+              )
+            )
+            expect_equal(
+              strsplit(input$del_button$id, "__", fixed = TRUE)[[1]][2],
+              as.character(reportID)
+            )
+            session$setInputs(confirm_delete = 1)
+            expect_false(reportID %in% readAutoReportData()$id)
+          }
+        )
       })
       test_that("no submit button is provided when module is not eligible", {
         shiny::testServer(
