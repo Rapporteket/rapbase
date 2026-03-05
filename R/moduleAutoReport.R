@@ -366,7 +366,7 @@ autoReportServer <- function(
           title = "Bekreft endring",
           "Eposten legges tilbake i epostfeltet og oppf\u00F8ringen slettes.
           Du kan gj\u00F8re endringer og deretter legge til eposten
-          igjen ved å trykke \"Lag oppf\u00F8ring\".
+          igjen ved \u00E5 trykke \"Lag oppf\u00F8ring\".
           Er du sikker p\u00E5 at du vil redigere mottaker(e)?",
           footer = shiny::tagList(
             shiny::modalButton("Avbryt"),
@@ -421,7 +421,7 @@ autoReportServer <- function(
       shiny::showModal(
         shiny::modalDialog(
           title = "Bekreft sletting",
-          "Er du sikker på at du vil slette mottaker(e)?",
+          "Er du sikker p\u00E5 at du vil slette mottaker(e)?",
           footer = shiny::tagList(
             shiny::modalButton("Avbryt"),
             shiny::actionButton(shiny::NS(id, "confirm_delete"),
