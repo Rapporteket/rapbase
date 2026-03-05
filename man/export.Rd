@@ -28,7 +28,7 @@ exportDb(dbName, compress = FALSE, session)
 
 queryToRdsFile(dbName, query, compress = FALSE, session)
 
-downloadBusyJs(btn_id, idle = "Last ned!", busy = "Laster ned...")
+downloadBusyJs(btnId, idle = "Last ned!", busy = "Laster ned...")
 }
 \arguments{
 \item{id}{Character string module ID}
@@ -51,7 +51,7 @@ compressed using gzip}
 
 \item{query}{Character string SQL query to execute}
 
-\item{btn_id}{Button id (already namespaced if in module)}
+\item{btnId}{Button id (already namespaced if in module)}
 
 \item{idle}{Label when idle}
 
