@@ -7,6 +7,8 @@
 \alias{exportUCApp}
 \alias{selectListPubkey}
 \alias{exportDb}
+\alias{queryToRdsFile}
+\alias{downloadBusyJs}
 \title{Shiny modules providing GUI and server logic for Export}
 \usage{
 exportUCInput(id)
@@ -23,12 +25,15 @@ exportUCApp(dbName = "rapbase")
 selectListPubkey(pubkey)
 
 exportDb(dbName, compress = FALSE, session)
+
+queryToRdsFile(dbName, query, compress = FALSE, session)
+
+downloadBusyJs(btnId, idle = "Last ned!", busy = "Laster ned...")
 }
 \arguments{
 \item{id}{Character string module ID}
 
-\item{dbName}{Character string database name. If this is `data`, then the
-database name is taken from the environment variable `MYSQL_DB_DATA`.}
+\item{dbName}{Character string database name}
 
 \item{teamName}{Character string defining the github team name containing
 members allowed to export the database. Default value is \code{dbName}.}
@@ -39,10 +44,18 @@ restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 
 \item{pubkey}{Character vector with public keys}
 
-\item{compress}{Logical if export data is to be compressed (using gzip).
-FALSE by default.}
+\item{compress}{Logical if the output RDS file should be
+compressed using gzip}
 
 \item{session}{Shiny session object}
+
+\item{query}{Character string SQL query to execute}
+
+\item{btnId}{Button id (already namespaced if in module)}
+
+\item{idle}{Label when idle}
+
+\item{busy}{Label when busy}
 }
 \value{
 Shiny objects, mostly. Helper functions may return other stuff too.
