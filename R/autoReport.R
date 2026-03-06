@@ -772,7 +772,8 @@ makeAutoReportTab <- function(
           label = "",
           icon = shiny::icon("edit"),
           onclick = sprintf(
-            "Shiny.onInputChange('%s', this.id)",
+            "Shiny.setInputValue('%s', {id: this.id,
+            nonce: Date.now()}, {priority: 'event'});",
             shiny::NS(namespace, "edit_button")
           )
         )
@@ -783,7 +784,8 @@ makeAutoReportTab <- function(
           label = "",
           icon = shiny::icon("trash"),
           onclick = sprintf(
-            "Shiny.onInputChange('%s', this.id)",
+            "Shiny.setInputValue('%s', {id: this.id,
+            nonce: Date.now()}, {priority: 'event'});",
             shiny::NS(namespace, "del_button")
           )
         )
