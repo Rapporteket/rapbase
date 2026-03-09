@@ -17,5 +17,5 @@ options
 
 ``` r
 noOptOutOk()
-#> [1] "Livet er herlig"
+#> [1] "Fint"
 ```
