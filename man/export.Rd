@@ -7,7 +7,6 @@
 \alias{exportUCApp}
 \alias{selectListPubkey}
 \alias{exportDb}
-\alias{exportUCServer2}
 \title{Shiny modules providing GUI and server logic for Export}
 \usage{
 exportUCInput(id)
@@ -18,8 +17,6 @@ exportUCServer(
   teamName = NULL,
   eligible = shiny::reactiveVal(TRUE)
 )
-
-exportUCServer2(id, dbName, teamName, eligible = shiny::reactiveVal(TRUE))
 
 exportUCApp(dbName = "rapbase")
 

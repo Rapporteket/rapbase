@@ -40,7 +40,7 @@ if (is.null(check_db(is_test_that = FALSE))) {
   create_log_db(dbLogKey)
 }
 
-with_envvar(
+withr::with_envvar(
   new = c(
     "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LU\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
     "FALK_APP_ID" = "80"
@@ -53,7 +53,12 @@ with_envvar(
       f <- exportDb(dbName = "rapbase", compress = TRUE, session = session)
       expect_true(file.exists(f))
     })
-
+    
+    test_that("query in queryToRdsFile returns a file name", {
+      check_db()
+      f <- queryToRdsFile(dbName = "rapbase", query = "SELECT * FROM testTable;", session = session)
+      expect_true(file.exists(f))
+    })
 
     # The remaining test the corresponding shiny modules
     test_that("export UC input returns a shiny tag list", {
@@ -63,12 +68,13 @@ with_envvar(
     # To recreate the stored responses delete the 'gh_api_response' directory
     # recursively and re-run these tests
 
-    with_mock_dir("gh_api_response", {
+    httptest::with_mock_dir("gh_api_response", {
       test_that("module server provides sensible output", {
         check_db()
         check_mysqldump()
         shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
           session$setInputs(exportPid = "areedv")
+          session$setInputs(fullDb = "Hele databasen")
           expect_equal("character", class(pubkey()))
           session$setInputs(exportKey = pubkey())
           expect_equal(class(output$exportKeyUI), "list")
@@ -76,6 +82,35 @@ with_envvar(
           expect_true(length(encFile()) == 1)
           session$setInputs(exportDownload = 1)
           expect_true(basename(output$exportDownload) == basename(encFile()))
+        })
+      })
+
+      test_that("Check if query is string", {
+        check_db()
+        shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
+          session$setInputs(exportPid = "areedv")
+          session$setInputs(exportKey = pubkey())
+          session$setInputs(fullDb = "Enkelttabell")
+          session$setInputs(dataTab = "testTable")
+          session$setInputs(exportCompress = TRUE)
+          expect_equal(class(downloadDataQuery()), "character")
+          session$setInputs(exportDownload = 1)
+          expect_true(basename(output$exportDownload) == basename(encFile()))
+        })
+      })
+
+      test_that("Check if daterange is added to query", {
+        check_db()
+        shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
+          session$setInputs(exportPid = "areedv")
+          session$setInputs(exportKey = pubkey())
+          session$setInputs(fullDb = "Enkelttabell")
+          session$setInputs(dataTab = "testTable")
+          lenBaseQuery <- nchar(downloadDataQuery())
+          session$setInputs(dateColSelect = "someTime")
+          session$setInputs(dateRange = c("2024-01-01", "2024-12-31"))
+          expect_equal(class(downloadDataQuery()), "character")
+          expect_true(nchar(downloadDataQuery())>lenBaseQuery)
         })
       })
       test_that("download is prevented when module is not eligible", {
@@ -92,14 +127,14 @@ with_envvar(
           }
         )
       })
-
-      test_that("exportUCServer2 provides sensible output", {
+      test_that("exportUCServer provides sensible output, again", {
         check_db()
         check_mysqldump()
-        shiny::testServer(exportUCServer2, args = list(
+        shiny::testServer(exportUCServer, args = list(
           dbName = shiny::reactiveVal("rapbase"),
           teamName = "rapbase"
         ), {
+          session$setInputs(fullDb = "Hele databasen")
           expect_equal(class(output$exportPidUI), "list")
           session$setInputs(exportPid = "areedv")
           expect_equal("character", class(pubkey()))
@@ -112,8 +147,9 @@ with_envvar(
         })
       })
     })
+  }
+)
 
-  })
 
 test_that("guide test app returns an app object", {
   expect_equal(class(exportUCApp()), "shiny.appobj")

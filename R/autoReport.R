@@ -131,12 +131,14 @@ deleteAutoReport <- function(autoReportId) {
       autoReportId
     )
   )
+  ids <- strsplit(autoReportId[1], "\n")[[1]] |> trimws()
+
   query <- paste0(
-    "DELETE FROM autoreport ",
-    " WHERE id = '",
-    autoReportId,
-    "';"
+    "DELETE FROM autoreport WHERE id IN ('",
+    paste(ids, collapse = "', '"),
+    "');"
   )
+
   dbConnect <- rapOpenDbConnection("autoreport")
   DBI::dbExecute(dbConnect$con, query)
   rapCloseDbConnection(dbConnect$con)
@@ -189,7 +191,8 @@ writeAutoReportData <- function(config) {
         id = digest::digest(
           paste0(
             email,
-            as.character(as.integer(as.POSIXct(Sys.time())))
+            as.character(as.integer(as.POSIXct(Sys.time()))),
+            sample(c(0:9, letters, LETTERS), 10, replace = TRUE)
           )
         ),
         synopsis = element$synopsis,
@@ -219,13 +222,36 @@ writeAutoReportData <- function(config) {
       )
     }
   }
-  message(paste0("Add auto report data to database, ",
-                 nrow(dataframe), " entries."))
+
+  # Filter out rows already in database
+  colsExceptId <- setdiff(names(dataframe), "id")
+
+  # to avoid crash for "interval" col, wrap col names in "`"
+  q <- function(x) paste0("`", gsub("`", "``", x), "`")
+  query <- sprintf(
+    "SELECT DISTINCT %s FROM %s",
+    paste(q(colsExceptId), collapse = ", "),
+    q("autoreport")
+  )
   con <- rapOpenDbConnection("autoreport")$con
-  DBI::dbAppendTable(con, "autoreport", dataframe, row.names = NULL)
+  distinctData <- DBI::dbGetQuery(con, query)
+
+  dataframe <- dataframe |>
+    dplyr::distinct(
+      dplyr::across(dplyr::all_of(colsExceptId)), .keep_all = TRUE
+    ) |>
+    dplyr::anti_join(distinctData, by = colsExceptId)
+
+  if (nrow(dataframe) == 0) {
+    message(paste0("Submition already exists in database."))
+  } else {
+    message(
+      paste0("Add auto report data to database, ", nrow(dataframe), " entries.")
+    )
+    DBI::dbAppendTable(con, "autoreport", dataframe, row.names = NULL)
+  }
   rapCloseDbConnection(con)
 }
-
 
 #' Filter auto report data
 #'
@@ -691,7 +717,13 @@ makeAutoReportTab <- function(
   autoRep <- readAutoReportData() |>
     filterAutoRep(by = "package", pass = group) |>
     filterAutoRep(by = "type", pass = type)
-
+  autoRep <- autoRep |>
+    dplyr::group_by(dplyr::across(-dplyr::all_of(c("id", "email")))) |>
+    dplyr::summarise(
+      id    = paste(unique(.data$id), collapse = "\n"),
+      email = paste(unique(.data$email), collapse = "\n"),
+      .groups = "drop"
+    )
   if (type == "subscription") {
     autoRep <- autoRep |>
       filterAutoRep(by = "owner", pass = user) |>
@@ -740,7 +772,8 @@ makeAutoReportTab <- function(
           label = "",
           icon = shiny::icon("edit"),
           onclick = sprintf(
-            "Shiny.onInputChange('%s', this.id)",
+            "Shiny.setInputValue('%s', {id: this.id,
+            nonce: Date.now()}, {priority: 'event'});",
             shiny::NS(namespace, "edit_button")
           )
         )
@@ -751,7 +784,8 @@ makeAutoReportTab <- function(
           label = "",
           icon = shiny::icon("trash"),
           onclick = sprintf(
-            "Shiny.onInputChange('%s', this.id)",
+            "Shiny.setInputValue('%s', {id: this.id,
+            nonce: Date.now()}, {priority: 'event'});",
             shiny::NS(namespace, "del_button")
           )
         )

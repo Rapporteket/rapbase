@@ -62,7 +62,7 @@
 #'   "month".
 #' @param user List of shiny reactive values providing user metadata and
 #'   privileges corresponding to the return value of
-#'   \code{\link{navbarWidgetServer}}.
+#'   \code{\link{navbarWidgetServer2}}.
 #' @param runAutoReportButton Logical defining if runAutoReport button should
 #'   be made available in the GUI. Default is FALSE. If TRUE, a button will be
 #'   made available to trigger running all auto reports for a given date. This
@@ -351,18 +351,55 @@ autoReportServer <- function(
       autoReport$email <- vector()
     })
 
+    rv <- shiny::reactiveValues(
+      pending_repId_edit = NULL
+    )
     shiny::observeEvent(input$edit_button, {
-      repId <- strsplit(input$edit_button, "__")[[1]][2]
+
+      btn_id <- input$edit_button$id
+      repId  <- strsplit(btn_id, "__", fixed = TRUE)[[1]][2]
+
+      rv$pending_repId_edit <- repId
+
+      shiny::showModal(
+        shiny::modalDialog(
+          title = "Bekreft endring",
+          "Eposten legges tilbake i epostfeltet og oppf\u00F8ringen slettes.
+          Du kan gj\u00F8re endringer og deretter legge til eposten
+          igjen ved \u00E5 trykke \"Lag oppf\u00F8ring\".
+          Er du sikker p\u00E5 at du vil redigere mottaker(e)?",
+          footer = shiny::tagList(
+            shiny::modalButton("Avbryt"),
+            shiny::actionButton(shiny::NS(id, "confirm_edit"),
+                                "Ja, rediger", class = "btn-primary")
+          ),
+          easyClose = TRUE
+        )
+      )
+    })
+    shiny::observeEvent(input$confirm_edit, {
+      shiny::removeModal()
+
+      repId <- rv$pending_repId_edit
+      rv$pending_repId_edit <- NULL
+      if (is.null(repId) || !nzchar(repId)) return()
+
+      repIdSplit <- strsplit(repId, "\n", fixed = TRUE)[[1]]
+
       rep <- readAutoReportData() |>
-        dplyr::filter(id == repId)
-      if (nrow(rep) != 1) {
-        message("Can not modify (either less or more than 1)")
+        dplyr::filter(id %in% repIdSplit)
+
+      if (nrow(rep) == 0) {
+        message("Can not modify (0 rows)")
         return(NULL)
       }
-      autoReport$org <- rep$organization
-      autoReport$freq <- paste0(rep$intervalName, "-", rep$interval)
+
+      autoReport$org   <- rep$organization
+      autoReport$freq  <- paste0(rep$intervalName, "-", rep$interval)
       autoReport$email <- rep$email
+
       deleteAutoReport(repId)
+
       autoReport$tab <- makeAutoReportTab(
         namespace = id,
         user = user$name(),
@@ -371,21 +408,39 @@ autoReportServer <- function(
         type = type,
         mapOrgId = orgList2df(orgs)
       )
-
-      if (rep$type == "subscription") {
-
-      }
-      if (rep$type == "dispatchment") {
-
-      }
-      if (rep$type == "bulletin") {
-
-      }
     })
 
+    rv <- shiny::reactiveValues(pending_repId_del = NULL)
     shiny::observeEvent(input$del_button, {
-      repId <- strsplit(input$del_button, "__")[[1]][2]
+      btn_id <- input$del_button$id
+
+      repId <- strsplit(btn_id, "__", fixed = TRUE)[[1]][2]
+
+      rv$pending_repId_del <- repId
+
+      shiny::showModal(
+        shiny::modalDialog(
+          title = "Bekreft sletting",
+          "Er du sikker p\u00E5 at du vil slette mottaker(e)?",
+          footer = shiny::tagList(
+            shiny::modalButton("Avbryt"),
+            shiny::actionButton(shiny::NS(id, "confirm_delete"),
+                                "Ja, slett", class = "btn-danger")
+          ),
+          easyClose = TRUE
+        )
+      )
+    })
+
+    shiny::observeEvent(input$confirm_delete, {
+      shiny::removeModal()
+
+      repId <- rv$pending_repId_del
+      rv$pending_repId_del <- NULL
+      if (is.null(repId) || !nzchar(repId)) return()
+
       deleteAutoReport(repId)
+
       autoReport$tab <- makeAutoReportTab(
         namespace = id,
         user = user$name(),
