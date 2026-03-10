@@ -49,10 +49,10 @@ NULL
 #' @export
 exportUCInput <- function(id) {
   shiny::tagList(
-    shiny::uiOutput(shiny::NS(id, "exportFullDbOrTable")),
-    shiny::uiOutput(shiny::NS(id, "exportTable")),
     shiny::uiOutput(shiny::NS(id, "exportPidUI")),
     shiny::uiOutput(shiny::NS(id, "exportKeyUI")),
+    shiny::uiOutput(shiny::NS(id, "exportFullDbOrTable")),
+    shiny::uiOutput(shiny::NS(id, "exportTable")),
     shiny::uiOutput(shiny::NS(id, "exportCompressUI")),
     shiny::uiOutput(shiny::NS(id, "exportDownloadUI"))
   )
