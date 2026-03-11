@@ -139,6 +139,7 @@ exportUCServer <- function(
           shiny::NS(id, "fullDb"),
           "",
           c("Hele databasen", "Enkelttabell"),
+          selected = isolate(input$fullDb) %||% "Hele databasen",
           inline = TRUE
         )
       }
