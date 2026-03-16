@@ -515,25 +515,26 @@ runAutoReport <- function(
               "Report", i, "of", dim(reps)[1],
               ". Sending email to:", email
             ))
-            autLogger(
-              user = rep$owner,
-              name = rep$ownerName,
-              registryName = rep$package,
-              reshId = rep$organization,
-              type = rep$type,
-              pkg = rep$package,
-              fun = rep$fun,
-              param = rep$params,
-              msg = paste(
-                "recipient:",
-                email
-              )
-            )
-            sendEmail(
-              conf = conf, to = email, subject = rep$synopsis,
-              text = text, attFile = attFile
-            )
           }
+          autLogger(
+            user = rep$owner,
+            name = rep$ownerName,
+            registryName = rep$package,
+            reshId = rep$organization,
+            type = rep$type,
+            pkg = rep$package,
+            fun = rep$fun,
+            param = rep$params,
+            msg = paste(
+              "recipients:",
+              rep$email,
+              collapse = ", "
+            )
+          )
+          sendEmail(
+            conf = conf, to = rep$email, subject = rep$synopsis,
+            text = text, attFile = attFile
+          )
         }
       },
       error = function(e) {
