@@ -97,9 +97,11 @@ exportUCServer <- function(
           session = session
         )
       } else {
-        f <- queryToRdsFile(
+        shiny::req(input$dataType)
+        f <- queryToFile(
           dbName(),
           downloadDataQuery(),
+          format = input$dataType,
           compress = input$exportCompress,
           session = session
         )
@@ -189,7 +191,8 @@ exportUCServer <- function(
           shiny::tagList(
             shiny::uiOutput(ns("dataTabNames")),
             shiny::uiOutput(ns("dateTimeCols")),
-            shiny::uiOutput(ns("dateFilterUI"))
+            shiny::uiOutput(ns("dateFilterUI")),
+            shiny::uiOutput(shiny::NS(id, "dataType"))
           )
         })
       }
@@ -206,6 +209,14 @@ exportUCServer <- function(
         label = "Velg tabell:",
         choices = tabs,
         selected = tabs[1]
+      )
+    })
+
+    output$dataType <- shiny::renderUI({
+      shiny::selectInput(
+        inputId = ns("dataType"),
+        label = "Velg datatype:",
+        choices = c("RDS", "CSV")
       )
     })
 
@@ -398,22 +409,50 @@ exportDb <- function(dbName, compress = FALSE, session) {
   invisible(f)
 }
 
-queryToRdsFile <- function(dbName, query, compress = FALSE, session) {
+queryToFile <- function(dbName,
+                        query,
+                        format = c("RDS", "CSV"),
+                        compress = FALSE,
+                        session = NULL) {
+  format <- match.arg(format)
+
+  conf <- getDbConfig(dbName)
+
+  ext <- switch(
+    format,
+    RDS = if (compress) ".rds.gz" else ".rds",
+    CSV = if (compress) ".csv.gz" else ".csv"
+  )
+
+  out <- tempfile(fileext = ext)
   dat <- loadRegData(registryName = dbName, query = query)
 
-  out <- tempfile(fileext = if (compress) ".rds.gz" else ".rds")
+  if (format == "RDS") {
+    if (compress) {
+      gz <- gzfile(out, open = "wb")
+      on.exit(close(gz), add = TRUE)
+      saveRDS(dat, gz)
+    } else {
+      saveRDS(dat, out)
+    }
+  }
 
-  if (compress) {
-    gz <- gzfile(out, open = "wb")
-    on.exit(close(gz), add = TRUE)
-    saveRDS(dat, gz)
-  } else {
-    saveRDS(dat, out)
+  if (format == "CSV") {
+    if (compress) {
+      gz <- gzfile(out, open = "wt")
+      on.exit(close(gz), add = TRUE)
+      utils::write.csv(dat, gz, row.names = FALSE)
+    } else {
+      utils::write.csv(dat, out, row.names = FALSE)
+    }
   }
-  conf <- getDbConfig(dbName)
+
   if (!is.null(session)) {
-    conf <- getDbConfig(dbName)
-    repLogger(session, msg = paste(conf$name, "Query RDS created."))
+    repLogger(
+      session,
+      msg = paste(conf$name, "Query", format, "created.")
+    )
   }
+
   out
 }
