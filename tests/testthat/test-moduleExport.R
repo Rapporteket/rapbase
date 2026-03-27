@@ -54,10 +54,22 @@ withr::with_envvar(
       expect_true(file.exists(f))
     })
     
-    test_that("query in queryToRdsFile returns a file name", {
+    test_that("query in queryToFile returns a file name", {
       check_db()
-      f <- queryToRdsFile(dbName = "rapbase", query = "SELECT * FROM testTable;", session = session)
-      expect_true(file.exists(f))
+      f_rds <- queryToFile(
+        dbName = "rapbase",
+        query = "SELECT * FROM testTable;",
+        format = "RDS",
+        session = session
+      )
+      expect_true(file.exists(f_rds))
+      f_csv <- queryToFile(
+        dbName = "rapbase",
+        query = "SELECT * FROM testTable;",
+        format = "CSV",
+        session = session
+      )
+      expect_true(file.exists(f_csv))
     })
 
     # The remaining test the corresponding shiny modules
@@ -94,6 +106,7 @@ withr::with_envvar(
           session$setInputs(dataTab = "testTable")
           session$setInputs(exportCompress = TRUE)
           expect_equal(class(downloadDataQuery()), "character")
+          session$setInputs(dataType = "RDS")
           session$setInputs(exportDownload = 1)
           expect_true(basename(output$exportDownload) == basename(encFile()))
         })
