@@ -49,6 +49,7 @@ NULL
 #' @export
 exportUCInput <- function(id) {
   shiny::tagList(
+    downloadBusyJs(shiny::NS(id, "exportDownload")),
     shiny::radioButtons(shiny::NS(id, "fullDb"), "",
                         c("Hele databasen", "Enkelttabell"), inline = TRUE),
     shiny::uiOutput(shiny::NS(id, "exportTable")),
@@ -128,6 +129,8 @@ exportUCServer <- function(
               session,
               msg = paste("Db export file", basename(encFile()), "downloaded.")
             )
+            session$sendCustomMessage("dl_done",
+                                      list(id = session$ns("exportDownload")))
           }
         )
       }
@@ -398,6 +401,15 @@ exportDb <- function(dbName, compress = FALSE, session) {
   invisible(f)
 }
 
+#' Function to run a query and save the result as an RDS file,
+#' optionally compressed
+#'
+#' @param dbName Character string database name
+#' @param query Character string SQL query to execute
+#' @param compress Logical if the output RDS file should be
+#' compressed using gzip
+#' @rdname export
+#' @export
 queryToRdsFile <- function(dbName, query, compress = FALSE, session) {
   dat <- loadRegData(registryName = dbName, query = query)
 
@@ -416,4 +428,31 @@ queryToRdsFile <- function(dbName, query, compress = FALSE, session) {
     repLogger(session, msg = paste(conf$name, "Query RDS created."))
   }
   out
+}
+
+#' JavaScript for download button to show busy state and prevent multiple clicks
+#'
+#' @param btnId Button id (already namespaced if in module)
+#' @param idle Label when idle
+#' @param busy Label when busy
+#' @rdname export
+#' @export
+downloadBusyJs <- function(btnId, idle = "Last ned!",
+                           busy = "Laster ned...") {
+  shiny::tags$script(shiny::HTML(sprintf(
+    "(function(i,a,b){
+       function s(on){
+         var e=document.getElementById(i); if(!e) return;
+         e.classList.toggle('disabled',on);
+         e.style.pointerEvents=on?'none':'';
+         on?e.setAttribute('aria-disabled','true')
+         :e.removeAttribute('aria-disabled');
+         e.textContent=on?b:a;
+       }
+       $(document).on('click','#'+i,function(){s(true);});
+       Shiny.addCustomMessageHandler('dl_done',function(m)
+       { if(m&&m.id===i) s(false); });
+     })('%s','%s','%s');",
+    btnId, idle, busy
+  )))
 }
