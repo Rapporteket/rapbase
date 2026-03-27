@@ -246,7 +246,7 @@ statsServer2 <- function(id,
         )
       }
     })
-    
+
     output$pivot <- shiny::renderUI({
       if ("rpivotTable" %in% rownames(utils::installed.packages())) {
         rpivotTable::rpivotTableOutput("pivot_inner")
