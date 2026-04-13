@@ -18,7 +18,7 @@ services:
       - ./dev/db/mysql:/docker-entrypoint-initdb.d
 
   mssql:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:2025-latest
     platform: "linux/amd64"
     environment:
       MSSQL_SA_PASSWORD: "Your_password123"

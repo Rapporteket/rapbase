@@ -51,12 +51,11 @@ NULL
 #' @export
 exportUCInput <- function(id) {
   shiny::tagList(
-    shiny::radioButtons(shiny::NS(id, "fullDb"), "",
-                        c("Hele databasen", "Enkelttabell"), inline = TRUE),
-    shiny::uiOutput(shiny::NS(id, "exportTable")),
     shiny::uiOutput(shiny::NS(id, "exportPidUI")),
     shiny::uiOutput(shiny::NS(id, "exportKeyUI")),
-    shiny::checkboxInput(shiny::NS(id, "exportCompress"), "Komprimer eksport"),
+    shiny::uiOutput(shiny::NS(id, "exportFullDbOrTable")),
+    shiny::uiOutput(shiny::NS(id, "exportTable")),
+    shiny::uiOutput(shiny::NS(id, "exportCompressUI")),
     shiny::checkboxInput(
       shiny::NS(id, "excludeData"),
       "Ikke inkluder data"
@@ -89,7 +88,7 @@ exportUCServer <- function(
   shiny::moduleServer(id, function(input, output, session) {
 
     pubkey <- shiny::reactive({
-      shiny::req(input$exportPid, dbName, eligible)
+      shiny::req(input$exportPid)
       keys <- getGithub("keys", input$exportPid)
       sship::pubkey_filter(keys, "rsa")
     })
@@ -122,41 +121,73 @@ exportUCServer <- function(
       ef
     })
 
-    shiny::observeEvent(eligible(), {
-      if (eligible()) {
-        output$exportDownload <- shiny::downloadHandler(
-          filename = function() {
-            basename(encFile())
-          },
-          content = function(file) {
-            file.copy(encFile(), file)
-            repLogger(
-              session,
-              msg = paste("Db export file", basename(encFile()), "downloaded.")
-            )
-          }
+    output$exportDownload <- shiny::downloadHandler(
+      filename = function() {
+        basename(encFile())
+      },
+      content = function(file) {
+        file.copy(encFile(), file)
+        repLogger(
+          session,
+          msg = paste("Db export file", basename(encFile()), "downloaded.")
         )
       }
-    })
+    )
 
 
     ## UC
+    output$exportFullDbOrTable <- shiny::renderUI({
+      shiny::req(pubkey, eligible)
+      if (length(pubkey()) == 0 | !eligible()) {
+        NULL
+      } else {
+        shiny::radioButtons(
+          shiny::NS(id, "fullDb"),
+          "",
+          c("Hele databasen", "Enkelttabell"),
+          selected = shiny::isolate(input$fullDb) %||% "Hele databasen",
+          inline = TRUE
+        )
+      }
+    })
     output$exportPidUI <- shiny::renderUI({
-      shiny::selectInput(
-        shiny::NS(id, "exportPid"),
-        label = shiny::tags$div(
-          shiny::HTML(as.character(shiny::icon("user")), "Velg mottaker:")
-        ),
-        choices = getGithub(
+      shiny::req(eligible)
+      teamMembers <- tryCatch(
+        getGithub(
           "members",
           teamName,
           .token = Sys.getenv("GITHUB_PAT")
-        )
+        ),
+        error = function(e) {
+          message("Error fetching team members from GitHub: ", e$message)
+          c()
+        }
       )
+      if (!eligible()) {
+        shiny::tagList(
+          shiny::h4("Funksjon utilgjengelig"),
+          shiny::p("Kontakt registeret")
+        )
+      } else if (length(teamMembers) == 0) {
+        shiny::p(
+          "Ingen team-medlemmer funnet. Sjekk om team ",
+          shiny::strong(teamName), " finnes og inneholder medlemmer."
+        )
+      } else {
+        shiny::selectInput(
+          shiny::NS(id, "exportPid"),
+          label = shiny::tags$div(
+            shiny::HTML(as.character(shiny::icon("user")), "Velg mottaker:")
+          ),
+          choices = teamMembers
+        )
+      }
     })
     output$exportKeyUI <- shiny::renderUI({
-      shiny::req(pubkey)
-      if (length(pubkey()) == 0) {
+      shiny::req(pubkey, eligible)
+      if (!eligible()) {
+        NULL
+      } else if (length(pubkey()) == 0) {
         shiny::p("No keys found!")
       } else {
         shiny::selectInput(
@@ -168,14 +199,21 @@ exportUCServer <- function(
         )
       }
     })
-    output$exportDownloadUI <- shiny::renderUI({
-      shiny::req(pubkey)
-      if (length(pubkey()) == 0) {
-        shiny::tagList(
-          shiny::hr(),
-          shiny::h4("Funksjon utilgjengelig"),
-          shiny::p("Kontakt registeret")
+    output$exportCompressUI <- shiny::renderUI({
+      shiny::req(pubkey, eligible)
+      if (length(pubkey()) == 0 | !eligible()) {
+        NULL
+      } else {
+        shiny::checkboxInput(
+          shiny::NS(id, "exportCompress"),
+          "Komprimer eksport"
         )
+      }
+    })
+    output$exportDownloadUI <- shiny::renderUI({
+      shiny::req(pubkey, eligible)
+      if (length(pubkey()) == 0 | !eligible()) {
+        NULL
       } else {
         shiny::tagList(
           shiny::hr(),
