@@ -13,7 +13,8 @@
 #' full capacity. This might be useful when access to module products should be
 #' restricted. Default is TRUE, \emph{i.e.} no restrictions.
 #' @param excludeData Logical defining if the option to exclude data from export
-#' should be available. Default is FALSE, \emph{i.e.} data will be included in export.
+#' should be available. Default is FALSE, \emph{i.e.} data will be included in
+#' export.
 #' @param pubkey Character vector with public keys
 #' @param compress Logical if export data is to be compressed (using gzip).
 #' FALSE by default.
@@ -213,7 +214,12 @@ exportUCServer <- function(
     })
     output$exportexcludeData <- shiny::renderUI({
       shiny::req(pubkey, eligible)
-      if (length(pubkey()) == 0 | !eligible() | input$fullDb == "Enkelttabell" | !excludeData) {
+      if (
+        length(pubkey()) == 0 |
+          !eligible() |
+          input$fullDb == "Enkelttabell" |
+          !excludeData
+      ) {
         NULL
       } else {
         shiny::checkboxInput(

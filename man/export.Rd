@@ -15,7 +15,8 @@ exportUCServer(
   id,
   dbName,
   teamName = NULL,
-  eligible = shiny::reactiveVal(TRUE)
+  eligible = shiny::reactiveVal(TRUE),
+  excludeData = FALSE
 )
 
 exportUCApp(dbName = "rapbase")
@@ -36,6 +37,9 @@ members allowed to export the database. Default value is \code{dbName}.}
 \item{eligible}{Logical defining if the module should be allowed to work at
 full capacity. This might be useful when access to module products should be
 restricted. Default is TRUE, \emph{i.e.} no restrictions.}
+
+\item{excludeData}{Logical defining if the option to exclude data from export
+should be available. Default is FALSE, \emph{i.e.} data will be included in export.}
 
 \item{pubkey}{Character vector with public keys}
 
