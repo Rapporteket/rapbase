@@ -23,7 +23,7 @@ exportUCApp(dbName = "rapbase")
 
 selectListPubkey(pubkey)
 
-exportDb(dbName, compress = FALSE, user)
+exportDb(dbName, compress = FALSE, user = NULL)
 }
 \arguments{
 \item{id}{Character string module ID}

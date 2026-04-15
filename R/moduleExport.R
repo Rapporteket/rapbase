@@ -466,26 +466,26 @@ queryToFile <- function(dbName,
     CSV = if (compress) ".csv.gz" else ".csv"
   )
 
-  out <- tempfile(fileext = ext)
+  f <- tempfile(fileext = ext)
   dat <- loadRegData(registryName = dbName, query = query)
 
   if (format == "RDS") {
     if (compress) {
-      gz <- gzfile(out, open = "wb")
+      gz <- gzfile(f, open = "wb")
       on.exit(close(gz), add = TRUE)
       saveRDS(dat, gz)
     } else {
-      saveRDS(dat, out)
+      saveRDS(dat, f)
     }
   }
 
   if (format == "CSV") {
     if (compress) {
-      gz <- gzfile(out, open = "wt")
+      gz <- gzfile(f, open = "wt")
       on.exit(close(gz), add = TRUE)
       utils::write.csv2(dat, gz, row.names = FALSE, na = "")
     } else {
-      utils::write.csv2(dat, out, row.names = FALSE, na = "")
+      utils::write.csv2(dat, f, row.names = FALSE, na = "")
     }
   }
 
@@ -496,5 +496,5 @@ queryToFile <- function(dbName,
     )
   }
 
-  out
+  f
 }
