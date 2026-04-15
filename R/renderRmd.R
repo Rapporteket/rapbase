@@ -78,8 +78,9 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
   )
 
   if (outputType == "html_fragment") {
-    return(shiny::HTML(readLines(f)))
+    output <- shiny::HTML(readLines(f))
     unlink(f)
+    return(output)
   } else {
     return(f)
   }
