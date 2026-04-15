@@ -107,7 +107,7 @@ exportUCServer <- function(
           user = user
         )
       }
-
+      on.exit(unlink(f), add = TRUE)
       message(paste("Plain file size:", file.size(f)))
       ef <- sship::enc(
         filename      = f,
