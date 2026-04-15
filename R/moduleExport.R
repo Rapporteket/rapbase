@@ -15,7 +15,8 @@
 #' @param pubkey Character vector with public keys
 #' @param compress Logical if export data is to be compressed (using gzip).
 #' FALSE by default.
-#' @param session Shiny session object
+#' @param user navbarWidgetServer2 user object, used for logging. Default is NULL
+#' in which case no logging will be done.
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name export
