@@ -38,12 +38,13 @@ members allowed to export the database. Default value is \code{dbName}.}
 full capacity. This might be useful when access to module products should be
 restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 
+\item{user}{navbarWidgetServer2 user object, used for logging. Default is NULL
+in which case no logging will be done.}
+
 \item{pubkey}{Character vector with public keys}
 
 \item{compress}{Logical if export data is to be compressed (using gzip).
 FALSE by default.}
-
-\item{session}{Shiny session object}
 }
 \value{
 Shiny objects, mostly. Helper functions may return other stuff too.
