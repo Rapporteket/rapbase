@@ -63,7 +63,8 @@ exportUCInput <- function(id) {
 #' @export
 exportUCServer <- function(
   id, dbName, teamName = NULL,
-  eligible = shiny::reactiveVal(TRUE)
+  eligible = shiny::reactiveVal(TRUE),
+  user = NULL
 ) {
   ns <- shiny::NS(id)
 
@@ -94,7 +95,7 @@ exportUCServer <- function(
         f <- exportDb(
           dbName(),
           compress = input$exportCompress,
-          session = session
+          user = user
         )
       } else {
         shiny::req(input$dataType)
@@ -103,7 +104,7 @@ exportUCServer <- function(
           downloadDataQuery(),
           format = input$dataType,
           compress = input$exportCompress,
-          session = session
+          user = user
         )
       }
 
@@ -192,7 +193,7 @@ exportUCServer <- function(
             shiny::uiOutput(ns("dataTabNames")),
             shiny::uiOutput(ns("dateTimeCols")),
             shiny::uiOutput(ns("dateFilterUI")),
-            shiny::uiOutput(shiny::NS(id, "dataType"))
+            shiny::uiOutput(ns("dataType"))
           )
         })
       }
@@ -380,7 +381,7 @@ selectListPubkey <- function(pubkey) {
 
 #' @rdname export
 #' @export
-exportDb <- function(dbName, compress = FALSE, session) {
+exportDb <- function(dbName, compress = FALSE, user) {
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
@@ -404,7 +405,7 @@ exportDb <- function(dbName, compress = FALSE, session) {
     invisible(system(cmd))
   }
 
-  repLogger(session, msg = paste(conf$name, "Db dump created."))
+  repLogger2(user, msg = paste(conf$name, "Db dump created."))
 
   invisible(f)
 }
@@ -413,7 +414,7 @@ queryToFile <- function(dbName,
                         query,
                         format = c("RDS", "CSV"),
                         compress = FALSE,
-                        session = NULL) {
+                        user) {
   format <- match.arg(format)
 
   conf <- getDbConfig(dbName)
@@ -441,15 +442,15 @@ queryToFile <- function(dbName,
     if (compress) {
       gz <- gzfile(out, open = "wt")
       on.exit(close(gz), add = TRUE)
-      utils::write.csv(dat, gz, row.names = FALSE)
+      utils::write.csv2(dat, gz, row.names = FALSE, na = "")
     } else {
-      utils::write.csv(dat, out, row.names = FALSE)
+      utils::write.csv2(dat, out, row.names = FALSE, na = "")
     }
   }
 
-  if (!is.null(session)) {
-    repLogger(
-      session,
+  if (!is.null(user)) {
+    repLogger2(
+      user = user,
       msg = paste(conf$name, "Query", format, "created.")
     )
   }

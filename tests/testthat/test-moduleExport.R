@@ -46,28 +46,35 @@ withr::with_envvar(
     "FALK_APP_ID" = "80"
   ),
   code = {
-
     test_that("an existing file name is provided", {
       check_db()
       check_mysqldump()
-      f <- exportDb(dbName = "rapbase", compress = TRUE, session = session)
+      user <- navbarWidgetServer2(
+        id = "navbar-widget",
+        orgName = "exportApp"
+      )
+      f <- exportDb(dbName = "rapbase", compress = TRUE, user = user)
       expect_true(file.exists(f))
     })
-    
+
     test_that("query in queryToFile returns a file name", {
       check_db()
+      user <- navbarWidgetServer2(
+        id = "navbar-widget",
+        orgName = "exportApp"
+      )
       f_rds <- queryToFile(
         dbName = "rapbase",
         query = "SELECT * FROM testTable;",
         format = "RDS",
-        session = session
+        user = user
       )
       expect_true(file.exists(f_rds))
       f_csv <- queryToFile(
         dbName = "rapbase",
         query = "SELECT * FROM testTable;",
         format = "CSV",
-        session = session
+        user = user
       )
       expect_true(file.exists(f_csv))
     })
