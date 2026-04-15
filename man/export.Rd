@@ -15,14 +15,15 @@ exportUCServer(
   id,
   dbName,
   teamName = NULL,
-  eligible = shiny::reactiveVal(TRUE)
+  eligible = shiny::reactiveVal(TRUE),
+  user = NULL
 )
 
 exportUCApp(dbName = "rapbase")
 
 selectListPubkey(pubkey)
 
-exportDb(dbName, compress = FALSE, session)
+exportDb(dbName, compress = FALSE, user)
 }
 \arguments{
 \item{id}{Character string module ID}
