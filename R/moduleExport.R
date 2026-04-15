@@ -443,8 +443,10 @@ exportDb <- function(dbName, compress = FALSE, user = NULL) {
     cmd <- paste("gzip -f", inFile, ">", f)
     invisible(system(cmd))
   }
+  if (!is.null(user)) {
+    repLogger2(user, msg = paste(conf$name, "Db dump created."))
+  }
 
-  repLogger2(user, msg = paste(conf$name, "Db dump created."))
 
   invisible(f)
 }
