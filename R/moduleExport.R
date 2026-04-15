@@ -420,7 +420,7 @@ selectListPubkey <- function(pubkey) {
 
 #' @rdname export
 #' @export
-exportDb <- function(dbName, compress = FALSE, user) {
+exportDb <- function(dbName, compress = FALSE, user = NULL) {
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
@@ -453,7 +453,7 @@ queryToFile <- function(dbName,
                         query,
                         format = c("RDS", "CSV"),
                         compress = FALSE,
-                        user) {
+                        user = NULL) {
   format <- match.arg(format)
 
   conf <- getDbConfig(dbName)
