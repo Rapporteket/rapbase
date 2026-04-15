@@ -39,7 +39,8 @@ full capacity. This might be useful when access to module products should be
 restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 
 \item{excludeData}{Logical defining if the option to exclude data from export
-should be available. Default is FALSE, \emph{i.e.} data will be included in export.}
+should be available. Default is FALSE, \emph{i.e.} the option to exclude data
+will not be available.}
 
 \item{pubkey}{Character vector with public keys}
 
