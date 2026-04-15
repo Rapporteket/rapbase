@@ -59,22 +59,18 @@ withr::with_envvar(
 
     test_that("query in queryToFile returns a file name", {
       check_db()
-      user <- navbarWidgetServer2(
-        id = "navbar-widget",
-        orgName = "exportApp"
-      )
       f_rds <- queryToFile(
         dbName = "rapbase",
         query = "SELECT * FROM testTable;",
         format = "RDS",
-        user = user
+        user = NULL
       )
       expect_true(file.exists(f_rds))
       f_csv <- queryToFile(
         dbName = "rapbase",
         query = "SELECT * FROM testTable;",
         format = "CSV",
-        user = user
+        user = NULL
       )
       expect_true(file.exists(f_csv))
     })
