@@ -38,3 +38,28 @@ regTitle <- function(regTitle = "rapbase") {
 rapTheme <- function(theme = "flatly", version = 3) {
   bslib::bs_theme(bootswatch = theme, version = version)
 }
+
+
+#' DO NOT USE THIS FUNCTION, use regTitle instead.
+#' This is only for backward compatibility.
+#'
+#' @param ... regTitle arguments
+#'
+#' @return a div containing the logo and the title
+#' @export
+#'
+title <- function(...) {
+  regTitle(...)
+}
+
+#' DO NOT USE THIS FUNCTION, use rapTheme instead.
+#' This is only for backward compatibility.
+#'
+#' @param ... rapTheme arguments
+#'
+#' @return a Bootstrap theme object
+#' @export
+#'
+theme <- function(...) {
+  rapTheme(...)
+}
