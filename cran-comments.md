@@ -1,2 +1,2 @@
 ## R CMD check results
-There were no NOTEs, ERRORs or WARNINGs.
+There were some NOTEs, ERRORs or WARNINGs.
