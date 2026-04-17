@@ -55,11 +55,18 @@ withr::with_envvar(
 
     test_that("query in queryToFile returns a file name", {
       check_db()
+      user <- shiny::testServer(
+          navbarWidgetServer2,
+          args = list(id = "navbar-widget", orgName = "exportApp"),
+          {
+            session$returned
+          }
+        )
       f_rds <- queryToFile(
         dbName = "rapbase",
         query = "SELECT * FROM testTable;",
         format = "RDS",
-        user = NULL
+        user = user
       )
       expect_true(file.exists(f_rds))
       f_csv <- queryToFile(
@@ -69,6 +76,14 @@ withr::with_envvar(
         user = NULL
       )
       expect_true(file.exists(f_csv))
+      f_csv_compress <- queryToFile(
+        dbName = "rapbase",
+        query = "SELECT * FROM testTable;",
+        format = "CSV",
+        compress = TRUE,
+        user = NULL
+      )
+      expect_true(file.exists(f_csv_compress))
     })
 
     # The remaining test the corresponding shiny modules
@@ -83,9 +98,17 @@ withr::with_envvar(
       test_that("module server provides sensible output", {
         check_db()
         check_mysqldump()
+        user <- shiny::testServer(
+          navbarWidgetServer2,
+          args = list(id = "navbar-widget", orgName = "exportApp"),
+          {
+            session$returned
+          }
+        )
+        
         shiny::testServer(
           exportUCServer,
-          args = list(dbName = "rapbase", eligible = TRUE, user = NULL),
+          args = list(dbName = "rapbase", eligible = TRUE, user = user),
         {
           session$setInputs(exportPid = "areedv")
           session$setInputs(fullDb = "Hele databasen")
