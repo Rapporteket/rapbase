@@ -11,9 +11,9 @@
 exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
   ui <- shiny::navbarPage(
     id = "navbarpage",
-    title = rapbase::title("Simple export app"),
+    title = regTitle("Simple export app"),
     windowTitle = "Simple export app",
-    theme = theme(),
+    theme = rapTheme(),
     shiny::tabPanel(
       title = "Info",
       navbarWidgetInput("navbar-widget", selectOrganization = TRUE),
