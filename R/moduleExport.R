@@ -90,7 +90,7 @@ exportUCServer <- function(
     })
 
     encFile <- shiny::reactive({
-      shiny::req(dbName(), input$exportKey)
+      shiny::req(dbName(), input$exportKey, input$dataTabDb)
       if (input$fullDb == "Hele databasen") {
         f <- exportDb(
           dbName(),
@@ -438,14 +438,20 @@ exportDb <- function(dbName, tableChoice = NULL, compress = FALSE, session) {
     ""
   }
 
-  cmd <- paste0(
-    "mysqldump ",
-    "--no-tablespaces --single-transaction --add-drop-database "
-  )
-  cmd <- sprintf(
-    "%s -B -u %s -p'%s' -h %s %s %s > %s",
-    cmd, conf$user, conf$pass, conf$host, conf$name, tables, f
-  )
+  cmd_base <- "mysqldump --no-tablespaces --single-transaction"
+
+  if (length(tableChoice) > 0) {
+    tables <- paste(tableChoice, collapse = " ")
+    cmd <- sprintf(
+      "%s -u %s -p'%s' -h %s %s %s > %s",
+      cmd_base, conf$user, conf$pass, conf$host, conf$name, tables, f
+    )
+  } else {
+    cmd <- sprintf(
+      "%s --add-drop-database -B -u %s -p'%s' -h %s %s > %s",
+      cmd_base, conf$user, conf$pass, conf$host, conf$name, f
+    )
+  }
   invisible(system(cmd))
 
   if (compress) {
