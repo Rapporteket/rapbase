@@ -440,7 +440,7 @@ exportDb <- function(dbName, tableChoice = NULL, compress = FALSE, session) {
     "--no-tablespaces --single-transaction --add-drop-database "
   )
   cmd <- sprintf(
-    "%s -B -u %s -p'%s' -h %s %s > %s",
+    "%s -B -u %s -p'%s' -h %s %s %s > %s",
     cmd, conf$user, conf$pass, conf$host, conf$name, tables, f
   )
   invisible(system(cmd))
