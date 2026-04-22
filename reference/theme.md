@@ -1,23 +1,19 @@
-# Theme of the app.
+# DO NOT USE THIS FUNCTION, use rapTheme instead. This is only for backward compatibility.
 
-This is a wrapper around bslib::bs_theme
+DO NOT USE THIS FUNCTION, use rapTheme instead. This is only for
+backward compatibility.
 
 ## Usage
 
 ``` r
-theme(theme = "flatly", version = 3)
+theme(...)
 ```
 
 ## Arguments
 
-- theme:
+- ...:
 
-  Name of the theme. See bslib::bootswatch_themes() for available
-  themes.
-
-- version:
-
-  Version of bootstrap to use (3, 4 or 5).
+  rapTheme arguments
 
 ## Value
 

@@ -41,9 +41,11 @@
 <url><loc>/reference/pronoun.html</loc></url>
 <url><loc>/reference/rapCloseDbConnection.html</loc></url>
 <url><loc>/reference/rapOpenDbConnection.html</loc></url>
+<url><loc>/reference/rapTheme.html</loc></url>
 <url><loc>/reference/rapbase.html</loc></url>
 <url><loc>/reference/readAutoReportData.html</loc></url>
 <url><loc>/reference/readLog.html</loc></url>
+<url><loc>/reference/regTitle.html</loc></url>
 <url><loc>/reference/renderRmd.html</loc></url>
 <url><loc>/reference/repLogger2.html</loc></url>
 <url><loc>/reference/runAutoReport.html</loc></url>

@@ -1,18 +1,19 @@
-# Title on the top left of the app, including the logo
+# DO NOT USE THIS FUNCTION, use regTitle instead. This is only for backward compatibility.
 
-Title on the top left of the app, including the logo
+DO NOT USE THIS FUNCTION, use regTitle instead. This is only for
+backward compatibility.
 
 ## Usage
 
 ``` r
-title(regTitle = "rapbase")
+title(...)
 ```
 
 ## Arguments
 
-- regTitle:
+- ...:
 
-  Title of the app
+  regTitle arguments
 
 ## Value
 
