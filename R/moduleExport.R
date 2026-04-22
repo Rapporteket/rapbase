@@ -92,6 +92,7 @@ exportUCServer <- function(
       if (input$fullDb == "Hele databasen") {
         f <- exportDb(
           dbName(),
+          tableChoice = input$dataTabDb,
           compress = input$exportCompress,
           session = session
         )
@@ -221,11 +222,13 @@ exportUCServer <- function(
 
     shiny::observeEvent(input$fullDb, {
       if (input$fullDb == "Hele databasen") {
-        output$exportTable <- NULL
+        output$exportTable <- shiny::renderUI({
+          shiny::uiOutput(ns("dataTabNamesDb"))
+        })
       } else {
         output$exportTable <- shiny::renderUI({
           shiny::tagList(
-            shiny::uiOutput(ns("dataTabNames")),
+            shiny::uiOutput(ns("dataTabNamesEnkel")),
             shiny::uiOutput(ns("dateTimeCols")),
             shiny::uiOutput(ns("dateFilterUI"))
           )
@@ -237,7 +240,7 @@ exportUCServer <- function(
       describeRegistryDb(registryName = dbName())
     })
 
-    output$dataTabNames <- shiny::renderUI({
+    output$dataTabNamesEnkel <- shiny::renderUI({
       tabs <- names(meta())
       shiny::selectInput(
         inputId = ns("dataTab"),
@@ -246,6 +249,19 @@ exportUCServer <- function(
         selected = tabs[1]
       )
     })
+
+    output$dataTabNamesDb <- shiny::renderUI({
+      tabs <- names(meta())
+      tabs_filtered <- tabs[!startsWith(tabs, "_")]
+      shiny::selectInput(
+        inputId = ns("dataTabDb"),
+        label = "Velg tabell(er):",
+        choices = tabs,
+        selected = tabs_filtered,
+        multiple = TRUE
+      )
+    })
+
 
     output$dateTimeCols <- shiny::renderUI({
       query <- paste0("SELECT COLUMN_NAME
@@ -407,20 +423,25 @@ selectListPubkey <- function(pubkey) {
 
 #' @rdname export
 #' @export
-exportDb <- function(dbName, compress = FALSE, session) {
+exportDb <- function(dbName, tableChoice = NULL, compress = FALSE, session) {
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
   conf <- getDbConfig(dbName)
   f <- tempfile(pattern = conf$name, fileext = ".sql")
 
+  tables <- if (!is.null(tableChoice) && length(tableChoice) > 0) {
+    paste(tableChoice, collapse = " ")
+  } else {
+    ""
+  }
   cmd <- paste0(
     "mysqldump ",
     "--no-tablespaces --single-transaction --add-drop-database "
   )
   cmd <- sprintf(
     "%s -B -u %s -p'%s' -h %s %s > %s",
-    cmd, conf$user, conf$pass, conf$host, conf$name, f
+    cmd, conf$user, conf$pass, conf$host, conf$name, tables, f
   )
   invisible(system(cmd))
 
