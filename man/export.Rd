@@ -39,6 +39,8 @@ restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 
 \item{pubkey}{Character vector with public keys}
 
+\item{tableChoice}{Character vector with table names to export. If NULL (default), all}
+
 \item{compress}{Logical if export data is to be compressed (using gzip).
 FALSE by default.}
 
