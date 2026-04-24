@@ -90,11 +90,16 @@ exportUCServer <- function(
     })
 
     encFile <- shiny::reactive({
-      shiny::req(dbName(), input$exportKey, input$dataTabDb)
+      shiny::req(dbName(), input$exportKey, input$dataTabDb, meta())
       if (input$fullDb == "Hele databasen") {
+        if (length(input$dataTabDb) > 0) {
+          dropTabs <- setdiff(names(meta()), input$dataTabDb)
+        } else {
+          dropTabs <- NULL
+        }
         f <- exportDb(
           dbName(),
-          tableChoice = input$dataTabDb,
+          dropTabs = dropTabs,
           compress = input$exportCompress,
           session = session
         )
@@ -425,33 +430,25 @@ selectListPubkey <- function(pubkey) {
 
 #' @rdname export
 #' @export
-exportDb <- function(dbName, tableChoice = NULL, compress = FALSE, session) {
+exportDb <- function(dbName, dropTabs = NULL, compress = FALSE, session) {
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
   conf <- getDbConfig(dbName)
   f <- tempfile(pattern = conf$name, fileext = ".sql")
 
-  tables <- if (!is.null(tableChoice) && length(tableChoice) > 0) {
-    paste(tableChoice, collapse = " ")
+  ignoreTabs <- if (!is.null(dropTabs) && length(dropTabs) > 0) {
+    paste(sprintf("--ignore-table=%s.%s", conf$name, dropTabs), collapse = " ")
   } else {
     ""
   }
 
-  cmd_base <- "mysqldump --no-tablespaces --single-transaction"
+  cmd_base <- "mysqldump --no-tablespaces --single-transaction --add-drop-database"
 
-  if (length(tableChoice) > 0) {
-    tables <- paste(tableChoice, collapse = " ")
-    cmd <- sprintf(
-      "%s -u %s -p'%s' -h %s %s %s > %s",
-      cmd_base, conf$user, conf$pass, conf$host, conf$name, tables, f
-    )
-  } else {
-    cmd <- sprintf(
-      "%s --add-drop-database -B -u %s -p'%s' -h %s %s > %s",
-      cmd_base, conf$user, conf$pass, conf$host, conf$name, f
-    )
-  }
+  cmd <- sprintf(
+    "%s -B -u %s -p'%s' -h %s %s %s > %s",
+    cmd_base, conf$user, conf$pass, conf$host, ignoreTabs, conf$name, f
+  )
   invisible(system(cmd))
 
   if (compress) {
