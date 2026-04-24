@@ -22,7 +22,7 @@ exportUCApp(dbName = "rapbase")
 
 selectListPubkey(pubkey)
 
-exportDb(dbName, tableChoice = NULL, compress = FALSE, session)
+exportDb(dbName, dropTabs = NULL, compress = FALSE, session)
 }
 \arguments{
 \item{id}{Character string module ID}
@@ -39,12 +39,13 @@ restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 
 \item{pubkey}{Character vector with public keys}
 
-\item{tableChoice}{Character vector with table names to export. If NULL (default), all}
-
 \item{compress}{Logical if export data is to be compressed (using gzip).
 FALSE by default.}
 
 \item{session}{Shiny session object}
+
+\item{tableChoice}{Character vector with table names to export.
+If NULL (default), all}
 }
 \value{
 Shiny objects, mostly. Helper functions may return other stuff too.
