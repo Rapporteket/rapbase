@@ -90,9 +90,9 @@ exportUCServer <- function(
     })
 
     encFile <- shiny::reactive({
-      shiny::req(dbName(), input$exportKey, input$dataTabDb, meta())
+      shiny::req(dbName(), input$exportKey, input$dataTabDb)
       if (input$fullDb == "Hele databasen") {
-        if (length(input$dataTabDb) > 0) {
+        if (length(input$dataTabDb) > 0 & length(meta()) > 0) {
           dropTabs <- setdiff(names(meta()), input$dataTabDb)
         } else {
           dropTabs <- NULL
