@@ -15,8 +15,8 @@
 #' @param pubkey Character vector with public keys
 #' @param compress Logical if export data is to be compressed (using gzip).
 #' FALSE by default.
-#' @param tableChoice Character vector with table names to export.
-#' If NULL (default), all
+#' @param dropTabs Character vector with names of tables 
+#' to be excluded from export.
 #' @param session Shiny session object
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
