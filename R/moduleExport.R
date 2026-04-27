@@ -91,7 +91,7 @@ exportUCServer <- function(
 
     encFile <- shiny::reactive({
       shiny::req(dbName(), input$exportKey)
-      if (input$fullDb == "Hele databasen") {
+      if (input$fullDb == "Database") {
         if (length(input$dataTabDb) > 0 & length(meta()) > 0) {
           dropTabs <- setdiff(names(meta()), input$dataTabDb)
         } else {
@@ -146,8 +146,8 @@ exportUCServer <- function(
         shiny::radioButtons(
           shiny::NS(id, "fullDb"),
           "",
-          c("Hele databasen", "Enkelttabell"),
-          selected = shiny::isolate(input$fullDb) %||% "Hele databasen",
+          c("Database", "Enkelttabell"),
+          selected = shiny::isolate(input$fullDb) %||% "Database",
           inline = TRUE
         )
       }
@@ -228,7 +228,7 @@ exportUCServer <- function(
     })
 
     shiny::observeEvent(input$fullDb, {
-      if (input$fullDb == "Hele databasen") {
+      if (input$fullDb == "Database") {
         output$exportTable <- shiny::renderUI({
           shiny::uiOutput(ns("dataTabNamesDb"))
         })
