@@ -15,14 +15,15 @@ exportUCServer(
   id,
   dbName,
   teamName = NULL,
-  eligible = shiny::reactiveVal(TRUE)
+  eligible = shiny::reactiveVal(TRUE),
+  excludeData = FALSE
 )
 
 exportUCApp(dbName = "rapbase")
 
 selectListPubkey(pubkey)
 
-exportDb(dbName, compress = FALSE, session)
+exportDb(dbName, compress = FALSE, noData = FALSE, session)
 }
 \arguments{
 \item{id}{Character string module ID}
@@ -37,9 +38,16 @@ members allowed to export the database. Default value is \code{dbName}.}
 full capacity. This might be useful when access to module products should be
 restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 
+\item{excludeData}{Logical defining if the option to exclude data from export
+should be available. Default is FALSE, \emph{i.e.} the option to exclude data
+will not be available.}
+
 \item{pubkey}{Character vector with public keys}
 
 \item{compress}{Logical if export data is to be compressed (using gzip).
+FALSE by default.}
+
+\item{noData}{Logical if data is to be excluded from export.
 FALSE by default.}
 
 \item{session}{Shiny session object}

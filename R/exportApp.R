@@ -64,7 +64,9 @@ exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
       }
     })
 
-    exportUCServer("export", dbName = dbName, teamName = teamName)
+    exportUCServer(
+      "export", dbName = dbName, teamName = teamName, excludeData = TRUE
+    )
 
     # User guide
     output$exportMainPanel <- shiny::renderUI({
