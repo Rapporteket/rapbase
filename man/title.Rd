@@ -2,16 +2,18 @@
 % Please edit documentation in R/styles.R
 \name{title}
 \alias{title}
-\title{Title on the top left of the app, including the logo}
+\title{DO NOT USE THIS FUNCTION, use regTitle instead.
+This is only for backward compatibility.}
 \usage{
-title(regTitle = "rapbase")
+title(...)
 }
 \arguments{
-\item{regTitle}{Title of the app}
+\item{...}{regTitle arguments}
 }
 \value{
 a div containing the logo and the title
 }
 \description{
-Title on the top left of the app, including the logo
+DO NOT USE THIS FUNCTION, use regTitle instead.
+This is only for backward compatibility.
 }

@@ -2,19 +2,18 @@
 % Please edit documentation in R/styles.R
 \name{theme}
 \alias{theme}
-\title{Theme of the app.}
+\title{DO NOT USE THIS FUNCTION, use rapTheme instead.
+This is only for backward compatibility.}
 \usage{
-theme(theme = "flatly", version = 3)
+theme(...)
 }
 \arguments{
-\item{theme}{Name of the theme. See bslib::bootswatch_themes()
-for available themes.}
-
-\item{version}{Version of bootstrap to use (3, 4 or 5).}
+\item{...}{rapTheme arguments}
 }
 \value{
 a Bootstrap theme object
 }
 \description{
-This is a wrapper around bslib::bs_theme
+DO NOT USE THIS FUNCTION, use rapTheme instead.
+This is only for backward compatibility.
 }
