@@ -46,18 +46,44 @@ withr::with_envvar(
     "FALK_APP_ID" = "80"
   ),
   code = {
-
     test_that("an existing file name is provided", {
       check_db()
       check_mysqldump()
-      f <- exportDb(dbName = "rapbase", compress = TRUE, session = session)
+      f <- exportDb(dbName = "rapbase", compress = TRUE)
       expect_true(file.exists(f))
     })
-    
-    test_that("query in queryToRdsFile returns a file name", {
+
+    test_that("query in queryToFile returns a file name", {
       check_db()
-      f <- queryToRdsFile(dbName = "rapbase", query = "SELECT * FROM testTable;", session = session)
-      expect_true(file.exists(f))
+      user <- shiny::testServer(
+          navbarWidgetServer2,
+          args = list(id = "navbar-widget", orgName = "exportApp"),
+          {
+            session$returned
+          }
+        )
+      f_rds <- queryToFile(
+        dbName = "rapbase",
+        query = "SELECT * FROM testTable;",
+        format = "RDS",
+        user = user
+      )
+      expect_true(file.exists(f_rds))
+      f_csv <- queryToFile(
+        dbName = "rapbase",
+        query = "SELECT * FROM testTable;",
+        format = "CSV",
+        user = NULL
+      )
+      expect_true(file.exists(f_csv))
+      f_csv_compress <- queryToFile(
+        dbName = "rapbase",
+        query = "SELECT * FROM testTable;",
+        format = "CSV",
+        compress = TRUE,
+        user = NULL
+      )
+      expect_true(file.exists(f_csv_compress))
     })
 
     # The remaining test the corresponding shiny modules
@@ -72,7 +98,18 @@ withr::with_envvar(
       test_that("module server provides sensible output", {
         check_db()
         check_mysqldump()
-        shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
+        user <- shiny::testServer(
+          navbarWidgetServer2,
+          args = list(id = "navbar-widget", orgName = "exportApp"),
+          {
+            session$returned
+          }
+        )
+        
+        shiny::testServer(
+          exportUCServer,
+          args = list(dbName = "rapbase", eligible = TRUE, user = user),
+        {
           session$setInputs(exportPid = "areedv")
           session$setInputs(fullDb = "Hele databasen")
           expect_equal("character", class(pubkey()))
@@ -87,13 +124,17 @@ withr::with_envvar(
 
       test_that("Check if query is string", {
         check_db()
-        shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
+        shiny::testServer(
+          exportUCServer,
+          args = list(dbName = "rapbase", eligible = TRUE, user = NULL),
+        {
           session$setInputs(exportPid = "areedv")
           session$setInputs(exportKey = pubkey())
           session$setInputs(fullDb = "Enkelttabell")
           session$setInputs(dataTab = "testTable")
           session$setInputs(exportCompress = TRUE)
           expect_equal(class(downloadDataQuery()), "character")
+          session$setInputs(dataType = "RDS")
           session$setInputs(exportDownload = 1)
           expect_true(basename(output$exportDownload) == basename(encFile()))
         })
@@ -101,7 +142,10 @@ withr::with_envvar(
 
       test_that("Check if daterange is added to query", {
         check_db()
-        shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
+        shiny::testServer(
+          exportUCServer,
+          args = list(dbName = "rapbase", eligible = TRUE, user = NULL),
+        {
           session$setInputs(exportPid = "areedv")
           session$setInputs(exportKey = pubkey())
           session$setInputs(fullDb = "Enkelttabell")
@@ -117,7 +161,7 @@ withr::with_envvar(
         check_db()
         shiny::testServer(
           exportUCServer,
-          args = list(dbName = "rapbase", eligible = FALSE),
+          args = list(dbName = "rapbase", eligible = FALSE, user = NULL),
           {
             session$setInputs(exportPid = "areedv")
             session$setInputs(exportKey = pubkey())
@@ -132,7 +176,8 @@ withr::with_envvar(
         check_mysqldump()
         shiny::testServer(exportUCServer, args = list(
           dbName = shiny::reactiveVal("rapbase"),
-          teamName = "rapbase"
+          teamName = "rapbase",
+          user = NULL
         ), {
           session$setInputs(fullDb = "Hele databasen")
           expect_equal(class(output$exportPidUI), "list")

@@ -15,7 +15,8 @@
 #' @param pubkey Character vector with public keys
 #' @param compress Logical if export data is to be compressed (using gzip).
 #' FALSE by default.
-#' @param session Shiny session object
+#' @param user navbarWidgetServer2 user object, used for logging. Default is
+#' NULL in which case no logging will be done.
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name export
@@ -62,7 +63,8 @@ exportUCInput <- function(id) {
 #' @export
 exportUCServer <- function(
   id, dbName, teamName = NULL,
-  eligible = shiny::reactiveVal(TRUE)
+  eligible = shiny::reactiveVal(TRUE),
+  user = NULL
 ) {
   ns <- shiny::NS(id)
 
@@ -93,17 +95,19 @@ exportUCServer <- function(
         f <- exportDb(
           dbName(),
           compress = input$exportCompress,
-          session = session
+          user = user
         )
       } else {
-        f <- queryToRdsFile(
+        shiny::req(input$dataType)
+        f <- queryToFile(
           dbName(),
           downloadDataQuery(),
+          format = input$dataType,
           compress = input$exportCompress,
-          session = session
+          user = user
         )
       }
-
+      on.exit(unlink(f), add = TRUE)
       message(paste("Plain file size:", file.size(f)))
       ef <- sship::enc(
         filename      = f,
@@ -227,7 +231,8 @@ exportUCServer <- function(
           shiny::tagList(
             shiny::uiOutput(ns("dataTabNames")),
             shiny::uiOutput(ns("dateTimeCols")),
-            shiny::uiOutput(ns("dateFilterUI"))
+            shiny::uiOutput(ns("dateFilterUI")),
+            shiny::uiOutput(ns("dataType"))
           )
         })
       }
@@ -244,6 +249,14 @@ exportUCServer <- function(
         label = "Velg tabell:",
         choices = tabs,
         selected = tabs[1]
+      )
+    })
+
+    output$dataType <- shiny::renderUI({
+      shiny::selectInput(
+        inputId = ns("dataType"),
+        label = "Velg datatype:",
+        choices = c("RDS", "CSV")
       )
     })
 
@@ -407,7 +420,7 @@ selectListPubkey <- function(pubkey) {
 
 #' @rdname export
 #' @export
-exportDb <- function(dbName, compress = FALSE, session) {
+exportDb <- function(dbName, compress = FALSE, user = NULL) {
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
@@ -430,28 +443,58 @@ exportDb <- function(dbName, compress = FALSE, session) {
     cmd <- paste("gzip -f", inFile, ">", f)
     invisible(system(cmd))
   }
+  if (!is.null(user)) {
+    repLogger2(user, msg = paste(conf$name, "Db dump created."))
+  }
 
-  repLogger(session, msg = paste(conf$name, "Db dump created."))
 
   invisible(f)
 }
 
-queryToRdsFile <- function(dbName, query, compress = FALSE, session) {
+queryToFile <- function(dbName,
+                        query,
+                        format = c("RDS", "CSV"),
+                        compress = FALSE,
+                        user = NULL) {
+  format <- match.arg(format)
+
+  conf <- getDbConfig(dbName)
+
+  ext <- switch(
+    format,
+    RDS = if (compress) ".rds.gz" else ".rds",
+    CSV = if (compress) ".csv.gz" else ".csv"
+  )
+
+  f <- tempfile(fileext = ext)
   dat <- loadRegData(registryName = dbName, query = query)
 
-  out <- tempfile(fileext = if (compress) ".rds.gz" else ".rds")
+  if (format == "RDS") {
+    if (compress) {
+      gz <- gzfile(f, open = "wb")
+      on.exit(close(gz), add = TRUE)
+      saveRDS(dat, gz)
+    } else {
+      saveRDS(dat, f)
+    }
+  }
 
-  if (compress) {
-    gz <- gzfile(out, open = "wb")
-    on.exit(close(gz), add = TRUE)
-    saveRDS(dat, gz)
-  } else {
-    saveRDS(dat, out)
+  if (format == "CSV") {
+    if (compress) {
+      gz <- gzfile(f, open = "wt")
+      on.exit(close(gz), add = TRUE)
+      utils::write.csv2(dat, gz, row.names = FALSE, na = "")
+    } else {
+      utils::write.csv2(dat, f, row.names = FALSE, na = "")
+    }
   }
-  conf <- getDbConfig(dbName)
-  if (!is.null(session)) {
-    conf <- getDbConfig(dbName)
-    repLogger(session, msg = paste(conf$name, "Query RDS created."))
+
+  if (!is.null(user)) {
+    repLogger2(
+      user = user,
+      msg = paste(conf$name, "Query", format, "created.")
+    )
   }
-  out
+
+  f
 }
