@@ -15,6 +15,8 @@
 #' @param pubkey Character vector with public keys
 #' @param compress Logical if export data is to be compressed (using gzip).
 #' FALSE by default.
+#' @param dropTabs Character vector with names of tables
+#' to be excluded from export.
 #' @param session Shiny session object
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
@@ -89,9 +91,15 @@ exportUCServer <- function(
 
     encFile <- shiny::reactive({
       shiny::req(dbName(), input$exportKey)
-      if (input$fullDb == "Hele databasen") {
+      if (input$fullDb == "Database") {
+        if (length(input$dataTabDb) > 0 & length(meta()) > 0) {
+          dropTabs <- setdiff(names(meta()), input$dataTabDb)
+        } else {
+          dropTabs <- NULL
+        }
         f <- exportDb(
           dbName(),
+          dropTabs = dropTabs,
           compress = input$exportCompress,
           session = session
         )
@@ -138,8 +146,8 @@ exportUCServer <- function(
         shiny::radioButtons(
           shiny::NS(id, "fullDb"),
           "",
-          c("Hele databasen", "Enkelttabell"),
-          selected = shiny::isolate(input$fullDb) %||% "Hele databasen",
+          c("Database", "Enkelttabell"),
+          selected = shiny::isolate(input$fullDb) %||% "Database",
           inline = TRUE
         )
       }
@@ -220,12 +228,14 @@ exportUCServer <- function(
     })
 
     shiny::observeEvent(input$fullDb, {
-      if (input$fullDb == "Hele databasen") {
-        output$exportTable <- NULL
+      if (input$fullDb == "Database") {
+        output$exportTable <- shiny::renderUI({
+          shiny::uiOutput(ns("dataTabNamesDb"))
+        })
       } else {
         output$exportTable <- shiny::renderUI({
           shiny::tagList(
-            shiny::uiOutput(ns("dataTabNames")),
+            shiny::uiOutput(ns("dataTabNamesEnkel")),
             shiny::uiOutput(ns("dateTimeCols")),
             shiny::uiOutput(ns("dateFilterUI"))
           )
@@ -237,7 +247,7 @@ exportUCServer <- function(
       describeRegistryDb(registryName = dbName())
     })
 
-    output$dataTabNames <- shiny::renderUI({
+    output$dataTabNamesEnkel <- shiny::renderUI({
       tabs <- names(meta())
       shiny::selectInput(
         inputId = ns("dataTab"),
@@ -246,6 +256,22 @@ exportUCServer <- function(
         selected = tabs[1]
       )
     })
+
+    output$dataTabNamesDb <- shiny::renderUI({
+      tabs <- names(meta())
+      tabs_filtered <- tabs[!startsWith(tabs, "_")]
+      shiny::selectizeInput(
+        inputId = ns("dataTabDb"),
+        label = "Velg tabell(er):",
+        choices = tabs,
+        selected = tabs_filtered,
+        multiple = TRUE,
+        options = list(
+          placeholder = "Laster ned hele databasen"
+        )
+      )
+    })
+
 
     output$dateTimeCols <- shiny::renderUI({
       query <- paste0("SELECT COLUMN_NAME
@@ -407,20 +433,27 @@ selectListPubkey <- function(pubkey) {
 
 #' @rdname export
 #' @export
-exportDb <- function(dbName, compress = FALSE, session) {
+exportDb <- function(dbName, dropTabs = NULL, compress = FALSE, session) {
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
   conf <- getDbConfig(dbName)
   f <- tempfile(pattern = conf$name, fileext = ".sql")
 
-  cmd <- paste0(
+  ignoreTabs <- if (!is.null(dropTabs) && length(dropTabs) > 0) {
+    paste(sprintf("--ignore-table=%s.%s", conf$name, dropTabs), collapse = " ")
+  } else {
+    ""
+  }
+
+  cmd_base <- paste0(
     "mysqldump ",
     "--no-tablespaces --single-transaction --add-drop-database "
   )
+
   cmd <- sprintf(
-    "%s -B -u %s -p'%s' -h %s %s > %s",
-    cmd, conf$user, conf$pass, conf$host, conf$name, f
+    "%s -B -u %s -p'%s' -h %s %s %s > %s",
+    cmd_base, conf$user, conf$pass, conf$host, ignoreTabs, conf$name, f
   )
   invisible(system(cmd))
 
