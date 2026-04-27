@@ -90,7 +90,7 @@ exportUCServer <- function(
     })
 
     encFile <- shiny::reactive({
-      shiny::req(dbName(), input$exportKey, input$dataTabDb)
+      shiny::req(dbName(), input$exportKey)
       if (input$fullDb == "Hele databasen") {
         if (length(input$dataTabDb) > 0 & length(meta()) > 0) {
           dropTabs <- setdiff(names(meta()), input$dataTabDb)
@@ -260,12 +260,15 @@ exportUCServer <- function(
     output$dataTabNamesDb <- shiny::renderUI({
       tabs <- names(meta())
       tabs_filtered <- tabs[!startsWith(tabs, "_")]
-      shiny::selectInput(
+      shiny::selectizeInput(
         inputId = ns("dataTabDb"),
         label = "Velg tabell(er):",
         choices = tabs,
         selected = tabs_filtered,
-        multiple = TRUE
+        multiple = TRUE,
+        options = list(
+          placeholder = "Laster ned hele databasen"
+        )
       )
     })
 

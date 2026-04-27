@@ -39,7 +39,7 @@ restricted. Default is TRUE, \emph{i.e.} no restrictions.}
 
 \item{pubkey}{Character vector with public keys}
 
-\item{dropTabs}{Character vector with names of tables 
+\item{dropTabs}{Character vector with names of tables
 to be excluded from export.}
 
 \item{compress}{Logical if export data is to be compressed (using gzip).
