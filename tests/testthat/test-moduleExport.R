@@ -75,10 +75,12 @@ withr::with_envvar(
         shiny::testServer(exportUCServer, args = list(dbName = "rapbase", eligible = TRUE), {
           session$setInputs(exportPid = "areedv")
           session$setInputs(fullDb = "Hele databasen")
+
           expect_equal("character", class(pubkey()))
           session$setInputs(exportKey = pubkey())
           expect_equal(class(output$exportKeyUI), "list")
           session$setInputs(exportCompress = FALSE)
+          session$setInputs(dataTabDb = "testTable")
           expect_true(length(encFile()) == 1)
           session$setInputs(exportDownload = 1)
           expect_true(basename(output$exportDownload) == basename(encFile()))
@@ -92,6 +94,7 @@ withr::with_envvar(
           session$setInputs(exportKey = pubkey())
           session$setInputs(fullDb = "Enkelttabell")
           session$setInputs(dataTab = "testTable")
+          session$setInputs(dataTabDb = "testTable")
           session$setInputs(exportCompress = TRUE)
           expect_equal(class(downloadDataQuery()), "character")
           session$setInputs(exportDownload = 1)
@@ -141,6 +144,7 @@ withr::with_envvar(
           session$setInputs(exportKey = pubkey())
           expect_equal(class(output$exportKeyUI), "list")
           session$setInputs(exportCompress = FALSE)
+          session$setInputs(dataTabDb = "testTable")
           expect_true(length(encFile()) == 1)
           session$setInputs(exportDownload = 1)
           expect_true(basename(output$exportDownload) == basename(encFile()))
