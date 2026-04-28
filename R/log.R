@@ -139,13 +139,15 @@ appLogger <- function(session, msg = "No message provided",
 
 appLogger2 <- function(user, msg = "No message provided") {
   name <- "appLog"
+  appID <- Sys.getenv("SHINYPROXY_APPID", unset = user$group)
   sessionData <- list(
     user = user$name,
     name = user$fullName,
-    group = user$group,
+    group = appID,
     role = user$role,
     resh_id = user$org
   )
+
   content <- c(
     sessionData,
     list(message = msg)
