@@ -175,6 +175,10 @@ navbarWidgetServer2 <- function(
       rv$orgName <- user$orgName[choices == input$unit]
     })
 
+    shiny::observeEvent(list(rv$role, rv$org), {
+      appLogger2(user = rv)
+    })
+
     invisible(
       list(
         name = shiny::reactive(rv$name),
