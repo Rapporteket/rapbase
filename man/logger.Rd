@@ -5,6 +5,7 @@
 \alias{appLogger}
 \alias{repLogger}
 \alias{autLogger}
+\alias{appLogger2}
 \title{Log user events in shiny applications at Rapporteket}
 \usage{
 appLogger(
@@ -13,6 +14,8 @@ appLogger(
   .topcall = sys.call(-1),
   .topenv = parent.frame()
 )
+
+appLogger2(user, msg = "No message provided")
 
 repLogger(
   session,

@@ -137,10 +137,8 @@ appLogger <- function(session, msg = "No message provided",
 #' @rdname logger
 #' @export
 
-appLogger2 <- function(user, msg = "No message provided",
-                      .topcall = sys.call(-1), .topenv = parent.frame()) {
+appLogger2 <- function(user, msg = "No message provided") {
   name <- "appLog"
-  parent_environment <- environmentName(topenv(.topenv))
   sessionData <- list(
     user = user$name,
     name = user$fullName,
