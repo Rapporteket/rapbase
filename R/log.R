@@ -134,6 +134,28 @@ appLogger <- function(session, msg = "No message provided",
   appendLog(event, name)
 }
 
+#' @rdname logger
+#' @export
+
+appLogger2 <- function(user, msg = "No message provided",
+                      .topcall = sys.call(-1), .topenv = parent.frame()) {
+  name <- "appLog"
+  parent_environment <- environmentName(topenv(.topenv))
+  sessionData <- list(
+    user = user$name,
+    name = user$fullName,
+    group = user$group,
+    role = user$role,
+    resh_id = user$org
+  )
+  content <- c(
+    sessionData,
+    list(message = msg)
+  )
+  event <- makeLogRecord(content)
+  appendLog(event, name)
+}
+
 
 #' @rdname logger
 #' @export
