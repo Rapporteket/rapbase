@@ -174,18 +174,11 @@ navbarWidgetServer2 <- function(
       rv$role <- user$role[choices == input$unit]
       rv$orgName <- user$orgName[choices == input$unit]
     })
-    message = paste(
-      "Starter ",
-      if (!is.null(caller)) {
-        paste0(caller, " ")
-      } else {
-        ""
-      },
-      "rapporteket."
-    )
+
     shiny::observeEvent(list(rv$role, rv$org), {
-      appLogger2(user = rv, msg = message)
+      appLogger2(user = rv)
     })
+
     invisible(
       list(
         name = shiny::reactive(rv$name),

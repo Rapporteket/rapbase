@@ -15,7 +15,7 @@ appLogger(
   .topenv = parent.frame()
 )
 
-appLogger2(user, msg = "No message provided")
+appLogger2(user)
 
 repLogger(
   session,
