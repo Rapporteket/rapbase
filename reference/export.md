@@ -20,7 +20,7 @@ exportUCApp(dbName = "rapbase")
 
 selectListPubkey(pubkey)
 
-exportDb(dbName, compress = FALSE, session)
+exportDb(dbName, dropTabs = NULL, compress = FALSE, session)
 ```
 
 ## Arguments
@@ -48,6 +48,10 @@ exportDb(dbName, compress = FALSE, session)
 - pubkey:
 
   Character vector with public keys
+
+- dropTabs:
+
+  Character vector with names of tables to be excluded from export.
 
 - compress:
 

@@ -16,18 +16,21 @@ Norwegian)](https://rapporteket.github.io/rapporteket/).
 Install *rapbase* from CRAN:
 
 ``` r
+
 install.packages("rapbase")
 ```
 
 The latest release of the package can be installed from GitHub:
 
 ``` r
+
 remotes::install_github("Rapporteket/rapbase@*release")
 ```
 
 Or install the development version from GitHub with:
 
 ``` r
+
 remotes::install("Rapporteket/rapbase")
 ```
 
@@ -37,6 +40,7 @@ Once the package is installed functions can be called from within R,
 *e.g.*:
 
 ``` r
+
 rapbase::halloRapporteket()
 ```
 
@@ -85,6 +89,7 @@ package will be needed. To make sure these are installed use the R
 Console and run
 
 ``` r
+
 devtools::install_dev_deps()
 ```
 

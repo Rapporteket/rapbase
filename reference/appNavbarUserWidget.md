@@ -55,6 +55,7 @@ fine... At the client, both `uiOutput` and `textOutput` will be fine
 
 Example of use in shiny (pseudo code):
 
+
     server <- function(input, output, session) {
       ...
       output$appUserName <- renderText(getUserName(session))

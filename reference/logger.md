@@ -156,6 +156,7 @@ function should not be applied per registry application.
 
 Pseudo code of how `appLogger()` may be implemented:
 
+
     library(shiny)
     library(raplog)
 
@@ -169,6 +170,7 @@ function in a reactive (shiny) context. First, this is an example of the
 shiny server function with the (reactive) function `renderPlot()`
 calling a function that provides a histogram:
 
+
     library(shiny)
     library(raplog)
 
@@ -181,6 +183,7 @@ calling a function that provides a histogram:
     }
 
 Then, logging is called within the function `makeHist()`:
+
 
     makeHist <- function(data, var, bins, ...) {
 
