@@ -105,7 +105,8 @@ navbarWidgetServer2 <- function(
       orgName = user$orgName[1]
     )
 
-    shiny::observe({
+    shiny::observeEvent(list(rv$org, rv$role), {
+      shiny::req(rv$org, rv$role, length(rv$group) > 0)
       if (!isTRUE(session$userData$sessionStarted)) {
         appID <- Sys.getenv("SHINYPROXY_APPID", unset = rv$group)
         msg <- paste0(
