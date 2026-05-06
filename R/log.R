@@ -134,6 +134,27 @@ appLogger <- function(session, msg = "No message provided",
   appendLog(event, name)
 }
 
+#' @rdname logger
+#' @export
+
+userLogger <- function(user, msg = "No message provided") {
+  name <- "appLog"
+  appID <- Sys.getenv("SHINYPROXY_APPID", unset = user$group)
+  sessionData <- list(
+    user = user$name,
+    name = user$fullName,
+    group = appID,
+    role = user$role,
+    resh_id = user$org
+  )
+
+  content <- c(
+    sessionData,
+    list(message = msg)
+  )
+  event <- makeLogRecord(content)
+  appendLog(event, name)
+}
 
 #' @rdname logger
 #' @export
