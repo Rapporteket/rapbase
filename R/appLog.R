@@ -28,6 +28,7 @@ loggerSetup <- function(
       auto_unbox = TRUE
     )
   }
+  logger::log_formatter(logger::formatter_sprintf)
   logger::log_layout(formatterJson)
   if (hooks) {
     logger::log_messages()
