@@ -100,13 +100,16 @@ exportUCServer <- function(
         f <- exportDb(
           dbName(),
           dropTabs = dropTabs,
+          tableNames = input$dataTabDb,
           compress = input$exportCompress,
           session = session
         )
       } else {
-        f <- queryToRdsFile(
+        f <- queryToFile(
           dbName(),
+          tableName = input$dataTab,
           downloadDataQuery(),
+          format = input$dataTabType,
           compress = input$exportCompress,
           session = session
         )
@@ -129,10 +132,6 @@ exportUCServer <- function(
       },
       content = function(file) {
         file.copy(encFile(), file)
-        repLogger(
-          session,
-          msg = paste("Db export file", basename(encFile()), "downloaded.")
-        )
       }
     )
 
@@ -237,7 +236,8 @@ exportUCServer <- function(
           shiny::tagList(
             shiny::uiOutput(ns("dataTabNamesEnkel")),
             shiny::uiOutput(ns("dateTimeCols")),
-            shiny::uiOutput(ns("dateFilterUI"))
+            shiny::uiOutput(ns("dateFilterUI")),
+            shiny::uiOutput(ns("dataTabTypes"))
           )
         })
       }
@@ -269,6 +269,16 @@ exportUCServer <- function(
         options = list(
           placeholder = "Laster ned hele databasen"
         )
+      )
+    })
+
+    output$dataTabTypes <- shiny::renderUI({
+      shiny::req(input$dataTab)
+      shiny::selectInput(
+        inputId = ns("dataTabType"),
+        label = "Velg format for tabell:",
+        choices = c("RDS", "CSV"),
+        selected = "RDS"
       )
     })
 
@@ -433,7 +443,8 @@ selectListPubkey <- function(pubkey) {
 
 #' @rdname export
 #' @export
-exportDb <- function(dbName, dropTabs = NULL, compress = FALSE, session) {
+exportDb <- function(dbName, dropTabs = NULL,
+                     tableNames = "", compress = FALSE, session) {
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
@@ -464,27 +475,64 @@ exportDb <- function(dbName, dropTabs = NULL, compress = FALSE, session) {
     invisible(system(cmd))
   }
 
-  repLogger(session, msg = paste(conf$name, "Db dump created."))
+  repLogger(
+    session,
+    msg = paste(
+      conf$name,
+      "Db dump created with tables",
+      paste(tableNames, collapse = ", "),
+      "."
+    )
+  )
 
   invisible(f)
 }
 
-queryToRdsFile <- function(dbName, query, compress = FALSE, session) {
+
+#' @rdname export
+#' @export
+queryToFile <- function(dbName,
+                        tableName,
+                        query,
+                        format = "RDS",
+                        compress = FALSE,
+                        session) {
+
+  conf <- getDbConfig(dbName)
+
+  ext <- switch(
+    format,
+    RDS = if (compress) ".rds.gz" else ".rds",
+    CSV = if (compress) ".csv.gz" else ".csv"
+  )
+
+  f <- tempfile(fileext = ext)
   dat <- loadRegData(registryName = dbName, query = query)
 
-  out <- tempfile(fileext = if (compress) ".rds.gz" else ".rds")
+  if (format == "RDS") {
+    if (compress) {
+      gz <- gzfile(f, open = "wb")
+      on.exit(close(gz), add = TRUE)
+      saveRDS(dat, gz)
+    } else {
+      saveRDS(dat, f)
+    }
+  }
 
-  if (compress) {
-    gz <- gzfile(out, open = "wb")
-    on.exit(close(gz), add = TRUE)
-    saveRDS(dat, gz)
-  } else {
-    saveRDS(dat, out)
+  if (format == "CSV") {
+    if (compress) {
+      gz <- gzfile(f, open = "wt")
+      on.exit(close(gz), add = TRUE)
+      utils::write.csv2(dat, gz, row.names = FALSE, na = "")
+    } else {
+      utils::write.csv2(dat, f, row.names = FALSE, na = "")
+    }
   }
-  conf <- getDbConfig(dbName)
-  if (!is.null(session)) {
-    conf <- getDbConfig(dbName)
-    repLogger(session, msg = paste(conf$name, "Query RDS created."))
-  }
-  out
+
+  repLogger(
+    session,
+    msg = paste(conf$name, "Db dump created from table", tableName, ".")
+  )
+
+  f
 }

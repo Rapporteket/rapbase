@@ -7,6 +7,7 @@
 \alias{exportUCApp}
 \alias{selectListPubkey}
 \alias{exportDb}
+\alias{queryToFile}
 \title{Shiny modules providing GUI and server logic for Export}
 \usage{
 exportUCInput(id)
@@ -22,7 +23,16 @@ exportUCApp(dbName = "rapbase")
 
 selectListPubkey(pubkey)
 
-exportDb(dbName, dropTabs = NULL, compress = FALSE, session)
+exportDb(dbName, dropTabs = NULL, tableNames = "", compress = FALSE, session)
+
+queryToFile(
+  dbName,
+  tableName,
+  query,
+  format = "RDS",
+  compress = FALSE,
+  session
+)
 }
 \arguments{
 \item{id}{Character string module ID}
