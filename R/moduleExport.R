@@ -128,7 +128,9 @@ exportUCServer <- function(
         basename(encFile())
       },
       content = function(file) {
-        shiny::showModal(shiny::modalDialog("Forbereder nedlasting...", footer = NULL))
+        shiny::showModal(
+          shiny::modalDialog("Forbereder nedlasting...", footer = NULL)
+        )
         on.exit(shiny::removeModal(), add = TRUE)
         file.copy(encFile(), file)
         repLogger(
