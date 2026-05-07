@@ -95,6 +95,7 @@ withr::with_envvar(
           session$setInputs(fullDb = "Enkelttabell")
           session$setInputs(dataTab = "testTable")
           session$setInputs(dataTabDb = "testTable")
+          session$setInputs(dataTabType = "RDS")
           session$setInputs(exportCompress = TRUE)
           expect_equal(class(downloadDataQuery()), "character")
           session$setInputs(exportDownload = 1)
