@@ -18,6 +18,14 @@
 #' @param dropTabs Character vector with names of tables
 #' to be excluded from export.
 #' @param session Shiny session object
+#' @param tableName Character string with name of table to export. Only used
+#' when exporting a single table, not the whole database.
+#' @param tableNames Character vector with names of tables to export. Only used
+#' when exporting the whole database, not a single table.
+#' @param query Character string with SQL query to fetch data to export. Only
+#' used when exporting a single table, not the whole database.
+#' @param format Character string with format to export data in. Only used
+#' when exporting a single table, not the whole database. Possible values are
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name export
