@@ -91,6 +91,13 @@ exportUCServer <- function(
 
     encFile <- shiny::reactive({
       shiny::req(dbName(), input$exportKey)
+      shiny::showModal(
+        shiny::modalDialog(
+          "Forbereder nedlasting...",
+          footer = NULL,
+          easyClose = FALSE
+        )
+      )
       if (input$fullDb == "Database") {
         if (length(input$dataTabDb) > 0 & length(meta()) > 0) {
           dropTabs <- setdiff(names(meta()), input$dataTabDb)
@@ -128,9 +135,6 @@ exportUCServer <- function(
         basename(encFile())
       },
       content = function(file) {
-        shiny::showModal(
-          shiny::modalDialog("Forbereder nedlasting...", footer = NULL)
-        )
         on.exit(shiny::removeModal(), add = TRUE)
         file.copy(encFile(), file)
         repLogger(
