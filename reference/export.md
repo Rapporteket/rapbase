@@ -20,7 +20,16 @@ exportUCApp(dbName = "rapbase")
 
 selectListPubkey(pubkey)
 
-exportDb(dbName, dropTabs = NULL, compress = FALSE, session)
+exportDb(dbName, dropTabs = NULL, tableNames = "", compress = FALSE, session)
+
+queryToFile(
+  dbName,
+  tableName = "",
+  query,
+  format = "RDS",
+  compress = FALSE,
+  session
+)
 ```
 
 ## Arguments
@@ -53,6 +62,11 @@ exportDb(dbName, dropTabs = NULL, compress = FALSE, session)
 
   Character vector with names of tables to be excluded from export.
 
+- tableNames:
+
+  Character vector with names of tables to export. Only used when
+  exporting the whole database, not a single table.
+
 - compress:
 
   Logical if export data is to be compressed (using gzip). FALSE by
@@ -61,6 +75,21 @@ exportDb(dbName, dropTabs = NULL, compress = FALSE, session)
 - session:
 
   Shiny session object
+
+- tableName:
+
+  Character string with name of table to export. Only used when
+  exporting a single table, not the whole database.
+
+- query:
+
+  Character string with SQL query to fetch data to export. Only used
+  when exporting a single table, not the whole database.
+
+- format:
+
+  Character string with format to export data in. Only used when
+  exporting a single table, not the whole database. Possible values are
 
 ## Value
 

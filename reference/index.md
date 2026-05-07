@@ -120,8 +120,8 @@ Helper functions to be used by shiny apps
   Guide
 - [`exportUCInput()`](export.md) [`exportUCServer()`](export.md)
   [`exportUCApp()`](export.md) [`selectListPubkey()`](export.md)
-  [`exportDb()`](export.md) : Shiny modules providing GUI and server
-  logic for Export
+  [`exportDb()`](export.md) [`queryToFile()`](export.md) : Shiny modules
+  providing GUI and server logic for Export
 - [`statsInput()`](stats.md) [`statsUI()`](stats.md)
   [`statsServer()`](stats.md) [`statsServer2()`](stats.md)
   [`statsApp()`](stats.md) [`logFormat()`](stats.md)
