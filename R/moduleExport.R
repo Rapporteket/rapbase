@@ -492,7 +492,7 @@ exportDb <- function(dbName, dropTabs = NULL,
 #' @rdname export
 #' @export
 queryToFile <- function(dbName,
-                        tableName,
+                        tableName = "",
                         query,
                         format = "RDS",
                         compress = FALSE,

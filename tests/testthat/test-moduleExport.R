@@ -56,7 +56,7 @@ withr::with_envvar(
     
     test_that("query in queryToRdsFile returns a file name", {
       check_db()
-      f <- queryToRdsFile(dbName = "rapbase", query = "SELECT * FROM testTable;", session = session)
+      f <- queryToFile(dbName = "rapbase", query = "SELECT * FROM testTable;", session = session)
       expect_true(file.exists(f))
     })
 
