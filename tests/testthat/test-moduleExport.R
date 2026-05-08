@@ -56,7 +56,7 @@ withr::with_envvar(
     
     test_that("query in queryToRdsFile returns a file name", {
       check_db()
-      f <- queryToRdsFile(dbName = "rapbase", query = "SELECT * FROM testTable;", session = session)
+      f <- queryToFile(dbName = "rapbase", query = "SELECT * FROM testTable;", session = session)
       expect_true(file.exists(f))
     })
 
@@ -95,6 +95,7 @@ withr::with_envvar(
           session$setInputs(fullDb = "Enkelttabell")
           session$setInputs(dataTab = "testTable")
           session$setInputs(dataTabDb = "testTable")
+          session$setInputs(dataTabType = "RDS")
           session$setInputs(exportCompress = TRUE)
           expect_equal(class(downloadDataQuery()), "character")
           session$setInputs(exportDownload = 1)
