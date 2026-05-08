@@ -74,7 +74,7 @@ statsInput <- function(id) {
 #' @export
 statsUI <- function(id) {
   shiny::tagList(
-    rpivotTable::rpivotTableOutput(shiny::NS(id, "pivot"))
+    shiny::uiOutput(shiny::NS(id, "pivot"))
   )
 }
 
@@ -146,18 +146,33 @@ statsServer <- function(id,
         )
       }
     })
-    output$pivot <- rpivotTable::renderRpivotTable(
-      if (eligible) {
-        rpivotTable::rpivotTable(
-          logFrame(),
-          rows = c("name"),
-          cols = c("year", "month"),
-          rendererName = "Heatmap"
-        )
+    output$pivot <- shiny::renderUI({
+      if ("rpivotTable" %in% rownames(utils::installed.packages())) {
+        rpivotTable::rpivotTableOutput("pivot_inner")
       } else {
-        rpivotTable::rpivotTable(data.frame())
+        shiny::tags$p(
+          "rpivotTable-pakken er ikke installert, ",
+          "og pivot-tabellen kan derfor ikke vises. ",
+          "Pakken finnes ikke lenger på CRAN. ",
+          "Vi jobber med saken."
+        )
       }
-    )
+    })
+
+    if ("rpivotTable" %in% rownames(utils::installed.packages())) {
+      output$pivot_inner <- rpivotTable::renderRpivotTable({
+        if (eligible) {
+          rpivotTable::rpivotTable(
+            logFrame(),
+            rows = "name",
+            cols = c("year", "month"),
+            rendererName = "Heatmap"
+          )
+        } else {
+          rpivotTable::rpivotTable(data.frame())
+        }
+      })
+    }
   })
 }
 
@@ -231,18 +246,34 @@ statsServer2 <- function(id,
         )
       }
     })
-    output$pivot <- rpivotTable::renderRpivotTable(
-      if (eligible()) {
-        rpivotTable::rpivotTable(
-          logFrame(),
-          rows = c("name"),
-          cols = c("year", "month"),
-          rendererName = "Heatmap"
-        )
+
+    output$pivot <- shiny::renderUI({
+      if ("rpivotTable" %in% rownames(utils::installed.packages())) {
+        rpivotTable::rpivotTableOutput("pivot_inner")
       } else {
-        rpivotTable::rpivotTable(data.frame())
+        shiny::tags$p(
+          "rpivotTable-pakken er ikke installert, ",
+          "og pivot-tabellen kan derfor ikke vises. ",
+          "Pakken finnes ikke lenger på CRAN. ",
+          "Vi jobber med saken."
+        )
       }
-    )
+    })
+
+    if ("rpivotTable" %in% rownames(utils::installed.packages())) {
+      output$pivot_inner <- rpivotTable::renderRpivotTable({
+        if (eligible) {
+          rpivotTable::rpivotTable(
+            logFrame(),
+            rows = "name",
+            cols = c("year", "month"),
+            rendererName = "Heatmap"
+          )
+        } else {
+          rpivotTable::rpivotTable(data.frame())
+        }
+      })
+    }
   })
 }
 
