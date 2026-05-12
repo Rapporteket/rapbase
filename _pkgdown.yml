@@ -87,8 +87,6 @@ reference:
     - stats
     - rapTheme
     - regTitle
-    - theme
-    - title
 
   - title: Miscellaneous
     desc: >
