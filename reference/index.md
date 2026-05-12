@@ -130,10 +130,6 @@ Helper functions to be used by shiny apps
 - [`rapTheme()`](rapTheme.md) : Theme of the app.
 - [`regTitle()`](regTitle.md) : Title on the top left of the app,
   including the logo
-- [`theme()`](theme.md) : DO NOT USE THIS FUNCTION, use rapTheme
-  instead. This is only for backward compatibility.
-- [`title()`](title.md) : DO NOT USE THIS FUNCTION, use regTitle
-  instead. This is only for backward compatibility.
 
 ## Miscellaneous
 
