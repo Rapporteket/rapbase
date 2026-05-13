@@ -23,6 +23,7 @@ reference:
     - rapOpenDbConnection
     - rapCloseDbConnection
     - exportApp
+    - createDb
 
   - title: Staging data
     desc: >
