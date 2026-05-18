@@ -90,10 +90,8 @@ navbarWidgetServer2 <- function(
   caller = NULL
 ) {
   shiny::moduleServer(id, function(input, output, session) {
-
     user <- userAttribute(map_orgname = map_orgname)
     stopifnot(length(user$name) > 0)
-
     # Initial privileges and affiliation will be first in list
     rv <- shiny::reactiveValues(
       name = user$name,
@@ -106,6 +104,35 @@ navbarWidgetServer2 <- function(
       role = user$role[1],
       orgName = user$orgName[1]
     )
+
+    shiny::observeEvent(list(rv$org, rv$role), {
+      shiny::req(rv$org, rv$role, length(rv$group) > 0)
+      if (!isTRUE(session$userData$sessionStarted)) {
+        appID <- Sys.getenv("SHINYPROXY_APPID", unset = rv$group)
+        msg <- paste0(
+          rv$fullName,
+          " med rolle ",
+          rv$role,
+          " og reshID ",
+          rv$org,
+          " har logget inn i ",
+          appID,
+          "-rapporteket."
+        )
+        userLogger(user = rv, msg = msg)
+        session$userData$sessionStarted <- TRUE
+      } else {
+        msg <- paste0(
+          rv$fullName,
+          " har byttet til reshID ",
+          rv$org,
+          " og rolle ",
+          rv$role,
+          "."
+        )
+        userLogger(user = rv, msg = msg)
+      }
+    })
 
     output$name <- shiny::renderText(rv$fullName)
     output$affiliation <- shiny::renderText(

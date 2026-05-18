@@ -1,4 +1,4 @@
-with_mock_dir("gh_api_response", {
+httptest::with_mock_dir("gh_api_response", {
   test_that("error when dont't know what", {
     expect_error(getGithub("harrypotter", "wand"))
   })

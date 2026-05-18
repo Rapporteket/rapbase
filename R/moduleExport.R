@@ -15,7 +15,17 @@
 #' @param pubkey Character vector with public keys
 #' @param compress Logical if export data is to be compressed (using gzip).
 #' FALSE by default.
+#' @param dropTabs Character vector with names of tables
+#' to be excluded from export.
 #' @param session Shiny session object
+#' @param tableName Character string with name of table to export. Only used
+#' when exporting a single table, not the whole database.
+#' @param tableNames Character vector with names of tables to export. Only used
+#' when exporting the whole database, not a single table.
+#' @param query Character string with SQL query to fetch data to export. Only
+#' used when exporting a single table, not the whole database.
+#' @param format Character string with format to export data in. Only used
+#' when exporting a single table, not the whole database. Possible values are
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name export
@@ -51,7 +61,9 @@ exportUCInput <- function(id) {
   shiny::tagList(
     shiny::uiOutput(shiny::NS(id, "exportPidUI")),
     shiny::uiOutput(shiny::NS(id, "exportKeyUI")),
-    shiny::checkboxInput(shiny::NS(id, "exportCompress"), "Komprimer eksport"),
+    shiny::uiOutput(shiny::NS(id, "exportFullDbOrTable")),
+    shiny::uiOutput(shiny::NS(id, "exportTable")),
+    shiny::uiOutput(shiny::NS(id, "exportCompressUI")),
     shiny::uiOutput(shiny::NS(id, "exportDownloadUI"))
   )
 }
@@ -62,6 +74,8 @@ exportUCServer <- function(
   id, dbName, teamName = NULL,
   eligible = shiny::reactiveVal(TRUE)
 ) {
+  ns <- shiny::NS(id)
+
   if (!shiny::is.reactive(eligible)) {
     # make eligible reactive if not already
     eligible <- shiny::reactiveVal(eligible)
@@ -78,62 +92,119 @@ exportUCServer <- function(
   shiny::moduleServer(id, function(input, output, session) {
 
     pubkey <- shiny::reactive({
-      shiny::req(input$exportPid, dbName, eligible)
+      shiny::req(input$exportPid)
       keys <- getGithub("keys", input$exportPid)
       sship::pubkey_filter(keys, "rsa")
     })
 
     encFile <- shiny::reactive({
-      shiny::req(dbName, input$exportKey)
-      f <- exportDb(
-        dbName(),
-        compress = input$exportCompress,
-        session = session
+      shiny::req(dbName(), input$exportKey)
+      shiny::showModal(
+        shiny::modalDialog(
+          "Forbereder nedlasting...",
+          footer = NULL,
+          easyClose = FALSE
+        )
       )
-      message(paste("Dump file size:", file.size(f)))
+      if (input$fullDb == "Database") {
+        if (length(input$dataTabDb) > 0 & length(meta()) > 0) {
+          dropTabs <- setdiff(names(meta()), input$dataTabDb)
+        } else {
+          dropTabs <- NULL
+        }
+        f <- exportDb(
+          dbName(),
+          dropTabs = dropTabs,
+          tableNames = input$dataTabDb,
+          compress = input$exportCompress,
+          session = session
+        )
+      } else {
+        f <- queryToFile(
+          dbName(),
+          tableName = input$dataTab,
+          downloadDataQuery(),
+          format = input$dataTabType,
+          compress = input$exportCompress,
+          session = session
+        )
+      }
+
+      message(paste("Plain file size:", file.size(f)))
       ef <- sship::enc(
-        f,
-        pid = NULL,
+        filename      = f,
+        pid           = NULL,
         pubkey_holder = NULL,
-        pubkey = input$exportKey
+        pubkey        = input$exportKey
       )
+
       ef
     })
 
-    shiny::observeEvent(eligible(), {
-      if (eligible()) {
-        output$exportDownload <- shiny::downloadHandler(
-          filename = function() {
-            basename(encFile())
-          },
-          content = function(file) {
-            file.copy(encFile(), file)
-            repLogger(
-              session,
-              msg = paste("Db export file", basename(encFile()), "downloaded.")
-            )
-          }
+    output$exportDownload <- shiny::downloadHandler(
+      filename = function() {
+        basename(encFile())
+      },
+      content = function(file) {
+        on.exit(shiny::removeModal(), add = TRUE)
+        file.copy(encFile(), file)
+      }
+    )
+
+
+    ## UC
+    output$exportFullDbOrTable <- shiny::renderUI({
+      shiny::req(pubkey, eligible)
+      if (length(pubkey()) == 0 | !eligible()) {
+        NULL
+      } else {
+        shiny::radioButtons(
+          shiny::NS(id, "fullDb"),
+          "",
+          c("Database", "Enkelttabell"),
+          selected = shiny::isolate(input$fullDb) %||% "Database",
+          inline = TRUE
         )
       }
     })
-
-    ## UC
     output$exportPidUI <- shiny::renderUI({
-      shiny::selectInput(
-        shiny::NS(id, "exportPid"),
-        label = shiny::tags$div(
-          shiny::HTML(as.character(shiny::icon("user")), "Velg mottaker:")
-        ),
-        choices = getGithub(
+      shiny::req(eligible)
+      teamMembers <- tryCatch(
+        getGithub(
           "members",
           teamName,
           .token = Sys.getenv("GITHUB_PAT")
-        )
+        ),
+        error = function(e) {
+          message("Error fetching team members from GitHub: ", e$message)
+          c()
+        }
       )
+      if (!eligible()) {
+        shiny::tagList(
+          shiny::h4("Funksjon utilgjengelig"),
+          shiny::p("Kontakt registeret")
+        )
+      } else if (length(teamMembers) == 0) {
+        shiny::p(
+          "Ingen team-medlemmer funnet. Sjekk om team ",
+          shiny::strong(teamName), " finnes og inneholder medlemmer."
+        )
+      } else {
+        shiny::selectInput(
+          shiny::NS(id, "exportPid"),
+          label = shiny::tags$div(
+            shiny::HTML(as.character(shiny::icon("user")), "Velg mottaker:")
+          ),
+          choices = teamMembers
+        )
+      }
     })
     output$exportKeyUI <- shiny::renderUI({
-      shiny::req(pubkey)
-      if (length(pubkey()) == 0) {
+      shiny::req(pubkey, eligible)
+      if (!eligible()) {
+        NULL
+      } else if (length(pubkey()) == 0) {
         shiny::p("No keys found!")
       } else {
         shiny::selectInput(
@@ -145,14 +216,21 @@ exportUCServer <- function(
         )
       }
     })
-    output$exportDownloadUI <- shiny::renderUI({
-      shiny::req(pubkey)
-      if (length(pubkey()) == 0) {
-        shiny::tagList(
-          shiny::hr(),
-          shiny::h4("Funksjon utilgjengelig"),
-          shiny::p("Kontakt registeret")
+    output$exportCompressUI <- shiny::renderUI({
+      shiny::req(pubkey, eligible)
+      if (length(pubkey()) == 0 | !eligible()) {
+        NULL
+      } else {
+        shiny::checkboxInput(
+          shiny::NS(id, "exportCompress"),
+          "Komprimer eksport"
         )
+      }
+    })
+    output$exportDownloadUI <- shiny::renderUI({
+      shiny::req(pubkey, eligible)
+      if (length(pubkey()) == 0 | !eligible()) {
+        NULL
       } else {
         shiny::tagList(
           shiny::hr(),
@@ -163,6 +241,120 @@ exportUCServer <- function(
         )
       }
     })
+
+    shiny::observeEvent(input$fullDb, {
+      if (input$fullDb == "Database") {
+        output$exportTable <- shiny::renderUI({
+          shiny::uiOutput(ns("dataTabNamesDb"))
+        })
+      } else {
+        output$exportTable <- shiny::renderUI({
+          shiny::tagList(
+            shiny::uiOutput(ns("dataTabNamesEnkel")),
+            shiny::uiOutput(ns("dateTimeCols")),
+            shiny::uiOutput(ns("dateFilterUI")),
+            shiny::uiOutput(ns("dataTabTypes"))
+          )
+        })
+      }
+    })
+
+    meta <- shiny::reactive({
+      describeRegistryDb(registryName = dbName())
+    })
+
+    output$dataTabNamesEnkel <- shiny::renderUI({
+      tabs <- names(meta())
+      shiny::selectInput(
+        inputId = ns("dataTab"),
+        label = "Velg tabell:",
+        choices = tabs,
+        selected = tabs[1]
+      )
+    })
+
+    output$dataTabNamesDb <- shiny::renderUI({
+      tabs <- names(meta())
+      tabs_filtered <- tabs[!startsWith(tabs, "_")]
+      shiny::selectizeInput(
+        inputId = ns("dataTabDb"),
+        label = "Velg tabell(er):",
+        choices = tabs,
+        selected = tabs_filtered,
+        multiple = TRUE,
+        options = list(
+          placeholder = "Laster ned hele databasen"
+        )
+      )
+    })
+
+    output$dataTabTypes <- shiny::renderUI({
+      shiny::req(input$dataTab)
+      shiny::selectInput(
+        inputId = ns("dataTabType"),
+        label = "Velg format for tabell:",
+        choices = c("RDS", "CSV"),
+        selected = "RDS"
+      )
+    })
+
+
+    output$dateTimeCols <- shiny::renderUI({
+      query <- paste0("SELECT COLUMN_NAME
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE DATA_TYPE IN (
+            'date',
+            'datetime',
+            'datetime2',
+            'smalldatetime',
+            'datetimeoffset'
+        )
+        AND TABLE_NAME = '", input$dataTab, "';")
+      dateTimeCols <- loadRegData(registryName = dbName(), query)
+      dateTimeCols <- c("Ingen datofilter", dateTimeCols$COLUMN_NAME)
+      shiny::selectInput(ns("dateColSelect"), "Velg datofilter:", dateTimeCols)
+    })
+
+    output$dateFilterUI <- shiny::renderUI({
+      shiny::req(input$dateColSelect)
+      if (input$dateColSelect != "Ingen datofilter") {
+        shiny::dateRangeInput(
+          ns("dateRange"),
+          "Velg datofilter:",
+          start = as.Date(paste0(format(Sys.Date(), "%Y"), "-01-01")),
+          end = Sys.Date()
+        )
+      }
+    })
+
+    downloadDataQuery <- shiny::reactive({
+      shiny::req(input$dataTab)
+      base_sql <- paste0("SELECT * FROM ", input$dataTab)
+
+      # No filter selected
+      if (is.null(input$dateColSelect) ||
+            input$dateColSelect == "Ingen datofilter") {
+        return(paste0(base_sql, ";"))
+      }
+
+      shiny::req(input$dateRange)
+      shiny::req(!any(is.na(input$dateRange)))
+
+      start <- input$dateRange[1]
+      end   <- input$dateRange[2]
+
+      paste0(
+        base_sql,
+        " WHERE ",
+        input$dateColSelect,
+        " >= '", start,
+        "' AND ",
+        input$dateColSelect,
+        " < DATE_ADD('", end, "', INTERVAL 1 DAY);"
+      )
+
+    })
+
   })
 }
 
@@ -267,20 +459,28 @@ selectListPubkey <- function(pubkey) {
 
 #' @rdname export
 #' @export
-exportDb <- function(dbName, compress = FALSE, session) {
+exportDb <- function(dbName, dropTabs = NULL,
+                     tableNames = "", compress = FALSE, session) {
   stopifnot(Sys.which("mysqldump") != "")
   stopifnot(Sys.which("gzip") != "")
 
   conf <- getDbConfig(dbName)
   f <- tempfile(pattern = conf$name, fileext = ".sql")
 
-  cmd <- paste0(
+  ignoreTabs <- if (!is.null(dropTabs) && length(dropTabs) > 0) {
+    paste(sprintf("--ignore-table=%s.%s", conf$name, dropTabs), collapse = " ")
+  } else {
+    ""
+  }
+
+  cmd_base <- paste0(
     "mysqldump ",
     "--no-tablespaces --single-transaction --add-drop-database "
   )
+
   cmd <- sprintf(
-    "%s -B -u %s -p'%s' -h %s %s > %s",
-    cmd, conf$user, conf$pass, conf$host, conf$name, f
+    "%s -B -u %s -p'%s' -h %s %s %s > %s",
+    cmd_base, conf$user, conf$pass, conf$host, ignoreTabs, conf$name, f
   )
   invisible(system(cmd))
 
@@ -291,7 +491,64 @@ exportDb <- function(dbName, compress = FALSE, session) {
     invisible(system(cmd))
   }
 
-  repLogger(session, msg = paste(conf$name, "Db dump created."))
+  repLogger(
+    session,
+    msg = paste(
+      conf$name,
+      "Db dump created with tables",
+      paste(tableNames, collapse = ", "),
+      "."
+    )
+  )
 
   invisible(f)
+}
+
+
+#' @rdname export
+#' @export
+queryToFile <- function(dbName,
+                        tableName = "",
+                        query,
+                        format = "RDS",
+                        compress = FALSE,
+                        session) {
+
+  conf <- getDbConfig(dbName)
+
+  ext <- switch(
+    format,
+    RDS = if (compress) ".rds.gz" else ".rds",
+    CSV = if (compress) ".csv.gz" else ".csv"
+  )
+
+  f <- tempfile(fileext = ext)
+  dat <- loadRegData(registryName = dbName, query = query)
+
+  if (format == "RDS") {
+    if (compress) {
+      gz <- gzfile(f, open = "wb")
+      on.exit(close(gz), add = TRUE)
+      saveRDS(dat, gz)
+    } else {
+      saveRDS(dat, f)
+    }
+  }
+
+  if (format == "CSV") {
+    if (compress) {
+      gz <- gzfile(f, open = "wt")
+      on.exit(close(gz), add = TRUE)
+      utils::write.csv2(dat, gz, row.names = FALSE, na = "")
+    } else {
+      utils::write.csv2(dat, f, row.names = FALSE, na = "")
+    }
+  }
+
+  repLogger(
+    session,
+    msg = paste(conf$name, "Db dump created from table", tableName, ".")
+  )
+
+  f
 }

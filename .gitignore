@@ -1,9 +1,27 @@
 .Rproj.user
 .Rhistory
-.RData
 vignettes/*.pdf
 docs/
 /doc/
 /Meta/
 tmpkladd.R
 .Rprofile
+
+# All kind of data files
+*.rda
+*.csv
+*.tsv
+*.xlsx
+*.xls
+*.sav
+*.dta
+*.sas7bdat
+*.rds
+*.RData
+*.sql
+*.tar.gz
+
+# Mac
+.DS_Store
+
+*~

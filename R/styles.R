@@ -5,7 +5,7 @@
 #' @return a div containing the logo and the title
 #' @export
 #'
-title <- function(regTitle = "rapbase") {
+regTitle <- function(regTitle = "rapbase") {
   shiny::div(
     style = "display: inline-block;",
     shiny::a(
@@ -35,6 +35,6 @@ title <- function(regTitle = "rapbase") {
 #' @return a Bootstrap theme object
 #' @export
 #'
-theme <- function(theme = "flatly", version = 3) {
+rapTheme <- function(theme = "flatly", version = 3) {
   bslib::bs_theme(bootswatch = theme, version = version)
 }

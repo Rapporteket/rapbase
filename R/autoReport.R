@@ -222,13 +222,36 @@ writeAutoReportData <- function(config) {
       )
     }
   }
-  message(paste0("Add auto report data to database, ",
-                 nrow(dataframe), " entries."))
+
+  # Filter out rows already in database
+  colsExceptId <- setdiff(names(dataframe), "id")
+
+  # to avoid crash for "interval" col, wrap col names in "`"
+  q <- function(x) paste0("`", gsub("`", "``", x), "`")
+  query <- sprintf(
+    "SELECT DISTINCT %s FROM %s",
+    paste(q(colsExceptId), collapse = ", "),
+    q("autoreport")
+  )
   con <- rapOpenDbConnection("autoreport")$con
-  DBI::dbAppendTable(con, "autoreport", dataframe, row.names = NULL)
+  distinctData <- DBI::dbGetQuery(con, query)
+
+  dataframe <- dataframe |>
+    dplyr::distinct(
+      dplyr::across(dplyr::all_of(colsExceptId)), .keep_all = TRUE
+    ) |>
+    dplyr::anti_join(distinctData, by = colsExceptId)
+
+  if (nrow(dataframe) == 0) {
+    message(paste0("Submition already exists in database."))
+  } else {
+    message(
+      paste0("Add auto report data to database, ", nrow(dataframe), " entries.")
+    )
+    DBI::dbAppendTable(con, "autoreport", dataframe, row.names = NULL)
+  }
   rapCloseDbConnection(con)
 }
-
 
 #' Filter auto report data
 #'
@@ -492,25 +515,26 @@ runAutoReport <- function(
               "Report", i, "of", dim(reps)[1],
               ". Sending email to:", email
             ))
-            autLogger(
-              user = rep$owner,
-              name = rep$ownerName,
-              registryName = rep$package,
-              reshId = rep$organization,
-              type = rep$type,
-              pkg = rep$package,
-              fun = rep$fun,
-              param = rep$params,
-              msg = paste(
-                "recipient:",
-                email
-              )
-            )
-            sendEmail(
-              conf = conf, to = email, subject = rep$synopsis,
-              text = text, attFile = attFile
-            )
           }
+          autLogger(
+            user = rep$owner,
+            name = rep$ownerName,
+            registryName = rep$package,
+            reshId = rep$organization,
+            type = rep$type,
+            pkg = rep$package,
+            fun = rep$fun,
+            param = rep$params,
+            msg = paste(
+              "recipients:",
+              rep$email,
+              collapse = ", "
+            )
+          )
+          sendEmail(
+            conf = conf, to = rep$email, subject = rep$synopsis,
+            text = text, attFile = attFile
+          )
         }
       },
       error = function(e) {
@@ -749,7 +773,8 @@ makeAutoReportTab <- function(
           label = "",
           icon = shiny::icon("edit"),
           onclick = sprintf(
-            "Shiny.onInputChange('%s', this.id)",
+            "Shiny.setInputValue('%s', {id: this.id,
+            nonce: Date.now()}, {priority: 'event'});",
             shiny::NS(namespace, "edit_button")
           )
         )
@@ -760,7 +785,8 @@ makeAutoReportTab <- function(
           label = "",
           icon = shiny::icon("trash"),
           onclick = sprintf(
-            "Shiny.onInputChange('%s', this.id)",
+            "Shiny.setInputValue('%s', {id: this.id,
+            nonce: Date.now()}, {priority: 'event'});",
             shiny::NS(namespace, "del_button")
           )
         )

@@ -1,7 +1,9 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "commitMessageExtra": "from v{{currentVersion}} to {{prettyNewVersion}}",
-  "baseBranches": ["main"],
+  "baseBranchPatterns": [
+    "main"
+  ],
   "extends": [
     "config:recommended"
   ]
