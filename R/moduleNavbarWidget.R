@@ -89,6 +89,12 @@ navbarWidgetServer2 <- function(
   map_orgname = NULL,
   caller = NULL
 ) {
+  # USER == "rapporteket" betyr at koden kjøres på rapporteket sine servere
+  # i kubernetes, og logging skal være på json-format.
+  if (Sys.getenv("USER") == "rapporteket") {
+    loggerSetup()
+  }
+
   shiny::moduleServer(id, function(input, output, session) {
     user <- userAttribute(map_orgname = map_orgname)
     stopifnot(length(user$name) > 0)
