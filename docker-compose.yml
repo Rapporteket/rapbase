@@ -19,8 +19,6 @@ services:
       - "8787:8787"
     environment:
       DISABLE_AUTH: "true"
-      MYSQL_DB_LOG: db_log
-      MYSQL_DB_AUTOREPORT: db_autoreport
 
   adminer:
     depends_on:
