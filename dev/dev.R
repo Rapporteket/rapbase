@@ -6,6 +6,6 @@ Sys.setenv(RUN_MYSQLDUMP = "true")
 
 devtools::test()
 
-rapbase::exportApp(teamName = "nord", dbName = "raplog", logAsJson = FALSE)
+rapbase::exportApp(teamName = "nord", dbName = "db_log", logAsJson = FALSE)
 
 rapbase::statsApp()
