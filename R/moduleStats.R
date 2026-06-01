@@ -102,7 +102,9 @@ statsServer <- function(id,
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("calendar")), "Periode:")
         ),
-        start = min(log()$date), end = max(log()$date), separator = "-",
+        start = min(c(log()$date, Sys.Date() - 181)),
+        end = max(c(log()$date, Sys.Date() - 179)),
+        separator = "-",
         weekstart = 1,
         language = "no"
       )
