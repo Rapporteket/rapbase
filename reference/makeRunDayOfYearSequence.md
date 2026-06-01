@@ -30,5 +30,5 @@ Integer vector of day numbers
 
 ``` r
 makeRunDayOfYearSequence(interval = "month")
-#>  [1] 149 180 210 241 272 302 333 363  29  60  88 119
+#>  [1] 152 182 213 244 274 305 335   1  32  60  91 121
 ```
