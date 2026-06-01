@@ -13,6 +13,7 @@ services:
     volumes:
       - ~/.ssh:/home/rstudio/.ssh
       - ~/.gitconfig:/home/rstudio/.gitconfig
+      - ~/.Renviron:/home/rstudio/.Renviron
       - ../.:/home/rstudio/repos
     ports:
       - "8787:8787"
