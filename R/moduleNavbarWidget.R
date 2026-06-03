@@ -392,7 +392,7 @@ howWeDealWithPersonalData <- function(..., callerPkg = NULL) {
 #'
 #' @param accessunits A list or data frame containing unit information with at
 #'   least "UnitId" and an organization mapping column.
-#' @param orgNameMapping A character string specifying the column name in 
+#' @param orgNameMapping A character string specifying the column name in
 #'   accessunits that contains the organization names. Default is "Title".
 #'
 #' @return A data frame with two columns:
