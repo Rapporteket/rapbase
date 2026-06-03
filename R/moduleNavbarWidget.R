@@ -396,10 +396,15 @@ howWeDealWithPersonalData <- function(..., callerPkg = NULL) {
 #'   accessunits that contains the organization names. Default is "Title".
 #'
 #' @return A data frame with two columns:
-#'   \item{UnitId}{Unit identifiers from accessunits}
-#'   \item{orgname}{Organization names mapped from the specified column}
+#'   \describe{
+#'     \item{UnitId}{Unit identifiers from accessunits}
+#'     \item{orgname}{Organization names mapped from the specified column}
+#'   }
 #' @export
 rapMapOrgName <- function(accessunits, orgNameMapping = "Title") {
+  if (!is.data.frame(accessunits)) {
+    stop("accessunits must be a data frame.")
+  }
   return(
     data.frame(
       UnitId = accessunits[["UnitId"]],

@@ -58,10 +58,11 @@ withr::with_envvar(
 
 accessunits <- data.frame(
   UnitId = c(1, 2),
-  Title = c("Unit One", "Unit Two")
+  Title = c("Unit One", "Unit Two"),
+  HealthUnitName = c("Health Unit One", "Health Unit Two")
 )
 test_that("rapMapOrgName maps organization names correctly", {
-  result <- rapMapOrgName(accessunits, orgNameMapping = "Title")
+  result <- rapMapOrgName(accessunits, orgNameMapping = "HealthUnitName")
   expect_equal(result$UnitId, c(1, 2))
-  expect_equal(result$orgname, c("Unit One", "Unit Two"))
+  expect_equal(result$orgname, c("Health Unit One", "Health Unit Two"))
 })
