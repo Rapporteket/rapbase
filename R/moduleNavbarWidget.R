@@ -401,6 +401,6 @@ getMapOrgName <- function() {
 
   data.frame(
     UnitId = accessunits[["UnitId"]],
-    orgname = accessunits[["HealthUnitName"]],
+    orgname = accessunits[["Title"]]
   )
 }
