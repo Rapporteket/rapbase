@@ -56,13 +56,35 @@ withr::with_envvar(
   }
 )
 
-accessunits <- data.frame(
-  UnitId = c(1, 2),
-  Title = c("Unit One", "Unit Two"),
-  HealthUnitName = c("Health Unit One", "Health Unit Two")
-)
-test_that("rapMapOrgName maps organization names correctly", {
-  result <- rapMapOrgName(accessunits, orgNameMapping = "HealthUnitName")
-  expect_equal(result$UnitId, c(1, 2))
-  expect_equal(result$orgname, c("Health Unit One", "Health Unit Two"))
+test_that("getMapOrgName returns mapped UnitId and orgname", {
+  mock_accessunits <- data.frame(
+    UnitId = c(10, 20),
+    Title = c("Org A", "Org B")
+  )
+
+  with_mocked_bindings(
+    loadRegData = function(query) {
+      expect_equal(query, "SELECT * FROM accessunits")
+      mock_accessunits
+    },
+    {
+      result <- getMapOrgName()
+
+      expect_s3_class(result, "data.frame")
+      expect_named(result, c("UnitId", "orgname"))
+      expect_equal(result$UnitId, c(10, 20))
+      expect_equal(result$orgname, c("Org A", "Org B"))
+    }
+  )
+})
+
+test_that("getMapOrgName returns NULL when loadRegData fails", {
+  with_mocked_bindings(
+    loadRegData = function(query) {
+      stop("database error")
+    },
+    {
+      expect_null(getMapOrgName())
+    }
+  )
 })
