@@ -46,6 +46,7 @@ reference:
     - getUserEmail
     - userInfo
     - userAttribute
+    - rapMapOrgName
 
   - title: Logging
     desc: >
