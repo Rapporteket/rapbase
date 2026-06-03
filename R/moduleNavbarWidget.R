@@ -90,6 +90,9 @@ navbarWidgetServer2 <- function(
   caller = NULL
 ) {
   shiny::moduleServer(id, function(input, output, session) {
+    if (is.null(map_orgname)) {
+      map_orgname <- getMapOrgName()
+    }
     user <- userAttribute(map_orgname = map_orgname)
     stopifnot(length(user$name) > 0)
     # Initial privileges and affiliation will be first in list
@@ -384,31 +387,20 @@ howWeDealWithPersonalData <- function(..., callerPkg = NULL) {
   )
 }
 
+getMapOrgName <- function() {
+  accessunits <- tryCatch(
+    loadRegData(query = "SELECT * FROM accessunits"),
+    error = function(e) {
+      return(NULL)
+    }
+  )
 
-#' Map Organization Names from Access Units Table
-#'
-#' Maps organization names from an access units data structure to a simplified
-#' data frame containing unit IDs and organization names.
-#'
-#' @param accessunits A list or data frame containing unit information with at
-#'   least "UnitId" and an organization mapping column.
-#' @param orgNameMapping A character string specifying the column name in
-#'   accessunits that contains the organization names. Default is "Title".
-#'
-#' @return A data frame with two columns:
-#'   \describe{
-#'     \item{UnitId}{Unit identifiers from accessunits}
-#'     \item{orgname}{Organization names mapped from the specified column}
-#'   }
-#' @export
-rapMapOrgName <- function(accessunits, orgNameMapping = "Title") {
-  if (!is.data.frame(accessunits)) {
-    stop("accessunits must be a data frame.")
+  if (is.null(accessunits)) {
+    return(NULL)
   }
-  return(
-    data.frame(
-      UnitId = accessunits[["UnitId"]],
-      orgname = accessunits[[orgNameMapping]]
-    )
+
+  data.frame(
+    UnitId = accessunits[["UnitId"]],
+    orgname = accessunits[["Title"]]
   )
 }
