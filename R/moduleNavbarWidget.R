@@ -383,3 +383,27 @@ howWeDealWithPersonalData <- function(..., callerPkg = NULL) {
     )
   )
 }
+
+
+#' Map Organization Names from Access Units Table
+#'
+#' Maps organization names from an access units data structure to a simplified
+#' data frame containing unit IDs and organization names.
+#'
+#' @param accessunits A list or data frame containing unit information with at
+#'   least "UnitId" and an organization mapping column.
+#' @param orgNameMapping A character string specifying the column name in 
+#'   accessunits that contains the organization names. Default is "Title".
+#'
+#' @return A data frame with two columns:
+#'   \item{UnitId}{Unit identifiers from accessunits}
+#'   \item{orgname}{Organization names mapped from the specified column}
+#' @export
+rapMapOrgName <- function(accessunits, orgNameMapping = "Title") {
+  return(
+    data.frame(
+      UnitId = accessunits[["UnitId"]],
+      orgname = accessunits[[orgNameMapping]]
+    )
+  )
+}
