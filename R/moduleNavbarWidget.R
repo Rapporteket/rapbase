@@ -90,6 +90,9 @@ navbarWidgetServer2 <- function(
   caller = NULL
 ) {
   shiny::moduleServer(id, function(input, output, session) {
+    if (is.null(map_orgname)) {
+      map_orgname <- getMapOrgName()
+    }
     user <- userAttribute(map_orgname = map_orgname)
     stopifnot(length(user$name) > 0)
     # Initial privileges and affiliation will be first in list
@@ -381,5 +384,23 @@ howWeDealWithPersonalData <- function(..., callerPkg = NULL) {
     sourceFile = sourceFile, outputType = "html_fragment", params = list(
       pkgInfo = pkgInfo
     )
+  )
+}
+
+getMapOrgName <- function() {
+  accessunits <- tryCatch(
+    loadRegData(query = "SELECT * FROM accessunits"),
+    error = function(e) {
+      return(NULL)
+    }
+  )
+
+  if (is.null(accessunits)) {
+    return(NULL)
+  }
+
+  data.frame(
+    UnitId = accessunits[["UnitId"]],
+    orgname = accessunits[["Title"]]
   )
 }
