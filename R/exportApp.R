@@ -113,5 +113,10 @@ exportApp <- function(teamName = "", dbName = "data", logAsJson = TRUE) {
   if (logAsJson) {
     loggerSetup()
   }
+  if (!capabilities()["cairo"]) {
+    # To make it work without cairo.
+    # On Alpine docker images, cairo is not available.
+    knitr::opts_chunk$set(dev = "svglite")
+  }
   shiny::shinyApp(ui, server)
 }
