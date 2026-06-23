@@ -49,7 +49,7 @@ withr::with_envvar(
       expect_true(userAttribute()$group[2] == "80")
       expect_true(userAttribute()$unit[1] == "1")
       expect_true(userAttribute()$unit[2] == "2")
-      expect_true(userAttribute()$appid == "rapbase")
+      expect_true(userAttribute()$app == "rapbase")
     })
 
     test_that("group and unit returned correspondingly when unit is given", {

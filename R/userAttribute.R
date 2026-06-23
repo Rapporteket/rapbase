@@ -24,7 +24,7 @@ userInfo <- function(
   # check for valid entities
   if (!(entity %in% c(
     "user", "groups", "resh_id", "role", "email",
-    "full_name", "phone"
+    "full_name", "phone", "app"
   ))) {
     stop("Incorrect entity provided! Must be one of 'user', 'groups', 'resh_id'
          'role', 'email', 'full_name' or 'phone'.")

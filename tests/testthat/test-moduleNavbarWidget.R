@@ -29,13 +29,13 @@ withr::with_envvar(
         caller = "rapbase"
       ), {
         session$setInputs(unit = NULL)
-        expect_equal(class(output$affiliation), "character")
         expect_equal(rv$name, "ttesterc")
         expect_equal(rv$fullName, "Tore Tester Container")
         expect_equal(rv$group, 80)
         expect_equal(rv$unit, 1)
         expect_equal(rv$org, 1)
         expect_equal(rv$role, "LU")
+        expect_equal(class(output$affiliation), "character")
 
         session$setInputs(selectOrganization = 3,
                           unit = paste0("Ukjent", " (", "2", ") - ", "SC"))
