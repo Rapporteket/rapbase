@@ -67,7 +67,6 @@ userInfo <- function(
 #'     \item{fullName}{User full name}
 #'     \item{phone}{User phone number}
 #'     \item{email}{User email}
-#'     \item{unit}{Unit id under which the privileges are defined.}
 #'     \item{org}{Organization id for the user.}
 #'     \item{role}{Role of the user.}
 #'     \item{orgName}{Name of the organization as defined under the unit id.}
@@ -98,15 +97,13 @@ userAttribute <- function(unit = NULL,
   }
 
   groups <- tilganger$A
-  units <- tilganger$U
-
   orgs <- tilganger$U
   roles <- tilganger$R
 
   if (!is.null(map_orgname)) {
     orgNames <- map_orgname$orgname[match(orgs, map_orgname$UnitId)]
   } else {
-    orgNames <- rep("Ukjent", length(units))
+    orgNames <- rep("Ukjent", length(orgs))
   }
 
   list(
@@ -115,7 +112,6 @@ userAttribute <- function(unit = NULL,
     phone = Sys.getenv("FALK_USER_PHONE"),
     email = Sys.getenv("FALK_USER_EMAIL"),
     group = groups,
-    unit = units,
     org = orgs,
     role = roles,
     orgName = orgNames

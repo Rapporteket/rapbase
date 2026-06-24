@@ -102,7 +102,6 @@ navbarWidgetServer2 <- function(
       phone = user$phone,
       email = user$email,
       group = user$group[1],
-      unit = user$unit[1],
       org = user$org[1],
       role = user$role[1],
       orgName = user$orgName[1]
@@ -199,7 +198,6 @@ navbarWidgetServer2 <- function(
     shiny::observeEvent(input$unit, {
       choices <- paste0(user$orgName, " (", user$org, ") - ", user$role)
       rv$group <- user$group[choices == input$unit]
-      rv$unit <- user$unit[choices == input$unit]
       rv$org <- user$org[choices == input$unit]
       rv$role <- user$role[choices == input$unit]
       rv$orgName <- user$orgName[choices == input$unit]
@@ -212,7 +210,6 @@ navbarWidgetServer2 <- function(
         phone = shiny::reactive(rv$phone),
         email = shiny::reactive(rv$email),
         group = shiny::reactive(rv$group),
-        unit = shiny::reactive(rv$unit),
         org = shiny::reactive(rv$org),
         role = shiny::reactive(rv$role),
         orgName = shiny::reactive(rv$orgName)

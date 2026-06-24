@@ -37,40 +37,40 @@ withr::with_envvar(
     "FALK_APP_ID" = "80"
   ),
   code = {
-    test_that("group and unit are returned correspondingly when unit = NULL", {
+    test_that("group and org are returned correspondingly when unit = NULL", {
       expect_true(class(userAttribute()) == "list")
       expect_true(
         length(userAttribute()$group) ==
-          length(userAttribute()$unit)
+          length(userAttribute()$org)
       )
       expect_true(length(userAttribute()$group) == 2)
       expect_true(userAttribute()$group[1] == "80")
       expect_true(userAttribute()$group[2] == "80")
-      expect_true(userAttribute()$unit[1] == "1")
-      expect_true(userAttribute()$unit[2] == "2")
+      expect_true(userAttribute()$org[1] == "1")
+      expect_true(userAttribute()$org[2] == "2")
     })
 
-    test_that("group and unit returned correspondingly when unit is given", {
+    test_that("group and org returned correspondingly when unit is given", {
       expect_equal(class(userAttribute()), "list")
       expect_equal(
         length(userAttribute(unit = 2)$group),
-        length(userAttribute(unit = 2)$unit)
+        length(userAttribute(unit = 2)$org)
       )
       expect_equal(
-        userAttribute(unit = 2)$unit, 2
+        userAttribute(unit = 2)$org, 2
       )
-      expect_equal(userAttribute(unit = 3)$unit, integer(0))
+      expect_equal(userAttribute(unit = 3)$org, integer(0))
     })
 
     test_that("correct lookup values are provided", {
       expect_equal(
         length(userAttribute(unit = 2)$group),
-        length(userAttribute(unit = 2)$unit)
+        length(userAttribute(unit = 2)$org)
       )
       expect_equal(
-        userAttribute(unit = 2)$unit, 2
+        userAttribute(unit = 2)$org, 2
       )
-      expect_equal(userAttribute(unit = 3)$unit, integer(0))
+      expect_equal(userAttribute(unit = 3)$org, integer(0))
     })
 
     test_that("orgname-mapping is working", {
