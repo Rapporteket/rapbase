@@ -21,6 +21,8 @@ getUserFullName(...)
 
 getUserGroups(...)
 
+getAppId(...)
+
 getUserName(...)
 
 getUserPhone(...)
@@ -55,7 +57,7 @@ getUserRole(...)
 
 ## Value
 
-Invisibly a list of user metadata and privileges:
+a list of user metadata and privileges:
 
 - name:
 
@@ -72,6 +74,16 @@ Invisibly a list of user metadata and privileges:
 - email:
 
   User email
+
+- app:
+
+  SHINYPROXY_APPID environmental variable. This is the id of the
+  application as string.
+
+- group:
+
+  FALK_APP_ID environmental variable. This is the id of the application
+  as integer.
 
 - unit:
 

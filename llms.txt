@@ -144,7 +144,7 @@ Provides information on the logged in user in a shiny session
 - [`userAttribute()`](userAttribute.md)
   [`getUserEmail()`](userAttribute.md)
   [`getUserFullName()`](userAttribute.md)
-  [`getUserGroups()`](userAttribute.md)
+  [`getUserGroups()`](userAttribute.md) [`getAppId()`](userAttribute.md)
   [`getUserName()`](userAttribute.md)
   [`getUserPhone()`](userAttribute.md)
   [`getUserReshId()`](userAttribute.md)

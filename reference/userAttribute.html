@@ -64,6 +64,8 @@ If redefining contexts is needed, please use <code><a href="userInfo.html">userI
 <span></span>
 <span><span class="fu">getUserGroups</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">getAppId</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">getUserName</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">getUserPhone</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span>
@@ -99,7 +101,7 @@ which case all privileges for <code>group</code> are returned.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Invisibly a list of user metadata and privileges:</p><dl><dt>name</dt>
+    <p>a list of user metadata and privileges:</p><dl><dt>name</dt>
 <dd><p>The username for whom the privileges apply.</p></dd>
 
     <dt>fullName</dt>
@@ -110,6 +112,12 @@ which case all privileges for <code>group</code> are returned.</p></dd>
 
     <dt>email</dt>
 <dd><p>User email</p></dd>
+
+    <dt>app</dt>
+<dd><p>SHINYPROXY_APPID environmental variable. This is the id of the application as string.</p></dd>
+
+    <dt>group</dt>
+<dd><p>FALK_APP_ID environmental variable. This is the id of the application as integer.</p></dd>
 
     <dt>unit</dt>
 <dd><p>Unit id under which the privileges are defined.</p></dd>
