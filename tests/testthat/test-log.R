@@ -100,6 +100,7 @@ test_that("repLogger2 works without errors", {
       fullName = shiny::reactive("fullName"),
       group = shiny::reactive("group"),
       role = shiny::reactive("role"),
+      app = shiny::reactive("app"),
       org = shiny::reactive("org")
     )
   }

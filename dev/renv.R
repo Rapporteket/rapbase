@@ -13,6 +13,7 @@ Sys.setenv(FALK_EXTENDED_USER_RIGHTS = "[
 Sys.setenv(FALK_APP_ID = "80")
 Sys.setenv(FALK_USER_EMAIL = "blue@sky.no")
 Sys.setenv(FALK_USER_FULLNAME = "Bob")
+Sys.setenv(SHINYPROXY_APPID = "rapbase")
 
 Sys.setenv(MYSQL_USER = "root")
 Sys.setenv(MYSQL_PASSWORD = "root")
