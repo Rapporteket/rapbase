@@ -68,8 +68,8 @@ userInfo <- function(
 #'     \item{fullName}{User full name}
 #'     \item{phone}{User phone number}
 #'     \item{email}{User email}
-#'     \item{app}{SHINYPROXY_APPID environmental variable. This is the id of the application as string.}
-#'     \item{group}{FALK_APP_ID environmental variable. This is the id of the application as integer.}
+#'     \item{app}{SHINYPROXY_APPID environmental variable (id as string).}
+#'     \item{group}{FALK_APP_ID environmental variable (id as integer).}
 #'     \item{unit}{Unit id under which the privileges are defined.}
 #'     \item{org}{Organization id for the user.}
 #'     \item{role}{Role of the user.}
