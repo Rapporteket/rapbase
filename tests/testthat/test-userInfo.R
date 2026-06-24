@@ -34,7 +34,8 @@ withr::with_envvar(
 withr::with_envvar(
   new = c(
     "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
-    "FALK_APP_ID" = "80"
+    "FALK_APP_ID" = "80",
+    "SHINYPROXY_APPID" = "rapbase"
   ),
   code = {
     test_that("group and org are returned correspondingly when unit = NULL", {
@@ -48,6 +49,7 @@ withr::with_envvar(
       expect_true(userAttribute()$group[2] == "80")
       expect_true(userAttribute()$org[1] == "1")
       expect_true(userAttribute()$org[2] == "2")
+      expect_true(userAttribute()$app == "rapbase")
     })
 
     test_that("group and org returned correspondingly when unit is given", {
@@ -98,6 +100,7 @@ withr::with_envvar(
     ),
     "FALK_APP_ID" = "80",
     "SHINYPROXY_USERNAME" = "userc",
+    "SHINYPROXY_APPID" = "rapbase",
     "FALK_USER_EMAIL" = "userc@container.no",
     "FALK_USER_FULLNAME" = "User Container",
     "FALK_USER_PHONE" = "+4787654321"
@@ -106,6 +109,7 @@ withr::with_envvar(
     test_that("User attribs can be fetched in container instance (QA, PROD)", {
       expect_equal(getUserName(shinySession, "rapbase"), "userc")
       expect_equal(getUserGroups(shinySession, "rapbase"), 80)
+      expect_equal(getAppId(shinySession, "rapbase"), "rapbase")
       expect_equal(getUserReshId(shinySession, "rapbase"), 102966)
       expect_equal(getUserRole(shinySession, "rapbase"), "SC")
       expect_equal(getUserEmail(shinySession, "rapbase"), "userc@container.no")

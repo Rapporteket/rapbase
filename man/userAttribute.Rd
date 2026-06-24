@@ -9,6 +9,7 @@
 \alias{getUserPhone}
 \alias{getUserReshId}
 \alias{getUserRole}
+\alias{getAppId}
 \title{User attributes in container apps running behind shinyproxy}
 \usage{
 userAttribute(unit = NULL, map_orgname = NULL)
@@ -18,6 +19,8 @@ getUserEmail(...)
 getUserFullName(...)
 
 getUserGroups(...)
+
+getAppId(...)
 
 getUserName(...)
 
@@ -40,12 +43,14 @@ which case all privileges for \code{group} are returned.}
 \item{...}{To keep the same interface as before. Not used.}
 }
 \value{
-Invisibly a list of user metadata and privileges:
+a list of user metadata and privileges:
   \describe{
     \item{name}{The username for whom the privileges apply.}
     \item{fullName}{User full name}
     \item{phone}{User phone number}
     \item{email}{User email}
+    \item{app}{SHINYPROXY_APPID environmental variable (id as string).}
+    \item{group}{FALK_APP_ID environmental variable (id as integer).}
     \item{org}{Organization id for the user.}
     \item{role}{Role of the user.}
     \item{orgName}{Name of the organization as defined under the unit id.}

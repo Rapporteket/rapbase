@@ -39,6 +39,7 @@ reference:
     contents:
     - getUserName
     - getUserGroups
+    - getAppId
     - getUserRole
     - getUserReshId
     - getUserFullName

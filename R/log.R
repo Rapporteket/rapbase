@@ -139,11 +139,10 @@ appLogger <- function(session, msg = "No message provided",
 
 userLogger <- function(user, msg = "No message provided") {
   name <- "appLog"
-  appID <- Sys.getenv("SHINYPROXY_APPID", unset = user$group)
   sessionData <- list(
     user = user$name,
     name = user$fullName,
-    group = appID,
+    group = user$app,
     role = user$role,
     resh_id = user$org
   )
@@ -234,14 +233,14 @@ repLogger2 <- function(user, msg = "No message provided",
   shiny::req(
     user$name(),
     user$fullName(),
-    user$group(),
+    user$app(),
     user$role(),
     user$org()
   )
   sessionData <- list(
     user = user$name(),
     name = user$fullName(),
-    group = user$group(),
+    group = user$app(),
     role = user$role(),
     resh_id = user$org()
   )

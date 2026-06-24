@@ -223,7 +223,8 @@ exportUCServer <- function(
       } else {
         shiny::checkboxInput(
           shiny::NS(id, "exportCompress"),
-          "Komprimer eksport"
+          "Komprimer eksport",
+          value = TRUE
         )
       }
     })

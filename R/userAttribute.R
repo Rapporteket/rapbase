@@ -24,7 +24,7 @@ userInfo <- function(
   # check for valid entities
   if (!(entity %in% c(
     "user", "groups", "resh_id", "role", "email",
-    "full_name", "phone"
+    "full_name", "phone", "app"
   ))) {
     stop("Incorrect entity provided! Must be one of 'user', 'groups', 'resh_id'
          'role', 'email', 'full_name' or 'phone'.")
@@ -37,6 +37,7 @@ userInfo <- function(
     entity,
     user = userprivs$name,
     groups = userprivs$group,
+    app = userprivs$app,
     resh_id = userprivs$org,
     role = userprivs$role,
     email = userprivs$email,
@@ -61,12 +62,14 @@ userInfo <- function(
 #'    \item{orgname}{corresponding organization names}
 #'    }
 #'
-#' @return Invisibly a list of user metadata and privileges:
+#' @return a list of user metadata and privileges:
 #'   \describe{
 #'     \item{name}{The username for whom the privileges apply.}
 #'     \item{fullName}{User full name}
 #'     \item{phone}{User phone number}
 #'     \item{email}{User email}
+#'     \item{app}{SHINYPROXY_APPID environmental variable (id as string).}
+#'     \item{group}{FALK_APP_ID environmental variable (id as integer).}
 #'     \item{org}{Organization id for the user.}
 #'     \item{role}{Role of the user.}
 #'     \item{orgName}{Name of the organization as defined under the unit id.}
@@ -111,6 +114,7 @@ userAttribute <- function(unit = NULL,
     fullName = Sys.getenv("FALK_USER_FULLNAME"),
     phone = Sys.getenv("FALK_USER_PHONE"),
     email = Sys.getenv("FALK_USER_EMAIL"),
+    app = Sys.getenv("SHINYPROXY_APPID", unset = "unknown_app"),
     group = groups,
     org = orgs,
     role = roles,
@@ -156,6 +160,12 @@ getUserFullName <- function(...) {
 #' @export
 getUserGroups <- function(...) {
   userInfo(entity = "groups")
+}
+
+#' @rdname userAttribute
+#' @export
+getAppId <- function(...) {
+  userInfo(entity = "app")
 }
 
 

@@ -101,6 +101,7 @@ navbarWidgetServer2 <- function(
       fullName = user$fullName,
       phone = user$phone,
       email = user$email,
+      app = user$app,
       group = user$group[1],
       org = user$org[1],
       role = user$role[1],
@@ -110,7 +111,6 @@ navbarWidgetServer2 <- function(
     shiny::observeEvent(list(rv$org, rv$role), {
       shiny::req(rv$org, rv$role, length(rv$group) > 0)
       if (!isTRUE(session$userData$sessionStarted)) {
-        appID <- Sys.getenv("SHINYPROXY_APPID", unset = rv$group)
         msg <- paste0(
           rv$fullName,
           " med rolle ",
@@ -118,7 +118,7 @@ navbarWidgetServer2 <- function(
           " og reshID ",
           rv$org,
           " har logget inn i ",
-          appID,
+          rv$app,
           "-rapporteket."
         )
         userLogger(user = rv, msg = msg)
