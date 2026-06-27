@@ -77,17 +77,11 @@ a list of user metadata and privileges:
 
 - app:
 
-  SHINYPROXY_APPID environmental variable. This is the id of the
-  application as string.
+  SHINYPROXY_APPID environmental variable (id as string).
 
 - group:
 
-  FALK_APP_ID environmental variable. This is the id of the application
-  as integer.
-
-- unit:
-
-  Unit id under which the privileges are defined.
+  FALK_APP_ID environmental variable (id as integer).
 
 - org:
 
