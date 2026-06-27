@@ -70,7 +70,6 @@ userInfo <- function(
 #'     \item{email}{User email}
 #'     \item{app}{SHINYPROXY_APPID environmental variable (id as string).}
 #'     \item{group}{FALK_APP_ID environmental variable (id as integer).}
-#'     \item{unit}{Unit id under which the privileges are defined.}
 #'     \item{org}{Organization id for the user.}
 #'     \item{role}{Role of the user.}
 #'     \item{orgName}{Name of the organization as defined under the unit id.}
@@ -101,15 +100,13 @@ userAttribute <- function(unit = NULL,
   }
 
   groups <- tilganger$A
-  units <- tilganger$U
-
   orgs <- tilganger$U
   roles <- tilganger$R
 
   if (!is.null(map_orgname)) {
     orgNames <- map_orgname$orgname[match(orgs, map_orgname$UnitId)]
   } else {
-    orgNames <- rep("Ukjent", length(units))
+    orgNames <- rep("Ukjent", length(orgs))
   }
 
   list(
@@ -119,7 +116,6 @@ userAttribute <- function(unit = NULL,
     email = Sys.getenv("FALK_USER_EMAIL"),
     app = Sys.getenv("SHINYPROXY_APPID", unset = "unknown_app"),
     group = groups,
-    unit = units,
     org = orgs,
     role = roles,
     orgName = orgNames
