@@ -1,11 +1,9 @@
 on:
   push:
     branches:
-      - master
       - main
   pull_request:
     branches:
-      - master
       - main
 
 name: test-coverage
@@ -18,7 +16,8 @@ jobs:
   test-coverage:
     runs-on: ubuntu-24.04
     env:
-      GITHUB_PAT: ${{ secrets.GH_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_COMPILE_AND_INSTALL_PACKAGES: never
       RUN_DB_UNIT_TESTS: true
       MYSQL_HOST: localhost
       MYSQL_USER: root

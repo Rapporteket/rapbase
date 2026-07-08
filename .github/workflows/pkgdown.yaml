@@ -1,12 +1,11 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
 on:
   push:
-    branches: [main, master]
+    branches: [main]
   pull_request:
-    branches: [main, master]
+    branches: [main]
   release:
     types: [published]
-  workflow_dispatch:
 
 name: pkgdown
 
@@ -24,6 +23,7 @@ jobs:
       group: pkgdown-${{ github.event_name != 'pull_request' || github.run_id }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_COMPILE_AND_INSTALL_PACKAGES: never
     permissions:
       contents: write
     steps:
