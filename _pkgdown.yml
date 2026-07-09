@@ -57,6 +57,7 @@ reference:
     - logger
     - repLogger2
     - sanitizeLog
+    - readLog
 
   - title: Automated reports
     desc: >

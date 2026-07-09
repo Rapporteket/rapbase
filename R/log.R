@@ -390,7 +390,7 @@ createLogDbTabs <- function() {
 
 #' Read log entries
 #'
-#' Internal function that provide log entries
+#' Function that provide log entries
 #'
 #' @param type Character string defining which log to request data from. Must be
 #' one of \code{c("app", "report")}.
@@ -402,7 +402,7 @@ createLogDbTabs <- function() {
 #' to show only entries matching chosen app_id.
 #'
 #' @return A data frame of log entries
-#' @keywords internal
+#' @export
 readLog <- function(type, name = "", app_id = NULL) {
   stopifnot(type == "report" | type == "app")
 
