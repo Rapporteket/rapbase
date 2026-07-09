@@ -46,8 +46,6 @@
 #' }
 #'
 #' @name stagingData
-#' @aliases listStagingData mtimeStagingData saveStagingData loadStagingData
-#' deleteStagingData cleanStagingData
 #'
 #' @examples
 #' \donttest{
@@ -225,8 +223,6 @@ cleanStagingData <- function(eolAge, dryRun = TRUE, dbTable = "data") {
 #'
 #' @name stagingDataHelper
 #' @keywords internal
-#' @aliases dbStagingPrereq dbStagingConnection
-#'   dbStagingProcess
 NULL
 
 #' @rdname stagingDataHelper

@@ -54,7 +54,6 @@ isRapContext <- function() {
 #'
 #' @return Character string containing RMarkdown table code
 #' @name makeStandardTable
-#' @aliases mst
 #' @examples
 #' mst(tab = mtcars[1:10, ])
 NULL

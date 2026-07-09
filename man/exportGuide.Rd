@@ -4,8 +4,8 @@
 \alias{exportGuide}
 \alias{exportGuideUI}
 \alias{exportGuideServer}
-\alias{exportGuideApp}
 \alias{exportGuideServer2}
+\alias{exportGuideApp}
 \title{Shiny modules providing the Export Guide}
 \usage{
 exportGuideUI(id)

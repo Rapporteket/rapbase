@@ -132,8 +132,6 @@ userAttribute <- function(unit = NULL,
 #' @param ... To keep the same interface as before. Not used.
 #' @return String with user attribute
 #' @name userAttribute
-#' @aliases getUserEmail getUserFullName getUserGroups getUserName getUserPhone
-#'   getUserReshId getUserRole
 #'
 #' @examples
 #' \donttest{

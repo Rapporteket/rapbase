@@ -29,7 +29,6 @@
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name export
-#' @aliases exportUCInput exportUCServer exportUCApp selectListPubkey exportDb
 #' @examples
 #' ## client user interface function
 #' ui <- shiny::fluidPage(
@@ -380,7 +379,6 @@ exportUCApp <- function(dbName = "rapbase") {
 #'
 #' @return Functions ui and server representing the (module) app
 #' @name exportGuide
-#' @aliases exportGuideUI exportGuideServer exportGuideApp
 #' @examples
 #' ui <- shiny::fluidPage(
 #'   exportGuideUI("exportGuide")

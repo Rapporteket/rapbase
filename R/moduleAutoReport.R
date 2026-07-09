@@ -74,9 +74,6 @@
 #' parameter values of auto report functions needs to be altered at application
 #' run time.
 #' @name autoReport
-#' @aliases autoReportUI autoReportOrgInput autoReportOrgServer
-#'   autoReportFormatInput autoReportFormatSercer autoReportInput
-#'   autoReportServer autoReportServer2
 #' @examples
 #' ## make a list for report metadata
 #' reports <- list(

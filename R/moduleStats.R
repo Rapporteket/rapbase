@@ -24,7 +24,6 @@
 #'
 #' @return Shiny objects, mostly. Helper functions may return other stuff too.
 #' @name stats
-#' @aliases statsInput statsUI statsServer statsApp logFormat logTimeFrame
 #'
 #' @examples
 #' # client user interface function
@@ -273,7 +272,6 @@ statsApp <- function() {
 #'
 #' @return Functions ui and server representing the (module) app
 #' @name statsGuide
-#' @aliases statsGuideUI statsGuideServer statsGuideApp
 #' @examples
 #' ui <- shiny::fluidPage(
 #'   statsGuideUI("statsGuide")

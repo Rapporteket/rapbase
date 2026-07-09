@@ -56,7 +56,6 @@ Imports:
     yaml
 Remotes:
     smartinsightsfromdata/rpivotTable
-RoxygenNote: 7.3.3
 URL: https://github.com/Rapporteket/rapbase
 BugReports: https://github.com/Rapporteket/rapbase/issues
 Suggests:
@@ -68,3 +67,4 @@ Suggests:
     rvest,
     testthat,
     withr
+Config/roxygen2/version: 8.0.0

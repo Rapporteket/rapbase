@@ -5,10 +5,10 @@
 \alias{statsInput}
 \alias{statsUI}
 \alias{statsServer}
+\alias{statsServer2}
 \alias{statsApp}
 \alias{logFormat}
 \alias{logTimeFrame}
-\alias{statsServer2}
 \title{Shiny modules and helper functions for registry usage reports}
 \usage{
 statsInput(id)

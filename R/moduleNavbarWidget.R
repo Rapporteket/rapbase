@@ -26,8 +26,6 @@
 #'   a list of reactive values representing user metadata and privileges. See
 #'   \code{\link{userAttribute}} for further details on these values.
 #' @name navbarWidget
-#' @aliases navbarWidgetInput navbarWidgetServer2
-#'   navbarWidgetApp
 #' @examples
 #' ## client user interface function
 #' ui <- shiny::tagList(

@@ -5,11 +5,11 @@
 \alias{getUserEmail}
 \alias{getUserFullName}
 \alias{getUserGroups}
+\alias{getAppId}
 \alias{getUserName}
 \alias{getUserPhone}
 \alias{getUserReshId}
 \alias{getUserRole}
-\alias{getAppId}
 \title{User attributes in container apps running behind shinyproxy}
 \usage{
 userAttribute(unit = NULL, map_orgname = NULL)
