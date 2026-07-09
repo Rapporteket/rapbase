@@ -2,11 +2,9 @@ on:
   push:
     branches:
       - main
-      - master
   pull_request:
     branches:
       - main
-      - master
 
 name: lint
 
@@ -18,7 +16,8 @@ jobs:
   lint:
     runs-on: ubuntu-24.04
     env:
-      GITHUB_PAT: ${{ secrets.GH_TOKEN }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      R_COMPILE_AND_INSTALL_PACKAGES: never
     steps:
       - uses: actions/checkout@v7
 
