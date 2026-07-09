@@ -2,11 +2,11 @@
 % Please edit documentation in R/stagingData.R
 \name{stagingDataHelper}
 \alias{stagingDataHelper}
+\alias{wrapStagingData}
+\alias{unwrapStagingData}
 \alias{dbStagingPrereq}
 \alias{dbStagingConnection}
 \alias{dbStagingProcess}
-\alias{wrapStagingData}
-\alias{unwrapStagingData}
 \title{Data staging helper (internal) functions}
 \usage{
 wrapStagingData(data)

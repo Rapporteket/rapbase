@@ -3,9 +3,9 @@
 \name{logger}
 \alias{logger}
 \alias{appLogger}
+\alias{userLogger}
 \alias{repLogger}
 \alias{autLogger}
-\alias{userLogger}
 \title{Log user events in shiny applications at Rapporteket}
 \usage{
 appLogger(

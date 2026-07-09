@@ -108,7 +108,6 @@
 #' Default value is \code{parent.frame()}.
 #'
 #' @name logger
-#' @aliases appLogger repLogger autLogger
 #'
 #' @return Returns nothing but calls a logging appender
 NULL

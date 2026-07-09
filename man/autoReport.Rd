@@ -6,11 +6,10 @@
 \alias{autoReportOrgInput}
 \alias{autoReportOrgServer}
 \alias{autoReportFormatInput}
-\alias{autoReportFormatSercer}
+\alias{autoReportFormatServer}
 \alias{autoReportInput}
 \alias{autoReportServer}
 \alias{autoReportServer2}
-\alias{autoReportFormatServer}
 \title{Shiny modules and helper functions for registry auto reports}
 \usage{
 autoReportUI(id)

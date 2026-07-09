@@ -17,7 +17,6 @@
 #' @return data frame containing registry data or a list with table names and
 #' corresponding fields with attributes
 #' @name loadRegData
-#' @aliases loadRegData describeRegistryDb
 NULL
 
 
