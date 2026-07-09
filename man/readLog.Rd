@@ -22,6 +22,5 @@ to show only entries matching chosen app_id.}
 A data frame of log entries
 }
 \description{
-Internal function that provide log entries
+Function that provide log entries
 }
-\keyword{internal}
