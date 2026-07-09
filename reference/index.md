@@ -62,6 +62,7 @@ Handle logging
   applications at Rapporteket.
 - [`sanitizeLog()`](sanitizeLog.md) : Sanitize log entries that have
   reached end of life
+- [`readLog()`](readLog.md) : Read log entries
 
 ## Automated reports
 

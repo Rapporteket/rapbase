@@ -1,6 +1,6 @@
 # Read log entries
 
-Internal function that provide log entries
+Function that provide log entries
 
 ## Usage
 
