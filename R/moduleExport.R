@@ -474,7 +474,7 @@ exportDb <- function(dbName, dropTabs = NULL,
 
   cmd_base <- paste0(
     "mysqldump ",
-    "--no-tablespaces --single-transaction --add-drop-database "
+    "--no-tablespaces --single-transaction --add-drop-database --skip-ssl "
   )
 
   cmd <- sprintf(
