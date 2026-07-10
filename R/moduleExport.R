@@ -481,6 +481,7 @@ exportDb <- function(dbName, dropTabs = NULL,
     "%s -B -u %s -p'%s' -h %s %s %s > %s",
     cmd_base, conf$user, conf$pass, conf$host, ignoreTabs, conf$name, f
   )
+  Sys.setenv(MARIADB_TLS_DISABLE_PEER_VERIFICATION = 1)
   invisible(system(cmd))
 
   if (compress) {
