@@ -208,6 +208,7 @@ navbarWidgetServer2 <- function(
         phone = shiny::reactive(rv$phone),
         email = shiny::reactive(rv$email),
         group = shiny::reactive(rv$group),
+        app = shiny::reactive(rv$app),
         org = shiny::reactive(rv$org),
         role = shiny::reactive(rv$role),
         orgName = shiny::reactive(rv$orgName)
