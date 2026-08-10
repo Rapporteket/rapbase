@@ -29,3 +29,13 @@ test_that("rapTheme function returns a valid shinytheme object", {
     # Check if rubbish theme name returns an error
     expect_error(rapTheme("qwerty"))
 })
+
+# Test for the memory display helpers
+test_that("memory display helpers create the expected UI structure", {
+  display <- memoryDisplay()
+  title <- memoryTitle("Test App")
+
+  expect_true(is.function(display))
+  expect_true(grepl("id=\"memory\"", as.character(title)))
+  expect_true(grepl("Test App", as.character(title)))
+})
