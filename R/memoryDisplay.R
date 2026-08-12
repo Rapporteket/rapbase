@@ -20,6 +20,13 @@
 memoryDisplay <- function(session = shiny::getDefaultReactiveDomain()) {
   shiny::renderText({
     shiny::invalidateLater(1000, session)
+
+    if (!requireNamespace("ps", quietly = TRUE)) {
+      message(
+        "The 'ps' package is required for memoryDisplay to work"
+      )
+      return(NULL)
+    }
     mem <- ps::ps_memory_info(ps::ps_handle())["rss"] / 1024^2
     paste0("Memory: ", round(mem, 1), " MB")
   })
