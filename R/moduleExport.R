@@ -473,7 +473,7 @@ exportDb <- function(dbName, dropTabs = NULL,
   }
 
   cmd_base <- paste0(
-    "mysqldump ",
+    "mariadb-dump ",
     "--no-tablespaces --single-transaction --add-drop-database --skip-ssl "
   )
 
