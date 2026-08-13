@@ -480,11 +480,11 @@ exportDb <- function(dbName, dropTabs = NULL,
 
   cmd_base <- paste0(
     if (Sys.which("mariadb-dump") != "") {
-      "mariadb-dump "
+      "mariadb-dump --skip-ssl "
     } else {
       "mysqldump "
     },
-    "--no-tablespaces --single-transaction --add-drop-database --skip-ssl "
+    "--no-tablespaces --single-transaction --add-drop-database "
   )
 
   cmd <- sprintf(
