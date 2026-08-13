@@ -460,7 +460,7 @@ selectListPubkey <- function(pubkey) {
 #' @export
 exportDb <- function(dbName, dropTabs = NULL,
                      tableNames = "", compress = FALSE, session) {
-  stopifnot(Sys.which("mysqldump") != "")
+  stopifnot(Sys.which("mariadb-dump") != "")
   stopifnot(Sys.which("gzip") != "")
 
   conf <- getDbConfig(dbName)
