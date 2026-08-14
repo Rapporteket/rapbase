@@ -62,12 +62,18 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
     file.copy(logoFile, ".", overwrite = TRUE)
   }
 
+  # Set pandoc arguments for pdf output if a template is specified,
+  # or to use default pandoc template
+  pdoc_args <- if (outputType == "pdf" && !is.null(template)) {
+    paste0("--template=", template, ".latex")
+  }
+
   f <- rmarkdown::render(
     input = basename(sourceFile),
     output_format =
       switch(outputType,
         pdf = bookdown::pdf_document2(
-          pandoc_args = c(paste0("--template=", template, ".latex"))
+          pandoc_args = pdoc_args
         ),
         html = bookdown::html_document2(),
         html_fragment = bookdown::html_fragment2(),
