@@ -42,9 +42,15 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
   # https://github.com/Rapporteket/rapbase/pull/86
   outputType <- as.character(outputType)
 
-  stopifnot(file.exists(sourceFile))
-  stopifnot(outputType %in% c("html", "html_fragment", "pdf"))
-  stopifnot(template %in% c("default", "document"))
+  stopifnot("Can't find 'sourceFile'" = file.exists(sourceFile))
+  stopifnot(
+    '"outputType" must be one of "pdf", "html" or "html_fragment"' =
+      !is.null(outputType) && outputType %in% c("html", "html_fragment", "pdf")
+  )
+  stopifnot(
+    '"template" must be one of "default", "document" or "NULL"' =
+      is.null(template) || template %in% c("default", "document")
+  )
 
   # do work in tempdir and return to origin on exit
   # setwd returns the current directory before the change
