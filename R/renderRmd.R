@@ -34,7 +34,7 @@
 #' @export
 
 renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
-                      params = list(), template = "default") {
+                      params = list(), template = "default", quiet = TRUE) {
 
   # When called from do.call (rapbase::runAutoReport()) arguments are provided
   # as class list. To prevent below switch of output formats to fail, make sure
@@ -77,7 +77,7 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
     clean = TRUE,
     params = params,
     envir = new.env(),
-    quiet = TRUE
+    quiet = quiet
   )
 
   if (outputType == "html_fragment") {
