@@ -20,8 +20,11 @@
 #' header. Default is \code{NULL} in which case no parameters as defined in the
 #' rmarkdown document will be overridden.
 #' @param template Character string defining which template to use for making
-#' pdf documents. Must be one of "default" or "document" where the first is
-#' assumed if this argument is not set.
+#' pdf documents. Must be one of "default", "document", or NULL where the
+#' first is assumed if this argument is not set. NULL means that the default
+#' pandoc template is used.
+#' @param quiet Logical. If TRUE, suppresses output from the rendering process.
+#' TRUE is assumed if this argument is not set.
 #'
 #' @return Character string with path to the rendered file or, if
 #' \code{outputType} is set to "html_fragment", a character string providing an
