@@ -51,6 +51,9 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
     '"template" must be one of "default", "document" or NULL' =
       is.null(template) || template %in% c("default", "document")
   )
+  stopifnot(
+    '"quiet" must be TRUE or FALSE' = length(quiet) == 1 && is.logical(quiet)
+  )
 
   # do work in tempdir and return to origin on exit
   # setwd returns the current directory before the change
