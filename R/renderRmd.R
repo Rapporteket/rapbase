@@ -20,11 +20,11 @@
 #' header. Default is \code{NULL} in which case no parameters as defined in the
 #' rmarkdown document will be overridden.
 #' @param template Character string defining which template to use for making
-#' pdf documents. Must be one of "default", "document", or NULL where the
-#' first is assumed if this argument is not set. NULL means that the default
-#' pandoc template is used.
-#' @param quiet Logical. If TRUE, suppresses output from the rendering process.
-#' TRUE is assumed if this argument is not set.
+#' pdf documents. Must be one of "default", "document", or \code{NULL} where
+#' the first is assumed if this argument is not set. \code{NULL} means that
+#' the default pandoc template is used.
+#' @param quiet Logical. If \code{TRUE}, suppresses output from the
+#' rendering process. \code{TRUE} is assumed if this argument is not set.
 #'
 #' @return Character string with path to the rendered file or, if
 #' \code{outputType} is set to "html_fragment", a character string providing an
@@ -48,7 +48,7 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
       !is.null(outputType) && outputType %in% c("html", "html_fragment", "pdf")
   )
   stopifnot(
-    '"template" must be one of "default", "document" or "NULL"' =
+    '"template" must be one of "default", "document" or NULL' =
       is.null(template) || template %in% c("default", "document")
   )
 
