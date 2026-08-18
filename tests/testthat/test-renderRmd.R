@@ -11,6 +11,15 @@ checkTinytex <- function() {
   }
 }
 
+test_that("Arguments are validated", {
+  sourceFile <- system.file("testReportSource.Rmd", package = "rapbase")
+  expect_error(renderRmd("noneExistingFile.Rmd"), "sourceFile")
+  expect_error(renderRmd(sourceFile, outputType = "beamer"), "outputType")
+  expect_error(renderRmd(sourceFile, template = "bogus"), "template")
+  expect_error(renderRmd(sourceFile, template = "NULL"), "template")
+  expect_error(renderRmd(sourceFile, quiet = NA), "quiet")
+})
+
 test_that("Rmd source can be rendered", {
   checkTinytex()
   sourceFile <- system.file("testReportSource.Rmd", package = "rapbase")
@@ -23,6 +32,8 @@ test_that("Rmd source can be rendered", {
     logoFile = logoFile,
     params = list(reglogo = "logo")
   )))
-  expect_error(renderRmd(sourceFile, outputType = "beamer"))
-  expect_error(renderRmd(sourceFile = "noneExistingFile.Rmd"))
+  expect_true(file.exists(renderRmd(sourceFile,
+    outputType = "pdf",
+    template = NULL
+  )))
 })
