@@ -20,8 +20,11 @@
 #' header. Default is \code{NULL} in which case no parameters as defined in the
 #' rmarkdown document will be overridden.
 #' @param template Character string defining which template to use for making
-#' pdf documents. Must be one of "default" or "document" where the first is
-#' assumed if this argument is not set.
+#' pdf documents. Must be one of "default", "document", or \code{NULL} where
+#' the first is assumed if this argument is not set. \code{NULL} means that
+#' the default pandoc template is used.
+#' @param quiet Logical. If \code{TRUE}, suppresses output from the
+#' rendering process. \code{TRUE} is assumed if this argument is not set.
 #'
 #' @return Character string with path to the rendered file or, if
 #' \code{outputType} is set to "html_fragment", a character string providing an
@@ -31,7 +34,7 @@
 #' @export
 
 renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
-                      params = list(), template = "default") {
+                      params = list(), template = "default", quiet = TRUE) {
 
   # When called from do.call (rapbase::runAutoReport()) arguments are provided
   # as class list. To prevent below switch of output formats to fail, make sure
@@ -39,9 +42,15 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
   # https://github.com/Rapporteket/rapbase/pull/86
   outputType <- as.character(outputType)
 
-  stopifnot(file.exists(sourceFile))
-  stopifnot(outputType %in% c("html", "html_fragment", "pdf"))
-  stopifnot(template %in% c("default", "document"))
+  stopifnot(
+    "Can't find 'sourceFile'" = file.exists(sourceFile),
+    '"outputType" must be one of "pdf", "html" or "html_fragment"' =
+      !is.null(outputType) && outputType %in% c("html", "html_fragment", "pdf"),
+    '"template" must be one of "default", "document" or NULL' =
+      is.null(template) || template %in% c("default", "document"),
+    '"quiet" must be TRUE or FALSE' =
+      !is.na(quiet) && length(quiet) == 1 && is.logical(quiet)
+  )
 
   # do work in tempdir and return to origin on exit
   # setwd returns the current directory before the change
@@ -59,12 +68,18 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
     file.copy(logoFile, ".", overwrite = TRUE)
   }
 
+  # Set pandoc arguments for pdf output if a template is specified,
+  # or to use default pandoc template
+  pdoc_args <- if (outputType == "pdf" && !is.null(template)) {
+    paste0("--template=", template, ".latex")
+  }
+
   f <- rmarkdown::render(
     input = basename(sourceFile),
     output_format =
       switch(outputType,
         pdf = bookdown::pdf_document2(
-          pandoc_args = c(paste0("--template=", template, ".latex"))
+          pandoc_args = pdoc_args
         ),
         html = bookdown::html_document2(),
         html_fragment = bookdown::html_fragment2(),
@@ -74,7 +89,7 @@ renderRmd <- function(sourceFile, outputType = "html", logoFile = NULL,
     clean = TRUE,
     params = params,
     envir = new.env(),
-    quiet = TRUE
+    quiet = quiet
   )
 
   if (outputType == "html_fragment") {

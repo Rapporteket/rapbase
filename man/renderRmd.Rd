@@ -9,7 +9,8 @@ renderRmd(
   outputType = "html",
   logoFile = NULL,
   params = list(),
-  template = "default"
+  template = "default",
+  quiet = TRUE
 )
 }
 \arguments{
@@ -30,8 +31,12 @@ header. Default is \code{NULL} in which case no parameters as defined in the
 rmarkdown document will be overridden.}
 
 \item{template}{Character string defining which template to use for making
-pdf documents. Must be one of "default" or "document" where the first is
-assumed if this argument is not set.}
+pdf documents. Must be one of "default", "document", or \code{NULL} where
+the first is assumed if this argument is not set. \code{NULL} means that
+the default pandoc template is used.}
+
+\item{quiet}{Logical. If \code{TRUE}, suppresses output from the
+rendering process. \code{TRUE} is assumed if this argument is not set.}
 }
 \value{
 Character string with path to the rendered file or, if
