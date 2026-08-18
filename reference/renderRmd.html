@@ -58,7 +58,8 @@ when calling <code>renderRmd()</code>.</p>
 <span>  outputType <span class="op">=</span> <span class="st">"html"</span>,</span>
 <span>  logoFile <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  params <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  template <span class="op">=</span> <span class="st">"default"</span></span>
+<span>  template <span class="op">=</span> <span class="st">"default"</span>,</span>
+<span>  quiet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -92,8 +93,14 @@ rmarkdown document will be overridden.</p></dd>
 
 <dt id="arg-template">template<a class="anchor" aria-label="anchor" href="#arg-template"></a></dt>
 <dd><p>Character string defining which template to use for making
-pdf documents. Must be one of "default" or "document" where the first is
-assumed if this argument is not set.</p></dd>
+pdf documents. Must be one of "default", "document", or <code>NULL</code> where
+the first is assumed if this argument is not set. <code>NULL</code> means that
+the default pandoc template is used.</p></dd>
+
+
+<dt id="arg-quiet">quiet<a class="anchor" aria-label="anchor" href="#arg-quiet"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>, suppresses output from the
+rendering process. <code>TRUE</code> is assumed if this argument is not set.</p></dd>
 
 </dl></div>
     <div class="section level2">

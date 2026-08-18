@@ -15,7 +15,8 @@ renderRmd(
   outputType = "html",
   logoFile = NULL,
   params = list(),
-  template = "default"
+  template = "default",
+  quiet = TRUE
 )
 ```
 
@@ -47,8 +48,14 @@ renderRmd(
 - template:
 
   Character string defining which template to use for making pdf
-  documents. Must be one of "default" or "document" where the first is
-  assumed if this argument is not set.
+  documents. Must be one of "default", "document", or `NULL` where the
+  first is assumed if this argument is not set. `NULL` means that the
+  default pandoc template is used.
+
+- quiet:
+
+  Logical. If `TRUE`, suppresses output from the rendering process.
+  `TRUE` is assumed if this argument is not set.
 
 ## Value
 
