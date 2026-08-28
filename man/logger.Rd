@@ -18,7 +18,7 @@ appLogger(
 userLogger(user, msg = "No message provided")
 
 repLogger(
-  session,
+  session = NULL,
   msg = "No message provided",
   .topcall = sys.call(-1),
   .topenv = parent.frame()
