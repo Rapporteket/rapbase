@@ -4,12 +4,7 @@
 \alias{getSessionData}
 \title{Get session data}
 \usage{
-getSessionData(group = NULL)
-}
-\arguments{
-\item{group}{Character string providing the name of the app R package name.
-The term "group" is used to relate to the environmental variable
-SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.}
+getSessionData()
 }
 \value{
 A list of relevant log fields
