@@ -124,9 +124,8 @@ NULL
 appLogger <- function(session, msg = "No message provided",
                       .topcall = sys.call(-1), .topenv = parent.frame()) {
   name <- "appLog"
-  parent_environment <- environmentName(topenv(.topenv))
   content <- c(
-    getSessionData(group = parent_environment),
+    getSessionData(),
     list(message = msg)
   )
   event <- makeLogRecord(content)
@@ -346,19 +345,15 @@ makeLogRecord <- function(content) {
 #'
 #' Internal function providing session data relevant to logging.
 #'
-#' @param group Character string providing the name of the app R package name.
-#'   The term "group" is used to relate to the environmental variable
-#'   SHINYPROXY_USERGROUPS that corresponds to the apps a given user can access.
-#'
 #' @return A list of relevant log fields
 #' @keywords internal
-getSessionData <- function(group = NULL) {
+getSessionData <- function() {
   list(
-    user = getUserName(group),
-    name = getUserFullName(group),
-    group = getUserGroups(group),
-    role = getUserRole(group),
-    resh_id = getUserReshId(group)
+    user = getUserName(),
+    name = getUserFullName(),
+    group = getUserGroups(),
+    role = getUserRole(),
+    resh_id = getUserReshId()
   )
 }
 

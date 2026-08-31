@@ -90,6 +90,31 @@ test_that("log can be sanitized in db", {
   expect_equal(dim(readLog(type = "report"))[1], 0)
 })
 
+withr::with_envvar(
+  new = c(
+    "FALK_EXTENDED_USER_RIGHTS" = "[{\"A\":80,\"R\":\"LC\",\"U\":1},{\"A\":80,\"R\":\"SC\",\"U\":2},{\"A\":81,\"R\":\"LC\",\"U\":2}]",
+    "FALK_APP_ID" = "80",
+    "SHINYPROXY_APPID" = "rapbase"
+  ),
+  code = {
+    test_that("applogger works without errors", {
+      check_db()
+      test_message <- "appLogger test message"
+      # Call the function and check for errors
+      expect_message(
+        appLogger(session = NULL, msg = test_message),
+        test_message
+      )
+      expect_true(test_message %in% readLog(type = "app")$message)
+      expect_message(
+        appLogger(session = FALSE, msg = test_message),
+        test_message
+      )
+    })
+  }
+)
+
+
 test_that("repLogger2 works without errors", {
   check_db()
   # Mock a Shiny server function
