@@ -161,7 +161,7 @@ userLogger <- function(user, msg = "No message provided") {
 #' try(repLogger(list()))
 #' }
 #'
-repLogger <- function(session, msg = "No message provided",
+repLogger <- function(session = NULL, msg = "No message provided",
                       .topcall = sys.call(-1), .topenv = parent.frame()) {
   name <- "reportLog"
   parent_environment <- environmentName(topenv(.topenv))
