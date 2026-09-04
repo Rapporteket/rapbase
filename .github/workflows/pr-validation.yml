@@ -1,0 +1,32 @@
+name: Validate PR
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Validate required checklist
+        env:
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          required=(
+            "[x] Jeg har vurdert sikkerhetskonsekvensene av endringen"
+            "[x] Ingen sensitive data er lagt inn i kode, tester eller logger"
+            "[x] All nedlasting av sensitive data logges"
+            "[x] Nødvendige tester er gjennomført"
+          )
+
+          for item in "${required[@]}"; do
+            echo "$BODY" | grep -F "$item" >/dev/null || {
+              echo "::error::Manglende avkryssing: $item"
+              exit 1
+            }
+          done
