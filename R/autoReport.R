@@ -227,7 +227,7 @@ writeAutoReportData <- function(config) {
   colsExceptId <- setdiff(names(dataframe), "id")
 
   # to avoid crash for "interval" col, wrap col names in "`"
-  q <- function(x) paste0("`", gsub("`", "``", x), "`")
+  q <- function(x) paste0(x)
   query <- sprintf(
     "SELECT DISTINCT %s FROM %s",
     paste(q(colsExceptId), collapse = ", "),
