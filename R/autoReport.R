@@ -227,7 +227,14 @@ writeAutoReportData <- function(config) {
   colsExceptId <- setdiff(names(dataframe), "id")
 
   # to avoid crash for "interval" col, wrap col names in "`"
-  q <- function(x) paste0("`", gsub("`", "``", x), "`")
+  db_type <- Sys.getenv("DB_TYPE", "mysql")
+  if (db_type %in% c("mysql", "sqlite")) {
+    q <- function(x) paste0("`", gsub("`", "``", x), "`")
+  } else if (db_type == "mssql") {
+    q <- function(x) paste0("[", gsub("]", "]]", x), "]")
+  } else {
+    stop("Unsupported DB_TYPE")
+  }
   query <- sprintf(
     "SELECT DISTINCT %s FROM %s",
     paste(q(colsExceptId), collapse = ", "),
