@@ -15,7 +15,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/Rapporteket/rapbase/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/Rapporteket/rapbase/blob/v3.10.1/DESCRIPTION)
 
 Edvardsen A, Thon K, Steindal A, Linberg P (2026). *rapbase: Base
 Functions and Resources for Rapporteket*. R package version 3.10.1,
