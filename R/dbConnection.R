@@ -34,7 +34,8 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
       host = conf$host,
       user = conf$user,
       password = conf$pass,
-      bigint = "integer"
+      bigint = "integer",
+      port = conf$port
     )
     message("Connected to database: ", conf$name)
     # ensure utf8 encoding
