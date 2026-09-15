@@ -226,14 +226,13 @@ writeAutoReportData <- function(config) {
   # Filter out rows already in database
   colsExceptId <- setdiff(names(dataframe), "id")
 
-  # to avoid crash for "interval" col, wrap col names in "`"
-  q <- function(x) paste0("`", gsub("`", "``", x), "`")
+  con <- rapOpenDbConnection("autoreport")$con
+  # wrap in dbQuoteIdentifier to avoid crash for "interval" col name
   query <- sprintf(
     "SELECT DISTINCT %s FROM %s",
-    paste(q(colsExceptId), collapse = ", "),
-    q("autoreport")
+    paste(DBI::dbQuoteIdentifier(con, colsExceptId), collapse = ", "),
+    "autoreport"
   )
-  con <- rapOpenDbConnection("autoreport")$con
   distinctData <- DBI::dbGetQuery(con, query)
 
   dataframe <- dataframe |>
