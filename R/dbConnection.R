@@ -49,6 +49,9 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
       driver = Sys.getenv("MYSQL_DRIVER", "FreeTDS"),
       database = conf$name,
       server = conf$host,
+      UID = conf$user,
+      PWD = conf$pass,
+      Port = conf$port,
       TrustedConnection = "Yes",
       Timeout = 10
     )
