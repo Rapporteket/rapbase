@@ -78,7 +78,7 @@ After cloning *rapbase* the development environment can be startet from
 a terminal at the local work copy root directory by:
 
 ``` bash
-docker-compose up
+docker compose up
 ```
 
 Navigate a browser to localhost on port 8787, log in to the [RStudio
