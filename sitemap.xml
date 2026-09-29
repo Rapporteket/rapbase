@@ -9,7 +9,14 @@
 <url><loc>/reference/appLog.html</loc></url>
 <url><loc>/reference/appNavbarUserWidget.html</loc></url>
 <url><loc>/reference/appendLog.html</loc></url>
-<url><loc>/reference/autoReport.html</loc></url>
+<url><loc>/reference/autoReportFormatInput.html</loc></url>
+<url><loc>/reference/autoReportFormatServer.html</loc></url>
+<url><loc>/reference/autoReportInput.html</loc></url>
+<url><loc>/reference/autoReportOrgInput.html</loc></url>
+<url><loc>/reference/autoReportOrgServer.html</loc></url>
+<url><loc>/reference/autoReportServer.html</loc></url>
+<url><loc>/reference/autoReportServer2.html</loc></url>
+<url><loc>/reference/autoReportUI.html</loc></url>
 <url><loc>/reference/createAutoReport.html</loc></url>
 <url><loc>/reference/createLogDbTabs.html</loc></url>
 <url><loc>/reference/deleteAutoReport.html</loc></url>
@@ -40,6 +47,7 @@
 <url><loc>/reference/memoryTitle.html</loc></url>
 <url><loc>/reference/navbarWidget.html</loc></url>
 <url><loc>/reference/noOptOutOk.html</loc></url>
+<url><loc>/reference/orgList2df.html</loc></url>
 <url><loc>/reference/pronoun.html</loc></url>
 <url><loc>/reference/rapCloseDbConnection.html</loc></url>
 <url><loc>/reference/rapOpenDbConnection.html</loc></url>

@@ -191,15 +191,21 @@ Handle automated reports
 - [`findNextRunDate()`](findNextRunDate.md) : Find next run date for
   automated reports
 - [`filterAutoRep()`](filterAutoRep.md) : Filter auto report data
-- [`autoReportUI()`](autoReport.md)
-  [`autoReportOrgInput()`](autoReport.md)
-  [`autoReportOrgServer()`](autoReport.md)
-  [`autoReportFormatInput()`](autoReport.md)
-  [`autoReportFormatServer()`](autoReport.md)
-  [`autoReportInput()`](autoReport.md)
-  [`autoReportServer()`](autoReport.md)
-  [`autoReportServer2()`](autoReport.md) : Shiny modules and helper
-  functions for registry auto reports
+- [`autoReportUI()`](autoReportUI.md) : Auto Report Main UI
+- [`autoReportOrgInput()`](autoReportOrgInput.md) : Organization
+  Selection UI
+- [`autoReportOrgServer()`](autoReportOrgServer.md) : Organization
+  Selection Server
+- [`autoReportFormatInput()`](autoReportFormatInput.md) : Report Format
+  Selection UI
+- [`autoReportFormatServer()`](autoReportFormatServer.md) : Report
+  Format Selection Server
+- [`autoReportInput()`](autoReportInput.md) : Auto Report Configuration
+  UI
+- [`autoReportServer()`](autoReportServer.md) : Auto Report Server
+  Module
+- [`autoReportServer2()`](autoReportServer2.md) : Alias for
+  autoReportServer
 - [`.testAutoReport()`](dot-testAutoReport.md) : Simple test of
   automated report
 - [`.getFun()`](dot-getFun.md) : Provide explicit reference to function
