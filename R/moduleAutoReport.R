@@ -1,139 +1,12 @@
-#' Shiny modules and helper functions for registry auto reports
+#' Auto Report Main UI
 #'
-#' These shiny modules may be used to set up auto reporting from registries at
-#' Rapporteket.
+#' User interface module for displaying existing auto reports and related
+#' information.
 #'
-#' The \emph{reports} argument must be a list where each entry
-#' represents one report and its name will be used in the auto report user
-#' interface for selecting reports, \emph{e.g.}
-#' \code{reports = list(MagicReport = ...)} will produce the entry "MagicReport"
-#' in the GUI list of reports to select from. The value of each entry must be
-#' another list with the following names and values:
-#' \describe{
-#'   \item{synopsis}{character string describing the report}
-#'   \item{fun}{report function base name (without"()")}
-#'   \item{paramNames}{character vector naming all arguments of \emph{fun}}
-#'   \item{paramValues}{vector with values corresponding to \emph{paramNames}}
-#' }
-#' These named values will be used to run reports none-interactively on a given
-#' schedule and must therefore represent existing and exported functions from
-#' the registry R package. For subscriptions the \emph{reports} list can be used
-#' as is, more specifically that the values provided in \emph{paramValues} can
-#' go unchanged. It is likely that parameter values must be set dynamically at
-#' runtime in which case \emph{paramValues} must be a reactive part of the
-#' application. See Examples on how function arguments may be used as reactives
-#' in an application.
+#' @param id Character string providing the Shiny module id.
 #'
-#' @param id Character string providing the shiny module id.
-#' @param registryName Character string with the registry name key. Must
-#'   correspond to the registry R package name.
-#' @param type Character string defining the type of auto reports. Must be one
-#'   of \code{c("subscription", "dispatchment", "bulletin")}
-#' @param reports List of a given structure that provides meta data for the
-#'   reports that are made available as automated reports. See Details for
-#'   further description.
-#' @param org Shiny reactive or NULL (default) defining the organization (id)
-#'   of the data source used for dispatchments and bulletins (in which case it
-#'   cannot be set to NULL) and its value will be used to populate the
-#'   \emph{organization} field in auto report data (autoReport.yml) for these
-#'   auto report types. On the other hand, since subscriptions are personal
-#'   (per user) the only relevant organization id will implicit be that of the
-#'   user and in this case any value of \code{org} will be disregarded.
-#' @param paramNames Shiny reactive value as a vector of parameter names of
-#'   which values are to be set interactively at application run time. Each
-#'   element of this vector must match exactly those of \code{paramValues}.
-#'   Default value is \code{shiny::reactiveVal("")}.
-#' @param paramValues Shiny reactive value as a vector of those parameter values
-#'   to be set interactively, \emph{i.e.} as per user input in the application.
-#'   Default value is set to \code{shiny::reactiveVal("")} in which case
-#'   parameter values defined in \code{reports} will be used as is. In other
-#'   words, explicit use of \code{paramValues} will only be needed if parameter
-#'   values must be changed during application run time. If so, each element of
-#'   this vector must correspond exactly to those of \code{paramNames}.
-#' @param orgs Named list of organizations (names) and ids (values). When set to
-#'   \code{NULL} (default) the ids found in auto report data will be used in the
-#'   table listing existing auto reports.
-#' @param eligible Logical defining if the module should be allowed to work at
-#'   full capacity. This might be useful when access to module products should
-#'   be restricted. Default is TRUE, \emph{i.e.} no restrictions.
-#' @param freq Character string defining default frequency set in the auto
-#'   report GUI. Must be one of
-#'   \code{c("day", "week", "month", "quarter", "year")}. Default value is
-#'   "month".
-#' @param user List of shiny reactive values providing user metadata and
-#'   privileges corresponding to the return value of
-#'   \code{\link{navbarWidgetServer2}}.
-#' @param runAutoReportButton Logical defining if runAutoReport button should
-#'   be made available in the GUI. Default is FALSE. If TRUE, a button will be
-#'   made available to trigger running all auto reports for a given date. This
-#'   is mainly useful for testing purposes.
+#' @return A Shiny UI object.
 #'
-#' @return In general, shiny objects. In particular, \code{autoreportOrgServer}
-#' returns a list with names "name" and "value" with corresponding reactive
-#' values for the selected organization name and id. This may be used when
-#' parameter values of auto report functions needs to be altered at application
-#' run time.
-#' @name autoReport
-#' @examples
-#' ## make a list for report metadata
-#' reports <- list(
-#'   FirstReport = list(
-#'     synopsis = "First example report",
-#'     fun = "fun1",
-#'     paramNames = c("organization", "topic", "outputFormat"),
-#'     paramValues = c(111111, "work", "html")
-#'   ),
-#'   SecondReport = list(
-#'     synopsis = "Second example report",
-#'     fun = "fun2",
-#'     paramNames = c("organization", "topic", "outputFormat"),
-#'     paramValues = c(111111, "leisure", "pdf")
-#'   )
-#' )
-#'
-#' ## make a list of organization names and numbers
-#' orgs <- list(
-#'   OrgOne = 111111,
-#'   OrgTwo = 222222
-#' )
-#'
-#' ## client user interface function
-#' ui <- shiny::fluidPage(
-#'   shiny::sidebarLayout(
-#'     shiny::sidebarPanel(
-#'       autoReportFormatInput("test"),
-#'       autoReportOrgInput("test"),
-#'       autoReportInput("test")
-#'     ),
-#'     shiny::mainPanel(
-#'       autoReportUI("test")
-#'     )
-#'   )
-#' )
-#'
-#' ## server function
-#' server <- function(input, output, session) {
-#'   org <- autoReportOrgServer("test", orgs)
-#'   format <- autoReportFormatServer("test")
-#'
-#'   # set reactive parameters overriding those in the reports list
-#'   paramNames <- shiny::reactive(c("organization", "outputFormat"))
-#'   paramValues <- shiny::reactive(c(org$value(), format()))
-#'
-#'   autoReportServer2(
-#'     id = "test", registryName = "rapbase", type = "dispatchment",
-#'     org = org$value, paramNames = paramNames, paramValues = paramValues,
-#'     reports = reports, orgs = orgs, eligible = TRUE, freq = "month", user
-#'   )
-#' }
-#'
-#' # run the shiny app in an interactive environment
-#' if (interactive()) {
-#'   shiny::shinyApp(ui, server)
-#' }
-NULL
-
-#' @rdname autoReport
 #' @export
 autoReportUI <- function(id) {
   shiny::tagList(
@@ -141,7 +14,15 @@ autoReportUI <- function(id) {
   )
 }
 
-#' @rdname autoReport
+#' Organization Selection UI
+#'
+#' User interface module for selecting an organization used as data source
+#' for dispatchments and bulletins.
+#'
+#' @param id Character string providing the Shiny module id.
+#'
+#' @return A Shiny UI object.
+#'
 #' @export
 autoReportOrgInput <- function(id) {
   shiny::tagList(
@@ -149,7 +30,19 @@ autoReportOrgInput <- function(id) {
   )
 }
 
-#' @rdname autoReport
+#' Organization Selection Server
+#'
+#' Server module for organization selection.
+#'
+#' @param id Character string providing the Shiny module id.
+#' @param orgs Named list containing organization names and ids.
+#'
+#' @return A list containing:
+#' \describe{
+#' \item{name}{Reactive organization name.}
+#' \item{value}{Reactive organization id.}
+#' }
+#'
 #' @export
 autoReportOrgServer <- function(id, orgs) {
   shiny::moduleServer(id, function(input, output, session) {
@@ -177,7 +70,14 @@ autoReportOrgServer <- function(id, orgs) {
   })
 }
 
-#' @rdname autoReport
+#' Report Format Selection UI
+#'
+#' User interface module for selecting report output format.
+#'
+#' @param id Character string providing the Shiny module id.
+#'
+#' @return A Shiny UI object.
+#'
 #' @export
 autoReportFormatInput <- function(id) {
   shiny::tagList(
@@ -185,7 +85,14 @@ autoReportFormatInput <- function(id) {
   )
 }
 
-#' @rdname autoReport
+#' Report Format Selection Server
+#'
+#' Server module for selecting report output format.
+#'
+#' @param id Character string providing the Shiny module id.
+#'
+#' @return Reactive value containing the selected report format.
+#'
 #' @export
 autoReportFormatServer <- function(id) {
   shiny::moduleServer(id, function(input, output, session) {
@@ -204,7 +111,14 @@ autoReportFormatServer <- function(id) {
   })
 }
 
-#' @rdname autoReport
+#' Auto Report Configuration UI
+#'
+#' User interface module for configuring and creating auto reports.
+#'
+#' @param id Character string providing the Shiny module id.
+#'
+#' @return A Shiny UI object.
+#'
 #' @export
 autoReportInput <- function(id) {
   shiny::tagList(
@@ -222,7 +136,37 @@ autoReportInput <- function(id) {
   )
 }
 
-#' @rdname autoReport
+#' Auto Report Server Module
+#'
+#' Creates and manages automated report subscriptions, dispatchments,
+#' and bulletins.
+#'
+#' @details
+#' The `reports` argument must be a list where each entry represents
+#' one report configuration:
+#'
+#' \describe{
+#'   \item{synopsis}{Description of the report.}
+#'   \item{fun}{Exported report function name.}
+#'   \item{paramNames}{Function argument names.}
+#'   \item{paramValues}{Corresponding argument values.}
+#' }
+#'
+#' @param id Character string providing the shiny module id.
+#' @param registryName Character string with registry package name.
+#' @param type One of `"subscription"`, `"dispatchment"` or `"bulletin"`.
+#' @param org Reactive organization id.
+#' @param paramNames Reactive vector of parameter names.
+#' @param paramValues Reactive vector of parameter values.
+#' @param reports Report metadata list.
+#' @param orgs Named list of organizations.
+#' @param eligible Reactive logical indicating module availability.
+#' @param freq Default report frequency.
+#' @param user User metadata reactives.
+#' @param runAutoReportButton Logical indicating if testing button should be shown.
+#'
+#' @return A Shiny server module.
+#'
 #' @export
 autoReportServer <- function(
   id,
@@ -693,13 +637,28 @@ autoReportServer <- function(
   })
 }
 
-#' @rdname autoReport
-#' @param ... Arguments passed to autoReportServer function
+#' Alias for autoReportServer
+#'
+#' Backward compatible wrapper around [autoReportServer()].
+#'
+#' @param ... Arguments passed directly to [autoReportServer()].
+#'
+#' @return Same result as [autoReportServer()].
+#'
 #' @export
 autoReportServer2 <- function(...) {
   autoReportServer(...)
 }
 
+#' Convert Organization List to Data Frame
+#'
+#' Internal utility for converting a named organization list into
+#' a data frame.
+#'
+#' @param orgs Named list of organizations.
+#'
+#' @return Data frame with columns `name` and `id`.
+#'
 #' @keywords internal
 orgList2df <- function(orgs) {
   data.frame(
