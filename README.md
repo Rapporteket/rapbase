@@ -46,7 +46,7 @@ If you want to make changes to this project please follow the [Contributing guid
 
 For kick-starting, a development environment set-up is included and may be applied if [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) is at hand. After cloning *rapbase* the development environment can be startet from a terminal at the local work copy root directory by:
 ```bash
-docker-compose up
+docker compose up
 ```
 Navigate a browser to localhost on port 8787, log in to the [RStudio IDE](https://posit.co/products/open-source/rstudio/) and initiate the project by "clicking" the file *rapbase.Rproj* inside the *rapbase* directory. For development all suggested imports for the *rapbase* R package will be needed. To make sure these are installed use the R Console and run
 ```r
