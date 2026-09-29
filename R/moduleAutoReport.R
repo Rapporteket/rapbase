@@ -223,7 +223,7 @@ autoReportInput <- function(id) {
 #' if (interactive()) {
 #'   shiny::shinyApp(ui, server)
 #' }
-#' 
+#'
 #' @return A Shiny server module.
 #'
 #' @export
