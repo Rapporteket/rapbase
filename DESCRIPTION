@@ -54,8 +54,6 @@ Imports:
     sship (>= 0.9.0),
     utils,
     yaml
-Remotes:
-    smartinsightsfromdata/rpivotTable
 URL: https://github.com/Rapporteket/rapbase
 BugReports: https://github.com/Rapporteket/rapbase/issues
 Suggests:
