@@ -42,7 +42,8 @@ autoReportServer(
 
 \item{user}{User metadata reactives.}
 
-\item{runAutoReportButton}{Logical indicating if testing button should be shown.}
+\item{runAutoReportButton}{Logical indicating if testing button should be
+shown.}
 }
 \value{
 A Shiny server module.

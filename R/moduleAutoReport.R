@@ -163,7 +163,8 @@ autoReportInput <- function(id) {
 #' @param eligible Reactive logical indicating module availability.
 #' @param freq Default report frequency.
 #' @param user User metadata reactives.
-#' @param runAutoReportButton Logical indicating if testing button should be shown.
+#' @param runAutoReportButton Logical indicating if testing button should be
+#' shown.
 #'
 #' @return A Shiny server module.
 #'
