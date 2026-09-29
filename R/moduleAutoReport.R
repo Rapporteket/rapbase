@@ -215,7 +215,7 @@ autoReportInput <- function(id) {
 #'   autoReportServer(
 #'     id = "test", registryName = "rapbase", type = "dispatchment",
 #'     org = org$value, paramNames = paramNames, paramValues = paramValues,
-#'     reports = reports, orgs = orgs, eligible = TRUE, freq = "month", user
+#'     reports = reports, orgs = orgs, eligible = shiny::reactiveVal(TRUE), freq = "month", user
 #'   )
 #' }
 #'
