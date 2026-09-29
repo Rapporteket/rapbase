@@ -110,9 +110,17 @@ server <- function(input, output, session) {
   paramValues <- shiny::reactive(c(org$value(), format()))
 
   autoReportServer(
-    id = "test", registryName = "rapbase", type = "dispatchment",
-    org = org$value, paramNames = paramNames, paramValues = paramValues,
-    reports = reports, orgs = orgs, eligible = TRUE, freq = "month", user
+    id = "test",
+    registryName = "rapbase",
+    type = "dispatchment",
+    org = org$value,
+    paramNames = paramNames,
+    paramValues = paramValues,
+    reports = reports,
+    orgs = orgs,
+    eligible = shiny::reactiveVal(TRUE),
+    freq = "month",
+    user = user
   )
 }
 
