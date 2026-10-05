@@ -89,12 +89,10 @@
       {\vspace{2em}}%
       \includegraphics[width=\hsize]{logo.png}%
       {\\ \href{https://rapporteket.github.io/rapporteket}{Rapporteket} er en
-      analysetjenste som tilbyr interaktiv undersøkelse
+      analysetjeneste som tilbyr interaktiv undersøkelse
       av rådata, rutinemessig utsending av rapporter og visualisering av
       resultater for medisinske kvalitetsregistre. Tjenesten utvikles og
-      vedlikeholdes av \href{https://www.skde.no}{SKDE} og arbeidet finansieres
-      av \href{https://www.regjeringen.no/no/dep/hod/id421}{Helse- og
-      omsorgsdepartementet}.}%
+      vedlikeholdes av \href{https://www.skde.no}{SKDE}.}%
     \end{textblock*}
 
     {\raggedright\sffamily\bfseries\fontsize{20}{25}\selectfont $title$\par}%
