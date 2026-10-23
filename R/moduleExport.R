@@ -407,8 +407,7 @@ exportGuideServer <- function(id, dbName) {
       renderRmd(
         sourceFile = system.file("exportGuide.Rmd", package = "rapbase"),
         outputType = "html_fragment",
-        # sqlite is TRUE to avoid check about missing env vars
-        params = list(dbName = getDbConfig(dbName, sqlite = TRUE)$name)
+        params = list(dbName = getDbName(dbName))
       )
     })
   })
@@ -469,11 +468,11 @@ exportDb <- function(dbName, dropTabs = NULL,
     }
   }
 
-  conf <- getDbConfig(dbName)
-  f <- tempfile(pattern = conf$name, fileext = ".sql")
+  db <- getDbName(dbName)
+  f <- tempfile(pattern = db, fileext = ".sql")
 
   ignoreTabs <- if (!is.null(dropTabs) && length(dropTabs) > 0) {
-    paste(sprintf("--ignore-table=%s.%s", conf$name, dropTabs), collapse = " ")
+    paste(sprintf("--ignore-table=%s.%s", db, dropTabs), collapse = " ")
   } else {
     ""
   }
@@ -489,7 +488,11 @@ exportDb <- function(dbName, dropTabs = NULL,
 
   cmd <- sprintf(
     "%s -B -u %s -p'%s' -h %s %s %s > %s",
-    cmd_base, conf$user, conf$pass, conf$host, ignoreTabs, conf$name, f
+    cmd_base,
+    Sys.getenv("MYSQL_USER"),
+    Sys.getenv("MYSQL_PASSWORD"),
+    Sys.getenv("MYSQL_HOST"),
+    ignoreTabs, db, f
   )
   Sys.setenv(MARIADB_TLS_DISABLE_PEER_VERIFICATION = 1)
   invisible(system(cmd))
@@ -504,7 +507,7 @@ exportDb <- function(dbName, dropTabs = NULL,
   repLogger(
     session,
     msg = paste(
-      conf$name,
+      db,
       "Db dump created with tables",
       paste(tableNames, collapse = ", "),
       "."
@@ -524,7 +527,7 @@ queryToFile <- function(dbName,
                         compress = FALSE,
                         session) {
 
-  conf <- getDbConfig(dbName)
+  db <- getDbName(dbName)
 
   ext <- switch(
     format,
@@ -557,7 +560,7 @@ queryToFile <- function(dbName,
 
   repLogger(
     session,
-    msg = paste(conf$name, "Db dump created from table", tableName, ".")
+    msg = paste(db, "Db dump created from table", tableName, ".")
   )
 
   f
