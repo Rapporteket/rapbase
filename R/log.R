@@ -351,7 +351,7 @@ getSessionData <- function() {
   list(
     user = getUserName(),
     name = getUserFullName(),
-    group = getUserGroups(),
+    group = getAppId(),
     role = getUserRole(),
     resh_id = getUserReshId()
   )

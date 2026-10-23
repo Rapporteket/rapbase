@@ -73,7 +73,14 @@ reference:
     - makeRunDayOfYearSequence
     - findNextRunDate
     - filterAutoRep
-    - autoReport
+    - autoReportUI
+    - autoReportOrgInput
+    - autoReportOrgServer
+    - autoReportFormatInput
+    - autoReportFormatServer
+    - autoReportInput
+    - autoReportServer
+    - autoReportServer2
     - .testAutoReport
     - .getFun
 
