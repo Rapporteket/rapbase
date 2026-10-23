@@ -51,7 +51,7 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
       server = conf$host,
       UID = conf$user,
       PWD = conf$pass,
-      Port = conf$port,
+      Port = as.numeric(Sys.getenv("MYSQL_PORT", "1433")),
       TrustedConnection = "Yes",
       Timeout = 10
     )
