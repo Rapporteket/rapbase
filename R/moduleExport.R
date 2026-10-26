@@ -468,6 +468,15 @@ exportDb <- function(dbName, dropTabs = NULL,
     }
   }
 
+  if (!all(
+    c("MYSQL_HOST", "MYSQL_USER", "MYSQL_PASSWORD") %in% names(Sys.getenv())
+  )) {
+    stop(paste0(
+      "Could not export database because the environment ",
+      "variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD ",
+      "are not defined. Please check configuration."
+    ))
+  }
   db <- getDbName(dbName)
   f <- tempfile(pattern = db, fileext = ".sql")
 
