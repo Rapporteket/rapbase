@@ -50,16 +50,22 @@ rapOpenDbConnection <- function(dbName, dbType = "mysql") {
     # ensure utf8 encoding
     invisible(DBI::dbExecute(con, "SET NAMES utf8;"))
   } else if (dbType == "mssql") {
-    db <- getDbName(dbName)
+    if (!("MYSQL_HOST" %in% names(Sys.getenv()))) {
+      stop(paste(
+        "Environment variable MYSQL_HOST is not defined.",
+        "Please check configuration."
+      ))
+    }
     rlang::check_installed("odbc")
     drv <- odbc::odbc()
+    db <- getDbName(dbName)
     con <- DBI::dbConnect(
       drv,
       driver = Sys.getenv("MYSQL_DRIVER", "FreeTDS"),
       database = db,
       server = Sys.getenv("MYSQL_HOST"),
-      UID = Sys.getenv("MYSQL_USER"),
-      PWD = Sys.getenv("MYSQL_PASSWORD"),
+      UID = Sys.getenv("MYSQL_USER", NULL),
+      PWD = Sys.getenv("MYSQL_PASSWORD", NULL),
       Port = as.numeric(Sys.getenv("MYSQL_PORT", "1433")),
       TrustedConnection = "Yes",
       Timeout = 10
