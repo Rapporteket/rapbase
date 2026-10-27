@@ -201,6 +201,7 @@ test_that("rapOpenDbConnection stop when env var MYSQL_HOST is missing for mssql
 })
 
 test_that("rapOpenDbConnection does not stop when env var MYSQL_USER is missing for mssql", {
+  check_db()
   withr::local_envvar(MYSQL_USER = NA)
   expect_error(
     rapOpenDbConnection(regName, dbType = "mssql"),
