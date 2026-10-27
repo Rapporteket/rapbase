@@ -459,15 +459,6 @@ selectListPubkey <- function(pubkey) {
 #' @export
 exportDb <- function(dbName, dropTabs = NULL,
                      tableNames = "", compress = FALSE, session) {
-  if (!any(Sys.which(c("mariadb-dump", "mysqldump")) != "")) {
-    stop("Neither mariadb-dump nor mysqldump was found in PATH.")
-  }
-  if (compress) {
-    if (Sys.which("gzip") == "") {
-      stop("gzip was not found in PATH.")
-    }
-  }
-
   if (!all(
     c("MYSQL_HOST", "MYSQL_USER", "MYSQL_PASSWORD") %in% names(Sys.getenv())
   )) {
@@ -477,6 +468,15 @@ exportDb <- function(dbName, dropTabs = NULL,
       "are not defined. Please check configuration."
     ))
   }
+  if (!any(Sys.which(c("mariadb-dump", "mysqldump")) != "")) {
+    stop("Neither mariadb-dump nor mysqldump was found in PATH.")
+  }
+  if (compress) {
+    if (Sys.which("gzip") == "") {
+      stop("gzip was not found in PATH.")
+    }
+  }
+
   db <- getDbName(dbName)
   f <- tempfile(pattern = db, fileext = ".sql")
 
