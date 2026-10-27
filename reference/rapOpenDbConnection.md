@@ -21,8 +21,9 @@ rapOpenDbConnection(dbName, dbType = "mysql")
 
 - dbType:
 
-  String providing type of data source, one of "mysql" and "sqlite".
-  Defaults to "mysql". "mssql" is not supported anymore.
+  String providing type of data source, one of "mysql", "sqlite" and
+  "mssql". Defaults to "mysql". If the environment variable DB_TYPE is
+  set, it will override this argument.
 
 ## Value
 

@@ -95,32 +95,24 @@ data <- mtcars
 
 ## Save data for staging
 try(saveStagingData(registryName, dataName, data))
-#> Error in getDbConfig(key) : 
-#>   Could not connect to database because the enviroment
-#>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD
-#>        are not defined. Please check configuration.
+#> Error in rapOpenDbConnection(dbName = key) : 
+#>   Could not connect to database because the enviroment variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD are not defined. Please check configuration.
 
 ## List data currently in staging
 try(listStagingData(registryName))
-#> Error in getDbConfig(key) : 
-#>   Could not connect to database because the enviroment
-#>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD
-#>        are not defined. Please check configuration.
+#> Error in rapOpenDbConnection(dbName = key) : 
+#>   Could not connect to database because the enviroment variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD are not defined. Please check configuration.
 
 ## Retrieve data set from staging and compare to outset
 try(stagedData <- loadStagingData(registryName, dataName))
-#> Error in getDbConfig(key) : 
-#>   Could not connect to database because the enviroment
-#>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD
-#>        are not defined. Please check configuration.
+#> Error in rapOpenDbConnection(dbName = key) : 
+#>   Could not connect to database because the enviroment variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD are not defined. Please check configuration.
 try(identical(data, stagedData))
 #> Error in eval(expr, envir) : object 'stagedData' not found
 
 ## Get modification time for staging file(s)
 try(mtimeStagingData(registryName))
-#> Error in getDbConfig(key) : 
-#>   Could not connect to database because the enviroment
-#>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD
-#>        are not defined. Please check configuration.
+#> Error in rapOpenDbConnection(dbName = key) : 
+#>   Could not connect to database because the enviroment variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD are not defined. Please check configuration.
 # }
 ```

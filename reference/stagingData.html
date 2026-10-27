@@ -136,33 +136,25 @@ that should be used with great care.</p>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Save data for staging</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">saveStagingData</span><span class="op">(</span><span class="va">registryName</span>, <span class="va">dataName</span>, <span class="va">data</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in getDbConfig(key) : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        are not defined. Please check configuration.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in rapOpenDbConnection(dbName = key) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD are not defined. Please check configuration.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## List data currently in staging</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">listStagingData</span><span class="op">(</span><span class="va">registryName</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in getDbConfig(key) : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        are not defined. Please check configuration.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in rapOpenDbConnection(dbName = key) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD are not defined. Please check configuration.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Retrieve data set from staging and compare to outset</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="va">stagedData</span> <span class="op">&lt;-</span> <span class="fu">loadStagingData</span><span class="op">(</span><span class="va">registryName</span>, <span class="va">dataName</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in getDbConfig(key) : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        are not defined. Please check configuration.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in rapOpenDbConnection(dbName = key) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD are not defined. Please check configuration.</span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/identical.html" class="external-link">identical</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">stagedData</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Error in eval(expr, envir) : object 'stagedData' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## Get modification time for staging file(s)</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">mtimeStagingData</span><span class="op">(</span><span class="va">registryName</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Error in getDbConfig(key) : </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        are not defined. Please check configuration.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in rapOpenDbConnection(dbName = key) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Could not connect to database because the enviroment variables MYSQL_HOST, MYSQL_USER and/or MYSQL_PASSWORD are not defined. Please check configuration.</span>
 <span class="r-in"><span><span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
