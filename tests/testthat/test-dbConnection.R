@@ -162,8 +162,49 @@ test_that(paste(
   "The use of unknown dbType return an appropriate",
   "message"
 ), {
-  expect_error(loadRegData(regName, query, dbType = "qwertysql"),
-               regexp = "Unsupported dbType qwertysql. Use 'mysql', 'sqlite' or 'mssql'."
+  expect_error(
+    loadRegData(regName, query, dbType = "qwertysql"),
+    regexp = "Unsupported dbType qwertysql. Use 'mysql', 'sqlite' or 'mssql'."
+  )
+})
+
+test_that("rapOpenDbConnection stop when env var MYSQL_HOST is missing", {
+  withr::local_envvar(MYSQL_HOST = NA)
+  expect_error(
+    rapOpenDbConnection(regName),
+    regexp = "Could not connect to database because the enviroment variables"
+  )
+})
+
+test_that("rapOpenDbConnection stop when env var MYSQL_USER is missing", {
+  withr::local_envvar(MYSQL_USER = NA)
+  expect_error(
+    rapOpenDbConnection(regName),
+    regexp = "Could not connect to database because the enviroment variables"
+      )
+})
+
+test_that("rapOpenDbConnection stop when env var MYSQL_PASSWORD is missing", {
+  withr::local_envvar(MYSQL_PASSWORD = NA)
+  expect_error(
+    rapOpenDbConnection(regName),
+    regexp = "Could not connect to database because the enviroment variables"
+      )
+})
+
+test_that("rapOpenDbConnection stop when env var MYSQL_HOST is missing for mssql", {
+  withr::local_envvar(MYSQL_HOST = NA)
+  expect_error(
+    rapOpenDbConnection(regName, dbType = "mssql"),
+    regexp = "Environment variable MYSQL_HOST is not defined. Please check configuration."
+  )
+})
+
+test_that("rapOpenDbConnection does not stop when env var MYSQL_USER is missing for mssql", {
+  withr::local_envvar(MYSQL_USER = NA)
+  expect_error(
+    rapOpenDbConnection(regName, dbType = "mssql"),
+    regexp = "ODBC failed with error"
   )
 })
 
