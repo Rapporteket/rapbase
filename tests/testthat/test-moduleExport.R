@@ -53,7 +53,7 @@ withr::with_envvar(
       f <- exportDb(dbName = "rapbase", compress = TRUE, session = session)
       expect_true(file.exists(f))
     })
-    
+
     test_that("query in queryToRdsFile returns a file name", {
       check_db()
       f <- queryToFile(dbName = "rapbase", query = "SELECT * FROM testTable;", session = session)
@@ -154,6 +154,33 @@ withr::with_envvar(
     })
   }
 )
+
+test_that("exportDb fails when MYSQL_HOST is missing", {
+  check_mysqldump()
+  withr::local_envvar(MYSQL_HOST = NA)
+  expect_error(
+    exportDb(dbName = "rapbase", compress = TRUE, session = session),
+    regexp = "Could not export database because the environment variables"
+  )
+})
+
+test_that("exportDb fails when MYSQL_USER is missing", {
+  check_mysqldump()
+  withr::local_envvar(MYSQL_USER = NA)
+  expect_error(
+    exportDb(dbName = "rapbase", compress = TRUE, session = session),
+    regexp = "Could not export database because the environment variables"
+  )
+})
+
+test_that("exportDb fails when MYSQL_PASSWORD is missing", {
+  check_mysqldump()
+  withr::local_envvar(MYSQL_PASSWORD = NA)
+  expect_error(
+    exportDb(dbName = "rapbase", compress = TRUE, session = session),
+    regexp = "Could not export database because the environment variables"
+  )
+})
 
 
 test_that("guide test app returns an app object", {

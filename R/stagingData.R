@@ -246,10 +246,10 @@ unwrapStagingData <- function(data) {
 #' @rdname stagingDataHelper
 dbStagingPrereq <- function(key) {
 
-  conf <- getDbConfig(key)
+  dbName <- getDbName(key)
 
   con <- dbStagingConnection(key, init = TRUE)
-  query <- paste0("SHOW DATABASES LIKE '", conf$name, "';")
+  query <- paste0("SHOW DATABASES LIKE '", dbName, "';")
   df <- DBI::dbGetQuery(con, query)
   # close and remove db connection
   con <- dbStagingConnection(con = con)
@@ -257,7 +257,7 @@ dbStagingPrereq <- function(key) {
     msg <- "You're good! Database for staging data already exists."
   } else {
     stop(paste0(
-      "Database for staging (", conf$name, ") does not exist."
+      "Database for staging (", dbName, ") does not exist."
     ))
   }
 

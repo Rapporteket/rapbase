@@ -162,41 +162,56 @@ test_that(paste(
   "The use of unknown dbType return an appropriate",
   "message"
 ), {
-  expect_error(loadRegData(regName, query, dbType = "qwertysql"),
-               regexp = "Unsupported dbType qwertysql. Use 'mysql' or 'sqlite'."
+  expect_error(
+    loadRegData(regName, query, dbType = "qwertysql"),
+    regexp = "Unsupported dbType qwertysql. Use 'mysql', 'sqlite' or 'mssql'."
   )
 })
 
-withr::with_envvar(
-  new = c(
-    "MYSQL_HOST" = NA,
-    "MYSQL_USER" = NA,
-    "MYSQL_PASSWORD" = NA
-  ),
-  code = {
-    test_that("getDbConfig is working when not db", {
-      expect_error(
-        getDbConfig(),
-        regexp = "Could not connect to database because the enviroment"
+test_that("rapOpenDbConnection stop when env var MYSQL_HOST is missing", {
+  withr::local_envvar(MYSQL_HOST = NA)
+  expect_error(
+    rapOpenDbConnection(regName),
+    regexp = "Could not connect to database because the enviroment variables"
+  )
+})
+
+test_that("rapOpenDbConnection stop when env var MYSQL_USER is missing", {
+  withr::local_envvar(MYSQL_USER = NA)
+  expect_error(
+    rapOpenDbConnection(regName),
+    regexp = "Could not connect to database because the enviroment variables"
       )
-      expect_error(
-        getDbConfig(dbName = "dev"),
-        regexp = "Could not connect to database because the enviroment"
+})
+
+test_that("rapOpenDbConnection stop when env var MYSQL_PASSWORD is missing", {
+  withr::local_envvar(MYSQL_PASSWORD = NA)
+  expect_error(
+    rapOpenDbConnection(regName),
+    regexp = "Could not connect to database because the enviroment variables"
       )
-      expect_error(
-        getDbConfig(dbName = "rapbase")$name,
-        regexp = "Could not connect to database because the enviroment"
-      )
-    })
-  }
-)
+})
+
+test_that("rapOpenDbConnection stop when env var MYSQL_HOST is missing for mssql", {
+  withr::local_envvar(MYSQL_HOST = NA)
+  expect_error(
+    rapOpenDbConnection(regName, dbType = "mssql"),
+    regexp = "Environment variable MYSQL_HOST is not defined. Please check configuration."
+  )
+})
+
+test_that("rapOpenDbConnection does not stop when env var MYSQL_USER is missing for mssql", {
+  check_db()
+  withr::local_envvar(MYSQL_USER = NA)
+  expect_error(
+    rapOpenDbConnection(regName, dbType = "mssql"),
+    regexp = "ODBC failed with error"
+  )
+})
 
 
 withr::with_envvar(
   new = c(
-    "MYSQL_HOST" = "qwerty",
-    "MYSQL_USER" = "asdfg",
-    "MYSQL_PASSWORD" = "zxcvb",
     "MYSQL_DB_LOG" = "log_db",
     "MYSQL_DB_AUTOREPORT" = "autoreport_db",
     "MYSQL_DB_DATA" = "data_db",
@@ -204,31 +219,23 @@ withr::with_envvar(
   ),
   code = {
     test_that("Returns default values", {
-      conf <- getDbConfig()
-      expect_equal(conf$host, "qwerty")
-      expect_equal(conf$name, "data_db")
-      expect_equal(conf$user, "asdfg")
-      expect_equal(conf$pass, "zxcvb")
-      expect_equal(conf$port, 3306)
+      dbName <- getDbName()
+      expect_equal(dbName, "data_db")
 
-      conf <- getDbConfig(dbName = "rapbase")
-      expect_equal(conf$name, "rapbase")
+      db <- getDbName(dbName = "rapbase")
+      expect_equal(db, "rapbase")
 
-      conf <- getDbConfig(dbName = "raplog")
-      expect_equal(conf$name, "log_db")
+      db <- getDbName(dbName = "raplog")
+      expect_equal(db, "log_db")
 
-      conf <- getDbConfig(dbName = "autoreport")
-      expect_equal(conf$name, "autoreport_db")
+      db <- getDbName(dbName = "autoreport")
+      expect_equal(db, "autoreport_db")
 
-      conf <- getDbConfig(dbName = "data")
-      expect_equal(conf$name, "data_db")
+      db <- getDbName(dbName = "data")
+      expect_equal(db, "data_db")
 
-      conf <- getDbConfig(dbName = "qwerty123")
-      expect_equal(conf$name, "qwerty123")
-      expect_equal(conf$host, "qwerty")
-      expect_equal(conf$user, "asdfg")
-      expect_equal(conf$pass, "zxcvb")
-      expect_equal(conf$port, 3306)
+      db <- getDbName(dbName = "qwerty123")
+      expect_equal(db, "qwerty123")
     })
   }
 )
