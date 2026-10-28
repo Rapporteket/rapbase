@@ -404,9 +404,16 @@ readLog <- function(type, name = "", app_id = NULL) {
     query <- paste0("SELECT * FROM ", type, "Log")
     if (name != "") {
       query <- paste0(query, " WHERE group = '", name, "'")
-    } else if (!is.null(app_id)) {
-      query <- paste0(query, " WHERE group = '", app_id, "'")
     }
+    
+   if (!is.null(app_id)) {
+      if (name != "") {
+        query <- paste0(query, " OR group = '", app_id, "'")
+      } else {
+        query <- paste0(query, " WHERE group = '", app_id, "'")
+      }
+    }
+     
     query <- paste0(query, ";")
     log <- loadRegData("raplog", query)
     log <- log |>
