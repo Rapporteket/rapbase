@@ -402,11 +402,13 @@ readLog <- function(type, name = "", app_id = NULL) {
 
   tryCatch({
     query <- paste0("SELECT * FROM ", type, "Log")
+    if (name != "") {
+      query <- paste0(query, " WHERE group = '", name, "'")
+    } else if (!is.null(app_id)) {
+      query <- paste0(query, " WHERE group = '", app_id, "'")
+    }
     query <- paste0(query, ";")
     log <- loadRegData("raplog", query)
-    if (!is.null(app_id)) {
-      log <- log[which(log$group == app_id), ]
-    }
     log <- log |>
       dplyr::select(-"id")
     invisible(log)
