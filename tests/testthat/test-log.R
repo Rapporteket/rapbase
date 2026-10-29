@@ -81,6 +81,31 @@ test_that("log entries can be read from db", {
     readLog(type = "app")$role,
     c("accessLevel", "LU")
   )
+
+  name_filter <- "readLogNameFilter"
+  app_id_filter <- "readLogIdFilter"
+  filter_rows <- data.frame(
+    time = rep("2000-01-01 00:00:00", 3),
+    user = c("name-match", "id-match", "unrelated"),
+    name = c("Name Match", "ID Match", "Unrelated"),
+    group = c(name_filter, app_id_filter, "readLogUnrelated"),
+    role = c("test", "test", "test"),
+    resh_id = c("1", "2", "3"),
+    message = c("name filter", "ID filter", "unrelated"),
+    stringsAsFactors = FALSE
+  )
+  for (i in seq_len(nrow(filter_rows))) {
+    appendLog(event = filter_rows[i, ], name = "appLog")
+  }
+
+  expect_equal(
+    readLog(type = "app", name = name_filter, app_id = app_id_filter)$user,
+    c("name-match", "id-match")
+  )
+  expect_equal(
+    readLog(type = "app", name = name_filter)$user,
+    "name-match"
+  )
 })
 
 test_that("log can be sanitized in db", {
