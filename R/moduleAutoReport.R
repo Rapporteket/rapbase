@@ -774,7 +774,7 @@ statsAutoreportServer <- function(id, registryName = NULL) {
     output$autoreportTable <- shiny::renderUI({
       shiny::tagList(
         shiny::h4(paste0("Alle eksisterende autorapporter fra ", registryName)),
-        DT::dataTableOutput(shiny::NS(id, "autoreportTableContent"))
+        DT::dataTableOutput(session$ns("autoreportTableContent"))
       )
     })
     output$autoreportTableContent <- DT::renderDataTable(
