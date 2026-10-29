@@ -400,20 +400,26 @@ createLogDbTabs <- function() {
 readLog <- function(type, name = "", app_id = NULL) {
   stopifnot(type == "report" | type == "app")
 
+  if (Sys.getenv("DB_TYPE") == "mssql") {
+    group <- "[group]"
+  } else {
+    group <- "`group`"
+  }
+
   tryCatch({
     query <- paste0("SELECT * FROM ", type, "Log")
     if (name != "") {
-      query <- paste0(query, " WHERE group = '", name, "'")
+      query <- paste0(query, " WHERE ", group, " = '", name, "'")
     }
-    
+
    if (!is.null(app_id)) {
       if (name != "") {
-        query <- paste0(query, " OR group = '", app_id, "'")
+        query <- paste0(query, " OR ", group, " = '", app_id, "'")
       } else {
-        query <- paste0(query, " WHERE group = '", app_id, "'")
+        query <- paste0(query, " WHERE ", group, " = '", app_id, "'")
       }
     }
-     
+
     query <- paste0(query, ";")
     log <- loadRegData("raplog", query)
     log <- log |>
