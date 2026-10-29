@@ -14,8 +14,8 @@ if it is "raplog" it will use the MYSQL_DB_LOG environment variable. If
 none of these are set, it will use the name provided.}
 
 \item{dbType}{String providing type of data source, one of
-"mysql", "sqlite" and "mssql". Defaults to "mysql". If the environment variable DB_TYPE is set,
-it will override this argument.}
+"mysql", "sqlite" and "mssql". Defaults to "mysql". If the environment
+variable DB_TYPE is set, it will override this argument.}
 }
 \value{
 A named list of con and drv representing the db connection handle and
