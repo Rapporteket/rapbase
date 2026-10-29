@@ -81,6 +81,8 @@ reference:
     - autoReportInput
     - autoReportServer
     - autoReportServer2
+    - statsAutoreportUI
+    - statsAutoreportServer
     - .testAutoReport
     - .getFun
 
