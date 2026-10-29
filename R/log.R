@@ -407,21 +407,33 @@ readLog <- function(type, name = "", app_id = NULL) {
   }
 
   tryCatch({
+    dbList <- rapOpenDbConnection("raplog")
+    on.exit(rapCloseDbConnection(dbList$con))
+
     query <- paste0("SELECT * FROM ", type, "Log")
     if (name != "") {
-      query <- paste0(query, " WHERE ", group, " = '", name, "'")
+      query <- paste0(
+        query, " WHERE ", group, " = ",
+        DBI::dbQuoteString(dbList$con, name)
+      )
     }
 
     if (!is.null(app_id)) {
       if (name != "") {
-        query <- paste0(query, " OR ", group, " = '", app_id, "'")
+        query <- paste0(
+          query, " OR ", group, " = ",
+          DBI::dbQuoteString(dbList$con, app_id)
+        )
       } else {
-        query <- paste0(query, " WHERE ", group, " = '", app_id, "'")
+        query <- paste0(
+          query, " WHERE ", group, " = ",
+          DBI::dbQuoteString(dbList$con, app_id)
+        )
       }
     }
 
     query <- paste0(query, ";")
-    log <- loadRegData("raplog", query)
+    log <- DBI::dbGetQuery(dbList$con, query)
     log <- log |>
       dplyr::select(-"id")
     invisible(log)
