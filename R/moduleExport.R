@@ -73,8 +73,6 @@ exportUCServer <- function(
   id, dbName, teamName = NULL,
   eligible = shiny::reactiveVal(TRUE)
 ) {
-  ns <- shiny::NS(id)
-
   if (!shiny::is.reactive(eligible)) {
     # make eligible reactive if not already
     eligible <- shiny::reactiveVal(eligible)
@@ -89,6 +87,7 @@ exportUCServer <- function(
   }
 
   shiny::moduleServer(id, function(input, output, session) {
+    ns <- session$ns
 
     pubkey <- shiny::reactive({
       shiny::req(input$exportPid)
@@ -158,7 +157,7 @@ exportUCServer <- function(
         NULL
       } else {
         shiny::radioButtons(
-          shiny::NS(id, "fullDb"),
+          session$ns("fullDb"),
           "",
           c("Database", "Enkelttabell"),
           selected = shiny::isolate(input$fullDb) %||% "Database",
@@ -191,7 +190,7 @@ exportUCServer <- function(
         )
       } else {
         shiny::selectInput(
-          shiny::NS(id, "exportPid"),
+          session$ns("exportPid"),
           label = shiny::tags$div(
             shiny::HTML(as.character(shiny::icon("user")), "Velg mottaker:")
           ),
@@ -207,7 +206,7 @@ exportUCServer <- function(
         shiny::p("No keys found!")
       } else {
         shiny::selectInput(
-          shiny::NS(id, "exportKey"),
+          session$ns("exportKey"),
           label = shiny::tags$div(
             shiny::HTML(as.character(shiny::icon("key")), "Velg n\u00f8kkel:")
           ),
@@ -221,7 +220,7 @@ exportUCServer <- function(
         NULL
       } else {
         shiny::checkboxInput(
-          shiny::NS(id, "exportCompress"),
+          session$ns("exportCompress"),
           "Komprimer eksport",
           value = TRUE
         )
@@ -235,7 +234,7 @@ exportUCServer <- function(
         shiny::tagList(
           shiny::hr(),
           shiny::downloadButton(
-            shiny::NS(id, "exportDownload"),
+            session$ns("exportDownload"),
             label = "Last ned!"
           )
         )
