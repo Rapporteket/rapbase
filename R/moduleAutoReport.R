@@ -733,3 +733,80 @@ orgList2df <- function(orgs) {
     id = as.vector(sapply(orgs, unname))
   )
 }
+
+
+
+#' Stats Auto Report Module UI
+#'
+#' User interface module for displaying existing auto reports
+#' information for a given registry.
+#'
+#' @param id Module ID
+#'
+#' @returns Shiny UI output for the auto report table
+#' @export
+#'
+statsAutoreportUI <- function(id) {
+  shiny::uiOutput(shiny::NS(id, "autoreportTable"))
+}
+
+#' Stats Auto Report Module Server
+#'
+#' Server module for displaying existing auto reports
+#' information for a given registry.
+#'
+#' @param id Module ID
+#' @param registryName Character string registry name
+#'
+#' @returns Shiny server logic for the auto report table
+#' @export
+#'
+statsAutoreportServer <- function(id, registryName = NULL) {
+  if (is.null(registryName)) {
+    registryName <- Sys.getenv("SHINYPROXY_APPID")
+  }
+
+  autoreports <- readAutoReportData() |>
+    dplyr::filter(.data$package == registryName)
+
+  shiny::moduleServer(id, function(input, output, session) {
+
+    output$autoreportTable <- shiny::renderUI({
+      shiny::tagList(
+        shiny::h4(paste0("Alle eksisterende autorapporter fra ", registryName)),
+        DT::dataTableOutput(shiny::NS(id, "autoreportTableContent"))
+      )
+    })
+    output$autoreportTableContent <- DT::renderDataTable(
+      autoreports,
+      server = FALSE, escape = FALSE, selection = "none",
+      rownames = FALSE,
+      options = list(
+        pageLength = 25,
+        language = list(
+          lengthMenu = "Vis _MENU_ rader per side",
+          search = "S\u00f8k:",
+          info = "Rad _START_ til _END_ av totalt _TOTAL_",
+          paginate = list(previous = "Forrige", `next` = "Neste")
+        )
+      )
+    )
+  })
+}
+
+#' Stats Auto Report App for testing
+#'
+#' @param registryName Character string registry name
+#'
+#' @returns Shiny app for the stats auto report module
+#'
+#' @keywords internal
+statsAutoreportApp <- function(registryName = NULL) {
+  ui <- shiny::fluidPage(
+    statsAutoreportUI("test")
+  )
+  server <- function(input, output, session) {
+    statsAutoreportServer("test", registryName)
+  }
+  shiny::shinyApp(ui, server)
+}
