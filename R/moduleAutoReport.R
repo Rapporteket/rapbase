@@ -779,7 +779,7 @@ statsAutoreportServer <- function(id, registryName = NULL) {
     })
     output$autoreportTableContent <- DT::renderDataTable(
       autoreports,
-      server = FALSE, escape = FALSE, selection = "none",
+      server = FALSE, selection = "none",
       rownames = FALSE,
       options = list(
         pageLength = 25,
