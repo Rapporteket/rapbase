@@ -412,7 +412,7 @@ readLog <- function(type, name = "", app_id = NULL) {
       query <- paste0(query, " WHERE ", group, " = '", name, "'")
     }
 
-   if (!is.null(app_id)) {
+    if (!is.null(app_id)) {
       if (name != "") {
         query <- paste0(query, " OR ", group, " = '", app_id, "'")
       } else {
