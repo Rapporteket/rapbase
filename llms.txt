@@ -206,6 +206,10 @@ Handle automated reports
   Module
 - [`autoReportServer2()`](autoReportServer2.md) : Alias for
   autoReportServer
+- [`statsAutoreportUI()`](statsAutoreportUI.md) : Stats Auto Report
+  Module UI
+- [`statsAutoreportServer()`](statsAutoreportServer.md) : Stats Auto
+  Report Module Server
 - [`.testAutoReport()`](dot-testAutoReport.md) : Simple test of
   automated report
 - [`.getFun()`](dot-getFun.md) : Provide explicit reference to function
