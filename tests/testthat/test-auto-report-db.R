@@ -566,6 +566,15 @@ test_that("stats autoreport server returns table output for registry", {
   })
 })
 
+test_that("stats autoreport server returns table output for registry without args", {
+  check_db()
+  shiny::testServer(statsAutoreportServer, {
+    expect_equal(class(output$autoreportTable), "list")
+    expect_match(output$autoreportTableContent, "Tore Tester")
+    expect_false(is.null(output$autoreportTableContent))
+  })
+})
+
 test_that("stats autoreport server returns empty table output for wrong registry", {
   check_db()
   shiny::testServer(statsAutoreportServer, args = list(registryName = "wrongName"), {
@@ -575,6 +584,15 @@ test_that("stats autoreport server returns empty table output for wrong registry
   })
 })
 
+test_that("stats autoreport server returns empty table output for wrong registry env var", {
+  check_db()
+  withr::local_envvar(c(SHINYPROXY_APPID = "wrong_value"))
+  shiny::testServer(statsAutoreportServer, {
+    expect_equal(class(output$autoreportTable), "list")
+    expect_no_match(output$autoreportTableContent, "Tore Tester")
+    expect_false(is.null(output$autoreportTableContent))
+  })
+})
 
 # remove test db
 if (is.null(check_db(is_test_that = FALSE))) {

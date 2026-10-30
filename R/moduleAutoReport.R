@@ -801,6 +801,7 @@ statsAutoreportServer <- function(id, registryName = NULL) {
 #' @returns Shiny app for the stats auto report module
 #'
 #' @keywords internal
+# nocov start
 statsAutoreportApp <- function(registryName = NULL) {
   ui <- shiny::fluidPage(
     statsAutoreportUI("test")
@@ -810,3 +811,4 @@ statsAutoreportApp <- function(registryName = NULL) {
   }
   shiny::shinyApp(ui, server)
 }
+# nocov end
