@@ -48,6 +48,38 @@ test_that("Function for testing automated reports return a file", {
   expect_true(file.exists(.testAutoReport()))
 })
 
+test_that("auto report table uses a supplied namespace function", {
+  reports <- data.frame(
+    id = "report-1",
+    email = "test@example.com",
+    synopsis = "Test report",
+    package = "rapbase",
+    type = "dispatchment",
+    owner = "tester",
+    ownerName = "Test User",
+    organization = "1",
+    startDate = as.character(Sys.Date()),
+    terminateDate = as.character(Sys.Date() + 30),
+    interval = "days",
+    intervalName = "Daily",
+    stringsAsFactors = FALSE
+  )
+
+  with_mocked_bindings(
+    readAutoReportData = function() reports,
+    {
+      tab <- makeAutoReportTab(
+        namespace = function(id) paste0("outer-child-", id),
+        group = "rapbase",
+        type = "dispatchment"
+      )
+    }
+  )
+
+  expect_match(tab[["Endre"]][[1]], 'id="outer-child-edit__report-1"')
+  expect_match(tab[["Slett"]][[1]], 'id="outer-child-del__report-1"')
+})
+
 test_that("A year-day sequence can be mande", {
   rdoy <- makeRunDayOfYearSequence(interval = "month")
   expect_gte(length(rdoy), 10)
