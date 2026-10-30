@@ -97,7 +97,7 @@ statsServer <- function(id,
 
     output$period <- shiny::renderUI({
       shiny::dateRangeInput(
-        shiny::NS(id, "period"),
+        session$ns("period"),
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("calendar")), "Periode:")
         ),
@@ -111,7 +111,7 @@ statsServer <- function(id,
 
     output$downloadButton <- shiny::renderUI({
       if (eligible) {
-        shiny::downloadButton(shiny::NS(id, "download"), "Last ned!")
+        shiny::downloadButton(session$ns("download"), "Last ned!")
       } else {
         NULL
       }
@@ -181,7 +181,7 @@ statsServer2 <- function(id,
 
     output$period <- shiny::renderUI({
       shiny::dateRangeInput(
-        shiny::NS(id, "period"),
+        session$ns("period"),
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("calendar")), "Periode:")
         ),
@@ -193,7 +193,7 @@ statsServer2 <- function(id,
 
     output$downloadButton <- shiny::renderUI({
       if (eligible()) {
-        shiny::downloadButton(shiny::NS(id, "download"), "Last ned!")
+        shiny::downloadButton(session$ns("download"), "Last ned!")
       } else {
         NULL
       }
