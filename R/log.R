@@ -400,13 +400,40 @@ createLogDbTabs <- function() {
 readLog <- function(type, name = "", app_id = NULL) {
   stopifnot(type == "report" | type == "app")
 
+  if (Sys.getenv("DB_TYPE") == "mssql") {
+    group <- "[group]"
+  } else {
+    group <- "`group`"
+  }
+
   tryCatch({
+    dbList <- rapOpenDbConnection("raplog")
+    on.exit(rapCloseDbConnection(dbList$con))
+
     query <- paste0("SELECT * FROM ", type, "Log")
-    query <- paste0(query, ";")
-    log <- loadRegData("raplog", query)
-    if (!is.null(app_id)) {
-      log <- log[which(log$group == app_id), ]
+    if (name != "") {
+      query <- paste0(
+        query, " WHERE ", group, " = ",
+        DBI::dbQuoteString(dbList$con, name)
+      )
     }
+
+    if (!is.null(app_id)) {
+      if (name != "") {
+        query <- paste0(
+          query, " OR ", group, " = ",
+          DBI::dbQuoteString(dbList$con, app_id)
+        )
+      } else {
+        query <- paste0(
+          query, " WHERE ", group, " = ",
+          DBI::dbQuoteString(dbList$con, app_id)
+        )
+      }
+    }
+
+    query <- paste0(query, ";")
+    log <- DBI::dbGetQuery(dbList$con, query)
     log <- log |>
       dplyr::select(-"id")
     invisible(log)
