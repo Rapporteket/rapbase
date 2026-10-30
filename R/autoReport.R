@@ -713,11 +713,6 @@ makeAutoReportTab <- function(
   includeReportId = FALSE
 ) {
   stopifnot(type %in% c("subscription", "dispatchment", "bulletin"))
-  ns <- if (is.function(namespace)) {
-    namespace
-  } else {
-    shiny::NS(namespace)
-  }
 
   autoRep <- readAutoReportData() |>
     filterAutoRep(by = "package", pass = group) |>
@@ -773,25 +768,25 @@ makeAutoReportTab <- function(
       "Neste" = nextDate,
       "Endre" = as.character(
         shiny::actionButton(
-          inputId = ns(paste0("edit__", autoRep[i, ]$id)),
+          inputId = shiny::NS(namespace, paste0("edit__", autoRep[i, ]$id)),
           label = "",
           icon = shiny::icon("edit"),
           onclick = sprintf(
             "Shiny.setInputValue('%s', {id: this.id,
             nonce: Date.now()}, {priority: 'event'});",
-            ns("edit_button")
+            shiny::NS(namespace, "edit_button")
           )
         )
       ),
       "Slett" = as.character(
         shiny::actionButton(
-          inputId = ns(paste0("del__", autoRep[i, ]$id)),
+          inputId = shiny::NS(namespace, paste0("del__", autoRep[i, ]$id)),
           label = "",
           icon = shiny::icon("trash"),
           onclick = sprintf(
             "Shiny.setInputValue('%s', {id: this.id,
             nonce: Date.now()}, {priority: 'event'});",
-            ns("del_button")
+            shiny::NS(namespace, "del_button")
           )
         )
       )
