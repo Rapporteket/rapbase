@@ -568,6 +568,7 @@ test_that("stats autoreport server returns table output for registry", {
 
 test_that("stats autoreport server returns table output for registry without args", {
   check_db()
+  withr::local_envvar(c(SHINYPROXY_APPID = registryName))
   shiny::testServer(statsAutoreportServer, {
     expect_equal(class(output$autoreportTable), "list")
     expect_match(output$autoreportTableContent, "Tore Tester")
