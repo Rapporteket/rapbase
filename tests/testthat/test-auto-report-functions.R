@@ -76,8 +76,8 @@ test_that("auto report table uses a supplied namespace function", {
     }
   )
 
-  expect_match(tab[1, "Endre"], 'id="outer-child-edit__report-1"')
-  expect_match(tab[1, "Slett"], 'id="outer-child-del__report-1"')
+  expect_match(tab[["Endre"]][[1]], 'id="outer-child-edit__report-1"')
+  expect_match(tab[["Slett"]][[1]], 'id="outer-child-del__report-1"')
 })
 
 test_that("A year-day sequence can be mande", {
