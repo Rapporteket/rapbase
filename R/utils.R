@@ -1,9 +1,5 @@
-#' Data pronouns
+#' Import .data and .env from rlang for internal use
 #'
-#' @name .data
-#' @rdname pronoun
 #' @keywords internal
-#' @export
-#' @importFrom rlang .data
-#' @usage .data
+#' @importFrom rlang .data .env
 NULL
