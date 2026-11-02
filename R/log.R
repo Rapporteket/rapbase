@@ -404,7 +404,7 @@ readLog <- function(type, name = "", app_id = NULL) {
     query <- paste0("SELECT * FROM ", type, "Log;")
     log <- loadRegData("raplog", query)
     if (!is.null(app_id) || name != "") {
-      log <- log |> dplyr::filter(.data$group %in% c(app_id, name))
+      log <- log |> dplyr::filter(.data$group %in% c(.env$app_id, .env$name))
     }
     log <- log |>
       dplyr::select(-"id")
