@@ -48,7 +48,7 @@ autoReportOrgServer <- function(id, orgs) {
   shiny::moduleServer(id, function(input, output, session) {
     output$orgs <- shiny::renderUI({
       shiny::selectInput(
-        shiny::NS(id, "org"),
+        session$ns("org"),
         label = shiny::tags$div(
           shiny::HTML(
             as.character(shiny::icon("database")),
@@ -98,7 +98,7 @@ autoReportFormatServer <- function(id) {
   shiny::moduleServer(id, function(input, output, session) {
     output$format <- shiny::renderUI({
       shiny::selectInput(
-        shiny::NS(id, "format"),
+        session$ns("format"),
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("file-pdf")), "Fil-format:")
         ),
@@ -274,7 +274,7 @@ autoReportServer <- function(
   shiny::moduleServer(id, function(input, output, session) {
     autoReport <- shiny::reactiveValues(
       tab = makeAutoReportTab(
-        namespace = id,
+        namespace = session$ns,
         user = NULL,
         group = registryName,
         orgId = NULL,
@@ -293,7 +293,7 @@ autoReportServer <- function(
     shiny::observeEvent(
       userEvent(),
       autoReport$tab <- makeAutoReportTab(
-        namespace = id,
+        namespace = session$ns,
         user = user$name(),
         group = registryName,
         orgId = user$org(),
@@ -349,7 +349,7 @@ autoReportServer <- function(
       )
       autoReport$tab <-
         makeAutoReportTab(
-          namespace = id,
+          namespace = session$ns,
           user = user$name(),
           group = registryName,
           orgId = user$org(),
@@ -378,7 +378,7 @@ autoReportServer <- function(
           Er du sikker p\u00E5 at du vil redigere mottaker(e)?",
           footer = shiny::tagList(
             shiny::modalButton("Avbryt"),
-            shiny::actionButton(shiny::NS(id, "confirm_edit"),
+            shiny::actionButton(session$ns("confirm_edit"),
                                 "Ja, rediger", class = "btn-primary")
           ),
           easyClose = TRUE
@@ -409,7 +409,7 @@ autoReportServer <- function(
       deleteAutoReport(repId)
 
       autoReport$tab <- makeAutoReportTab(
-        namespace = id,
+        namespace = session$ns,
         user = user$name(),
         group = registryName,
         orgId = user$org(),
@@ -432,7 +432,7 @@ autoReportServer <- function(
           "Er du sikker p\u00E5 at du vil slette mottaker(e)?",
           footer = shiny::tagList(
             shiny::modalButton("Avbryt"),
-            shiny::actionButton(shiny::NS(id, "confirm_delete"),
+            shiny::actionButton(session$ns("confirm_delete"),
                                 "Ja, slett", class = "btn-danger")
           ),
           easyClose = TRUE
@@ -450,7 +450,7 @@ autoReportServer <- function(
       deleteAutoReport(repId)
 
       autoReport$tab <- makeAutoReportTab(
-        namespace = id,
+        namespace = session$ns,
         user = user$name(),
         group = registryName,
         orgId = user$org(),
@@ -465,7 +465,7 @@ autoReportServer <- function(
         NULL
       } else {
         shiny::selectInput(
-          shiny::NS(id, "report"),
+          session$ns("report"),
           label = shiny::tags$div(
             shiny::HTML(as.character(shiny::icon("file")), "Velg rapport:")
           ),
@@ -488,7 +488,7 @@ autoReportServer <- function(
 
     output$freq <- shiny::renderUI({
       shiny::selectInput(
-        shiny::NS(id, "freq"),
+        session$ns("freq"),
         label = shiny::tags$div(
           shiny::HTML(as.character(shiny::icon("clock")), "Frekvens:")
         ),
@@ -506,7 +506,7 @@ autoReportServer <- function(
     output$start <- shiny::renderUI({
       shiny::req(input$freq)
       shiny::dateInput(
-        shiny::NS(id, "start"),
+        session$ns("start"),
         label = shiny::tags$div(
           shiny::HTML(
             as.character(shiny::icon("calendar")), "F\u00F8rste utsending:"
@@ -524,7 +524,7 @@ autoReportServer <- function(
     output$email <- shiny::renderUI({
       if (type %in% c("dispatchment", "bulletin")) {
         shiny::textInput(
-          shiny::NS(id, "email"),
+          session$ns("email"),
           label = shiny::tags$div(
             shiny::HTML(as.character(shiny::icon("at")), "E-post mottaker:")
           ),
@@ -546,13 +546,13 @@ autoReportServer <- function(
         } else {
           if (input$email %in% autoReport$email) {
             shiny::actionButton(
-              shiny::NS(id, "delEmail"),
+              session$ns("delEmail"),
               shiny::HTML(paste("Slett mottaker<br/>", input$email)),
               icon = shiny::icon("minus-square")
             )
           } else {
             shiny::actionButton(
-              shiny::NS(id, "addEmail"),
+              session$ns("addEmail"),
               shiny::HTML(paste("Legg til mottaker<br/>", input$email)),
               icon = shiny::icon("plus-square")
             )
@@ -578,7 +578,7 @@ autoReportServer <- function(
       } else {
         if (type %in% c("subscription")) {
           shiny::actionButton(
-            shiny::NS(id, "makeAutoReport"),
+            session$ns("makeAutoReport"),
             "Lag oppf\u00F8ring",
             icon = shiny::icon("save")
           )
@@ -588,7 +588,7 @@ autoReportServer <- function(
             NULL
           } else {
             shiny::actionButton(
-              shiny::NS(id, "makeAutoReport"),
+              session$ns("makeAutoReport"),
               "Lag oppf\u00F8ring",
               icon = shiny::icon("save")
             )
@@ -626,13 +626,13 @@ autoReportServer <- function(
             "Nye oppf\u00F8ringer kan lages fra menyen til",
             "venstre. Bruk gjerne veiledingen under."
           )),
-          shiny::htmlOutput(shiny::NS(id, "autoReportGuide"))
+          shiny::htmlOutput(session$ns("autoReportGuide"))
         )
       } else {
         shiny::tagList(
           shiny::h2("Aktive oppf\u00F8ringer:"),
-          DT::dataTableOutput(shiny::NS(id, "activeReports")),
-          shiny::htmlOutput(shiny::NS(id, "autoReportGuide"))
+          DT::dataTableOutput(session$ns("activeReports")),
+          shiny::htmlOutput(session$ns("autoReportGuide"))
         )
       }
     })
@@ -657,20 +657,20 @@ autoReportServer <- function(
             "og vil lage alle rapporter for gitt dato."
           )),
           shiny::actionButton(
-            inputId = shiny::NS(id, "run_autoreport"),
+            inputId = session$ns("run_autoreport"),
             label = "Kj\u00F8r autorapporter",
             icon = shiny::icon("play"),
             onclick = "this.disabled=true;"
           ),
           shiny::dateInput(
-            inputId = shiny::NS(id, "rapportdato"),
+            inputId = session$ns("rapportdato"),
             label = "Kj\u00F8r rapporter med dato:",
             value = Sys.Date() + 1,
             weekstart = 1,
             language = "no"
           ),
           shiny::checkboxInput(
-            inputId = shiny::NS(id, "sendEmails"),
+            inputId = session$ns("sendEmails"),
             label = "Send e-post",
             value = FALSE
           )
