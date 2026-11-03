@@ -414,6 +414,7 @@ readLog <- function(type, name = "", app_id = NULL) {
     }
 
     if (!is.null(app_id)) {
+      app_id <- as.character(app_id)
       if (name != "") {
         query <- paste0(
           query, " OR ",

@@ -83,7 +83,7 @@ test_that("log entries can be read from db", {
   )
 
   name_filter <- "readLogNameFilter"
-  app_id_filter <- "readLogIdFilter"
+  app_id_filter <- 10
   filter_rows <- data.frame(
     time = rep("2000-01-01 00:00:00", 3),
     user = c("name-match", "id-match", "unrelated"),
