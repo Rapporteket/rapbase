@@ -633,7 +633,7 @@ autoReportServer <- function(
           shinyjs::useShinyjs(),
           shiny::h2("Aktive oppf\u00F8ringer:"),
           DT::dataTableOutput(session$ns("activeReports")),
-          shiny::verbatimTextOutput(shiny::NS(id, "sysMessage")),
+          shiny::verbatimTextOutput(session$ns("sysMessage")),
           shiny::htmlOutput(session$ns("autoReportGuide"))
         )
       }
