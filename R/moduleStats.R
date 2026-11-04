@@ -84,7 +84,7 @@ statsServer <- function(id,
                         registryName,
                         app_id = NULL,
                         eligible = shiny::reactiveVal(TRUE)) {
- if (!shiny::is.reactive(eligible)) {
+  if (!shiny::is.reactive(eligible)) {
     # make eligible reactive if not already
     eligible <- shiny::reactiveVal(eligible)
   }
