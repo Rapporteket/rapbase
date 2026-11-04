@@ -5,7 +5,6 @@
 \alias{statsInput}
 \alias{statsUI}
 \alias{statsServer}
-\alias{statsServer2}
 \alias{statsApp}
 \alias{logFormat}
 \alias{logTimeFrame}
@@ -15,9 +14,7 @@ statsInput(id)
 
 statsUI(id)
 
-statsServer(id, registryName, app_id = NULL, eligible = TRUE)
-
-statsServer2(
+statsServer(
   id,
   registryName,
   app_id = NULL,

@@ -83,7 +83,12 @@ statsUI <- function(id) {
 statsServer <- function(id,
                         registryName,
                         app_id = NULL,
-                        eligible = TRUE) {
+                        eligible = shiny::reactiveVal(TRUE)) {
+ if (!shiny::is.reactive(eligible)) {
+    # make eligible reactive if not already
+    eligible <- shiny::reactiveVal(eligible)
+  }
+
   shiny::moduleServer(id, function(input, output, session) {
     log <- shiny::reactive({
       readLog(input$type, registryName, app_id) |>
@@ -104,88 +109,6 @@ statsServer <- function(id,
         start = min(c(log()$date, Sys.Date() - 31)),
         end = max(c(log()$date, Sys.Date() - 30)),
         separator = "-",
-        weekstart = 1,
-        language = "no"
-      )
-    })
-
-    output$downloadButton <- shiny::renderUI({
-      if (eligible) {
-        shiny::downloadButton(session$ns("download"), "Last ned!")
-      } else {
-        NULL
-      }
-    })
-
-    if (eligible) {
-      output$download <- shiny::downloadHandler(
-        filename = function() {
-          basename(
-            tempfile(
-              pattern = paste0("useStats-", registryName),
-              fileext = ".csv"
-            )
-          )
-        },
-        content = function(file) {
-          if (input$downloadFormat == "xlsx-csv") {
-            readr::write_excel_csv2(logFrame(), file)
-          } else {
-            readr::write_csv2(logFrame(), file)
-          }
-        }
-      )
-    }
-
-    output$eligible <- shiny::renderUI({
-      if (eligible) {
-        NULL
-      } else {
-        shiny::tagList(
-          shiny::h4("Funksjonen er ikke tilgjengelig"),
-          shiny::p("Ta kontakt med registeret")
-        )
-      }
-    })
-    output$pivot <- rpivotTable::renderRpivotTable(
-      if (eligible) {
-        rpivotTable::rpivotTable(
-          logFrame(),
-          rows = c("name"),
-          cols = c("year", "month"),
-          rendererName = "Heatmap"
-        )
-      } else {
-        rpivotTable::rpivotTable(data.frame())
-      }
-    )
-  })
-}
-
-#' @rdname stats
-#' @export
-statsServer2 <- function(id,
-                         registryName,
-                         app_id = NULL,
-                         eligible = shiny::reactiveVal(TRUE)) {
-  shiny::moduleServer(id, function(input, output, session) {
-    log <- shiny::reactive({
-      readLog(input$type, registryName, app_id) |>
-        logFormat()
-    })
-
-    logFrame <- shiny::reactive({
-      shiny::req(input$period)
-      logTimeFrame(log(), input$period[1], input$period[2])
-    })
-
-    output$period <- shiny::renderUI({
-      shiny::dateRangeInput(
-        session$ns("period"),
-        label = shiny::tags$div(
-          shiny::HTML(as.character(shiny::icon("calendar")), "Periode:")
-        ),
-        start = min(log()$date), end = max(log()$date), separator = "-",
         weekstart = 1,
         language = "no"
       )
@@ -219,8 +142,7 @@ statsServer2 <- function(id,
           }
         )
       }
-    }
-    )
+    })
 
     output$eligible <- shiny::renderUI({
       if (eligible()) {
@@ -246,6 +168,21 @@ statsServer2 <- function(id,
     )
   })
 }
+
+
+#' Alias for statsServer
+#'
+#' Backward compatible wrapper around [statsServer()].
+#'
+#' @param ... Arguments passed directly to [statsServer()].
+#
+#' @return Same result as [statsServer()].
+#
+#' @export
+statsServer2 <- function(...) {
+  statsServer(...)
+}
+
 
 #' @rdname stats
 #' @export
