@@ -122,7 +122,6 @@ autoReportFormatServer <- function(id) {
 #' @export
 autoReportInput <- function(id) {
   shiny::tagList(
-    shinyjs::useShinyjs(),
     shiny::uiOutput(shiny::NS(id, "reports")),
     shiny::uiOutput(shiny::NS(id, "synopsis")),
     shiny::tags$hr(),
@@ -631,6 +630,7 @@ autoReportServer <- function(
         )
       } else {
         shiny::tagList(
+          shinyjs::useShinyjs(),
           shiny::h2("Aktive oppf\u00F8ringer:"),
           DT::dataTableOutput(session$ns("activeReports")),
           shiny::verbatimTextOutput(shiny::NS(id, "sysMessage")),
