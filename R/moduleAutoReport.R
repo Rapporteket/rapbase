@@ -703,6 +703,15 @@ autoReportServer <- function(
         )
         message("Finished running all auto reports for date ", dato)
       },
+      warning = function(w) {
+        shinyjs::html(
+          id = "sysMessage",
+          html = as.character(shiny::tags$span(
+            paste0(conditionMessage(w), "\n")
+          )),
+          add = TRUE
+        )
+      },
       message = function(m) {
         shinyjs::html(
           id = "sysMessage",
