@@ -626,6 +626,7 @@ autoReportServer <- function(
             "Nye oppf\u00F8ringer kan lages fra menyen til",
             "venstre. Bruk gjerne veiledingen under."
           )),
+          shiny::verbatimTextOutput(session$ns("sysMessage")),
           shiny::htmlOutput(session$ns("autoReportGuide"))
         )
       } else {
