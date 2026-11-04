@@ -431,8 +431,7 @@ readLog <- function(type, name = "", app_id = NULL) {
     }
 
     query <- paste0(query, ";")
-    log <- DBI::dbGetQuery(dbList$con, query)
-    log <- log |>
+    log <- DBI::dbGetQuery(dbList$con, query) |>
       dplyr::select(-"id")
     invisible(log)
   } , error = function(e) {
