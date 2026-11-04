@@ -687,7 +687,10 @@ autoReportServer <- function(
       dato <- input$rapportdato
       dryRun <- !(input$sendEmails)
       withCallingHandlers({
-        shinyjs::html("sysMessage", "<b>System messages will be printed here...</b><br/><br/>")
+        shinyjs::html(
+          "sysMessage",
+          "<b>System messages will be printed here...</b><br/><br/>"
+        )
         message("Running all auto reports for date ", dato,
           " and registry ", registryName, ", ",
           ifelse(input$sendEmails, "WITH", "WITHOUT"),
