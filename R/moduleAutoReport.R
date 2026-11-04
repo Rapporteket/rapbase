@@ -634,7 +634,6 @@ autoReportServer <- function(
           shiny::h2("Aktive oppf\u00F8ringer:"),
           DT::dataTableOutput(session$ns("activeReports")),
           shiny::verbatimTextOutput(shiny::NS(id, "sysMessage")),
-          shiny::verbatimTextOutput(shiny::NS(id, "funMessage")),
           shiny::htmlOutput(session$ns("autoReportGuide"))
         )
       }
@@ -686,28 +685,24 @@ autoReportServer <- function(
       # Run all auto reports with the given date
       # when clicking the button
       dato <- input$rapportdato
-      message("Running all auto reports for date ", dato,
-        " and registry ", registryName, ", ",
-        ifelse(input$sendEmails, "WITH", "WITHOUT"),
-        " sending e-mails. This job was triggered by ", user$fullName()
-      )
       dryRun <- !(input$sendEmails)
       withCallingHandlers({
-        shinyjs::html("sysMessage", "System messages will be printed here...<br/>")
-        shinyjs::html("funMessage", "Function messages will be printed here...<br/>")
-        shinyjs::html(
-          "funMessage",
-          runAutoReport(
-            group = registryName,
-            dato = dato,
-            dryRun = dryRun
-          )
+        shinyjs::html("sysMessage", "<b>System messages will be printed here...</b><br/><br/>")
+        message("Running all auto reports for date ", dato,
+          " and registry ", registryName, ", ",
+          ifelse(input$sendEmails, "WITH", "WITHOUT"),
+          " sending e-mails. This job was triggered by ", user$fullName()
         )
+        runAutoReport(
+          group = registryName,
+          dato = dato,
+          dryRun = dryRun
+        )
+        message("Finished running all auto reports for date ", dato)
       },
       message = function(m) {
         shinyjs::html(id = "sysMessage", html = m$message, add = TRUE)
       })
-      message("Finished running all auto reports for date ", dato)
       # reactivate button
       shiny::updateActionButton(
         inputId = "run_autoreport",
