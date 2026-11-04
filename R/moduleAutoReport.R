@@ -704,7 +704,11 @@ autoReportServer <- function(
         message("Finished running all auto reports for date ", dato)
       },
       message = function(m) {
-        shinyjs::html(id = "sysMessage", html = m$message, add = TRUE)
+        shinyjs::html(
+          id = "sysMessage",
+          html = as.character(shiny::tags$span(m$message)),
+          add = TRUE
+        )
       })
       # reactivate button
       shiny::updateActionButton(
