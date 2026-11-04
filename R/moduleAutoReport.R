@@ -122,6 +122,7 @@ autoReportFormatServer <- function(id) {
 #' @export
 autoReportInput <- function(id) {
   shiny::tagList(
+    shinyjs::useShinyjs(),
     shiny::uiOutput(shiny::NS(id, "reports")),
     shiny::uiOutput(shiny::NS(id, "synopsis")),
     shiny::tags$hr(),
@@ -632,6 +633,8 @@ autoReportServer <- function(
         shiny::tagList(
           shiny::h2("Aktive oppf\u00F8ringer:"),
           DT::dataTableOutput(session$ns("activeReports")),
+          shiny::verbatimTextOutput(shiny::NS(id, "sysMessage")),
+          shiny::verbatimTextOutput(shiny::NS(id, "funMessage")),
           shiny::htmlOutput(session$ns("autoReportGuide"))
         )
       }
@@ -689,11 +692,21 @@ autoReportServer <- function(
         " sending e-mails. This job was triggered by ", user$fullName()
       )
       dryRun <- !(input$sendEmails)
-      runAutoReport(
-        group = registryName,
-        dato = dato,
-        dryRun = dryRun
-      )
+      withCallingHandlers({
+        shinyjs::html("sysMessage", "System messages will be printed here...<br/>")
+        shinyjs::html("funMessage", "Function messages will be printed here...<br/>")
+        shinyjs::html(
+          "funMessage",
+          runAutoReport(
+            group = registryName,
+            dato = dato,
+            dryRun = dryRun
+          )
+        )
+      },
+      message = function(m) {
+        shinyjs::html(id = "sysMessage", html = m$message, add = TRUE)
+      })
       message("Finished running all auto reports for date ", dato)
       # reactivate button
       shiny::updateActionButton(
