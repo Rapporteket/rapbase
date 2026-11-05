@@ -5,7 +5,12 @@ Server module for creating usage statistics based on log data.
 ## Usage
 
 ``` r
-statsServer(id, registryName, app_id = NULL, eligible = TRUE)
+statsServer(
+  id,
+  registryName,
+  app_id = NULL,
+  eligible = shiny::reactiveVal(TRUE)
+)
 ```
 
 ## Arguments

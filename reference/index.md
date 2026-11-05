@@ -128,8 +128,7 @@ Helper functions to be used by shiny apps
 - [`statsInput()`](statsInput.md) : Stats Input UI
 - [`statsUI()`](statsUI.md) : Stats Output UI
 - [`statsServer()`](statsServer.md) : Stats Server Module
-- [`statsServer2()`](statsServer2.md) : Stats Server Module with
-  Reactive Eligibility
+- [`statsServer2()`](statsServer2.md) : Alias for statsServer
 - [`statsGuideUI()`](statsGuideUI.md) : Stats Guide UI
 - [`statsGuideServer()`](statsGuideServer.md) : Stats Guide Server
   Module
