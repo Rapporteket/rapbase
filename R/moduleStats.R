@@ -179,8 +179,8 @@ statsServer <- function(id,
 #' @return Same result as [statsServer()].
 #
 #' @export
-statsServer2 <- function(...) {
-  statsServer(...)
+statsServer2 <- function(id, registryName, ...) {
+  statsServer(id, registryName, ...)
 }
 
 
