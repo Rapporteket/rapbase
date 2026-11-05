@@ -93,9 +93,13 @@ reference:
     - navbarWidget
     - appNavbarUserWidget
     - exportGuide
-    - statsGuide
+    - statsInput
+    - statsUI
+    - statsServer
+    - statsServer2
+    - statsGuideUI
+    - statsGuideServer
     - export
-    - stats
     - rapTheme
     - regTitle
     - memoryDisplay
