@@ -1,51 +1,12 @@
-#' Shiny modules and helper functions for registry usage reports
+#' Stats Input UI
 #'
-#' These modules may be used by registries for easy setup of usage reports.
-#' The intended purpose is to provide registry staff access to when and by
-#' whom the resources at Rapporteket were used, \emph{i.e.} application
-#' start-up and single report usage. As such, this will be a tool to provide
-#' useful statistics. However, it might also serve as a formal monitor utility
-#' but only if logging is carefully implemented throughout the relevant
-#' functions that make up the registry application at Rapporteket.
+#' User interface module for selecting stats type, time period and download
+#' format.
 #'
-#' @param id Character string shiny module id
-#' @param registryName Character string registry name key
-#' @param app_id An identifier for a particular registry. Default value is NULL,
-#' in which case no action is taken. If value is provided, the log is filtered
-#' to show only entries matching chosen app_id.
-#' @param eligible Logical defining if the module should be allowed to work at
-#' full capacity. This might be useful when access to module products should be
-#' restricted. Default is TRUE, \emph{i.e.} no restrictions.
-#' @param log Data frame containing log data (in Rapporteket format)
-#' @param startDate Date object defining start of interval (character
-#' representation "YYYY-MM-DD")
-#' @param endDate Date object defining end of interval (character representation
-#' "YYYY-MM-DD")
+#' @param id Character string providing the Shiny module id.
 #'
-#' @return Shiny objects, mostly. Helper functions may return other stuff too.
-#' @name stats
+#' @return A Shiny UI object.
 #'
-#' @examples
-#' # client user interface function
-#' ui <- shiny::fluidPage(
-#'   shiny::sidebarLayout(
-#'     shiny::sidebarPanel(statsInput("test")),
-#'     shiny::mainPanel(statsUI("test"))
-#'   )
-#' )
-#'
-#' # server function
-#' server <- function(input, output, session) {
-#'   statsServer("test", registryName = "rapbase", eligible = TRUE)
-#' }
-#'
-#' # run the shiny app in an interactive environment
-#' if (interactive()) {
-#'   shiny::shinyApp(ui, server)
-#' }
-NULL
-
-#' @rdname stats
 #' @export
 statsInput <- function(id) {
   shiny::tagList(
@@ -69,7 +30,14 @@ statsInput <- function(id) {
   )
 }
 
-#' @rdname stats
+#' Stats Output UI
+#'
+#' User interface module for rendering the usage statistics pivot table.
+#'
+#' @param id Character string providing the Shiny module id.
+#'
+#' @return A Shiny UI object.
+#'
 #' @export
 statsUI <- function(id) {
   shiny::tagList(
@@ -78,7 +46,19 @@ statsUI <- function(id) {
 }
 
 
-#' @rdname stats
+#' Stats Server Module
+#'
+#' Server module for creating usage statistics based on log data.
+#'
+#' @param id Character string providing the Shiny module id.
+#' @param registryName Character string with registry package name.
+#' @param app_id Optional identifier used to filter log entries for a specific
+#'   application.
+#' @param eligible Logical indicating whether the module should be available at
+#'   full capacity. Default is TRUE.
+#'
+#' @return A Shiny server module.
+#'
 #' @export
 statsServer <- function(id,
                         registryName,
@@ -162,7 +142,20 @@ statsServer <- function(id,
   })
 }
 
-#' @rdname stats
+#' Stats Server Module with Reactive Eligibility
+#'
+#' Server module for creating usage statistics with eligibility controlled by a
+#' reactive value.
+#'
+#' @param id Character string providing the Shiny module id.
+#' @param registryName Character string with registry package name.
+#' @param app_id Optional identifier used to filter log entries for a specific
+#'   application.
+#' @param eligible Reactive logical indicating whether the module should be
+#'   available at full capacity. Default is shiny::reactiveVal(TRUE).
+#'
+#' @return A Shiny server module.
+#'
 #' @export
 statsServer2 <- function(id,
                          registryName,
@@ -247,8 +240,13 @@ statsServer2 <- function(id,
   })
 }
 
-#' @rdname stats
-#' @export
+#' Stats App for Testing
+#'
+#' Launch a small Shiny app that demonstrates the stats module.
+#'
+#' @return A Shiny application object.
+#'
+#' @keywords internal
 statsApp <- function() {
   ui <- shiny::fluidPage(
     shiny::sidebarLayout(
@@ -265,34 +263,28 @@ statsApp <- function() {
 }
 
 
-#' Shiny modules providing the Stats Guide
+#' Stats Guide UI
 #'
-#' @param id Character string module ID
-#' @param registryName Character string registry name key
+#' User interface module for displaying the stats guide.
 #'
-#' @return Functions ui and server representing the (module) app
-#' @name statsGuide
-#' @examples
-#' ui <- shiny::fluidPage(
-#'   statsGuideUI("statsGuide")
-#' )
+#' @param id Character string providing the Shiny module id.
 #'
-#' server <- function(input, output, session) {
-#'   statsGuideServer("statsGuide", "test")
-#' }
+#' @return A Shiny UI object.
 #'
-#' if (interactive()) {
-#'   shiny::shinyApp(ui, server)
-#' }
-NULL
-
-#' @rdname statsGuide
 #' @export
 statsGuideUI <- function(id) {
   shiny::htmlOutput(shiny::NS(id, "statsGuide"))
 }
 
-#' @rdname statsGuide
+#' Stats Guide Server Module
+#'
+#' Server module for rendering the stats guide text.
+#'
+#' @param id Character string providing the Shiny module id.
+#' @param registryName Character string with registry package name.
+#'
+#' @return A Shiny server module.
+#'
 #' @export
 statsGuideServer <- function(id, registryName) {
   shiny::moduleServer(id, function(input, output, session) {
@@ -306,8 +298,13 @@ statsGuideServer <- function(id, registryName) {
   })
 }
 
-#' @rdname statsGuide
-#' @export
+#' Stats Guide App for Testing
+#'
+#' Launch a Shiny app that demonstrates the stats guide module.
+#'
+#' @return A Shiny application object.
+#'
+#' @keywords internal
 statsGuideApp <- function() {
   ui <- shiny::fluidPage(
     statsGuideUI("statsGuide")
@@ -321,8 +318,15 @@ statsGuideApp <- function() {
 }
 
 
-#' @rdname stats
-#' @export
+#' Format Log Data
+#'
+#' Convert a raw log data frame into a format suitable for stats analysis.
+#'
+#' @param log Data frame containing log data in Rapporteket format.
+#'
+#' @return A data frame with formatted date and time columns.
+#'
+#' @keywords internal
 logFormat <- function(log) {
   log <- log |>
     dplyr::mutate(
@@ -341,8 +345,17 @@ logFormat <- function(log) {
   invisible(log)
 }
 
-#' @rdname stats
-#' @export
+#' Filter Log by Date Interval
+#'
+#' Keep only log entries between the supplied start and end dates.
+#'
+#' @param log Data frame containing log data in Rapporteket format.
+#' @param startDate Date object defining the start of the interval.
+#' @param endDate Date object defining the end of the interval.
+#'
+#' @return A filtered data frame with rows inside the interval.
+#'
+#' @keywords internal
 logTimeFrame <- function(log, startDate, endDate) {
   dplyr::filter(log, date >= startDate & date <= endDate)
 }
