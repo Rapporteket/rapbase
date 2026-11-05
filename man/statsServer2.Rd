@@ -4,9 +4,13 @@
 \alias{statsServer2}
 \title{Alias for statsServer}
 \usage{
-statsServer2(...)
+statsServer2(id, registryName, ...)
 }
 \arguments{
+\item{id}{Character string shiny module id}
+
+\item{registryName}{Character string registry name key}
+
 \item{...}{Arguments passed directly to [statsServer()].}
 }
 \value{

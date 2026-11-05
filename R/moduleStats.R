@@ -174,6 +174,8 @@ statsServer <- function(id,
 #'
 #' Backward compatible wrapper around [statsServer()].
 #'
+#' @param id Character string shiny module id
+#' @param registryName Character string registry name key
 #' @param ... Arguments passed directly to [statsServer()].
 #
 #' @return Same result as [statsServer()].
