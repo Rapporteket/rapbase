@@ -2,30 +2,20 @@
 % Please edit documentation in R/moduleStats.R
 \name{statsServer2}
 \alias{statsServer2}
-\title{Stats Server Module with Reactive Eligibility}
+\title{Alias for statsServer}
 \usage{
-statsServer2(
-  id,
-  registryName,
-  app_id = NULL,
-  eligible = shiny::reactiveVal(TRUE)
-)
+statsServer2(id, registryName, ...)
 }
 \arguments{
-\item{id}{Character string providing the Shiny module id.}
+\item{id}{Character string shiny module id}
 
-\item{registryName}{Character string with registry package name.}
+\item{registryName}{Character string registry name key}
 
-\item{app_id}{Optional identifier used to filter log entries for a specific
-application.}
-
-\item{eligible}{Reactive logical indicating whether the module should be
-available at full capacity. Default is shiny::reactiveVal(TRUE).}
+\item{...}{Arguments passed directly to [statsServer()].}
 }
 \value{
-A Shiny server module.
+Same result as [statsServer()].
 }
 \description{
-Server module for creating usage statistics with eligibility controlled by a
-reactive value.
+Backward compatible wrapper around [statsServer()].
 }

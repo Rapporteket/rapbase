@@ -4,7 +4,12 @@
 \alias{statsServer}
 \title{Stats Server Module}
 \usage{
-statsServer(id, registryName, app_id = NULL, eligible = TRUE)
+statsServer(
+  id,
+  registryName,
+  app_id = NULL,
+  eligible = shiny::reactiveVal(TRUE)
+)
 }
 \arguments{
 \item{id}{Character string providing the Shiny module id.}
