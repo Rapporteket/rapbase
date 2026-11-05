@@ -190,7 +190,14 @@ if (is.null(check_db(is_test_that = FALSE))) {
           fun = "fun2",
           paramNames = c("organization", "outputFormat"),
           paramValues = c(102966, "pdf")
+        ),
+        brokenReport = list(
+          synopsis = "Broken example report (missing paramValue)",
+          fun = "fun3",
+          paramNames = c("organization", "outputFormat", "extraParam"),
+          paramValues = c(102966, "pdf")
         )
+
       )
       ## make a list of organization names and numbers
       orgs <- list(
@@ -328,6 +335,71 @@ if (is.null(check_db(is_test_that = FALSE))) {
           }
         )
       })
+      test_that("makeAutoReport button creates a report entry", {
+        check_db()
+        before <- nrow(readAutoReportData())
+
+        shiny::testServer(
+          autoReportServer,
+          args = list(
+            registryName = registryName, type = "subscription",
+            reports = reports, orgs = orgs, user = user
+          ),
+          {
+            session$setInputs(report = "FirstReport")
+            session$setInputs(freq = "Månedlig-month")
+            session$setInputs(start = as.Date("2025-01-02"))
+            session$setInputs(makeAutoReport = 1)
+            expect_equal(nrow(readAutoReportData()), before + 1)
+          }
+        )
+      })
+
+      test_that("makeAutoReport button creates a dispatchment report entry", {
+        check_db()
+        before <- nrow(readAutoReportData())
+
+        shiny::testServer(
+          autoReportServer,
+          args = list(
+            registryName = registryName, type = "dispatchment",
+            org = shiny::reactive(111111),
+            reports = reports, orgs = orgs, user = user
+          ),
+          {
+            session$setInputs(report = "SecondReport")
+            session$setInputs(freq = "Månedlig-month")
+            session$setInputs(email = "someemail@somewhere.com")
+            session$setInputs(addEmail = 1)
+            session$setInputs(start = as.Date("2026-01-02"))
+            session$setInputs(makeAutoReport = 1)
+            expect_equal(nrow(readAutoReportData()), before + 1)
+          }
+        )
+      })
+
+      test_that("makeAutoReport button stops if report is invalid", {
+        check_db()
+        before <- nrow(readAutoReportData())
+
+        expect_warning(
+          shiny::testServer(
+            autoReportServer,
+            args = list(
+              registryName = registryName, type = "subscription",
+              reports = reports, orgs = orgs, user = user
+            ),
+            {
+              session$setInputs(report = "brokenReport")
+              session$setInputs(freq = "Månedlig-month")
+              session$setInputs(start = as.Date("2025-01-02"))
+              session$setInputs(makeAutoReport = 1)
+            }
+          ), regexp = "must be the same length as the vector"
+        )
+        expect_equal(nrow(readAutoReportData()), before)
+      })
+
       test_that("no submit button is provided when module is not eligible", {
         shiny::testServer(
           autoReportServer,
