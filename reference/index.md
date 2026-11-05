@@ -125,19 +125,18 @@ Helper functions to be used by shiny apps
   [`exportGuideServer2()`](exportGuide.md)
   [`exportGuideApp()`](exportGuide.md) : Shiny modules providing the
   Export Guide
-- [`statsGuideUI()`](statsGuide.md)
-  [`statsGuideServer()`](statsGuide.md)
-  [`statsGuideApp()`](statsGuide.md) : Shiny modules providing the Stats
-  Guide
+- [`statsInput()`](statsInput.md) : Stats Input UI
+- [`statsUI()`](statsUI.md) : Stats Output UI
+- [`statsServer()`](statsServer.md) : Stats Server Module
+- [`statsServer2()`](statsServer2.md) : Stats Server Module with
+  Reactive Eligibility
+- [`statsGuideUI()`](statsGuideUI.md) : Stats Guide UI
+- [`statsGuideServer()`](statsGuideServer.md) : Stats Guide Server
+  Module
 - [`exportUCInput()`](export.md) [`exportUCServer()`](export.md)
   [`exportUCApp()`](export.md) [`selectListPubkey()`](export.md)
   [`exportDb()`](export.md) [`queryToFile()`](export.md) : Shiny modules
   providing GUI and server logic for Export
-- [`statsInput()`](stats.md) [`statsUI()`](stats.md)
-  [`statsServer()`](stats.md) [`statsServer2()`](stats.md)
-  [`statsApp()`](stats.md) [`logFormat()`](stats.md)
-  [`logTimeFrame()`](stats.md) : Shiny modules and helper functions for
-  registry usage reports
 - [`rapTheme()`](rapTheme.md) : Theme of the app.
 - [`regTitle()`](regTitle.md) : Title on the top left of the app,
   including the logo
