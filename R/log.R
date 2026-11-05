@@ -401,13 +401,37 @@ readLog <- function(type, name = "", app_id = NULL) {
   stopifnot(type == "report" | type == "app")
 
   tryCatch({
+    dbList <- rapOpenDbConnection("raplog")
+    on.exit(rapCloseDbConnection(dbList$con))
+
     query <- paste0("SELECT * FROM ", type, "Log")
-    query <- paste0(query, ";")
-    log <- loadRegData("raplog", query)
-    if (!is.null(app_id)) {
-      log <- log[which(log$group == app_id), ]
+    if (name != "") {
+      query <- paste0(
+        query, " WHERE ",
+        DBI::dbQuoteIdentifier(dbList$con, "group"), " = ",
+        DBI::dbQuoteString(dbList$con, name)
+      )
     }
-    log <- log |>
+
+    if (!is.null(app_id)) {
+      app_id <- as.character(app_id)
+      if (name != "") {
+        query <- paste0(
+          query, " OR ",
+          DBI::dbQuoteIdentifier(dbList$con, "group"), " = ",
+          DBI::dbQuoteString(dbList$con, app_id)
+        )
+      } else {
+        query <- paste0(
+          query, " WHERE ",
+          DBI::dbQuoteIdentifier(dbList$con, "group"), " = ",
+          DBI::dbQuoteString(dbList$con, app_id)
+        )
+      }
+    }
+
+    query <- paste0(query, ";")
+    log <- DBI::dbGetQuery(dbList$con, query) |>
       dplyr::select(-"id")
     invisible(log)
   } , error = function(e) {
