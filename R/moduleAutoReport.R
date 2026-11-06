@@ -367,7 +367,16 @@ autoReportServer <- function(
 
       # grouped entries share the same report, use the first id
       repIdFirst <- trimws(strsplit(repId, "\n", fixed = TRUE)[[1]])[1]
+      shiny::req(eligible())
       rep <- readAutoReportData() |>
+        filterAutoRep(by = "package", pass = registryName) |>
+        filterAutoRep(by = "type", pass = type)
+      if (type == "subscription") {
+        rep <- rep |>
+          filterAutoRep(by = "owner", pass = user$name()) |>
+          filterAutoRep(by = "organization", pass = user$org())
+      }
+      rep <- rep |>
         dplyr::filter(.data$id %in% repIdFirst)
 
       if (nrow(rep) == 0) {
