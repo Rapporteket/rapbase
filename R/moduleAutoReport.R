@@ -272,6 +272,14 @@ autoReportServer <- function(
   }
 
   shiny::moduleServer(id, function(input, output, session) {
+    previewFiles <- shiny::reactiveVal(character())
+    previewActive <- new.env(parent = emptyenv())
+    previewActive$active <- FALSE
+    session$onSessionEnded(function() {
+      previewActive$active <- FALSE
+      unlink(previewFiles(), recursive = TRUE)
+    })
+
     autoReport <- shiny::reactiveValues(
       tab = makeAutoReportTab(
         namespace = session$ns,
@@ -360,6 +368,10 @@ autoReportServer <- function(
     })
 
     shiny::observeEvent(input$check_button, {
+      previewActive$active <- FALSE
+      unlink(previewFiles(), recursive = TRUE)
+      previewFiles(character())
+
       btn_id <- input$check_button$id
       repId  <- strsplit(btn_id, "__", fixed = TRUE)[[1]][2]
 
@@ -415,10 +427,147 @@ autoReportServer <- function(
         shiny::HTML(paste(content, collapse = "\n"))
       } else if (is.character(content) && length(content) == 1 &&
                    file.exists(content)) {
-        prefix <- paste0("rapbase_check_", basename(tempfile("")))
-        shiny::addResourcePath(prefix, dirname(content))
+        reportPath <- normalizePath(
+          content,
+          winslash = "/",
+          mustWork = TRUE
+        )
+        assetDir <- file.path(
+          dirname(reportPath),
+          paste0(tools::file_path_sans_ext(basename(reportPath)), "_files")
+        )
+        resources <- reportPath
+        if (dir.exists(assetDir) && !nzchar(Sys.readlink(assetDir))) {
+          assetRoot <- normalizePath(
+            assetDir,
+            winslash = "/",
+            mustWork = TRUE
+          )
+          assetPaths <- list.files(
+            assetRoot,
+            recursive = TRUE,
+            full.names = TRUE,
+            all.files = TRUE,
+            no.. = TRUE
+          )
+          assetInfo <- file.info(assetPaths)
+          assetPaths <- assetPaths[
+            !is.na(assetInfo$isdir) & !assetInfo$isdir
+          ]
+          if (length(assetPaths) > 0) {
+            assetPaths <- normalizePath(
+              assetPaths,
+              winslash = "/",
+              mustWork = TRUE
+            )
+            assetPaths <- assetPaths[
+              startsWith(assetPaths, paste0(assetRoot, "/"))
+            ]
+            resources <- c(resources, assetPaths)
+          }
+        }
+        resources <- unique(resources)
+        resourceUrls <- stats::setNames(character(length(resources)), resources)
+
+        relativePath <- function(source, target) {
+          from <- strsplit(dirname(source), "/", fixed = TRUE)[[1]]
+          to <- strsplit(target, "/", fixed = TRUE)[[1]]
+          common <- 0L
+          while (common < min(length(from), length(to)) &&
+                 from[common + 1L] == to[common + 1L]) {
+            common <- common + 1L
+          }
+          paste(
+            c(
+              rep("..", length(from) - common),
+              to[seq.int(common + 1L, length(to))]
+            ),
+            collapse = "/"
+          )
+        }
+
+        rewriteResources <- function(path) {
+          content <- readChar(
+            path,
+            nchars = file.info(path)$size,
+            useBytes = TRUE
+          )
+          for (resource in resources[resources != path]) {
+            relative <- relativePath(path, resource)
+            candidates <- unique(c(
+              relative,
+              paste0("./", relative),
+              utils::URLencode(relative)
+            ))
+            for (candidate in candidates) {
+              content <- gsub(
+                candidate,
+                resourceUrls[[resource]],
+                content,
+                fixed = TRUE
+              )
+            }
+          }
+          content
+        }
+
+        appPath <- session$clientData$url_pathname
+        if (is.null(appPath) || !nzchar(appPath)) {
+          appPath <- "/"
+        }
+        appPath <- paste0(sub("/+$", "", appPath), "/")
+
+        for (resource in resources) {
+          resourceUrls[[resource]] <- paste0(
+            appPath,
+            session$registerDataObj(
+              paste0("rapbase_check_", basename(tempfile())),
+              resource,
+              function(data, req) {
+                if (!previewActive$active) {
+                  return(shiny::httpResponse(404L, "text/plain", "Not found"))
+                }
+                if (!file.exists(data)) {
+                  return(shiny::httpResponse(404L, "text/plain", "Not found"))
+                }
+                extension <- tolower(tools::file_ext(data))
+                contentType <- switch(
+                  extension,
+                  html = "text/html; charset=UTF-8",
+                  css = "text/css; charset=UTF-8",
+                  js = "application/javascript",
+                  json = "application/json",
+                  xml = "application/xml",
+                  png = "image/png",
+                  jpg = "image/jpeg",
+                  jpeg = "image/jpeg",
+                  gif = "image/gif",
+                  svg = "image/svg+xml",
+                  webp = "image/webp",
+                  woff = "font/woff",
+                  woff2 = "font/woff2",
+                  ttf = "font/ttf",
+                  "application/octet-stream"
+                )
+                responseContent <- if (extension %in% c(
+                  "html", "css", "js", "json", "xml"
+                )) {
+                  rewriteResources(data)
+                } else {
+                  list(file = data, owned = FALSE)
+                }
+                shiny::httpResponse(200L, contentType, responseContent)
+              }
+            )
+          )
+        }
+
+        tempRoot <- normalizePath(tempdir(), winslash = "/", mustWork = TRUE)
+        if (startsWith(reportPath, paste0(tempRoot, "/"))) {
+          previewFiles(c(reportPath, assetDir))
+        }
         shiny::tags$iframe(
-          src = paste0(prefix, "/", basename(content)),
+          src = resourceUrls[[reportPath]],
           style = "width: 100%; height: 70vh; border: none;"
         )
       } else {
@@ -427,13 +576,22 @@ autoReportServer <- function(
 
       shiny::showModal(
         shiny::modalDialog(
-          title = paste("Sjekk rapport:", rep$synopsis[1]),
-          body,
-          footer = shiny::modalButton("Lukk"),
+          title = NULL,
+          shiny::tagList(
+            shiny::tags$h4(paste("Sjekk rapport:", rep$synopsis[1])),
+            body
+          ),
+          footer = shiny::actionButton(session$ns("close_check"), "Lukk"),
           size = "xl",
-          easyClose = TRUE
+          easyClose = FALSE
         )
       )
+    })
+    shiny::observeEvent(input$close_check, {
+      shiny::removeModal()
+      previewActive$active <- FALSE
+      unlink(previewFiles(), recursive = TRUE)
+      previewFiles(character())
     })
 
     rv <- shiny::reactiveValues(
