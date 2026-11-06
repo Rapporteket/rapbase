@@ -20,6 +20,7 @@
 <url><loc>/reference/createAutoReport.html</loc></url>
 <url><loc>/reference/createLogDbTabs.html</loc></url>
 <url><loc>/reference/deleteAutoReport.html</loc></url>
+<url><loc>/reference/dot-data.html</loc></url>
 <url><loc>/reference/dot-getFun.html</loc></url>
 <url><loc>/reference/dot-testAutoReport.html</loc></url>
 <url><loc>/reference/export.html</loc></url>
@@ -50,7 +51,6 @@
 <url><loc>/reference/navbarWidget.html</loc></url>
 <url><loc>/reference/noOptOutOk.html</loc></url>
 <url><loc>/reference/orgList2df.html</loc></url>
-<url><loc>/reference/pronoun.html</loc></url>
 <url><loc>/reference/rapCloseDbConnection.html</loc></url>
 <url><loc>/reference/rapOpenDbConnection.html</loc></url>
 <url><loc>/reference/rapTheme.html</loc></url>
