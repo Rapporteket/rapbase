@@ -2,7 +2,9 @@
 # spend time debugging this skip these test on win based on same criteria as
 # db test
 checkTinytex <- function() {
-  if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
+  if (Sys.getenv("RUN_LATEX") == "false") {
+    testthat::skip("Possible missing or non-functional LaTeX")
+  } else if (Sys.getenv("R_RAP_INSTANCE") == "DEV") {
     NULL
   } else if (Sys.getenv("RUN_DB_UNIT_TESTS") == "true") {
     NULL

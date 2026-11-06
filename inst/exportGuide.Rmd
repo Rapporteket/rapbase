@@ -46,4 +46,4 @@ der _X_ og _Y_ er MySQL serverens adresse og et brukernavn for pålogging, henho
 Sikringen av data slik de lastes ned her er ivaretatt av [R-pakken _sship_](https://github.com/Rapporteket/sship/) i kombinasjon med mottakers egne nøkler og samhandlingsverktøyet [Rapporteket på GitHub](https://github.com/Rapporteket). Ytterligere detaljer finnes i [dokumentasjonen av _sship_](https://rapporteket.github.io/sship/articles/overview.html).
 
 ## Hjelp
-Ved spørsmål eller behov for hjelp, [ta gjerne kontakt med SKDE](mailto:rapporteket@helse-nord.no).
+Ved spørsmål eller behov for hjelp, [ta gjerne kontakt med SKDE](mailto:rapporteket@skde.no).
