@@ -415,10 +415,8 @@ autoReportServer <- function(
         shiny::HTML(paste(content, collapse = "\n"))
       } else if (is.character(content) && length(content) == 1 &&
                    file.exists(content)) {
-        prefix <- paste0("rapbase_check_", basename(tempfile("")))
-        shiny::addResourcePath(prefix, dirname(content))
         shiny::tags$iframe(
-          src = paste0(prefix, "/", basename(content)),
+          src = .registerReportFile(session, content),
           style = "width: 100%; height: 70vh; border: none;"
         )
       } else {
@@ -808,6 +806,40 @@ orgList2df <- function(orgs) {
   data.frame(
     name = names(orgs),
     id = as.vector(sapply(orgs, unname))
+  )
+}
+
+#' Serve a single report file through a session-scoped url
+#'
+#' Only the given file is served, and the url is removed by Shiny when the
+#' session ends.
+#'
+#' @param session Shiny session object
+#' @param path Character string with path to the report file
+#'
+#' @return Character string with the url to the file
+#' @noRd
+.registerReportFile <- function(session, path) {
+  contentType <- switch(
+    tolower(sub(".*\\.", "", basename(path))),
+    pdf = "application/pdf",
+    html = ,
+    htm = "text/html; charset=utf-8",
+    "text/plain; charset=utf-8"
+  )
+  session$registerDataObj(
+    name = "rapbase_check",
+    data = list(
+      bytes = readBin(path, "raw", file.info(path)$size),
+      type = contentType
+    ),
+    filterFunc = function(data, req) {
+      shiny::httpResponse(
+        200,
+        content_type = data$type,
+        content = data$bytes
+      )
+    }
   )
 }
 
