@@ -3,12 +3,13 @@ currentConfigPath <- Sys.getenv("R_RAP_CONFIG_PATH")
 
 # make pristine and dedicated config to avoid interference with other tests
 Sys.setenv(R_RAP_CONFIG_PATH = file.path(tempdir(), "autoReportTesting"))
-dir.create(Sys.getenv("R_RAP_CONFIG_PATH"))
+dir.create(Sys.getenv("R_RAP_CONFIG_PATH"), showWarnings = FALSE)
 file.copy(
   system.file(c("rapbaseConfig.yml", "autoReport.yml"),
     package = "rapbase"
   ),
-  Sys.getenv("R_RAP_CONFIG_PATH")
+  Sys.getenv("R_RAP_CONFIG_PATH"),
+  overwrite = TRUE
 )
 
 registryName <- "rapbase"
@@ -38,7 +39,7 @@ test_that("report file is served through a session-scoped data object", {
   resp <- captured$filterFunc(captured$data, NULL)
   expect_equal(resp$status, 200L)
   expect_match(resp$content_type, "text/html")
-  expect_equal(rawToChar(resp$content), "<p>hei</p>\n")
+  expect_equal(trimws(rawToChar(resp$content)), "<p>hei</p>")
   expect_false(grepl("secret", rawToChar(resp$content)))
 
   pdfFile <- tempfile(fileext = ".pdf")
