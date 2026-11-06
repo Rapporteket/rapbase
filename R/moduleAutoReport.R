@@ -359,6 +359,74 @@ autoReportServer <- function(
       autoReport$email <- vector()
     })
 
+    shiny::observeEvent(input$check_button, {
+      btn_id <- input$check_button$id
+      repId  <- strsplit(btn_id, "__", fixed = TRUE)[[1]][2]
+
+      message("Check report for id: ", repId)
+
+      # grouped entries share the same report, use the first id
+      repIdFirst <- trimws(strsplit(repId, "\n", fixed = TRUE)[[1]])[1]
+      rep <- readAutoReportData() |>
+        dplyr::filter(.data$id %in% repIdFirst)
+
+      if (nrow(rep) == 0) {
+        shiny::showNotification("Fant ikke rapporten.", type = "error")
+        return(NULL)
+      }
+
+      content <- tryCatch(
+        {
+          shiny::withProgress(message = "Lager rapport...", {
+            # the registry's own report function, e.g.
+            # rapRegTemplate::reportProcessor
+            f <- if (grepl("::", rep$fun[1])) {
+              .getFun(rep$fun[1])
+            } else {
+              .getFun(paste0(rep$package[1], "::", rep$fun[1]))
+            }
+            do.call(
+              what = f,
+              args = as.list(jsonlite::fromJSON(rep$params[1]))
+            )
+          })
+        },
+        error = function(e) e
+      )
+
+      errorBox <- function(msg) {
+        shiny::tags$div(class = "alert alert-danger", msg)
+      }
+
+      body <- if (inherits(content, "error")) {
+        errorBox(
+          paste("Rapporten kunne ikke lages:", conditionMessage(content))
+        )
+      } else if (rep$type[1] == "bulletin" || inherits(content, "html")) {
+        shiny::HTML(paste(content, collapse = "\n"))
+      } else if (is.character(content) && length(content) == 1 &&
+                   file.exists(content)) {
+        prefix <- paste0("rapbase_check_", basename(tempfile("")))
+        shiny::addResourcePath(prefix, dirname(content))
+        shiny::tags$iframe(
+          src = paste0(prefix, "/", basename(content)),
+          style = "width: 100%; height: 70vh; border: none;"
+        )
+      } else {
+        errorBox("Rapporten kunne ikke lages.")
+      }
+
+      shiny::showModal(
+        shiny::modalDialog(
+          title = paste("Sjekk rapport:", rep$synopsis[1]),
+          body,
+          footer = shiny::modalButton("Lukk"),
+          size = "xl",
+          easyClose = TRUE
+        )
+      )
+    })
+
     rv <- shiny::reactiveValues(
       pending_repId_edit = NULL
     )

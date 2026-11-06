@@ -771,6 +771,18 @@ makeAutoReportTab <- function(
         format = dateFormat
       ),
       "Neste" = nextDate,
+      "Sjekk rapport" = as.character(
+        shiny::actionButton(
+          inputId = ns(paste0("check__", autoRep[i, ]$id)),
+          label = "",
+          icon = shiny::icon("play"),
+          onclick = sprintf(
+            "Shiny.setInputValue('%s', {id: this.id,
+            nonce: Date.now()}, {priority: 'event'});",
+            ns("check_button")
+          )
+        )
+      ),
       "Endre" = as.character(
         shiny::actionButton(
           inputId = ns(paste0("edit__", autoRep[i, ]$id)),
