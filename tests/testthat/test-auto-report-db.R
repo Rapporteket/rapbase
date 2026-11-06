@@ -378,6 +378,27 @@ if (is.null(check_db(is_test_that = FALSE))) {
         )
       })
 
+      test_that("run_autoreport button triggers batch processing", {
+        check_db()
+
+        shiny::testServer(
+          autoReportServer,
+          args = list(
+            registryName = registryName,
+            type = "subscription",
+            reports = reports,
+            orgs = orgs,
+            runAutoReportButton = TRUE,
+            user = user
+          ),
+          {
+            session$setInputs(rapportdato = as.Date("2024-12-02"))
+            session$setInputs(sendEmails = FALSE)
+            expect_no_error(session$setInputs(run_autoreport = 1))
+          }
+        )
+      })
+
       test_that("makeAutoReport button stops if report is invalid", {
         check_db()
         before <- nrow(readAutoReportData())
