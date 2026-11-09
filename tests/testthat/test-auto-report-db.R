@@ -77,7 +77,7 @@ test_that("Auto reports can be processed monthly", {
     dato = "2024-12-01",
     dryRun = TRUE
     ),
-    "No emails sent. Content is:",
+    "No emails sent. Dry run.",
     all = FALSE
   )
 })
@@ -90,7 +90,7 @@ test_that("Auto reports can be processed weekly", {
     dato = "2024-12-02",
     dryRun = TRUE
     ),
-    "No emails sent. Content is:",
+    "No emails sent. Dry run.",
     all = FALSE
   )
 })
@@ -104,7 +104,7 @@ test_that("Bulletin reports can be processed (monthly)", {
       type = c("bulletin"),
       dryRun = TRUE
       ),
-    "No emails sent. Content is: This is a simple",
+    "No emails sent. Dry run.",
     all = FALSE
   )
 })
