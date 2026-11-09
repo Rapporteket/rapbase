@@ -507,7 +507,7 @@ runAutoReport <- function(
           }
         }
         if (dryRun) {
-          message(paste("No emails sent. Content is:", content))
+          message(paste("No emails sent. Dry run."))
         } else {
           for (email in rep$email) {
             message(paste(
