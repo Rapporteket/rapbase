@@ -422,7 +422,10 @@ autoReportServer <- function(
       } else {
         errorBox("Rapporten kunne ikke lages.")
       }
-
+      repLogger2(
+        msg = paste0("Rapport med repId: ", repId, " ble sjekket."),
+        user = user
+      )
       shiny::showModal(
         shiny::modalDialog(
           title = paste("Sjekk rapport:", rep$synopsis[1]),
