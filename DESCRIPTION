@@ -51,6 +51,7 @@ Imports:
     sendmailR,
     shiny,
     shinyalert,
+    shinyjs,
     sship (>= 0.9.0),
     utils,
     yaml

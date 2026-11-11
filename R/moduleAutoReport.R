@@ -701,12 +701,15 @@ autoReportServer <- function(
             "Nye oppf\u00F8ringer kan lages fra menyen til",
             "venstre. Bruk gjerne veiledingen under."
           )),
+          shiny::verbatimTextOutput(session$ns("sysMessage")),
           shiny::htmlOutput(session$ns("autoReportGuide"))
         )
       } else {
         shiny::tagList(
+          shinyjs::useShinyjs(),
           shiny::h2("Aktive oppf\u00F8ringer:"),
           DT::dataTableOutput(session$ns("activeReports")),
+          shiny::verbatimTextOutput(session$ns("sysMessage")),
           shiny::htmlOutput(session$ns("autoReportGuide"))
         )
       }
@@ -758,18 +761,40 @@ autoReportServer <- function(
       # Run all auto reports with the given date
       # when clicking the button
       dato <- input$rapportdato
-      message("Running all auto reports for date ", dato,
-        " and registry ", registryName, ", ",
-        ifelse(input$sendEmails, "WITH", "WITHOUT"),
-        " sending e-mails. This job was triggered by ", user$fullName()
-      )
       dryRun <- !(input$sendEmails)
-      runAutoReport(
-        group = registryName,
-        dato = dato,
-        dryRun = dryRun
-      )
-      message("Finished running all auto reports for date ", dato)
+      withCallingHandlers({
+        shinyjs::html(
+          "sysMessage",
+          "<b>System messages will be printed here...</b><br/><br/>"
+        )
+        message("Running all auto reports for date ", dato,
+          " and registry ", registryName, ", ",
+          ifelse(input$sendEmails, "WITH", "WITHOUT"),
+          " sending e-mails. This job was triggered by ", user$fullName()
+        )
+        runAutoReport(
+          group = registryName,
+          dato = dato,
+          dryRun = dryRun
+        )
+        message("Finished running all auto reports for date ", dato)
+      },
+      warning = function(w) {
+        shinyjs::html(
+          id = "sysMessage",
+          html = as.character(shiny::tags$span(
+            paste0(conditionMessage(w), "\n")
+          )),
+          add = TRUE
+        )
+      },
+      message = function(m) {
+        shinyjs::html(
+          id = "sysMessage",
+          html = as.character(shiny::tags$span(m$message)),
+          add = TRUE
+        )
+      })
       # reactivate button
       shiny::updateActionButton(
         inputId = "run_autoreport",
