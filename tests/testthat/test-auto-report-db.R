@@ -77,7 +77,7 @@ test_that("Auto reports can be processed monthly", {
     dato = "2024-12-01",
     dryRun = TRUE
     ),
-    "No emails sent. Content is:",
+    "No emails sent. Dry run.",
     all = FALSE
   )
 })
@@ -90,7 +90,7 @@ test_that("Auto reports can be processed weekly", {
     dato = "2024-12-02",
     dryRun = TRUE
     ),
-    "No emails sent. Content is:",
+    "No emails sent. Dry run.",
     all = FALSE
   )
 })
@@ -104,7 +104,7 @@ test_that("Bulletin reports can be processed (monthly)", {
       type = c("bulletin"),
       dryRun = TRUE
       ),
-    "No emails sent. Content is: This is a simple",
+    "No emails sent. Dry run.",
     all = FALSE
   )
 })
@@ -374,6 +374,58 @@ if (is.null(check_db(is_test_that = FALSE))) {
             session$setInputs(start = as.Date("2026-01-02"))
             session$setInputs(makeAutoReport = 1)
             expect_equal(nrow(readAutoReportData()), before + 1)
+          }
+        )
+      })
+
+      test_that("run_autoreport button triggers batch processing", {
+        check_db()
+
+        shiny::testServer(
+          autoReportServer,
+          args = list(
+            registryName = registryName,
+            type = "subscription",
+            reports = reports,
+            orgs = orgs,
+            runAutoReportButton = TRUE,
+            user = user
+          ),
+          {
+            session$setInputs(rapportdato = as.Date("2024-12-02"))
+            session$setInputs(sendEmails = FALSE)
+            expect_no_error(session$setInputs(run_autoreport = 1))
+          }
+        )
+      })
+
+      test_that("run_autoreport warning handler catches warnings from batch processing", {
+        check_db()
+
+        with_mocked_bindings(
+          runAutoReport = function(group, dato, dryRun) {
+            warning("Simulated warning from batch auto report")
+          },
+          {
+            shiny::testServer(
+              autoReportServer,
+              args = list(
+                registryName = registryName,
+                type = "subscription",
+                reports = reports,
+                orgs = orgs,
+                runAutoReportButton = TRUE,
+                user = user
+              ),
+              {
+                session$setInputs(rapportdato = as.Date("2024-12-02"))
+                session$setInputs(sendEmails = FALSE)
+                expect_warning(
+                  session$setInputs(run_autoreport = 1),
+                  regexp = "Simulated warning from batch auto report"
+                )
+              }
+            )
           }
         )
       })
