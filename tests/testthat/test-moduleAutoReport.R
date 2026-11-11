@@ -122,10 +122,14 @@ pressCheck <- function(
   cap$modal <- NULL
   cap$notification <- NULL
   cap$path <- NULL
+  cap$logged <- NULL
   cap$messages <- character()
 
   testthat::local_mocked_bindings(
     readAutoReportData = function(...) chk_data,
+    repLogger2 = function(user, msg = "No message provided", ...) {
+      cap$logged <- msg
+    },
     .registerReportFile = function(session, path) {
       cap$path <- path
       "mock/url"
@@ -149,7 +153,8 @@ pressCheck <- function(
     fullName = shiny::reactiveVal("Tore Tester"),
     email = shiny::reactiveVal("someone@nowhere.com"),
     org = shiny::reactiveVal(999999),
-    role = shiny::reactiveVal("LC")
+    role = shiny::reactiveVal("LC"),
+    app = shiny::reactiveVal("rapbase")
   )
 
   withCallingHandlers(
@@ -182,6 +187,7 @@ pressCheck <- function(
 test_that("check button logs the report id", {
   res <- pressCheck(1, makeCheckData(1))
   expect_true("Check report for id: 1" %in% trimws(res$messages))
+  expect_match(res$logged, "repId: 1", fixed = TRUE)
 })
 
 test_that("check button shows a file report in an iframe", {
