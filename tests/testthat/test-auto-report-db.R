@@ -90,7 +90,7 @@ test_that("Broken auto reports can be processed monthly", {
     dryRun = TRUE,
     group = "rapbase2"
   ),
-    "there is no package called ‘rapbase2’",
+    "there is no package called 'rapbase2'",
     all = FALSE
   )
 })
