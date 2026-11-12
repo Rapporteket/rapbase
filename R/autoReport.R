@@ -538,7 +538,11 @@ runAutoReport <- function(
       },
       error = function(e) {
         warning(paste(
-          "Report could not be processed (moving on to the next):",
+          "Report ", i, " of ", dim(reps)[1], " from package ",
+          reps$package[i], " could not be processed. ",
+          "Recipients: ", reps$email[i],
+          "Organization: ", reps$organization[i],
+          "Moving on to the next. Error message: ",
           e
         ))
       }

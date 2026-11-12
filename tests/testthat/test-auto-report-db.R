@@ -54,10 +54,10 @@ test_that("a sample of auto report data can be written to db", {
 
 test_that("sample auto report data can be read from db", {
   check_db()
-  expect_equal(nrow(readAutoReportData()), 9)
+  expect_equal(nrow(readAutoReportData()), 11)
   expect_equal(class(readAutoReportData()), "data.frame")
   writeAutoReportData(config = arSample)
-  expect_equal(nrow(readAutoReportData()), 9)
+  expect_equal(nrow(readAutoReportData()), 11)
 })
 
 test_that("duplicate rows are removed, unique rows are written to db", {
@@ -65,7 +65,7 @@ test_that("duplicate rows are removed, unique rows are written to db", {
   check_db()
   arSample$testAutoReportSecond$ownerName <- "Torvald Tester"
   writeAutoReportData(config = arSample)
-  expect_equal(nrow(readAutoReportData()), 10)
+  expect_equal(nrow(readAutoReportData()), 12)
 })
 # For a valid test make sure there is ONE standard dummy report scheduled
 # monthly and with start date first of some month.
@@ -75,9 +75,22 @@ test_that("Auto reports can be processed monthly", {
   check_db()
   expect_message(runAutoReport(
     dato = "2024-12-01",
-    dryRun = TRUE
+    dryRun = TRUE,
+    group = "rapbase"
     ),
     "No emails sent. Dry run.",
+    all = FALSE
+  )
+})
+
+test_that("Broken auto reports can be processed monthly", {
+  check_db()
+  expect_warning(runAutoReport(
+    dato = "2024-12-01",
+    dryRun = TRUE,
+    group = "rapbase2"
+  ),
+    "there is no package called 'rapbase2'",
     all = FALSE
   )
 })
