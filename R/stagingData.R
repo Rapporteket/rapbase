@@ -230,16 +230,17 @@ wrapStagingData <- function(data) {
 
   k <- digest::digest(Sys.getenv("MYSQL_PASSWORD"), algo = "sha256", raw = TRUE)
   serialize(data, connection = NULL) |>
-    sship::sym_enc(key = k, iv = NULL) |>
-    memCompress(type = "bzip2")
+    memCompress(type = "gzip") |>
+    sship::sym_enc(key = k, iv = NULL)
 }
 
 #' @rdname stagingDataHelper
 unwrapStagingData <- function(data) {
 
   k <- digest::digest(Sys.getenv("MYSQL_PASSWORD"), algo = "sha256", raw = TRUE)
-  memDecompress(data, type = "bzip2") |>
+  data |>
     sship::sym_dec(key = k, iv = NULL) |>
+    memDecompress(type = "gzip") |>
     unserialize()
 }
 
